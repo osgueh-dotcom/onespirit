@@ -1,0 +1,370 @@
+<template>
+  <div class="space-y-6">
+    <!-- Top toolbar actions -->
+    <div class="flex items-center justify-between gap-4 select-none">
+      <div class="flex items-center gap-3">
+        <select 
+          v-model="filterCategory"
+          class="px-4 py-2.5 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/35 focus:border-brand-orange text-xs font-semibold text-gray-300 outline-none transition-all"
+        >
+          <option value="">All Client Categories</option>
+          <option value="Corporate">Corporate Accounts</option>
+          <option value="Agency">Creative Agencies</option>
+          <option value="Partner">Logistic Partners</option>
+          <option value="Government">Government</option>
+          <option value="School">Educational Institutes</option>
+        </select>
+      </div>
+
+      <button 
+        v-if="auth.hasPermission('crm:write')"
+        @click="showAddModal = true"
+        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none"
+      >
+        + Add New Client Account
+      </button>
+    </div>
+
+    <!-- Accounts Grid -->
+    <div v-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
+      <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span class="text-xs text-gray-400 font-semibold">Retrieving CRM directories...</span>
+    </div>
+
+    <div v-else class="glass-panel overflow-hidden border border-brand-charcoal-light/30">
+      <div class="overflow-x-auto min-w-full">
+        <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+          <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+            <tr>
+              <th class="px-6 py-4">Company Name</th>
+              <th class="px-6 py-4">Category</th>
+              <th class="px-6 py-4">Address</th>
+              <th class="px-6 py-4">Point of Contact</th>
+              <th class="px-6 py-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-brand-charcoal-light/10">
+            <tr v-if="filteredCustomers.length === 0">
+              <td colspan="5" class="px-6 py-12 text-center font-semibold text-gray-500">
+                No client accounts found matching the filter criteria.
+              </td>
+            </tr>
+            <tr 
+              v-for="cust in filteredCustomers" 
+              :key="cust.id"
+              class="hover:bg-brand-charcoal-light/10 transition-colors"
+            >
+              <td class="px-6 py-4 font-bold text-white tracking-wide text-sm">{{ cust.company_name }}</td>
+              <td class="px-6 py-4 select-none">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getCategoryStyles(cust.category)">
+                  {{ cust.category }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-gray-400 truncate max-w-xs font-medium">{{ cust.address || '-' }}</td>
+              <td class="px-6 py-4">
+                <div v-if="cust.contacts?.length > 0" class="space-y-1">
+                  <div v-for="c in cust.contacts.slice(0, 1)" :key="c.id" class="font-semibold text-white">
+                    {{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span>
+                  </div>
+                  <span v-if="cust.contacts.length > 1" class="text-[10px] text-gray-500 font-bold block">
+                    + {{ cust.contacts.length - 1 }} other contact points
+                  </span>
+                </div>
+                <span v-else class="text-gray-500 font-bold italic">No contacts added</span>
+              </td>
+              <td class="px-6 py-4 text-right select-none space-x-2.5">
+                <button 
+                  @click="openContactDetails(cust)"
+                  class="px-2.5 py-1 text-[10px] font-bold text-brand-blue bg-brand-blue/10 rounded hover:bg-brand-blue/20 transition-all"
+                >
+                  Manage Contacts
+                </button>
+                <button 
+                  v-if="auth.hasPermission('crm:write')"
+                  @click="deleteCustomer(cust.id)"
+                  class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
+                >
+                  Deactivate
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Client Account Creation Modal -->
+    <div v-if="showAddModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
+      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
+        <h3 class="text-base font-bold text-white tracking-wide mb-5">Register Client Profile</h3>
+        
+        <form @submit.prevent="saveCustomer" class="space-y-4">
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Company Name</label>
+            <input 
+              v-model="newCust.company_name"
+              type="text" 
+              required
+              placeholder="e.g. Google Indonesia"
+              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-sm font-semibold outline-none transition-all text-white"
+            />
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Account Classification</label>
+            <select 
+              v-model="newCust.category"
+              required
+              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-sm font-semibold outline-none transition-all text-gray-300"
+            >
+              <option value="Corporate">Corporate Account</option>
+              <option value="Agency">Creative Agency</option>
+              <option value="Partner">Logistic Partner</option>
+              <option value="Government">Government / BUMN</option>
+              <option value="School">Educational Institute</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Headquarters Address</label>
+            <textarea 
+              v-model="newCust.address"
+              rows="3"
+              placeholder="Full mailing address details..."
+              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-sm font-semibold outline-none transition-all text-white"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-3">
+            <button 
+              type="button"
+              @click="showAddModal = false"
+              class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white hover:bg-brand-charcoal-light/10 transition-all"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all"
+            >
+              Save Account
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Manage Contacts Modal -->
+    <div v-if="showContactModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
+      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-2xl shadow-2xl p-6 relative">
+        <h3 class="text-base font-bold text-white tracking-wide mb-4">
+          Point of Contacts: <span class="text-brand-orange">{{ activeCust?.company_name }}</span>
+        </h3>
+
+        <!-- Contact List -->
+        <div class="max-h-60 overflow-y-auto space-y-2 mb-6">
+          <div v-if="activeCust?.contacts?.length === 0" class="p-4 bg-brand-charcoal-light/10 rounded-2xl text-center text-xs font-semibold text-gray-500">
+            No contacts recorded for this client.
+          </div>
+          <div 
+            v-for="c in activeCust?.contacts" 
+            :key="c.id"
+            class="p-4 bg-brand-charcoal-light/20 border border-brand-charcoal-light/10 rounded-2xl flex items-center justify-between text-xs font-medium"
+          >
+            <div>
+              <p class="font-bold text-white">{{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span></p>
+              <p class="text-gray-400 mt-1">Email: {{ c.email || '-' }} | Phone: {{ c.phone || '-' }}</p>
+            </div>
+            <button 
+              v-if="auth.hasPermission('crm:write')"
+              @click="deleteContact(c.id)"
+              class="px-2 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Add Contact Form -->
+        <div v-if="auth.hasPermission('crm:write')" class="border-t border-brand-charcoal-light/30 pt-4">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Add New Point of Contact</h4>
+          <form @submit.prevent="saveContact" class="grid grid-cols-2 gap-3">
+            <div class="col-span-2">
+              <input 
+                v-model="newContact.name" 
+                type="text" 
+                required
+                placeholder="POC Name *"
+                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+              />
+            </div>
+            <div>
+              <input 
+                v-model="newContact.email" 
+                type="email" 
+                placeholder="Email Address"
+                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+              />
+            </div>
+            <div>
+              <input 
+                v-model="newContact.phone" 
+                type="text" 
+                placeholder="Phone Number"
+                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+              />
+            </div>
+            <div class="col-span-2">
+              <input 
+                v-model="newContact.position" 
+                type="text" 
+                placeholder="Position / Title (e.g. Marketing Lead)"
+                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+              />
+            </div>
+            <div class="col-span-2 flex items-center justify-end gap-3 mt-2">
+              <button 
+                type="button"
+                @click="showContactModal = false"
+                class="px-4 py-2 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all"
+              >
+                Close
+              </button>
+              <button 
+                type="submit"
+                class="px-4 py-2 rounded-xl bg-brand-orange text-white font-bold text-xs transition-all"
+              >
+                + Link Contact
+              </button>
+            </div>
+          </form>
+        </div>
+        <div v-else class="flex justify-end pt-2">
+          <button 
+            @click="showContactModal = false"
+            class="px-4 py-2 rounded-xl bg-brand-charcoal-light text-white font-bold text-xs"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
+import { useAuthStore } from '../store/auth'
+
+const auth = useAuthStore()
+const customers = ref([])
+const loading = ref(true)
+
+const filterCategory = ref('')
+const showAddModal = ref(false)
+const showContactModal = ref(false)
+
+const activeCust = ref(null)
+
+const newCust = ref({
+  company_name: '',
+  category: 'Corporate',
+  address: '',
+  notes: ''
+})
+
+const newContact = ref({
+  name: '',
+  email: '',
+  phone: '',
+  position: ''
+})
+
+const fetchCustomers = async () => {
+  try {
+    const response = await axios.get('/api/v1/customers')
+    customers.value = response.data
+  } catch (err) {
+    console.error('Failed to load customers', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchCustomers()
+})
+
+const filteredCustomers = computed(() => {
+  if (!filterCategory.value) return customers.value
+  return customers.value.filter(c => c.category === filterCategory.value)
+})
+
+const getCategoryStyles = (cat) => {
+  if (cat === 'Corporate') return 'bg-brand-orange/10 text-brand-orange'
+  if (cat === 'Agency') return 'bg-brand-blue/10 text-brand-blue'
+  if (cat === 'Partner') return 'bg-brand-emerald/10 text-brand-emerald'
+  return 'bg-brand-charcoal-light text-gray-300'
+}
+
+const saveCustomer = async () => {
+  try {
+    const response = await axios.post('/api/v1/customers', newCust.value)
+    customers.value.push(response.data)
+    showAddModal.value = false
+    newCust.value = { company_name: '', category: 'Corporate', address: '', notes: '' }
+  } catch (err) {
+    alert(err.response?.data?.detail || 'Failed to register client account')
+  }
+}
+
+const deleteCustomer = async (id) => {
+  if (!confirm('Are you sure you want to deactivate this client and all their contacts?')) return
+  try {
+    await axios.delete(`/api/v1/customers/${id}`)
+    customers.value = customers.value.filter(c => c.id !== id)
+  } catch (err) {
+    alert('Failed to delete customer')
+  }
+}
+
+const openContactDetails = (cust) => {
+  activeCust.value = cust
+  showContactModal.value = true
+}
+
+const saveContact = async () => {
+  try {
+    const payload = {
+      ...newContact.value,
+      customer_id: activeCust.value.id
+    }
+    // Clean empty optional fields to prevent validation issues
+    if (!payload.email) delete payload.email
+    if (!payload.phone) delete payload.phone
+    if (!payload.position) delete payload.position
+
+    const response = await axios.post('/api/v1/contacts', payload)
+    
+    // Push newly created contact
+    activeCust.value.contacts.push(response.data)
+    newContact.value = { name: '', email: '', phone: '', position: '' }
+  } catch (err) {
+    alert(err.response?.data?.detail || 'Failed to link contact point')
+  }
+}
+
+const deleteContact = async (id) => {
+  if (!confirm('Are you sure you want to delete this contact?')) return
+  try {
+    await axios.delete(`/api/v1/contacts/${id}`)
+    activeCust.value.contacts = activeCust.value.contacts.filter(c => c.id !== id)
+  } catch (err) {
+    alert('Failed to delete contact')
+  }
+}
+</script>

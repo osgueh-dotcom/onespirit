@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-app: #111315; /* brand-charcoal-dark */
+  --bg-sidebar: #1A1D20; /* brand-charcoal */
+  --border-sidebar: rgba(45, 49, 54, 0.3); /* brand-charcoal-light/30 */
+  --text-main: #F3F4F6; /* gray-100 */
+  --text-muted: #9CA3AF; /* gray-400 */
+  --bg-panel: rgba(26, 32, 44, 0.7);
+  --border-panel: rgba(45, 49, 54, 0.35);
+  --bg-header: rgba(26, 29, 32, 0.4);
+}
+
+/* Light Theme Class Variables override */
+.light {
+  --bg-app: #F3F4F6; /* Clean light gray bg */
+  --bg-sidebar: #FFFFFF; /* Pure white sidebar background */
+  --border-sidebar: rgba(229, 231, 235, 0.8); /* gray-200 border */
+  --text-main: #111827; /* gray-900 principal text */
+  --text-muted: #4B5563; /* gray-600 secondary text */
+  --bg-panel: rgba(255, 255, 255, 0.85); /* white transparent glass panel */
+  --border-panel: rgba(229, 231, 235, 0.9); /* light gray panel border */
+  --bg-header: rgba(255, 255, 255, 0.65); /* light blur header */
+}
+
+/* Light Theme Element & Utility Overrides */
+.light .bg-brand-charcoal {
+  background-color: #FFFFFF !important;
+}
+.light .bg-brand-charcoal-dark {
+  background-color: #F9FAFB !important;
+}
+.light .bg-brand-charcoal-light {
+  background-color: #E5E7EB !important;
+}
+.light .bg-brand-charcoal\/50 {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+.light .bg-brand-charcoal-dark\/45 {
+  background-color: rgba(249, 250, 251, 0.75) !important;
+}
+.light .bg-brand-charcoal-light\/5 {
+  background-color: rgba(229, 231, 235, 0.25) !important;
+}
+.light .bg-brand-charcoal-light\/10 {
+  background-color: rgba(229, 231, 235, 0.45) !important;
+}
+.light .bg-brand-charcoal-light\/30 {
+  background-color: rgba(229, 231, 235, 0.65) !important;
+}
+.light .bg-brand-charcoal-light\/35 {
+  background-color: rgba(229, 231, 235, 0.7) !important;
+}
+
+/* Borders */
+.light .border-brand-charcoal-light\/10 {
+  border-color: rgba(229, 231, 235, 0.5) !important;
+}
+.light .border-brand-charcoal-light\/20 {
+  border-color: rgba(229, 231, 235, 0.7) !important;
+}
+.light .border-brand-charcoal-light\/25 {
+  border-color: rgba(229, 231, 235, 0.75) !important;
+}
+.light .border-brand-charcoal-light\/35 {
+  border-color: rgba(229, 231, 235, 0.8) !important;
+}
+.light .border-brand-charcoal-light\/40 {
+  border-color: rgba(229, 231, 235, 0.85) !important;
+}
+.light .border-brand-charcoal-light\/45 {
+  border-color: rgba(229, 231, 235, 0.9) !important;
+}
+
+/* Hover background states */
+.light .hover\:bg-brand-charcoal-light\/10:hover {
+  background-color: rgba(229, 231, 235, 0.5) !important;
+}
+
+/* Hardcoded text-white overrides */
+.light .text-white {
+  color: #111827 !important;
+}
+.light .text-white.text-brand-orange,
+.light .text-white.text-brand-blue,
+.light .text-white.text-brand-emerald {
+  color: inherit !important;
+}
+.light button .text-white,
+.light button.text-white,
+.light a .text-white,
+.light a.text-white,
+.light [class*="bg-brand-"] .text-white,
+.light [class*="bg-brand-"].text-white,
+.light [class*="from-brand-"] .text-white,
+.light [class*="from-brand-"].text-white,
+.light .bg-brand-orange .text-white,
+.light .bg-brand-orange-light .text-white,
+.light .bg-gradient-to-r .text-white,
+.light .bg-gradient-to-r.text-white,
+.light .bg-brand-emerald .text-white,
+.light .bg-brand-emerald.text-white,
+.light .bg-brand-blue .text-white,
+.light .bg-brand-blue.text-white,
+.light .bg-brand-orange-soft .text-white,
+.light .bg-brand-orange-soft.text-white {
+  color: #FFFFFF !important;
+}
+
+/* Light Mode Input fields styling */
+.light input, 
+.light select, 
+.light textarea {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  border-color: rgba(229, 231, 235, 0.9) !important;
+}
+.light input:focus, 
+.light select:focus, 
+.light textarea:focus {
+  border-color: #FF7B00 !important; /* brand-orange focus border */
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    @apply antialiased selection:bg-brand-orange selection:text-white transition-colors duration-300;
+  }
+}
+
+/* Dynamic CSS Theme Utility Classes */
+.bg-app-theme {
+  background-color: var(--bg-app);
+}
+.bg-sidebar-theme {
+  background-color: var(--bg-sidebar);
+}
+.border-sidebar-theme {
+  border-color: var(--border-sidebar);
+}
+.text-main-theme {
+  color: var(--text-main);
+}
+.text-muted-theme {
+  color: var(--text-muted);
+}
+.bg-panel-theme {
+  background-color: var(--bg-panel);
+}
+.border-panel-theme {
+  border-color: var(--border-panel);
+}
+.bg-header-theme {
+  background-color: var(--bg-header);
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: var(--bg-sidebar);
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-brand-charcoal-light rounded hover:bg-brand-orange/40 transition-colors;
+}
+
+/* Glassmorphism panel styling */
+.glass-panel {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  @apply backdrop-blur-md rounded-2xl shadow-xl transition-all duration-300;
+}
+
+/* Interactive hover cards */
+.interactive-card {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-panel);
+  @apply rounded-2xl transition-all duration-300 hover:border-brand-orange/40 hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-orange/10;
+}
+
+/* Active workflow badges pulse */
+.pulse-badge {
+  @apply relative overflow-hidden;
+}
+.pulse-badge::after {
+  content: '';
+  @apply absolute inset-0 bg-white/20 -translate-x-full skew-x-12 animate-pulse;
+}
