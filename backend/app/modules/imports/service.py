@@ -188,7 +188,12 @@ def map_payment_status(val: Any) -> str:
     mapping = {
         "not invoiced": "Not Invoiced", "invoiced": "Invoice Sent", "invoice sent": "Invoice Sent",
         "partial": "Partial Paid", "partial paid": "Partial Paid", "paid": "Paid",
-        "outstanding": "Outstanding", "overdue": "Overdue"
+        "outstanding": "Outstanding",
+        "out standing": "Outstanding",
+        "out-standing": "Outstanding",
+        "outstanding payment": "Outstanding",
+        "out standing payment": "Outstanding",
+        "overdue": "Overdue"
     }
     return mapping.get(cleaned, "Not Invoiced")
 

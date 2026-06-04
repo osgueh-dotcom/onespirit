@@ -37,6 +37,8 @@ services:
       - JWT_ALGORITHM=${JWT_ALGORITHM:-HS256}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
       - UPLOAD_DIR=${UPLOAD_DIR:-/app/uploads}
+      - ENV=${ENV:-development}
+      - AUTO_CREATE_TABLES=${AUTO_CREATE_TABLES:-true}
     volumes:
       - ./backend:/app
       - uploads_data:/app/uploads
@@ -58,6 +60,8 @@ services:
     restart: always
     ports:
       - "${FRONTEND_PORT:-5173}:5173"
+    environment:
+      - VITE_PROXY_TARGET=${VITE_PROXY_TARGET:-http://backend:8000}
     volumes:
       - ./frontend:/app
       - /app/node_modules

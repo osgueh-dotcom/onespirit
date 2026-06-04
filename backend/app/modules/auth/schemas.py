@@ -50,6 +50,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
     role_id: UUID
+    initial_code: Optional[str] = None
 
     @field_validator("password")
     @classmethod
@@ -62,6 +63,7 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     role_id: Optional[UUID] = None
     is_active: Optional[bool] = None
+    initial_code: Optional[str] = None
 
     @field_validator("password")
     @classmethod
@@ -78,6 +80,7 @@ class UserResponse(UserBase):
     id: UUID
     role_id: UUID
     role: Optional[RoleResponse] = None
+    initial_code: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 

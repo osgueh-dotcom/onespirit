@@ -21,7 +21,8 @@ def create_user(db: Session, user_in: UserCreate) -> User:
         hashed_password=hashed_pw,
         full_name=user_in.full_name,
         is_active=user_in.is_active,
-        role_id=user_in.role_id
+        role_id=user_in.role_id,
+        initial_code=user_in.initial_code
     )
     db.add(db_user)
     db_commit_safety(db)
@@ -98,3 +99,23 @@ def seed_roles_and_admin(db: Session):
         )
         create_user(db, admin_create)
         print("Successfully seeded Super Admin user: admin@onespirit.asia / OneSpirit2026!")
+
+    # 3. Seed placeholder internal users for Excel PO/PM verification
+    initials_to_seed = [
+        "JIP", "AR", "BR", "SBK", "SR", "TF", "JC", "SYS", "MWB", "RA", "OME", "SB", "UT", "MDL"
+    ]
+    staff_role = created_roles.get("Staff")
+    if staff_role:
+        for initials in initials_to_seed:
+            existing_user = db.query(User).filter(User.initial_code == initials, User.deleted_at == None).first()
+            if not existing_user:
+                user_create = UserCreate(
+                    email=f"{initials.lower()}@onespirit.asia",
+                    password="OneSpirit2026!Placeholder",
+                    full_name=initials,
+                    is_active=True,
+                    role_id=staff_role.id,
+                    initial_code=initials
+                )
+                create_user(db, user_create)
+                print(f"Successfully seeded placeholder user: {initials}")
