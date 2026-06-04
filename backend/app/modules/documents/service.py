@@ -11,7 +11,42 @@ def get_document(db: Session, doc_id: str) -> Optional[Document]:
 def get_documents_by_project(db: Session, project_id: str) -> List[Document]:
     return db.query(Document).filter(Document.project_id == project_id, Document.deleted_at == None).all()
 
+def map_legacy_file_type_to_doc_type(file_type: str) -> str:
+    cleaned = (file_type or "").strip().lower()
+    if cleaned in ["pdf", "signed_file", "signed_file"]:
+        return "SIGNED_FILE"
+    if cleaned in ["image", "photo", "jpg", "png"]:
+        return "PHOTO"
+    if cleaned in ["video", "mp4", "avi"]:
+        return "VIDEO"
+    if cleaned == "teaser":
+        return "TEASER"
+    if cleaned == "instagram":
+        return "INSTAGRAM"
+    if cleaned == "youtube":
+        return "YOUTUBE"
+    return "OTHER"
+
 def create_document(db: Session, doc_in: DocumentCreate, uploaded_by_id: str) -> Document:
+    doc_type = doc_in.document_type
+    if not doc_type:
+        doc_type = map_legacy_file_type_to_doc_type(doc_in.file_type)
+        
+    doc_url = doc_in.url
+    if not doc_url:
+        doc_url = doc_in.file_path
+
+    import uuid
+    parsed_uploader_id = None
+    if uploaded_by_id:
+        if isinstance(uploaded_by_id, str):
+            try:
+                parsed_uploader_id = uuid.UUID(uploaded_by_id)
+            except ValueError:
+                parsed_uploader_id = None
+        else:
+            parsed_uploader_id = uploaded_by_id
+
     db_doc = Document(
         project_id=doc_in.project_id,
         title=doc_in.title,
@@ -19,7 +54,9 @@ def create_document(db: Session, doc_in: DocumentCreate, uploaded_by_id: str) ->
         file_type=doc_in.file_type,
         storage_type=doc_in.storage_type,
         notes=doc_in.notes,
-        uploaded_by_id=uploaded_by_id
+        uploaded_by_id=parsed_uploader_id,
+        document_type=doc_type,
+        url=doc_url
     )
     db.add(db_doc)
     db_commit_safety(db)
@@ -30,7 +67,7 @@ def create_document(db: Session, doc_in: DocumentCreate, uploaded_by_id: str) ->
     
     log_activity(
         db,
-        user_id=uploaded_by_id,
+        user_id=parsed_uploader_id,
         action=action,
         entity_type="document",
         entity_id=db_doc.id,
@@ -41,6 +78,19 @@ def create_document(db: Session, doc_in: DocumentCreate, uploaded_by_id: str) ->
             "storage_type": db_doc.storage_type
         }
     )
+    
+    # Track document added in ProjectActivityLog
+    from app.modules.projects.models import ProjectActivityLog
+    activity = ProjectActivityLog(
+        project_id=db_doc.project_id,
+        user_id=parsed_uploader_id,
+        action="document_added",
+        field_name="document",
+        new_value=db_doc.title,
+        notes=f"Document '{db_doc.title}' ({db_doc.document_type}) linked to project."
+    )
+    db.add(activity)
+    db_commit_safety(db)
     
     return db_doc
 

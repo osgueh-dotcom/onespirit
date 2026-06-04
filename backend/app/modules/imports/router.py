@@ -10,6 +10,7 @@ router = APIRouter(prefix="/imports", tags=["Workflow Excel Import Engine"])
 @router.post("/validate", response_model=schemas.ImportPreviewResponse)
 def validate_excel_workflow(
     file: UploadFile = File(...),
+    db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.PermissionChecker(["admin", "projects:write"]))
 ):
     """Parses Excel stream without commit, executing schemas, rows matching preview, and warnings report"""
@@ -20,7 +21,7 @@ def validate_excel_workflow(
         )
     try:
         file_bytes = file.file.read()
-        preview = service.parse_excel_sheet(file_bytes)
+        preview = service.parse_excel_sheet(db, file_bytes)
         return preview
     except Exception as e:
         raise HTTPException(

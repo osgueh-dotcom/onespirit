@@ -5,12 +5,17 @@
       <div class="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-brand-orange/5 rounded-full blur-3xl pointer-events-none"></div>
       
       <div>
-        <span class="px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded bg-brand-orange/15 text-brand-orange border border-brand-orange/20 mr-2">
-          {{ project.status }}
-        </span>
-        <span class="text-xs text-gray-400 font-bold">Client: {{ project.customer?.company_name }}</span>
-        <h2 class="text-2xl font-black text-white mt-1.5 tracking-wide">{{ project.title }}</h2>
-        <p class="text-xs text-gray-500 font-bold mt-1">Duration: {{ project.start_date || '-' }} to {{ project.end_date || '-' }}</p>
+        <div class="flex items-center flex-wrap gap-2">
+          <span class="px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded bg-brand-orange/15 text-brand-orange border border-brand-orange/20">
+            {{ project.project_status }}
+          </span>
+          <span v-if="project.project_code" class="text-xs text-brand-orange font-bold font-mono">
+            {{ project.project_code }}
+          </span>
+        </div>
+        <span class="text-xs text-gray-400 font-bold mt-1.5 block">Client: {{ project.customer?.company_name }}</span>
+        <h2 class="text-2xl font-black text-white mt-1 tracking-wide">{{ project.title }}</h2>
+        <p class="text-xs text-gray-500 font-bold mt-1">Duration: {{ project.event_date_start || '-' }} to {{ project.event_date_end || '-' }}</p>
       </div>
 
       <div class="flex items-center gap-5 text-right font-sans">
@@ -19,8 +24,8 @@
           <p class="text-lg font-black text-brand-emerald">{{ formatMoney(project.budget) }}</p>
         </div>
         <div>
-          <p class="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-0.5">Project Lead</p>
-          <p class="text-sm font-extrabold text-white">{{ project.assigned_to?.full_name || 'Unassigned' }}</p>
+          <p class="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-0.5">Lead PM</p>
+          <p class="text-sm font-extrabold text-white">{{ project.program_manager?.full_name || 'Unassigned' }}</p>
         </div>
       </div>
     </div>
@@ -35,249 +40,540 @@
     </div>
 
     <div v-else class="space-y-6">
-      <!-- Tabs Navigation -->
-      <div class="flex border-b border-brand-charcoal-light/20 pb-0.5 select-none gap-4 shrink-0 overflow-x-auto">
-        <button 
-          v-for="tab in tabs" 
-          :key="tab.id"
-          @click="activeTab = tab.id"
-          class="pb-3 text-xs font-bold uppercase tracking-wider relative transition-colors whitespace-nowrap"
-          :class="activeTab === tab.id ? 'text-brand-orange border-b-2 border-brand-orange' : 'text-gray-400 hover:text-white'"
-        >
-          {{ tab.name }}
-        </button>
-      </div>
-
-      <!-- TAB 1: RUNDOWN TIMELINE -->
-      <div v-if="activeTab === 'schedules'" class="space-y-6">
-        <div class="flex items-center justify-between gap-4 select-none">
-          <h3 class="text-sm font-extrabold uppercase tracking-wider text-white">Event Venues & Rundown Sheets</h3>
-          <button 
-            v-if="auth.hasPermission('events:write')"
-            @click="showAddScheduleModal = true"
-            class="px-3.5 py-2 rounded-xl bg-brand-orange text-white font-bold text-xs shadow hover:bg-brand-orange-dark transition-all"
-          >
-            + Link Venue Schedule
-          </button>
-        </div>
-
-        <div v-if="schedules.length === 0" class="p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
-          No event schedule venues created. Click Link Venue Schedule to initialize rundowns.
-        </div>
-
-        <!-- Venue Schedule Listing Grid -->
-        <div v-else class="grid grid-cols-1 gap-6">
-          <div 
-            v-for="sched in schedules" 
-            :key="sched.id"
-            class="glass-panel p-6 space-y-4"
-          >
-            <!-- Schedule Header -->
-            <div class="flex items-center justify-between flex-wrap gap-3 border-b border-brand-charcoal-light/20 pb-4 select-none">
-              <div>
-                <h4 class="text-base font-extrabold text-white tracking-wide">{{ sched.venue_name }}</h4>
-                <p class="text-xs text-gray-400 mt-1">Location: {{ sched.address || '-' }} | <a :href="sched.map_link" target="_blank" class="text-brand-blue hover:underline">Google Maps</a></p>
-              </div>
-              <div class="text-right text-xs">
-                <p class="font-bold text-gray-300">Time: {{ formatDateTime(sched.start_time) }} to {{ formatDateTime(sched.end_time) }}</p>
-                <p class="text-[10px] text-brand-orange font-bold uppercase mt-1">PIC: {{ sched.pic?.full_name || 'Unassigned' }}</p>
-              </div>
-            </div>
-
-            <!-- Rundown Table -->
-            <div>
-              <p class="text-[10px] font-extrabold uppercase tracking-widest text-brand-orange mb-3 select-none">Hour-by-Hour Rundown Timesheet</p>
-              <div class="overflow-x-auto rounded-xl border border-brand-charcoal-light/20">
-                <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-                  <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
-                    <tr>
-                      <th class="px-4 py-3">Time</th>
-                      <th class="px-4 py-3">Activity description</th>
-                      <th class="px-4 py-3">PIC Assignment</th>
-                      <th class="px-4 py-3">Special Instructions</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-brand-charcoal-light/5">
-                    <tr v-if="sched.rundown?.length === 0">
-                      <td colspan="4" class="px-4 py-6 text-center text-gray-500 font-semibold italic">No rundown items added.</td>
-                    </tr>
-                    <tr v-for="(item, idx) in sched.rundown" :key="idx" class="hover:bg-brand-charcoal-light/5">
-                      <td class="px-4 py-3 font-bold text-brand-orange">{{ item.time }}</td>
-                      <td class="px-4 py-3 text-white font-bold">{{ item.activity }}</td>
-                      <td class="px-4 py-3 text-gray-300 font-semibold">{{ item.pic }}</td>
-                      <td class="px-4 py-3 text-gray-400">{{ item.notes || '-' }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <!-- Quick Rundown Addition Form -->
-              <form 
-                v-if="auth.hasPermission('events:write')"
-                @submit.prevent="addRundownItem(sched)"
-                class="mt-4 grid grid-cols-4 gap-3 bg-brand-charcoal-light/10 p-3.5 rounded-xl border border-brand-charcoal-light/10"
-              >
-                <input v-model="newRundown.time" type="text" placeholder="e.g. 08:00" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                <input v-model="newRundown.activity" type="text" placeholder="Activity" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                <input v-model="newRundown.pic" type="text" placeholder="Assignee (PIC)" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                <div class="flex gap-2">
-                  <input v-model="newRundown.notes" type="text" placeholder="Notes/Remarks" class="flex-1 px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                  <button type="submit" class="px-4 py-2 bg-brand-emerald text-white rounded-lg font-bold text-xs shrink-0 hover:bg-brand-emerald-dark transition-all">+</button>
-                </div>
-              </form>
-            </div>
+      <!-- Validation Warnings Alert Panel -->
+      <div v-if="validationWarnings.length > 0" class="p-4 bg-brand-orange/10 border border-brand-orange/20 rounded-3xl select-none">
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-brand-orange shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <div>
+            <h4 class="text-xs font-black text-brand-orange uppercase tracking-wider">Workflow Quality Audits ({{ validationWarnings.length }} Warnings)</h4>
+            <ul class="list-disc list-inside text-xs text-gray-300 font-semibold space-y-1.5 mt-2">
+              <li v-for="(warn, idx) in validationWarnings" :key="idx">{{ warn }}</li>
+            </ul>
           </div>
         </div>
       </div>
 
-      <!-- TAB 2: TASKS CHECKLIST -->
-      <div v-if="activeTab === 'tasks'" class="space-y-6">
-        <div class="flex items-center justify-between gap-4 select-none">
-          <h3 class="text-sm font-extrabold uppercase tracking-wider text-white">Operations Task Checklist</h3>
-          <button 
-            v-if="auth.hasPermission('tasks:write')"
-            @click="showAddTaskModal = true"
-            class="px-3.5 py-2 rounded-xl bg-brand-orange text-white font-bold text-xs shadow hover:bg-brand-orange-dark transition-all"
+      <!-- Quick Workflow Status Gates -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-brand-charcoal-light/10 p-4 rounded-3xl border border-brand-charcoal-light/15">
+        <div>
+          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Quotation Status</label>
+          <select 
+            :value="project.quotation_status" 
+            @change="transitionStatus('quotation_status', $event.target.value)"
+            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
           >
-            + Create New Task
-          </button>
+            <option v-for="st in ['Draft', 'Sent', 'Follow Up', 'Revision', 'Signed & Deal', 'Cancel']" :key="st" :value="st">{{ st }}</option>
+          </select>
         </div>
-
-        <div v-if="tasks.length === 0" class="p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
-          No operations tasks registered. Click Create New Task to add checklists.
-        </div>
-
-        <!-- Task Checklist Grid -->
-        <div v-else class="space-y-3">
-          <div 
-            v-for="task in tasks" 
-            :key="task.id"
-            class="p-4 bg-brand-charcoal border rounded-2xl flex items-center justify-between gap-4 flex-wrap"
-            :class="task.status === 'done' ? 'border-brand-emerald/20 opacity-70' : 'border-brand-charcoal-light/40 hover:border-brand-orange/30 transition-all'"
+        <div>
+          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Program Status</label>
+          <select 
+            :value="project.program_status" 
+            @change="transitionStatus('program_status', $event.target.value)"
+            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
           >
-            <div class="flex items-center gap-3 min-w-0 flex-1">
-              <!-- Quick check checkbox -->
-              <input 
-                v-if="auth.hasPermission('tasks:write')"
-                type="checkbox"
-                :checked="task.status === 'done'"
-                @change="toggleTaskDone(task)"
-                class="h-4.5 w-4.5 rounded-lg bg-brand-charcoal-dark border-brand-charcoal-light/45 checked:bg-brand-emerald focus:ring-0 text-brand-emerald shrink-0 cursor-pointer"
-              />
-              <div class="min-w-0">
-                <p class="font-bold text-sm tracking-wide text-white" :class="{ 'line-through !text-gray-500': task.status === 'done' }">
-                  {{ task.title }}
-                </p>
-                <p class="text-xs text-gray-400 mt-1 font-semibold">
-                  Due: {{ formatDateTime(task.due_date) }} | PIC: {{ task.assigned_to?.full_name || 'Unassigned' }}
-                </p>
+            <option v-for="st in ['Inquiry', 'Confirmed', 'Preparation', 'Ready', 'Running', 'Completed', 'Reporting', 'Closed', 'Cancel']" :key="st" :value="st">{{ st }}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Payment Status</label>
+          <select 
+            :value="project.payment_status" 
+            @change="transitionStatus('payment_status', $event.target.value)"
+            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
+          >
+            <option v-for="st in ['Not Invoiced', 'Invoice Sent', 'Partial Paid', 'Paid', 'Outstanding', 'Overdue']" :key="st" :value="st">{{ st }}</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Project Status</label>
+          <select 
+            :value="project.project_status" 
+            @change="transitionStatus('project_status', $event.target.value)"
+            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
+          >
+            <option v-for="st in ['Open', 'Active', 'Reporting', 'Closed', 'Canceled']" :key="st" :value="st">{{ st }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Main Operational Dashboard Layout Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Side: Event Details & Action ledger tabs -->
+        <div class="lg:col-span-2 space-y-6">
+          
+          <!-- Parameters cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none">
+            <!-- Event parameters -->
+            <div class="glass-panel p-5 space-y-3">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Event Parameters</h4>
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <p class="text-gray-400 font-semibold">Category</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.event_category || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Program Type</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.program_type || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Program Name</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.program_name || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Quantity (Pax)</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.quantity || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Venue</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.venue || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Duration</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.duration || '-' }}</p>
+                </div>
               </div>
             </div>
 
-            <!-- Priority & Status badges -->
-            <div class="flex items-center gap-3.5 select-none shrink-0 font-sans">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPriorityStyles(task.priority)">
-                {{ task.priority }} Priority
-              </span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getTaskStatusStyles(task.status)">
-                {{ task.status }}
-              </span>
+            <!-- Quotation Parameters -->
+            <div class="glass-panel p-5 space-y-3">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Quotation & Financials</h4>
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <p class="text-gray-400 font-semibold">Quote Reference</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.quotation_number || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Quotation Date</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.quotation_date || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Inquiry Date</p>
+                  <p class="text-white font-bold mt-0.5">{{ project.inquiry_date || '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">Allocated Revenue</p>
+                  <p class="text-brand-emerald font-black mt-0.5">{{ formatMoney(project.revenue) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes Card -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none">
+            <!-- General Notes & Cancel -->
+            <div class="glass-panel p-5 space-y-3">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">General & Cancel Notes</h4>
+              <div class="text-xs space-y-3">
+                <div v-if="project.cancel_reason">
+                  <p class="text-red-400 font-bold">Cancellation Reason</p>
+                  <p class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-200 mt-1 font-semibold leading-relaxed">
+                    {{ project.cancel_reason }}
+                  </p>
+                </div>
+                <div>
+                  <p class="text-gray-400 font-semibold">General Remarks</p>
+                  <p class="text-gray-200 font-semibold mt-1 whitespace-pre-line leading-relaxed">
+                    {{ project.general_notes || 'No general notes recorded.' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- MOM Notes -->
+            <div class="glass-panel p-5 space-y-3">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Minutes of Meeting (MOM)</h4>
+              <div class="text-xs">
+                <p class="text-gray-200 font-semibold whitespace-pre-line leading-relaxed">
+                  {{ project.mom_notes || 'No meeting minutes logged yet.' }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic ledger action tabs -->
+          <div class="space-y-6">
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-brand-charcoal-light/20 pb-0.5 select-none gap-4 shrink-0 overflow-x-auto">
               <button 
-                v-if="auth.hasPermission('tasks:write')"
-                @click="deleteTask(task.id)"
-                class="text-red-400 hover:text-red-500 text-xs font-bold transition-colors"
+                v-for="tab in tabs" 
+                :key="tab.id"
+                @click="activeTab = tab.id"
+                class="pb-3 text-xs font-bold uppercase tracking-wider relative transition-colors whitespace-nowrap"
+                :class="activeTab === tab.id ? 'text-brand-orange border-b-2 border-brand-orange' : 'text-gray-400 hover:text-white'"
               >
-                Delete
+                {{ tab.name }}
               </button>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- TAB 3: DOCUMENT ARCHIVES -->
-      <div v-if="activeTab === 'documents'" class="space-y-6">
-        <!-- Add Document panel -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Google Drive and Cloud links addition -->
-          <div v-if="auth.hasPermission('documents:write')" class="glass-panel p-5 space-y-4 h-fit">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Link Google Drive Reference</h4>
-            <form @submit.prevent="saveDocLink" class="space-y-3 select-none">
-              <div>
-                <input v-model="newDoc.title" type="text" placeholder="Document Title *" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-              </div>
-              <div>
-                <input v-model="newDoc.file_path" type="url" placeholder="Google Drive Link URL *" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-              </div>
-              <div>
-                <textarea v-model="newDoc.notes" placeholder="Remarks/Description" rows="2" class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white"></textarea>
-              </div>
-              <button type="submit" class="w-full py-2 bg-brand-orange text-white rounded-lg font-bold text-xs hover:bg-brand-orange-dark transition-all">Link Cloud Sheet</button>
-            </form>
-          </div>
-
-          <!-- Document lists -->
-          <div class="lg:col-span-2 glass-panel p-5 flex flex-col h-[400px]">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4 shrink-0">Archived Documents & Assets</h4>
-            
-            <div class="flex-1 overflow-y-auto space-y-3 pr-1">
-              <div v-if="documents.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
-                No linked documents or image uploads recorded for this project.
-              </div>
-              
-              <div 
-                v-for="doc in documents" 
-                :key="doc.id"
-                class="p-4 bg-brand-charcoal border border-brand-charcoal-light/20 rounded-2xl flex items-center justify-between text-xs font-medium"
-              >
-                <div>
-                  <a :href="doc.file_path" target="_blank" class="font-bold text-white hover:text-brand-orange transition-colors text-sm flex items-center gap-1.5">
-                    {{ doc.title }}
-                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" :class="doc.storage_type === 'google_drive' ? 'bg-brand-orange/10 text-brand-orange' : 'bg-brand-blue/10 text-brand-blue'">
-                      {{ doc.storage_type }}
-                    </span>
-                  </a>
-                  <p class="text-gray-400 mt-1 font-semibold">Uploaded by: {{ doc.uploaded_by?.full_name || 'System' }} | Date: {{ formatDateTime(doc.created_at) }}</p>
-                  <p v-if="doc.notes" class="text-gray-500 mt-1 text-[11px] font-medium leading-relaxed">{{ doc.notes }}</p>
-                </div>
+            <!-- TAB 1: EVENT TIMELINE (Rundowns) -->
+            <div v-if="activeTab === 'schedules'" class="space-y-6">
+              <div class="flex items-center justify-between gap-4 select-none">
+                <h3 class="text-sm font-extrabold uppercase tracking-wider text-white">Event Venues & Rundown Sheets</h3>
                 <button 
-                  v-if="auth.hasPermission('documents:write')"
-                  @click="deleteDoc(doc.id)"
-                  class="px-2 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all select-none"
+                  v-if="auth.hasPermission('events:write')"
+                  @click="showAddScheduleModal = true"
+                  class="px-3.5 py-2 rounded-xl bg-brand-orange text-white font-bold text-xs shadow hover:bg-brand-orange-dark transition-all"
                 >
-                  Remove
+                  + Link Venue Schedule
                 </button>
+              </div>
+
+              <div v-if="schedules.length === 0" class="p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
+                No event schedule venues created. Click Link Venue Schedule to initialize rundowns.
+              </div>
+
+              <!-- Venue Schedule Listing Grid -->
+              <div v-else class="grid grid-cols-1 gap-6">
+                <div 
+                  v-for="sched in schedules" 
+                  :key="sched.id"
+                  class="glass-panel p-6 space-y-4"
+                >
+                  <!-- Schedule Header -->
+                  <div class="flex items-center justify-between flex-wrap gap-3 border-b border-brand-charcoal-light/20 pb-4 select-none">
+                    <div>
+                      <h4 class="text-base font-extrabold text-white tracking-wide">{{ sched.venue_name }}</h4>
+                      <p class="text-xs text-gray-400 mt-1">Location: {{ sched.address || '-' }} | <a :href="sched.map_link" target="_blank" class="text-brand-blue hover:underline">Google Maps</a></p>
+                    </div>
+                    <div class="text-right text-xs">
+                      <p class="font-bold text-gray-300">Time: {{ formatDateTime(sched.start_time) }} to {{ formatDateTime(sched.end_time) }}</p>
+                      <p class="text-[10px] text-brand-orange font-bold uppercase mt-1">PIC: {{ sched.pic?.full_name || 'Unassigned' }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Rundown Table -->
+                  <div>
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-brand-orange mb-3 select-none">Hour-by-Hour Rundown Timesheet</p>
+                    <div class="overflow-x-auto rounded-xl border border-brand-charcoal-light/20">
+                      <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
+                        <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+                          <tr>
+                            <th class="px-4 py-3">Time</th>
+                            <th class="px-4 py-3">Activity description</th>
+                            <th class="px-4 py-3">PIC Assignment</th>
+                            <th class="px-4 py-3">Special Instructions</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-brand-charcoal-light/5">
+                          <tr v-if="sched.rundown?.length === 0">
+                            <td colspan="4" class="px-4 py-6 text-center text-gray-500 font-semibold italic">No rundown items added.</td>
+                          </tr>
+                          <tr v-for="(item, idx) in sched.rundown" :key="idx" class="hover:bg-brand-charcoal-light/5">
+                            <td class="px-4 py-3 font-bold text-brand-orange">{{ item.time }}</td>
+                            <td class="px-4 py-3 text-white font-bold">{{ item.activity }}</td>
+                            <td class="px-4 py-3 text-gray-300 font-semibold">{{ item.pic }}</td>
+                            <td class="px-4 py-3 text-gray-400">{{ item.notes || '-' }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Quick Rundown Addition Form -->
+                    <form 
+                      v-if="auth.hasPermission('events:write')"
+                      @submit.prevent="addRundownItem(sched)"
+                      class="mt-4 grid grid-cols-4 gap-3 bg-brand-charcoal-light/10 p-3.5 rounded-xl border border-brand-charcoal-light/10"
+                    >
+                      <input v-model="newRundown.time" type="text" placeholder="e.g. 08:00" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                      <input v-model="newRundown.activity" type="text" placeholder="Activity" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                      <input v-model="newRundown.pic" type="text" placeholder="Assignee (PIC)" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                      <div class="flex gap-2">
+                        <input v-model="newRundown.notes" type="text" placeholder="Notes/Remarks" class="flex-1 px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                        <button type="submit" class="px-4 py-2 bg-brand-emerald text-white rounded-lg font-bold text-xs shrink-0 hover:bg-brand-emerald-dark transition-all">+</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: TASKS CHECKLIST -->
+            <div v-if="activeTab === 'tasks'" class="space-y-6">
+              <div class="flex items-center justify-between gap-4 select-none">
+                <h3 class="text-sm font-extrabold uppercase tracking-wider text-white">Operations Task Checklist</h3>
+                <button 
+                  v-if="auth.hasPermission('tasks:write')"
+                  @click="showAddTaskModal = true"
+                  class="px-3.5 py-2 rounded-xl bg-brand-orange text-white font-bold text-xs shadow hover:bg-brand-orange-dark transition-all"
+                >
+                  + Create New Task
+                </button>
+              </div>
+
+              <div v-if="tasks.length === 0" class="p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
+                No operations tasks registered. Click Create New Task to add checklists.
+              </div>
+
+              <!-- Task Checklist Grid -->
+              <div v-else class="space-y-3">
+                <div 
+                  v-for="task in tasks" 
+                  :key="task.id"
+                  class="p-4 bg-brand-charcoal border rounded-2xl flex items-center justify-between gap-4 flex-wrap"
+                  :class="task.status === 'done' ? 'border-brand-emerald/20 opacity-70' : 'border-brand-charcoal-light/40 hover:border-brand-orange/30 transition-all'"
+                >
+                  <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <!-- Quick check checkbox -->
+                    <input 
+                      v-if="auth.hasPermission('tasks:write')"
+                      type="checkbox"
+                      :checked="task.status === 'done'"
+                      @change="toggleTaskDone(task)"
+                      class="h-4.5 w-4.5 rounded-lg bg-brand-charcoal-dark border-brand-charcoal-light/45 checked:bg-brand-emerald focus:ring-0 text-brand-emerald shrink-0 cursor-pointer"
+                    />
+                    <div class="min-w-0">
+                      <p class="font-bold text-sm tracking-wide text-white" :class="{ 'line-through !text-gray-500': task.status === 'done' }">
+                        {{ task.title }}
+                      </p>
+                      <p class="text-xs text-gray-400 mt-1 font-semibold">
+                        Due: {{ formatDateTime(task.due_date) }} | PIC: {{ task.assigned_to?.full_name || 'Unassigned' }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Priority & Status badges -->
+                  <div class="flex items-center gap-3.5 select-none shrink-0 font-sans">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPriorityStyles(task.priority)">
+                      {{ task.priority }} Priority
+                    </span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getTaskStatusStyles(task.status)">
+                      {{ task.status }}
+                    </span>
+                    <button 
+                      v-if="auth.hasPermission('tasks:write')"
+                      @click="deleteTask(task.id)"
+                      class="text-red-400 hover:text-red-500 text-xs font-bold transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 3: DOCUMENT ARCHIVES -->
+            <div v-if="activeTab === 'documents'" class="space-y-6">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Google Drive Reference Add Form -->
+                <div v-if="auth.hasPermission('documents:write')" class="glass-panel p-5 space-y-4 h-fit">
+                  <h4 class="text-xs font-bold text-white uppercase tracking-wider">Link Operations Document</h4>
+                  <form @submit.prevent="saveDocLink" class="space-y-3 select-none">
+                    <div>
+                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Document Title *</label>
+                      <input v-model="newDoc.title" type="text" placeholder="e.g. Approved Quotation PDF" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Document Type *</label>
+                      <select v-model="newDoc.document_type" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white">
+                        <option value="SIGNED_FILE">Signed File</option>
+                        <option value="PHOTO">Photo</option>
+                        <option value="VIDEO">Video</option>
+                        <option value="TEASER">Teaser</option>
+                        <option value="INSTAGRAM">Instagram</option>
+                        <option value="YOUTUBE">YouTube</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Google Drive / Resource URL *</label>
+                      <input v-model="newDoc.file_path" type="url" placeholder="https://drive.google.com/..." required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Remarks</label>
+                      <textarea v-model="newDoc.notes" placeholder="Notes..." rows="2" class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-brand-orange text-white rounded-lg font-bold text-xs hover:bg-brand-orange-dark transition-all">Link Document</button>
+                  </form>
+                </div>
+
+                <!-- Document lists -->
+                <div class="lg:col-span-2 glass-panel p-5 flex flex-col h-[400px]">
+                  <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4 shrink-0">Archived Documents & Assets</h4>
+                  
+                  <div class="flex-1 overflow-y-auto space-y-3 pr-1">
+                    <div v-if="documents.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
+                      No linked documents or asset URLs recorded for this project.
+                    </div>
+                    
+                    <div 
+                      v-for="doc in documents" 
+                      :key="doc.id"
+                      class="p-4 bg-brand-charcoal border border-brand-charcoal-light/20 rounded-2xl flex items-center justify-between text-xs font-medium"
+                    >
+                      <div>
+                        <a :href="doc.url || doc.file_path" target="_blank" class="font-bold text-white hover:text-brand-orange transition-colors text-sm flex items-center gap-1.5 flex-wrap">
+                          {{ doc.title }}
+                          <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/20">
+                            {{ doc.document_type || 'OTHER' }}
+                          </span>
+                        </a>
+                        <p class="text-gray-400 mt-1 font-semibold">Uploaded by: {{ doc.uploaded_by?.full_name || 'System' }} | Date: {{ formatDateTime(doc.created_at) }}</p>
+                        <p v-if="doc.notes" class="text-gray-500 mt-1 text-[11px] font-medium leading-relaxed">{{ doc.notes }}</p>
+                      </div>
+                      <button 
+                        v-if="auth.hasPermission('documents:write')"
+                        @click="deleteDoc(doc.id)"
+                        class="px-2 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all select-none"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 4: STATUS TIMELINE -->
+            <div v-if="activeTab === 'timeline'" class="glass-panel p-6 max-h-[500px] overflow-y-auto flex flex-col">
+              <h3 class="text-sm font-bold text-white tracking-wider uppercase mb-5 shrink-0 select-none">Workflow Audit Trail (Status Timeline)</h3>
+              
+              <div class="flex-1 space-y-5 pr-1 relative pl-4 border-l border-brand-charcoal-light/25">
+                <div v-if="logs.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
+                  No status timeline shifts logged.
+                </div>
+                <div 
+                  v-for="log in logs" 
+                  :key="log.id"
+                  class="relative text-xs font-medium"
+                >
+                  <!-- Timeline connector node -->
+                  <span class="absolute -left-6.5 top-1.5 h-3.5 w-3.5 rounded-full bg-brand-charcoal border-2 border-brand-orange shrink-0"></span>
+                  
+                  <p class="font-extrabold text-white">
+                    <span class="text-brand-orange uppercase font-bold">[{{ log.status_type || 'program_status' }}]</span>: 
+                    Shifted from 
+                    <span class="text-gray-400 lowercase italic">{{ log.old_status || log.from_status || '-' }}</span> to 
+                    <span class="text-brand-orange uppercase font-bold">{{ log.new_status || log.to_status }}</span>
+                  </p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">Changed by: {{ log.changed_by_user?.full_name || log.changed_by?.full_name || 'System' }} | Timestamp: {{ formatDateTime(log.created_at) }}</p>
+                  <p v-if="log.notes" class="p-2.5 bg-brand-charcoal-light/10 border border-brand-charcoal-light/15 rounded-xl text-gray-300 mt-2 leading-relaxed">{{ log.notes }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 5: ACTIVITY LOG -->
+            <div v-if="activeTab === 'activity'" class="glass-panel p-6 max-h-[500px] overflow-y-auto flex flex-col">
+              <h3 class="text-sm font-bold text-white tracking-wider uppercase mb-5 shrink-0 select-none">Operational Activity Ledger</h3>
+              
+              <div class="flex-1 space-y-5 pr-1 relative pl-4 border-l border-brand-charcoal-light/25">
+                <div v-if="activityLogs.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
+                  No operational activities logged.
+                </div>
+                <div 
+                  v-for="act in activityLogs" 
+                  :key="act.id"
+                  class="relative text-xs font-medium"
+                >
+                  <!-- Timeline connector node -->
+                  <span class="absolute -left-6.5 top-1.5 h-3.5 w-3.5 rounded-full bg-brand-charcoal border-2 border-brand-emerald shrink-0"></span>
+                  
+                  <p class="font-extrabold text-white">
+                    <span class="text-brand-emerald uppercase font-bold">{{ formatAction(act.action) }}</span>
+                    <span v-if="act.field_name"> for field <span class="text-gray-300 italic">{{ act.field_name }}</span></span>
+                  </p>
+                  <div v-if="act.old_value || act.new_value" class="text-[11px] text-gray-400 mt-1 font-semibold">
+                    <span class="text-red-400">{{ act.old_value || '-' }}</span> &rarr; <span class="text-brand-emerald">{{ act.new_value || '-' }}</span>
+                  </div>
+                  <p class="text-[10px] text-gray-400 mt-0.5">Executor: {{ act.user?.full_name || 'System' }} | Timestamp: {{ formatDateTime(act.created_at) }}</p>
+                  <p v-if="act.notes" class="p-2.5 bg-brand-charcoal-light/10 border border-brand-charcoal-light/15 rounded-xl text-gray-300 mt-2 leading-relaxed">{{ act.notes }}</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Right Side: Sidebar Cards for Customer, Assignments, Event Source, Financial Summary -->
+        <div class="space-y-6">
+          
+          <!-- Assignments panel -->
+          <div class="glass-panel p-5 space-y-4 select-none">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Operational Assignments</h4>
+            <div class="space-y-3 text-xs">
+              <div class="flex justify-between items-center bg-brand-charcoal-light/10 p-2.5 rounded-xl border border-brand-charcoal-light/15">
+                <div>
+                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Program Owner (PO)</p>
+                  <p class="text-white font-extrabold mt-1 text-sm">{{ project.program_owner?.full_name || 'Unassigned' }}</p>
+                </div>
+                <span v-if="project.program_owner?.initial_code" class="px-2 py-1 bg-brand-orange/15 text-brand-orange text-xs font-black rounded border border-brand-orange/20">
+                  {{ project.program_owner.initial_code }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center bg-brand-charcoal-light/10 p-2.5 rounded-xl border border-brand-charcoal-light/15">
+                <div>
+                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Program Manager (PM)</p>
+                  <p class="text-white font-extrabold mt-1 text-sm">{{ project.program_manager?.full_name || 'Unassigned' }}</p>
+                </div>
+                <span v-if="project.program_manager?.initial_code" class="px-2 py-1 bg-brand-orange/15 text-brand-orange text-xs font-black rounded border border-brand-orange/20">
+                  {{ project.program_manager.initial_code }}
+                </span>
               </div>
             </div>
           </div>
+
+          <!-- Customer details -->
+          <div class="glass-panel p-5 space-y-3 select-none">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Client Profile</h4>
+            <div class="text-xs space-y-2">
+              <p class="text-sm font-extrabold text-white">{{ project.customer?.company_name }}</p>
+              <p class="text-gray-400 font-semibold">Category: <span class="text-gray-200">{{ project.customer?.category }}</span></p>
+              <p class="text-gray-400 font-semibold">Mailing Address: <span class="text-gray-300">{{ project.customer?.address || '-' }}</span></p>
+            </div>
+          </div>
+
+          <!-- Event Source -->
+          <div class="glass-panel p-5 space-y-3 select-none">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Event Source / Referral</h4>
+            <div class="text-xs space-y-2">
+              <div class="flex justify-between items-center">
+                <p class="text-gray-400 font-semibold">Source Type</p>
+                <span class="px-2 py-0.5 bg-brand-orange/10 text-brand-orange rounded font-bold uppercase text-[9px]">
+                  {{ project.event_source?.source_type || 'Direct' }}
+                </span>
+              </div>
+              <p class="text-gray-400 font-semibold">Partner/Vendor: <span class="text-gray-200 font-bold">{{ project.event_source?.vendor_name || '-' }}</span></p>
+              <p class="text-gray-400 font-semibold">External Sales PIC: <span class="text-gray-200 font-bold">{{ project.event_source?.sales_name || '-' }}</span></p>
+            </div>
+          </div>
+
+          <!-- Collections Progress Card -->
+          <div class="glass-panel p-5 space-y-3 select-none">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Collections Progress</h4>
+            <div class="space-y-3 text-xs">
+              <div class="flex justify-between items-center">
+                <p class="text-gray-400 font-semibold">Billing Status</p>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(project.payment_status)">
+                  {{ project.payment_status }}
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+                <div>
+                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Total Deal Value</p>
+                  <p class="text-white font-extrabold text-sm">{{ formatMoney(project.budget) }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Approved Collected</p>
+                  <p class="text-brand-emerald font-black text-sm">{{ formatMoney(project.paid_amount) }}</p>
+                </div>
+              </div>
+              <div class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/20 h-2 rounded-full overflow-hidden mt-2">
+                <div 
+                  class="bg-brand-emerald h-full rounded-full transition-all duration-500" 
+                  :style="{ width: getPaymentPercent(project.budget, project.paid_amount) + '%' }"
+                ></div>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </div>
 
-      <!-- TAB 4: TRANSITION LOGS -->
-      <div v-if="activeTab === 'logs'" class="glass-panel p-6 max-h-[500px] overflow-y-auto flex flex-col">
-        <h3 class="text-sm font-bold text-white tracking-wider uppercase mb-5 shrink-0 select-none">Workflow Audit trail logs</h3>
-        
-        <div class="flex-1 space-y-5 pr-1 relative pl-4 border-l border-brand-charcoal-light/25">
-          <div v-if="logs.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
-            No workflow shift records found.
-          </div>
-          <div 
-            v-for="log in logs" 
-            :key="log.id"
-            class="relative text-xs font-medium"
-          >
-            <!-- Timeline connector node -->
-            <span class="absolute -left-6.5 top-1.5 h-3.5 w-3.5 rounded-full bg-brand-charcoal border-2 border-brand-orange shrink-0"></span>
-            
-            <p class="font-extrabold text-white">
-              Status shifted from 
-              <span class="text-gray-400 lowercase italic">{{ log.from_status }}</span> to 
-              <span class="text-brand-orange uppercase font-bold">{{ log.to_status }}</span>
-            </p>
-            <p class="text-[10px] text-gray-400 mt-0.5">Changed by: {{ log.changed_by?.full_name }} | Timestamp: {{ formatDateTime(log.created_at) }}</p>
-            <p v-if="log.notes" class="p-2.5 bg-brand-charcoal-light/10 border border-brand-charcoal-light/15 rounded-xl text-gray-300 mt-2 leading-relaxed">{{ log.notes }}</p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Link Venue Schedule Modal -->
@@ -381,6 +677,8 @@ const schedules = ref([])
 const tasks = ref([])
 const documents = ref([])
 const logs = ref([])
+const activityLogs = ref([])
+const validationWarnings = ref([])
 const users = ref([])
 
 const loading = ref(true)
@@ -393,7 +691,8 @@ const tabs = [
   { id: 'schedules', name: 'Event Timeline' },
   { id: 'tasks', name: 'Checklist Operations' },
   { id: 'documents', name: 'Shared Documents' },
-  { id: 'logs', name: 'Workflow Logs' }
+  { id: 'timeline', name: 'Status Timeline' },
+  { id: 'activity', name: 'Activity Log' }
 ]
 
 const newRundown = ref({ time: '', activity: '', pic: '', notes: '' })
@@ -422,8 +721,32 @@ const newDoc = ref({
   file_path: '',
   file_type: 'link',
   storage_type: 'google_drive',
-  notes: ''
+  notes: '',
+  document_type: 'OTHER',
+  url: ''
 })
+
+const formatAction = (action) => {
+  return action.replace(/_/g, ' ').toUpperCase()
+}
+
+const getPaymentPercent = (budget, paid) => {
+  const b = parseFloat(budget) || 0
+  const p = parseFloat(paid) || 0
+  if (b <= 0) return 0
+  return Math.min(100, Math.round((p / b) * 100))
+}
+
+const fetchProjectDetail = async () => {
+  try {
+    const res = await axios.get(`/api/v1/projects/${projectId}`)
+    project.value = res.data
+    validationWarnings.value = res.data.validation_warnings || []
+    activityLogs.value = res.data.activity_logs || []
+  } catch (err) {
+    console.error('Failed to refresh project details', err)
+  }
+}
 
 const fetchData = async () => {
   try {
@@ -442,6 +765,9 @@ const fetchData = async () => {
     documents.value = docsRes.data
     logs.value = logsRes.data
     users.value = usersRes.data
+    
+    validationWarnings.value = projRes.data.validation_warnings || []
+    activityLogs.value = projRes.data.activity_logs || []
   } catch (err) {
     console.error('Failed to load project detailed context', err)
   } finally {
@@ -484,6 +810,33 @@ const getTaskStatusStyles = (status) => {
   return 'bg-brand-charcoal-light text-gray-300'
 }
 
+const getPaymentStatusStyles = (status) => {
+  if (status === 'Paid') return 'bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20'
+  if (status === 'Partial Paid') return 'bg-brand-blue/10 text-brand-blue border border-brand-blue/20'
+  if (status === 'Outstanding' || status === 'Overdue') return 'bg-red-500/10 text-red-400 border border-red-500/20'
+  return 'bg-brand-charcoal-light text-gray-300 border border-brand-charcoal-light/30'
+}
+
+// Transition Status Action
+const transitionStatus = async (statusType, newStatus) => {
+  try {
+    if (statusType === 'program_status') {
+      await axios.post(`/api/v1/projects/${projectId}/transition?new_status=${newStatus}`)
+    } else {
+      const payload = {}
+      payload[statusType] = newStatus
+      await axios.put(`/api/v1/projects/${projectId}`, payload)
+    }
+    await fetchProjectDetail()
+    // Fetch logs again
+    const logsRes = await axios.get(`/api/v1/projects/${projectId}/logs`)
+    logs.value = logsRes.data
+    alert('Workflow status transitioned successfully')
+  } catch (err) {
+    alert(err.response?.data?.detail || 'Failed to transition workflow status')
+  }
+}
+
 // Actions
 const saveSchedule = async () => {
   try {
@@ -500,6 +853,7 @@ const saveSchedule = async () => {
     schedules.value.push(response.data)
     showAddScheduleModal.value = false
     newSched.value = { venue_name: '', address: '', map_link: '', start_time: '', end_time: '', pic_id: null, rundown: [] }
+    await fetchProjectDetail()
   } catch (err) {
     alert('Failed to save venue schedule')
   }
@@ -511,6 +865,7 @@ const addRundownItem = async (sched) => {
     const response = await axios.put(`/api/v1/events/${sched.id}`, { rundown: updatedRundown })
     sched.rundown = response.data.rundown
     newRundown.value = { time: '', activity: '', pic: '', notes: '' }
+    await fetchProjectDetail()
   } catch (err) {
     alert('Failed to save rundown timesheet item')
   }
@@ -533,6 +888,7 @@ const saveTask = async () => {
     tasks.value.push(response.data)
     showAddTaskModal.value = false
     newTask.value = { title: '', description: '', priority: 'medium', due_date: '', assigned_to_id: null, status: 'todo' }
+    await fetchProjectDetail()
   } catch (err) {
     alert('Failed to allocate task')
   }
@@ -543,6 +899,7 @@ const toggleTaskDone = async (task) => {
     const newStatus = task.status === 'done' ? 'todo' : 'done'
     const response = await axios.put(`/api/v1/tasks/${task.id}`, { status: newStatus })
     task.status = response.data.status
+    await fetchProjectDetail()
   } catch (err) {
     alert('Failed to update task status')
   }
@@ -553,6 +910,7 @@ const deleteTask = async (id) => {
   try {
     await axios.delete(`/api/v1/tasks/${id}`)
     tasks.value = tasks.value.filter(t => t.id !== id)
+    await fetchProjectDetail()
   } catch (err) {
     alert('Failed to delete task')
   }
@@ -560,6 +918,7 @@ const deleteTask = async (id) => {
 
 const saveDocLink = async () => {
   try {
+    newDoc.value.url = newDoc.value.file_path
     const payload = {
       ...newDoc.value,
       project_id: projectId
@@ -568,7 +927,8 @@ const saveDocLink = async () => {
     response.data.uploaded_by = auth.user
     
     documents.value.push(response.data)
-    newDoc.value = { title: '', file_path: '', file_type: 'link', storage_type: 'google_drive', notes: '' }
+    newDoc.value = { title: '', file_path: '', file_type: 'link', storage_type: 'google_drive', notes: '', document_type: 'OTHER', url: '' }
+    await fetchProjectDetail()
   } catch (err) {
     alert('Failed to link cloud document reference')
   }
@@ -579,6 +939,7 @@ const deleteDoc = async (id) => {
   try {
     await axios.delete(`/api/v1/documents/${id}`)
     documents.value = documents.value.filter(d => d.id !== id)
+    await fetchProjectDetail()
   } catch (err) {
     alert('Failed to delete document reference')
   }

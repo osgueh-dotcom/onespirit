@@ -21,3 +21,4 @@ class User(Base, BaseModelMixin):
     
     role_id = Column(ForeignKey("roles.id", ondelete="RESTRICT"), nullable=False)
     role = relationship("Role", back_populates="users")
+    initial_code = Column(String(10), unique=True, index=True, nullable=True)

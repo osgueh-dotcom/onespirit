@@ -10,6 +10,8 @@ class DocumentBase(BaseModel):
     file_type: str  # pdf, image, link, teaser
     storage_type: str  # local, google_drive
     notes: Optional[str] = None
+    document_type: Optional[str] = None
+    url: Optional[str] = None
 
 class DocumentCreate(DocumentBase):
     project_id: UUID

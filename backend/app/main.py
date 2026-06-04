@@ -12,15 +12,17 @@ from app.modules.documents.router import router as documents_router
 from app.modules.finance.router import router as finance_router
 from app.modules.dashboard.router import router as dashboard_router
 from app.modules.imports.router import router as imports_router
+from app.modules.event_sources.router import router as event_sources_router
 
 # Make sure models are registered on Base
 from app.modules.auth.models import User, Role
 from app.modules.crm.models import Customer, Contact
-from app.modules.projects.models import Project, ProjectStatusLog
+from app.modules.projects.models import Project, ProjectStatusLog, ProjectActivityLog
 from app.modules.events.models import EventSchedule
 from app.modules.tasks.models import Task
 from app.modules.documents.models import Document
 from app.modules.finance.models import Invoice, Payment
+from app.modules.event_sources.models import EventSource
 from app.models.activity import ActivityLog
 
 app = FastAPI(
@@ -59,6 +61,7 @@ app.include_router(documents_router, prefix=settings.API_V1_STR)
 app.include_router(finance_router, prefix=settings.API_V1_STR)
 app.include_router(dashboard_router, prefix=settings.API_V1_STR)
 app.include_router(imports_router, prefix=settings.API_V1_STR)
+app.include_router(event_sources_router, prefix=settings.API_V1_STR)
 
 @app.get("/health")
 def health_check():

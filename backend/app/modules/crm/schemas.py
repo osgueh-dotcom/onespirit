@@ -35,6 +35,7 @@ class CustomerBase(BaseModel):
     category: str  # Corporate, Agency, Partner, etc.
     address: Optional[str] = None
     notes: Optional[str] = None
+    normalized_name: Optional[str] = None
 
 class CustomerCreate(CustomerBase):
     pass
@@ -44,6 +45,7 @@ class CustomerUpdate(BaseModel):
     category: Optional[str] = None
     address: Optional[str] = None
     notes: Optional[str] = None
+    normalized_name: Optional[str] = None
 
 class CustomerResponse(CustomerBase):
     id: UUID

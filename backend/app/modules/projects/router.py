@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -14,12 +15,31 @@ def get_all_projects(
     status: Optional[str] = None,
     skip: int = 0,
     limit: int = 100,
+    po_id: Optional[UUID] = None,
+    pm_id: Optional[UUID] = None,
+    source_id: Optional[UUID] = None,
+    quotation_status: Optional[str] = None,
+    program_status: Optional[str] = None,
+    payment_status: Optional[str] = None,
+    project_status: Optional[str] = None,
     current_user: User = Depends(deps.PermissionChecker(["projects:read"]))
 ):
-    """Retrieve the list of active projects, optionally filtered by status"""
-    return service.get_projects(db, status=status, skip=skip, limit=limit)
+    """Retrieve the list of active projects, optionally filtered by various attributes"""
+    return service.get_projects(
+        db, 
+        status=status, 
+        skip=skip, 
+        limit=limit,
+        po_id=po_id,
+        pm_id=pm_id,
+        source_id=source_id,
+        quotation_status=quotation_status,
+        program_status=program_status,
+        payment_status=payment_status,
+        project_status=project_status
+    )
 
-@router.get("/projects/{project_id}", response_model=schemas.ProjectResponse)
+@router.get("/projects/{project_id}", response_model=schemas.ProjectDetailResponse)
 def get_project_by_id(
     project_id: str,
     db: Session = Depends(deps.get_db),
@@ -32,6 +52,7 @@ def get_project_by_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Project not found"
         )
+    project.validation_warnings = service.check_project_validation_warnings(project)
     return project
 
 @router.post("/projects", response_model=schemas.ProjectResponse, status_code=status.HTTP_201_CREATED)
@@ -75,8 +96,17 @@ def transition_project_workflow(
             detail="Project not found"
         )
     
-    valid_statuses = ["inquiry", "quotation", "negotiation", "confirmed", "preparation", "ongoing", "completed", "canceled"]
-    if new_status not in valid_statuses:
+    # Map input status to the new Program Status taxonomy case-insensitively
+    valid_statuses_map = {
+        "inquiry": "Inquiry", "confirmed": "Confirmed", "preparation": "Preparation",
+        "ready": "Ready", "running": "Running", "completed": "Completed",
+        "reporting": "Reporting", "closed": "Closed", "cancel": "Cancel",
+        "canceled": "Cancel", "negotiation": "Inquiry"
+    }
+    normalized_status = valid_statuses_map.get(new_status.lower(), new_status)
+    
+    valid_statuses = ["Inquiry", "Confirmed", "Preparation", "Ready", "Running", "Completed", "Reporting", "Closed", "Cancel"]
+    if normalized_status not in valid_statuses:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Invalid status selection. Must be one of {valid_statuses}"
@@ -85,22 +115,22 @@ def transition_project_workflow(
     # Standardized business approval role matrix check
     user_role = current_user.role.name
     
-    # 1. Canceled status requires administrative or director scope
-    if new_status == "canceled" and user_role not in ["Super Admin", "Director", "Sales"]:
+    # 1. Cancel status requires administrative or management scope
+    if normalized_status == "Cancel" and user_role not in ["Super Admin", "Management", "Director"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only Directors, Sales, or Administrators can cancel active event projects."
+            detail="Only Directors, Management, or Administrators can cancel active event projects."
         )
 
-    # 2. Confirmed or Completed status requires PM, Sales, Director, or Admin scope
-    if new_status in ["confirmed", "completed"] and user_role not in ["Super Admin", "Director", "Project Manager", "Sales"]:
+    # 2. Confirmed or Completed status requires PM, Staff, Management, or Admin scope
+    if normalized_status in ["Confirmed", "Completed"] and user_role not in ["Super Admin", "Management", "Director", "Staff", "Project Manager"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only Directors, PMs, Sales, or Administrators can confirm or complete active event projects."
+            detail="Only Management, Staff, PMs, or Administrators can confirm or complete active event projects."
         )
 
     # 3. Completed status requires all associated operations checklist tasks to be finished (done)
-    if new_status == "completed":
+    if normalized_status == "Completed":
         from app.modules.tasks.models import Task
         uncompleted_tasks_count = db.query(Task).filter(
             Task.project_id == project.id,
@@ -111,13 +141,13 @@ def transition_project_workflow(
         if uncompleted_tasks_count > 0:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Cannot transition to 'completed' status. There are {uncompleted_tasks_count} uncompleted operational checklist tasks remaining."
+                detail=f"Cannot transition to 'Completed' status. There are {uncompleted_tasks_count} uncompleted operational checklist tasks remaining."
             )
         
     return service.transition_project_status(
         db, 
         db_project=project, 
-        new_status=new_status, 
+        new_status=normalized_status, 
         notes=notes, 
         changed_by_id=str(current_user.id)
     )

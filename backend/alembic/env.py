@@ -20,13 +20,15 @@ from app.core.database import Base
 from app.core.config import settings
 
 # Import all models to ensure they are registered on Base.metadata
-# from app.modules.auth.models import User, Role
-# from app.modules.crm.models import Customer, Contact
-# from app.modules.projects.models import Project, ProjectStatusLog
-# from app.modules.events.models import EventSchedule
-# from app.modules.tasks.models import Task
-# from app.modules.finance.models import Invoice, Payment
-# from app.modules.documents.models import Document
+from app.modules.auth.models import User, Role
+from app.modules.crm.models import Customer, Contact
+from app.modules.projects.models import Project, ProjectStatusLog, ProjectActivityLog
+from app.modules.event_sources.models import EventSource
+from app.modules.events.models import EventSchedule
+from app.modules.tasks.models import Task
+from app.modules.finance.models import Invoice, Payment
+from app.modules.documents.models import Document
+from app.models.activity import ActivityLog
 
 target_metadata = Base.metadata
 

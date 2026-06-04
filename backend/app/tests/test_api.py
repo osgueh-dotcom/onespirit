@@ -120,10 +120,10 @@ def test_password_complexity_validator(client):
     assert res.json()["email"] == "strong@onespirit.asia"
 
 def test_project_transition_gates(client, db):
-    # 1. Get Creative Role from DB
+    # 1. Get Finance Role from DB
     from app.modules.auth.models import Role
-    creative_role = db.query(Role).filter(Role.name == "Creative").first()
-    assert creative_role is not None
+    finance_role = db.query(Role).filter(Role.name == "Finance").first()
+    assert finance_role is not None
 
     # 2. Login as Super Admin
     login_response = client.post(
@@ -134,15 +134,15 @@ def test_project_transition_gates(client, db):
     admin_token = login_response.json()["access_token"]
     admin_headers = {"Authorization": f"Bearer {admin_token}"}
 
-    # 3. Create a Creative User
-    creative_email = "creative@onespirit.asia"
-    creative_payload = {
-        "email": creative_email,
-        "password": "CreativeUser2026!",
-        "full_name": "Creative Designer",
-        "role_id": str(creative_role.id)
+    # 3. Create a Finance User (to check 403 authorization boundary)
+    finance_email = "finance_test@onespirit.asia"
+    finance_payload = {
+        "email": finance_email,
+        "password": "FinanceUser2026!",
+        "full_name": "Finance Officer",
+        "role_id": str(finance_role.id)
     }
-    create_res = client.post("/api/v1/auth/users", json=creative_payload, headers=admin_headers)
+    create_res = client.post("/api/v1/auth/users", json=finance_payload, headers=admin_headers)
     assert create_res.status_code == 200
 
     # 4. Create a Customer and a Project
@@ -167,19 +167,19 @@ def test_project_transition_gates(client, db):
     assert proj_res.status_code == 201
     proj_id = proj_res.json()["id"]
 
-    # 5. Login as Creative
-    creative_login = client.post(
+    # 5. Login as Finance User
+    finance_login = client.post(
         "/api/v1/auth/login",
-        data={"username": creative_email, "password": "CreativeUser2026!"}
+        data={"username": finance_email, "password": "FinanceUser2026!"}
     )
-    assert creative_login.status_code == 200
-    creative_token = creative_login.json()["access_token"]
-    creative_headers = {"Authorization": f"Bearer {creative_token}"}
+    assert finance_login.status_code == 200
+    finance_token = finance_login.json()["access_token"]
+    finance_headers = {"Authorization": f"Bearer {finance_token}"}
 
-    # 6. Attempt to transition status to "confirmed" (should be 403 Forbidden for Creative)
+    # 6. Attempt to transition status to "confirmed" (should be 403 Forbidden for Finance)
     transition_res = client.post(
         f"/api/v1/projects/{proj_id}/transition?new_status=confirmed&notes=Try+transition",
-        headers=creative_headers
+        headers=finance_headers
     )
     assert transition_res.status_code == 403
 

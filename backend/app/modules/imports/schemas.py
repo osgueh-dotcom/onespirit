@@ -19,6 +19,16 @@ class ImportCommitResponse(BaseModel):
     created_count: int
     updated_count: int
     errors: List[str]
+    
+    total_rows: int = 0
+    successful_rows: int = 0
+    skipped_rows: int = 0
+    warning_count: int = 0
+    error_count: int = 0
+    warnings_per_row: Dict[str, List[str]] = {}
+    unmapped_po_pm: List[Dict[str, Any]] = []
+    unknown_source_types: List[Dict[str, Any]] = []
+    duplicate_customers: List[Dict[str, Any]] = []
 
     class Config:
         from_attributes = True

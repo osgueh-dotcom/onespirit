@@ -7,6 +7,7 @@ class Customer(Base, BaseModelMixin):
     __tablename__ = "customers"
 
     company_name = Column(String(100), unique=True, index=True, nullable=False)
+    normalized_name = Column(String(100), index=True, nullable=True)
     category = Column(String(50), nullable=False)  # Corporate, Agency, Partner, etc.
     address = Column(Text, nullable=True)
     notes = Column(Text, nullable=True)

@@ -1,9 +1,30 @@
+import re
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.modules.crm.models import Customer, Contact
 from app.modules.crm.schemas import CustomerCreate, CustomerUpdate, ContactCreate, ContactUpdate
 from app.core.activity import log_activity
 from app.core.database import db_commit_safety
+
+def normalize_customer_name(name: str) -> str:
+    if not name:
+        return ""
+    # 1. Lowercase and trim spaces
+    cleaned = name.strip().lower()
+    # 2. Remove punctuation
+    cleaned = re.sub(r'[^\w\s]', '', cleaned)
+    # 3. Collapse multiple spaces
+    cleaned = re.sub(r'\s+', ' ', cleaned)
+    return cleaned.strip()
+
+def check_duplicate_customer(db: Session, company_name: str, exclude_id: Optional[str] = None) -> List[Customer]:
+    normalized = normalize_customer_name(company_name)
+    if not normalized:
+        return []
+    query = db.query(Customer).filter(Customer.normalized_name == normalized, Customer.deleted_at == None)
+    if exclude_id:
+        query = query.filter(Customer.id != exclude_id)
+    return query.all()
 
 # Customer CRUD
 def get_customer(db: Session, customer_id: str) -> Optional[Customer]:
@@ -18,6 +39,7 @@ def get_customers(db: Session, skip: int = 0, limit: int = 100) -> List[Customer
 def create_customer(db: Session, customer_in: CustomerCreate, user_id: Optional[str] = None) -> Customer:
     db_customer = Customer(
         company_name=customer_in.company_name,
+        normalized_name=normalize_customer_name(customer_in.company_name),
         category=customer_in.category,
         address=customer_in.address,
         notes=customer_in.notes
@@ -41,6 +63,8 @@ def update_customer(db: Session, db_customer: Customer, customer_in: CustomerUpd
     customer_data = customer_in.dict(exclude_unset=True)
     for field, value in customer_data.items():
         setattr(db_customer, field, value)
+    if "company_name" in customer_data:
+        db_customer.normalized_name = normalize_customer_name(db_customer.company_name)
     db_commit_safety(db)
     db.refresh(db_customer)
     return db_customer

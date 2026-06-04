@@ -14,6 +14,9 @@ class Document(Base, BaseModelMixin):
     file_type = Column(String(50), nullable=False)  # pdf, image, link, teaser
     storage_type = Column(String(50), nullable=False)  # local, google_drive
     
+    document_type = Column(String(50), nullable=True) # SIGNED_FILE, PHOTO, VIDEO, TEASER, INSTAGRAM, YOUTUBE, OTHER
+    url = Column(String(255), nullable=True)
+    
     notes = Column(Text, nullable=True)
 
     uploaded_by_id = Column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
