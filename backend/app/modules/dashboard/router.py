@@ -12,6 +12,9 @@ from app.modules.events.models import EventSchedule
 from app.modules.tasks.models import Task
 from app.modules.finance.models import Invoice, Payment
 from app.models.activity import ActivityLog
+from app.modules.dashboard.schemas import DashboardAnalyticsResponse
+from app.modules.dashboard.service import get_dashboard_analytics
+from uuid import UUID
 
 router = APIRouter(prefix="/dashboard", tags=["Premium Dashboard Analytics Hub"])
 
@@ -612,3 +615,42 @@ def get_activity_timeline(
             "created_at": log.created_at.isoformat()
         })
     return {"activities": activities}
+
+# GET /api/v1/dashboard/analytics Endpoint
+@router.get("/analytics", response_model=DashboardAnalyticsResponse)
+def get_analytics(
+    db: Session = Depends(deps.get_db),
+    year: Optional[int] = Query(None),
+    month: Optional[int] = Query(None),
+    date_from: Optional[date] = Query(None),
+    date_to: Optional[date] = Query(None),
+    po_id: Optional[UUID] = Query(None),
+    pm_id: Optional[UUID] = Query(None),
+    source_type: Optional[str] = Query(None),
+    quotation_status: Optional[str] = Query(None),
+    program_status: Optional[str] = Query(None),
+    payment_status: Optional[str] = Query(None),
+    project_status: Optional[str] = Query(None),
+    customer_category: Optional[str] = Query(None),
+    event_category: Optional[str] = Query(None),
+    program_type: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
+):
+    """Retrieve structured business intelligence metrics, PO/PM workloads, category shares, and data audits"""
+    filters = {
+        "year": year,
+        "month": month,
+        "date_from": date_from,
+        "date_to": date_to,
+        "po_id": po_id,
+        "pm_id": pm_id,
+        "source_type": source_type,
+        "quotation_status": quotation_status,
+        "program_status": program_status,
+        "payment_status": payment_status,
+        "project_status": project_status,
+        "customer_category": customer_category,
+        "event_category": event_category,
+        "program_type": program_type,
+    }
+    return get_dashboard_analytics(db, filters)

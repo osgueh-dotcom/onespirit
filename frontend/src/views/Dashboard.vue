@@ -35,7 +35,234 @@
         </span>
       </div>
 
-      <div v-show="showFilters" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-300">
+      <!-- Analytics Filters (Active when activeTab === 'analytics') -->
+      <div v-show="showFilters && activeTab === 'analytics'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-300">
+        <!-- Date Start -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Date Range Start</label>
+          <input 
+            type="date" 
+            v-model="analyticsFilters.date_from" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          />
+        </div>
+
+        <!-- Date End -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Date Range End</label>
+          <input 
+            type="date" 
+            v-model="analyticsFilters.date_to" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          />
+        </div>
+
+        <!-- Year Select -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Year</label>
+          <select 
+            v-model="analyticsFilters.year" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Years</option>
+            <option :value="2025">2025</option>
+            <option :value="2026">2026</option>
+            <option :value="2027">2027</option>
+          </select>
+        </div>
+
+        <!-- Month Select -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Month</label>
+          <select 
+            v-model="analyticsFilters.month" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Months</option>
+            <option v-for="m in 12" :key="m" :value="m">{{ new Date(2000, m - 1).toLocaleString('default', { month: 'long' }) }}</option>
+          </select>
+        </div>
+
+        <!-- PO Selector -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Owner (PO)</label>
+          <select 
+            v-model="analyticsFilters.po_id" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All POs</option>
+            <option v-for="user in usersList" :key="user.id" :value="user.id">
+              {{ user.full_name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- PM Selector -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Manager (PM)</label>
+          <select 
+            v-model="analyticsFilters.pm_id" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All PMs</option>
+            <option v-for="user in usersList" :key="user.id" :value="user.id">
+              {{ user.full_name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Quotation Status -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Quotation Status</label>
+          <select 
+            v-model="analyticsFilters.quotation_status" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Quotation Statuses</option>
+            <option value="Draft">Draft</option>
+            <option value="Sent">Sent</option>
+            <option value="Follow Up">Follow Up</option>
+            <option value="Revision">Revision</option>
+            <option value="Signed & Deal">Signed & Deal</option>
+            <option value="Cancel">Cancel</option>
+          </select>
+        </div>
+
+        <!-- Program Status -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Status</label>
+          <select 
+            v-model="analyticsFilters.program_status" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Program Statuses</option>
+            <option value="Inquiry">Inquiry</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Preparation">Preparation</option>
+            <option value="Ready">Ready</option>
+            <option value="Running">Running</option>
+            <option value="Completed">Completed</option>
+            <option value="Reporting">Reporting</option>
+            <option value="Closed">Closed</option>
+            <option value="Cancel">Cancel</option>
+          </select>
+        </div>
+
+        <!-- Payment Status -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Payment Status</label>
+          <select 
+            v-model="analyticsFilters.payment_status" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Payment Statuses</option>
+            <option value="Not Invoiced">Not Invoiced</option>
+            <option value="Invoice Sent">Invoice Sent</option>
+            <option value="Partial Paid">Partial Paid</option>
+            <option value="Paid">Paid</option>
+            <option value="Outstanding">Outstanding</option>
+            <option value="Overdue">Overdue</option>
+          </select>
+        </div>
+
+        <!-- Project Status -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Project Status</label>
+          <select 
+            v-model="analyticsFilters.project_status" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Project Statuses</option>
+            <option value="Open">Open</option>
+            <option value="Active">Active</option>
+            <option value="Reporting">Reporting</option>
+            <option value="Closed">Closed</option>
+            <option value="Canceled">Canceled</option>
+          </select>
+        </div>
+
+        <!-- Customer Category -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Customer Category</label>
+          <select 
+            v-model="analyticsFilters.customer_category" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Customer Categories</option>
+            <option value="Corporate">Corporate</option>
+            <option value="Goverment">Government</option>
+            <option value="Agency">Agency</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Event Source Type -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Event Source Type</label>
+          <select 
+            v-model="analyticsFilters.source_type" 
+            @change="fetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          >
+            <option value="">All Source Types</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Direct">Direct</option>
+            <option value="Repeater">Repeater</option>
+            <option value="Partner">Partner</option>
+            <option value="Instagram">Instagram</option>
+            <option value="Web">Web</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Event Category (text search) -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Event Category Tag</label>
+          <input 
+            type="text" 
+            placeholder="e.g. Gathering, Outbound" 
+            v-model="analyticsFilters.event_category" 
+            @input="debounceFetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          />
+        </div>
+
+        <!-- Program Type (text search) -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Type Tag</label>
+          <input 
+            type="text" 
+            placeholder="e.g. Entertainment" 
+            v-model="analyticsFilters.program_type" 
+            @input="debounceFetchAnalytics"
+            class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          />
+        </div>
+
+        <!-- Clear Analytics Filters button -->
+        <div class="flex items-end sm:col-span-2 gap-3 select-none">
+          <button 
+            @click="clearAnalyticsFilters"
+            class="w-full py-2.5 border border-charcoal-600 hover:border-brand-orange text-xs text-charcoal-300 hover:text-white rounded-xl transition-all duration-200"
+          >
+            Clear Analytics Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Legacy Filters (Active when activeTab !== 'analytics') -->
+      <div v-show="showFilters && activeTab !== 'analytics'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-300">
         <!-- Date Start -->
         <div class="flex flex-col gap-1.5">
           <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Date Range Start</label>
@@ -151,6 +378,49 @@
     </div>
 
     <div v-else class="space-y-6">
+      <!-- Analytics Hub View Panel -->
+      <div v-if="activeTab === 'analytics'" class="space-y-6">
+        <div v-if="analyticsLoading" class="h-96 flex flex-col items-center justify-center gap-3">
+          <svg class="animate-spin h-10 w-10 text-brand-orange" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-xs font-bold text-charcoal-400 tracking-wider">Compiling analytics metrics...</span>
+        </div>
+        <div v-else-if="analyticsData" class="space-y-6">
+          <!-- KPI Cards -->
+          <ExecutiveKpiCards :executive="analyticsData.executive" />
+          
+          <!-- Target Revenue Banner -->
+          <RevenueSummary :executive="analyticsData.executive" />
+          
+          <!-- Status Summaries (Quotation, Program, Payment, Project) -->
+          <PaymentSummary 
+            :quotation="analyticsData.quotation" 
+            :program="analyticsData.program" 
+            :payment="analyticsData.payment" 
+            :project="analyticsData.project" 
+          />
+          
+          <!-- PO Performance Table -->
+          <PoPerformanceTable :data="analyticsData.po_performance" />
+          
+          <!-- PM Workload Table -->
+          <PmWorkloadTable :data="analyticsData.pm_workload" />
+          
+          <!-- Source & Category Share -->
+          <SourceAnalytics 
+            :sources="analyticsData.source_analytics" 
+            :customers="analyticsData.customer_analytics" 
+            :eventCategories="analyticsData.event_category_analytics" 
+            :programTypes="analyticsData.program_type_analytics" 
+          />
+          
+          <!-- Data Integrity Audit -->
+          <DataQualityPanel :quality="analyticsData.data_quality" />
+        </div>
+      </div>
+
       <!-- 1. OVERVIEW VIEW PANEL -->
       <div v-if="activeTab === 'overview'" class="space-y-6">
         <!-- 4 KPI Cards -->
@@ -511,7 +781,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
 
@@ -521,17 +791,27 @@ import FunnelChart from '../components/charts/FunnelChart.vue'
 import DonutChart from '../components/charts/DonutChart.vue'
 import WorkbarChart from '../components/charts/WorkbarChart.vue'
 
+// Import analytics subcomponents
+import ExecutiveKpiCards from '../components/ExecutiveKpiCards.vue'
+import RevenueSummary from '../components/RevenueSummary.vue'
+import PaymentSummary from '../components/PaymentSummary.vue'
+import PoPerformanceTable from '../components/PoPerformanceTable.vue'
+import PmWorkloadTable from '../components/PmWorkloadTable.vue'
+import SourceAnalytics from '../components/SourceAnalytics.vue'
+import DataQualityPanel from '../components/DataQualityPanel.vue'
+
 const auth = useAuthStore()
 const stats = ref({})
 const loading = ref(true)
 const showFilters = ref(false)
-const activeTab = ref('overview')
+const activeTab = ref('analytics')
 
 const tabItems = [
-  { id: 'overview', label: 'Executive Summary' },
-  { id: 'revenue', label: 'Revenue Analytics' },
-  { id: 'workflow', label: 'Workflow Conversion' },
-  { id: 'workloads', label: 'Team Allocation' },
+  { id: 'analytics', label: 'Analytics Hub' },
+  { id: 'overview', label: 'Executive Summary (Legacy)' },
+  { id: 'revenue', label: 'Revenue Analytics (Legacy)' },
+  { id: 'workflow', label: 'Workflow Conversion (Legacy)' },
+  { id: 'workloads', label: 'Team Allocation (Legacy)' },
   { id: 'timeline', label: 'Activity Feed' }
 ]
 
@@ -543,6 +823,26 @@ const filters = ref({
   sales: '',
   partner: '',
   event_category: ''
+})
+
+const analyticsData = ref(null)
+const analyticsLoading = ref(true)
+
+const analyticsFilters = ref({
+  year: '',
+  month: '',
+  date_from: '',
+  date_to: '',
+  po_id: '',
+  pm_id: '',
+  source_type: '',
+  quotation_status: '',
+  program_status: '',
+  payment_status: '',
+  project_status: '',
+  customer_category: '',
+  event_category: '',
+  program_type: ''
 })
 
 const usersList = ref([])
@@ -576,12 +876,38 @@ const fetchDashboard = async () => {
   }
 }
 
+const fetchAnalytics = async () => {
+  analyticsLoading.value = true
+  try {
+    const params = {}
+    for (const key in analyticsFilters.value) {
+      if (analyticsFilters.value[key]) {
+        params[key] = analyticsFilters.value[key]
+      }
+    }
+    const response = await axios.get('/api/v1/dashboard/analytics', { params })
+    analyticsData.value = response.data
+  } catch (err) {
+    console.error('Failed to load dashboard analytics metrics', err)
+  } finally {
+    analyticsLoading.value = false
+  }
+}
+
 // Debounce filtering on text input
 let debounceTimeout = null
 const debounceFetch = () => {
   if (debounceTimeout) clearTimeout(debounceTimeout)
   debounceTimeout = setTimeout(() => {
     fetchDashboard()
+  }, 400)
+}
+
+let debounceAnalyticsTimeout = null
+const debounceFetchAnalytics = () => {
+  if (debounceAnalyticsTimeout) clearTimeout(debounceAnalyticsTimeout)
+  debounceAnalyticsTimeout = setTimeout(() => {
+    fetchAnalytics()
   }, 400)
 }
 
@@ -597,9 +923,42 @@ const clearFilters = () => {
   fetchDashboard()
 }
 
+const clearAnalyticsFilters = () => {
+  analyticsFilters.value = {
+    year: '',
+    month: '',
+    date_from: '',
+    date_to: '',
+    po_id: '',
+    pm_id: '',
+    source_type: '',
+    quotation_status: '',
+    program_status: '',
+    payment_status: '',
+    project_status: '',
+    customer_category: '',
+    event_category: '',
+    program_type: ''
+  }
+  fetchAnalytics()
+}
+
+// Watch tab changes to fetch appropriate dataset
+watch(activeTab, (newTab) => {
+  if (newTab === 'analytics') {
+    fetchAnalytics()
+  } else {
+    fetchDashboard()
+  }
+})
+
 onMounted(() => {
   loadUsers()
-  fetchDashboard()
+  if (activeTab.value === 'analytics') {
+    fetchAnalytics()
+  } else {
+    fetchDashboard()
+  }
 })
 
 const formatMoney = (val) => {
