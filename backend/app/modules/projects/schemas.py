@@ -108,6 +108,11 @@ class ProjectUpdate(BaseModel):
     program_owner_id: Optional[UUID] = None
     program_manager_id: Optional[UUID] = None
 
+class ProjectStatusUpdate(BaseModel):
+    status_type: str
+    new_status: str
+    notes: Optional[str] = None
+
 class ProjectDocumentResponse(BaseModel):
     id: UUID
     project_id: UUID

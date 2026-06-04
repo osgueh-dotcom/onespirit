@@ -57,7 +57,7 @@ HEADER_MAP = {
     "program_status": ["program status", "status", "program_status", "workflow status"],
     "payment_status": ["payment status", "pay status", "payment_status"],
     "project_status": ["project status", "project_status"],
-    "budget": ["budget", "value", "deal value", "deal_value", "price"],
+    "budget": ["budget", "value", "deal value", "deal_value", "price", "budget (rp)", "budget rp"],
     
     "cl": ["cl", "cl checklist"],
     "ros": ["ros", "ros checklist"],
@@ -81,7 +81,9 @@ HEADER_MAP = {
 def clean_header(val: Any) -> str:
     if not val:
         return ""
-    return str(val).strip().lower().replace("_", " ").replace("-", " ")
+    import re
+    cleaned = str(val).strip().lower().replace("_", " ").replace("-", " ")
+    return re.sub(r'\s+', ' ', cleaned)
 
 def find_column_indices(sheet: openpyxl.worksheet.worksheet.Worksheet) -> Tuple[Dict[str, int], int]:
     best_row_idx = 1
@@ -472,7 +474,9 @@ def parse_excel_sheet(db: Session, file_bytes: bytes) -> Dict[str, Any]:
             "start_date": str(start_date) if start_date else None,
             "end_date": str(end_date) if end_date else None,
             "quotation_number": quote_no,
-            "project_status": p_status,
+            "project_status": proj_status,
+            "program_status": p_status,
+            "payment_status": pay_status,
             "quotation_status": q_status
         })
 

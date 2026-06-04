@@ -444,6 +444,80 @@ def delete_project(db: Session, db_project: Project) -> Project:
     
     return db_project
 
+def update_project_status_generic(
+    db: Session,
+    db_project: Project,
+    status_type: str,
+    new_status: str,
+    notes: Optional[str],
+    changed_by_id: str
+) -> Project:
+    valid_types = ["quotation_status", "program_status", "payment_status", "project_status"]
+    if status_type not in valid_types:
+        raise ValueError(f"Invalid status_type. Must be one of {valid_types}")
+        
+    old_status = getattr(db_project, status_type)
+    if old_status == new_status:
+        return db_project
+        
+    parsed_changer_id = None
+    if changed_by_id:
+        if isinstance(changed_by_id, str):
+            try:
+                parsed_changer_id = uuid.UUID(changed_by_id)
+            except ValueError:
+                parsed_changer_id = None
+        else:
+            parsed_changer_id = changed_by_id
+
+    # Update field
+    setattr(db_project, status_type, new_status)
+    
+    # If updating program status, also keep legacy field synced
+    if status_type == "program_status":
+        db_project.status = new_status.lower()
+        
+    db_commit_safety(db)
+    
+    # Log transition to ProjectStatusLog
+    log = ProjectStatusLog(
+        project_id=db_project.id,
+        status_type=status_type,
+        old_status=old_status,
+        new_status=new_status,
+        from_status=old_status if status_type == "program_status" else None,
+        to_status=new_status if status_type == "program_status" else None,
+        notes=notes or f"{status_type} shifted from {old_status} to {new_status}",
+        changed_by_user_id=parsed_changer_id,
+        changed_by_id=parsed_changer_id if status_type == "program_status" else None
+    )
+    db.add(log)
+    
+    # Write to ProjectActivityLog
+    db.add(ProjectActivityLog(
+        project_id=db_project.id,
+        user_id=parsed_changer_id,
+        action=f"{status_type}_changed",
+        field_name=status_type,
+        old_value=old_status,
+        new_value=new_status,
+        notes=notes
+    ))
+    db_commit_safety(db)
+    db.refresh(db_project)
+    
+    # Central activity logging
+    log_activity(
+        db, 
+        user_id=parsed_changer_id, 
+        action="status_transitioned", 
+        entity_type="project", 
+        entity_id=db_project.id, 
+        details={"title": db_project.title, "status_type": status_type, "old_status": old_status, "new_status": new_status, "notes": notes or ""}
+    )
+    
+    return db_project
+
 def get_project_logs(db: Session, project_id: str) -> List[ProjectStatusLog]:
     parsed_id = project_id
     if isinstance(project_id, str):

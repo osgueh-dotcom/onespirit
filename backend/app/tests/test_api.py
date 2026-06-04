@@ -190,3 +190,84 @@ def test_project_transition_gates(client, db):
     )
     assert transition_admin_res.status_code == 200
     assert transition_admin_res.json()["status"] == "confirmed"
+
+def test_event_source_crud(client):
+    # 1. Login to retrieve admin bearer token
+    login_response = client.post(
+        "/api/v1/auth/login",
+        data={"username": "admin@onespirit.asia", "password": "OneSpirit2026!"}
+    )
+    assert login_response.status_code == 200
+    admin_token = login_response.json()["access_token"]
+    admin_headers = {"Authorization": f"Bearer {admin_token}"}
+
+    # 2. Create Event Source
+    payload = {
+        "source_type": "Instagram",
+        "vendor_name": "Test Vendor",
+        "sales_name": "Test Sales",
+        "contact": "0812345678",
+        "notes": "Test notes"
+    }
+    create_res = client.post("/api/v1/event-sources", json=payload, headers=admin_headers)
+    assert create_res.status_code == 201
+    source_id = create_res.json()["id"]
+
+    # 3. Read Event Source
+    read_res = client.get(f"/api/v1/event-sources", headers=admin_headers)
+    assert read_res.status_code == 200
+    assert any(s["id"] == source_id for s in read_res.json())
+
+    # 4. Update Event Source
+    update_payload = {
+        "source_type": "Web",
+        "vendor_name": "Updated Vendor",
+        "sales_name": "Updated Sales",
+        "contact": "0812345678",
+        "notes": "Updated notes"
+    }
+    update_res = client.put(f"/api/v1/event-sources/{source_id}", json=update_payload, headers=admin_headers)
+    assert update_res.status_code == 200
+    assert update_res.json()["source_type"] == "Web"
+
+    # 5. Delete Event Source
+    delete_res = client.delete(f"/api/v1/event-sources/{source_id}", headers=admin_headers)
+    assert delete_res.status_code == 200
+
+def test_generic_status_patch(client):
+    # 1. Login as admin
+    login_response = client.post(
+        "/api/v1/auth/login",
+        data={"username": "admin@onespirit.asia", "password": "OneSpirit2026!"}
+    )
+    assert login_response.status_code == 200
+    admin_token = login_response.json()["access_token"]
+    admin_headers = {"Authorization": f"Bearer {admin_token}"}
+
+    # 2. Create Customer & Project
+    cust_res = client.post("/api/v1/customers", json={"company_name": "Status Patch Client", "category": "Corporate"}, headers=admin_headers)
+    cust_id = cust_res.json()["id"]
+
+    proj_res = client.post("/api/v1/projects", json={
+        "title": "Status Patch Project",
+        "customer_id": cust_id,
+        "budget": 10000000
+    }, headers=admin_headers)
+    proj_id = proj_res.json()["id"]
+
+    # 3. Patch status generically
+    patch_payload = {
+        "status_type": "quotation_status",
+        "new_status": "Signed & Deal",
+        "notes": "Signed quotation agreement"
+    }
+    patch_res = client.patch(f"/api/v1/projects/{proj_id}/status", json=patch_payload, headers=admin_headers)
+    assert patch_res.status_code == 200
+    assert patch_res.json()["quotation_status"] == "Signed & Deal"
+
+    # 4. Check timeline logs and validation warnings in detail view
+    detail_res = client.get(f"/api/v1/projects/{proj_id}", headers=admin_headers)
+    assert detail_res.status_code == 200
+    detail_data = detail_res.json()
+    assert any(log["status_type"] == "quotation_status" and log["new_status"] == "Signed & Deal" for log in detail_data["status_logs"])
+    assert any(act["action"] == "quotation_status_changed" for act in detail_data["activity_logs"])

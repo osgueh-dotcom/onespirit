@@ -42,7 +42,8 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     # 1. Create tables automatically (highly robust for immediate startup)
-    Base.metadata.create_all(bind=engine)
+    if settings.AUTO_CREATE_TABLES:
+        Base.metadata.create_all(bind=engine)
     
     # 2. Seed database roles and default admin user
     db = SessionLocal()

@@ -123,10 +123,11 @@ def transition_project_workflow(
         )
 
     # 2. Confirmed or Completed status requires PM, Staff, Management, or Admin scope
-    if normalized_status in ["Confirmed", "Completed"] and user_role not in ["Super Admin", "Management", "Director", "Staff", "Project Manager"]:
+    is_pm_assigned = project.program_manager_id == current_user.id
+    if normalized_status in ["Confirmed", "Completed"] and not (is_pm_assigned or user_role in ["Super Admin", "Management", "Director", "Staff"]):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only Management, Staff, PMs, or Administrators can confirm or complete active event projects."
+            detail="Only Management, Staff, the assigned Program Manager, or Administrators can confirm or complete active event projects."
         )
 
     # 3. Completed status requires all associated operations checklist tasks to be finished (done)
@@ -166,6 +167,57 @@ def get_project_status_logs(
             detail="Project not found"
         )
     return service.get_project_logs(db, project_id=project_id)
+
+@router.patch("/projects/{project_id}/status", response_model=schemas.ProjectResponse)
+def patch_project_status(
+    project_id: str,
+    payload: schemas.ProjectStatusUpdate,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.PermissionChecker(["projects:write"]))
+):
+    """Generic status update endpoint to shift quotation, program, payment, or project status"""
+    project = service.get_project(db, project_id=project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+    
+    # Gate validation for generic endpoint
+    user_role = current_user.role.name
+    if payload.status_type == "program_status":
+        valid_statuses = ["Inquiry", "Confirmed", "Preparation", "Ready", "Running", "Completed", "Reporting", "Closed", "Cancel"]
+        if payload.new_status not in valid_statuses:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid program status selection. Must be one of {valid_statuses}"
+            )
+        if payload.new_status == "Cancel" and user_role not in ["Super Admin", "Management", "Director"]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only Directors, Management, or Administrators can cancel active event projects."
+            )
+        is_pm_assigned = project.program_manager_id == current_user.id
+        if payload.new_status in ["Confirmed", "Completed"] and not (is_pm_assigned or user_role in ["Super Admin", "Management", "Director", "Staff"]):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only Management, Staff, the assigned Program Manager, or Administrators can confirm or complete active event projects."
+            )
+
+    try:
+        return service.update_project_status_generic(
+            db,
+            db_project=project,
+            status_type=payload.status_type,
+            new_status=payload.new_status,
+            notes=payload.notes,
+            changed_by_id=str(current_user.id)
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
 
 @router.delete("/projects/{project_id}", status_code=status.HTTP_200_OK)
 def delete_project_entry(

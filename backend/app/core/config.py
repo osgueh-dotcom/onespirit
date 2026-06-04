@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "One Spirit Asia Operations System"
     API_V1_STR: str = "/api/v1"
     ENV: str = "development"  # development, staging, production
+    AUTO_CREATE_TABLES: bool = True
     
     # Environment configs loaded by docker-compose or .env
     DB_HOST: str = "localhost"

@@ -1,34 +1,6 @@
 <template>
   <div class="space-y-6">
-    <!-- Project Header Panel -->
-    <div v-if="project" class="p-6 bg-gradient-to-r from-brand-charcoal to-brand-charcoal-light/45 border border-brand-charcoal-light/35 rounded-3xl relative overflow-hidden select-none flex items-center justify-between flex-wrap gap-4">
-      <div class="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-brand-orange/5 rounded-full blur-3xl pointer-events-none"></div>
-      
-      <div>
-        <div class="flex items-center flex-wrap gap-2">
-          <span class="px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded bg-brand-orange/15 text-brand-orange border border-brand-orange/20">
-            {{ project.project_status }}
-          </span>
-          <span v-if="project.project_code" class="text-xs text-brand-orange font-bold font-mono">
-            {{ project.project_code }}
-          </span>
-        </div>
-        <span class="text-xs text-gray-400 font-bold mt-1.5 block">Client: {{ project.customer?.company_name }}</span>
-        <h2 class="text-2xl font-black text-white mt-1 tracking-wide">{{ project.title }}</h2>
-        <p class="text-xs text-gray-500 font-bold mt-1">Duration: {{ project.event_date_start || '-' }} to {{ project.event_date_end || '-' }}</p>
-      </div>
-
-      <div class="flex items-center gap-5 text-right font-sans">
-        <div>
-          <p class="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-0.5">Budget Allocated</p>
-          <p class="text-lg font-black text-brand-emerald">{{ formatMoney(project.budget) }}</p>
-        </div>
-        <div>
-          <p class="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-0.5">Lead PM</p>
-          <p class="text-sm font-extrabold text-white">{{ project.program_manager?.full_name || 'Unassigned' }}</p>
-        </div>
-      </div>
-    </div>
+    <ProjectDetailHeader v-if="project" :project="project" @transition="transitionStatus" />
 
     <!-- Loading Indicators -->
     <div v-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
@@ -40,64 +12,7 @@
     </div>
 
     <div v-else class="space-y-6">
-      <!-- Validation Warnings Alert Panel -->
-      <div v-if="validationWarnings.length > 0" class="p-4 bg-brand-orange/10 border border-brand-orange/20 rounded-3xl select-none">
-        <div class="flex items-start gap-3">
-          <svg class="h-5 w-5 text-brand-orange shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-          </svg>
-          <div>
-            <h4 class="text-xs font-black text-brand-orange uppercase tracking-wider">Workflow Quality Audits ({{ validationWarnings.length }} Warnings)</h4>
-            <ul class="list-disc list-inside text-xs text-gray-300 font-semibold space-y-1.5 mt-2">
-              <li v-for="(warn, idx) in validationWarnings" :key="idx">{{ warn }}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Workflow Status Gates -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-brand-charcoal-light/10 p-4 rounded-3xl border border-brand-charcoal-light/15">
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Quotation Status</label>
-          <select 
-            :value="project.quotation_status" 
-            @change="transitionStatus('quotation_status', $event.target.value)"
-            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          >
-            <option v-for="st in ['Draft', 'Sent', 'Follow Up', 'Revision', 'Signed & Deal', 'Cancel']" :key="st" :value="st">{{ st }}</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Program Status</label>
-          <select 
-            :value="project.program_status" 
-            @change="transitionStatus('program_status', $event.target.value)"
-            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          >
-            <option v-for="st in ['Inquiry', 'Confirmed', 'Preparation', 'Ready', 'Running', 'Completed', 'Reporting', 'Closed', 'Cancel']" :key="st" :value="st">{{ st }}</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Payment Status</label>
-          <select 
-            :value="project.payment_status" 
-            @change="transitionStatus('payment_status', $event.target.value)"
-            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          >
-            <option v-for="st in ['Not Invoiced', 'Invoice Sent', 'Partial Paid', 'Paid', 'Outstanding', 'Overdue']" :key="st" :value="st">{{ st }}</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Project Status</label>
-          <select 
-            :value="project.project_status" 
-            @change="transitionStatus('project_status', $event.target.value)"
-            class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          >
-            <option v-for="st in ['Open', 'Active', 'Reporting', 'Closed', 'Canceled']" :key="st" :value="st">{{ st }}</option>
-          </select>
-        </div>
-      </div>
+      <ProjectValidationWarnings :warnings="validationWarnings" />
 
       <!-- Main Operational Dashboard Layout Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -356,132 +271,18 @@
             </div>
 
             <!-- TAB 3: DOCUMENT ARCHIVES -->
-            <div v-if="activeTab === 'documents'" class="space-y-6">
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Google Drive Reference Add Form -->
-                <div v-if="auth.hasPermission('documents:write')" class="glass-panel p-5 space-y-4 h-fit">
-                  <h4 class="text-xs font-bold text-white uppercase tracking-wider">Link Operations Document</h4>
-                  <form @submit.prevent="saveDocLink" class="space-y-3 select-none">
-                    <div>
-                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Document Title *</label>
-                      <input v-model="newDoc.title" type="text" placeholder="e.g. Approved Quotation PDF" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                    </div>
-                    <div>
-                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Document Type *</label>
-                      <select v-model="newDoc.document_type" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white">
-                        <option value="SIGNED_FILE">Signed File</option>
-                        <option value="PHOTO">Photo</option>
-                        <option value="VIDEO">Video</option>
-                        <option value="TEASER">Teaser</option>
-                        <option value="INSTAGRAM">Instagram</option>
-                        <option value="YOUTUBE">YouTube</option>
-                        <option value="OTHER">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Google Drive / Resource URL *</label>
-                      <input v-model="newDoc.file_path" type="url" placeholder="https://drive.google.com/..." required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                    </div>
-                    <div>
-                      <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Remarks</label>
-                      <textarea v-model="newDoc.notes" placeholder="Notes..." rows="2" class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white"></textarea>
-                    </div>
-                    <button type="submit" class="w-full py-2 bg-brand-orange text-white rounded-lg font-bold text-xs hover:bg-brand-orange-dark transition-all">Link Document</button>
-                  </form>
-                </div>
-
-                <!-- Document lists -->
-                <div class="lg:col-span-2 glass-panel p-5 flex flex-col h-[400px]">
-                  <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4 shrink-0">Archived Documents & Assets</h4>
-                  
-                  <div class="flex-1 overflow-y-auto space-y-3 pr-1">
-                    <div v-if="documents.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
-                      No linked documents or asset URLs recorded for this project.
-                    </div>
-                    
-                    <div 
-                      v-for="doc in documents" 
-                      :key="doc.id"
-                      class="p-4 bg-brand-charcoal border border-brand-charcoal-light/20 rounded-2xl flex items-center justify-between text-xs font-medium"
-                    >
-                      <div>
-                        <a :href="doc.url || doc.file_path" target="_blank" class="font-bold text-white hover:text-brand-orange transition-colors text-sm flex items-center gap-1.5 flex-wrap">
-                          {{ doc.title }}
-                          <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/20">
-                            {{ doc.document_type || 'OTHER' }}
-                          </span>
-                        </a>
-                        <p class="text-gray-400 mt-1 font-semibold">Uploaded by: {{ doc.uploaded_by?.full_name || 'System' }} | Date: {{ formatDateTime(doc.created_at) }}</p>
-                        <p v-if="doc.notes" class="text-gray-500 mt-1 text-[11px] font-medium leading-relaxed">{{ doc.notes }}</p>
-                      </div>
-                      <button 
-                        v-if="auth.hasPermission('documents:write')"
-                        @click="deleteDoc(doc.id)"
-                        class="px-2 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all select-none"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div v-if="activeTab === 'documents'">
+              <ProjectDocumentsPanel :documents="documents" @save-doc="saveDocLink" @delete-doc="deleteDoc" />
             </div>
 
             <!-- TAB 4: STATUS TIMELINE -->
-            <div v-if="activeTab === 'timeline'" class="glass-panel p-6 max-h-[500px] overflow-y-auto flex flex-col">
-              <h3 class="text-sm font-bold text-white tracking-wider uppercase mb-5 shrink-0 select-none">Workflow Audit Trail (Status Timeline)</h3>
-              
-              <div class="flex-1 space-y-5 pr-1 relative pl-4 border-l border-brand-charcoal-light/25">
-                <div v-if="logs.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
-                  No status timeline shifts logged.
-                </div>
-                <div 
-                  v-for="log in logs" 
-                  :key="log.id"
-                  class="relative text-xs font-medium"
-                >
-                  <!-- Timeline connector node -->
-                  <span class="absolute -left-6.5 top-1.5 h-3.5 w-3.5 rounded-full bg-brand-charcoal border-2 border-brand-orange shrink-0"></span>
-                  
-                  <p class="font-extrabold text-white">
-                    <span class="text-brand-orange uppercase font-bold">[{{ log.status_type || 'program_status' }}]</span>: 
-                    Shifted from 
-                    <span class="text-gray-400 lowercase italic">{{ log.old_status || log.from_status || '-' }}</span> to 
-                    <span class="text-brand-orange uppercase font-bold">{{ log.new_status || log.to_status }}</span>
-                  </p>
-                  <p class="text-[10px] text-gray-400 mt-0.5">Changed by: {{ log.changed_by_user?.full_name || log.changed_by?.full_name || 'System' }} | Timestamp: {{ formatDateTime(log.created_at) }}</p>
-                  <p v-if="log.notes" class="p-2.5 bg-brand-charcoal-light/10 border border-brand-charcoal-light/15 rounded-xl text-gray-300 mt-2 leading-relaxed">{{ log.notes }}</p>
-                </div>
-              </div>
+            <div v-if="activeTab === 'timeline'">
+              <ProjectStatusTimeline :logs="logs" />
             </div>
 
             <!-- TAB 5: ACTIVITY LOG -->
-            <div v-if="activeTab === 'activity'" class="glass-panel p-6 max-h-[500px] overflow-y-auto flex flex-col">
-              <h3 class="text-sm font-bold text-white tracking-wider uppercase mb-5 shrink-0 select-none">Operational Activity Ledger</h3>
-              
-              <div class="flex-1 space-y-5 pr-1 relative pl-4 border-l border-brand-charcoal-light/25">
-                <div v-if="activityLogs.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-gray-500 select-none">
-                  No operational activities logged.
-                </div>
-                <div 
-                  v-for="act in activityLogs" 
-                  :key="act.id"
-                  class="relative text-xs font-medium"
-                >
-                  <!-- Timeline connector node -->
-                  <span class="absolute -left-6.5 top-1.5 h-3.5 w-3.5 rounded-full bg-brand-charcoal border-2 border-brand-emerald shrink-0"></span>
-                  
-                  <p class="font-extrabold text-white">
-                    <span class="text-brand-emerald uppercase font-bold">{{ formatAction(act.action) }}</span>
-                    <span v-if="act.field_name"> for field <span class="text-gray-300 italic">{{ act.field_name }}</span></span>
-                  </p>
-                  <div v-if="act.old_value || act.new_value" class="text-[11px] text-gray-400 mt-1 font-semibold">
-                    <span class="text-red-400">{{ act.old_value || '-' }}</span> &rarr; <span class="text-brand-emerald">{{ act.new_value || '-' }}</span>
-                  </div>
-                  <p class="text-[10px] text-gray-400 mt-0.5">Executor: {{ act.user?.full_name || 'System' }} | Timestamp: {{ formatDateTime(act.created_at) }}</p>
-                  <p v-if="act.notes" class="p-2.5 bg-brand-charcoal-light/10 border border-brand-charcoal-light/15 rounded-xl text-gray-300 mt-2 leading-relaxed">{{ act.notes }}</p>
-                </div>
-              </div>
+            <div v-if="activeTab === 'activity'">
+              <ProjectActivityLog :activity-logs="activityLogs" />
             </div>
 
           </div>
@@ -667,6 +468,11 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+import ProjectDetailHeader from '../components/ProjectDetailHeader.vue'
+import ProjectValidationWarnings from '../components/ProjectValidationWarnings.vue'
+import ProjectStatusTimeline from '../components/ProjectStatusTimeline.vue'
+import ProjectActivityLog from '../components/ProjectActivityLog.vue'
+import ProjectDocumentsPanel from '../components/ProjectDocumentsPanel.vue'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -715,20 +521,6 @@ const newTask = ref({
   assigned_to_id: null,
   status: 'todo'
 })
-
-const newDoc = ref({
-  title: '',
-  file_path: '',
-  file_type: 'link',
-  storage_type: 'google_drive',
-  notes: '',
-  document_type: 'OTHER',
-  url: ''
-})
-
-const formatAction = (action) => {
-  return action.replace(/_/g, ' ').toUpperCase()
-}
 
 const getPaymentPercent = (budget, paid) => {
   const b = parseFloat(budget) || 0
@@ -819,14 +611,14 @@ const getPaymentStatusStyles = (status) => {
 
 // Transition Status Action
 const transitionStatus = async (statusType, newStatus) => {
+  const notes = prompt(`Please enter transition notes for shifting ${statusType.replace('_', ' ')} to "${newStatus}":`, "")
+  if (notes === null) return // cancelled
   try {
-    if (statusType === 'program_status') {
-      await axios.post(`/api/v1/projects/${projectId}/transition?new_status=${newStatus}`)
-    } else {
-      const payload = {}
-      payload[statusType] = newStatus
-      await axios.put(`/api/v1/projects/${projectId}`, payload)
-    }
+    await axios.patch(`/api/v1/projects/${projectId}/status`, {
+      status_type: statusType,
+      new_status: newStatus,
+      notes: notes
+    })
     await fetchProjectDetail()
     // Fetch logs again
     const logsRes = await axios.get(`/api/v1/projects/${projectId}/logs`)
@@ -916,18 +708,16 @@ const deleteTask = async (id) => {
   }
 }
 
-const saveDocLink = async () => {
+const saveDocLink = async (docData) => {
   try {
-    newDoc.value.url = newDoc.value.file_path
     const payload = {
-      ...newDoc.value,
+      ...docData,
       project_id: projectId
     }
     const response = await axios.post('/api/v1/documents', payload)
     response.data.uploaded_by = auth.user
     
     documents.value.push(response.data)
-    newDoc.value = { title: '', file_path: '', file_type: 'link', storage_type: 'google_drive', notes: '', document_type: 'OTHER', url: '' }
     await fetchProjectDetail()
   } catch (err) {
     alert('Failed to link cloud document reference')
