@@ -12,8 +12,13 @@ class ExecutiveSummarySchema(BaseModel):
     cancel_rate: float
     potential_revenue: float
     confirmed_revenue: float
+    revenue_received: float
+    collection_rate: float
+    outstanding_amount: float
     revenue_conversion_rate: float
     average_project_value: float
+    total_data_quality_issues: int
+
 
 class QuotationSummarySchema(BaseModel):
     count_by_status: Dict[str, int]

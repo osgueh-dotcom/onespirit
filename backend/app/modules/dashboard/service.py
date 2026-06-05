@@ -7,6 +7,8 @@ from app.modules.projects.models import Project
 from app.modules.auth.models import User
 from app.modules.crm.models import Customer
 from app.modules.event_sources.models import EventSource
+from app.modules.finance.models import Invoice, Payment
+
 
 def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, Any]:
     # Base query for active (non-deleted) projects
@@ -67,7 +69,8 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
         joinedload(Project.program_manager),
         joinedload(Project.customer),
         joinedload(Project.event_source),
-        joinedload(Project.documents)
+        joinedload(Project.documents),
+        joinedload(Project.invoices).joinedload(Invoice.payments)
     ).all()
     
     # Initialize variables for in-memory calculations
@@ -77,6 +80,7 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
     total_cancel = 0
     potential_revenue = 0.0
     confirmed_revenue = 0.0
+    revenue_received = 0.0
     
     # Base status trackers initialized with 0
     quotation_statuses = ["Draft", "Sent", "Follow Up", "Revision", "Signed & Deal", "Cancel"]
@@ -158,6 +162,9 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
         is_confirmed_rev = (is_deal or pr_status in confirmed_prog_statuses)
         if is_confirmed_rev:
             confirmed_revenue += budget
+            
+        # Accumulate actually received cash (approved payments)
+        revenue_received += p.paid_amount
             
         # PO Performance mapping
         if p.program_owner_id:
@@ -311,6 +318,14 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
     revenue_conversion_rate = (confirmed_revenue / potential_revenue * 100.0) if potential_revenue > 0 else 0.0
     average_project_value = (confirmed_revenue / total_deal) if total_deal > 0 else 0.0
     
+    # Calculate finance and data quality summaries
+    collection_rate = (revenue_received / confirmed_revenue * 100.0) if confirmed_revenue > 0 else 0.0
+    outstanding_amount = max(0.0, confirmed_revenue - revenue_received)
+    total_data_quality_issues = (
+        missing_po + missing_pm + missing_customer + missing_budget +
+        cancel_without_reason + closed_not_paid + documentation_missing + unknown_source
+    )
+    
     # Calculate target achievement rate
     revenue_target = 9200000000.0
     achievement_rate = (confirmed_revenue / revenue_target * 100.0) if revenue_target > 0 else 0.0
@@ -363,8 +378,12 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
             "cancel_rate": cancel_rate,
             "potential_revenue": potential_revenue,
             "confirmed_revenue": confirmed_revenue,
+            "revenue_received": revenue_received,
+            "collection_rate": collection_rate,
+            "outstanding_amount": outstanding_amount,
             "revenue_conversion_rate": revenue_conversion_rate,
-            "average_project_value": average_project_value
+            "average_project_value": average_project_value,
+            "total_data_quality_issues": total_data_quality_issues
         },
         "target": {
             "year": 2025,

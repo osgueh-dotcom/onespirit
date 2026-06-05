@@ -14,6 +14,7 @@ from app.modules.crm.models import Customer
 from app.modules.event_sources.models import EventSource
 from app.modules.projects.models import Project
 from app.modules.documents.models import Document
+from app.modules.finance.models import Invoice, Payment
 
 # Use in-memory SQLite for extremely fast unit tests
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_analytics.db"
@@ -71,7 +72,11 @@ def test_analytics_endpoint_empty(client):
     assert data["executive"]["total_inquiry"] == 0
     assert data["executive"]["inquiry_stage_count"] == 0
     assert data["executive"]["confirmed_revenue"] == 0.0
+    assert data["executive"]["revenue_received"] == 0.0
+    assert data["executive"]["collection_rate"] == 0.0
+    assert data["executive"]["outstanding_amount"] == 0.0
     assert data["executive"]["deal_rate"] == 0.0
+    assert data["executive"]["total_data_quality_issues"] == 0
     assert data["target"]["achievement_rate"] == 0.0
     assert len(data["po_performance"]) == 0
     assert len(data["pm_workload"]) == 0
@@ -189,6 +194,28 @@ def test_analytics_calculations(client, db: Session):
     db.add(doc1)
     db.commit()
     
+    # Add mock invoice and payment for Project 1 (Confirmed revenue = 100M, collected = 60M)
+    inv1 = Invoice(
+        project_id=proj1.id,
+        invoice_number="INV-2026-001",
+        amount=100000000.0,
+        issue_date=date(2026, 6, 2),
+        due_date=date(2026, 7, 2),
+        status="paid"
+    )
+    db.add(inv1)
+    db.commit()
+    
+    pay1 = Payment(
+        invoice_id=inv1.id,
+        amount=60000000.0,
+        payment_date=date(2026, 6, 3),
+        reference_number="PAY-REF-001",
+        status="approved"
+    )
+    db.add(pay1)
+    db.commit()
+    
     # 3. Query all projects analytics
     res = client.get("/api/v1/dashboard/analytics", headers=headers)
     assert res.status_code == 200
@@ -202,9 +229,13 @@ def test_analytics_calculations(client, db: Session):
     assert exec_data["total_cancel"] == 1
     assert exec_data["potential_revenue"] == 180000000.0
     assert exec_data["confirmed_revenue"] == 100000000.0
+    assert exec_data["revenue_received"] == 60000000.0
+    assert exec_data["collection_rate"] == 60.0
+    assert exec_data["outstanding_amount"] == 40000000.0
     assert exec_data["deal_rate"] == pytest.approx(33.33, 0.1)
     assert exec_data["cancel_rate"] == pytest.approx(33.33, 0.1)
     assert exec_data["revenue_conversion_rate"] == pytest.approx(55.55, 0.1)
+    assert exec_data["total_data_quality_issues"] == 8
 
     # Target checks
     target_data = data["target"]
