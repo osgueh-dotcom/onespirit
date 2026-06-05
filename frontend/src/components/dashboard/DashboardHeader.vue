@@ -11,7 +11,7 @@
       
       <!-- Printed Active Filter context info block -->
       <p class="text-[10px] text-charcoal-400 font-semibold pt-1 hidden print:block">
-        Filter Periode: {{ getFilterSummary() }} | Diunduh pada: {{ timestamp }}
+        Filter Periode: {{ getFilterSummary() }} | Diunduh pada: {{ lastSync || timestamp }}
       </p>
     </div>
 
@@ -21,9 +21,21 @@
         <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
         <div class="flex flex-col">
           <span class="text-[9px] uppercase tracking-wider text-charcoal-400 font-bold">Last Sync</span>
-          <span class="text-xs font-bold text-white">{{ timestamp }}</span>
+          <span class="text-xs font-bold text-white">{{ lastSync || timestamp }}</span>
         </div>
       </div>
+
+      <!-- Refresh Dashboard button -->
+      <button 
+        @click="$emit('refresh')"
+        :disabled="loading"
+        class="py-3 px-5 bg-charcoal-800 hover:bg-charcoal-700 border border-charcoal-700 hover:border-charcoal-600 text-white text-xs font-black uppercase tracking-wider rounded-2xl flex items-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+      >
+        <svg :class="['w-4.5 h-4.5 text-brand-orange', loading ? 'animate-spin' : '']" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+        </svg>
+        Refresh
+      </button>
       
       <!-- Print/Save Report action button -->
       <button 
@@ -47,10 +59,18 @@ const props = defineProps({
     type: Object,
     required: true,
     default: () => ({})
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  lastSync: {
+    type: String,
+    default: ''
   }
 })
 
-const emit = defineEmits(['print'])
+const emit = defineEmits(['print', 'refresh'])
 const timestamp = ref('')
 
 const updateTimestamp = () => {

@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2 print:text-charcoal-900 print:text-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-orange print:hidden"></span>
-        Program Owner (PO) Performance Review
+        Review Performa Program Owner (PO)
       </h3>
     </div>
     
@@ -11,20 +11,20 @@
       <table class="w-full text-left text-xs font-bold border-collapse print:text-charcoal-900">
         <thead>
           <tr class="border-b border-charcoal-700 text-charcoal-400 uppercase tracking-widest text-[9px] print:border-charcoal-200 print:text-charcoal-500">
-            <th class="pb-3 pl-2">Name</th>
-            <th class="pb-3 text-center">Initials</th>
-            <th class="pb-3 text-center">Projects</th>
-            <th class="pb-3 text-center">Deals Won</th>
-            <th class="pb-3 text-center">Cancelled</th>
+            <th class="pb-3 pl-2">Nama</th>
+            <th class="pb-3 text-center">Inisial</th>
+            <th class="pb-3 text-center">Total Proyek</th>
+            <th class="pb-3 text-center">Deal</th>
+            <th class="pb-3 text-center">Batal</th>
             <th class="pb-3 text-right">Confirmed Revenue</th>
-            <th class="pb-3 text-right">Avg Budget</th>
-            <th class="pb-3 text-center pr-2">Closed</th>
+            <th class="pb-3 text-right">Rata-rata Anggaran</th>
+            <th class="pb-3 text-center pr-2">Selesai</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="data.length === 0">
             <td colspan="8" class="py-8 text-center text-charcoal-500 font-bold print:text-charcoal-400">
-              No Program Owner performance data matching filters.
+              Belum ada data untuk periode atau filter yang dipilih.
             </td>
           </tr>
           <tr 
@@ -35,7 +35,7 @@
             <td class="py-3.5 pl-2 text-white print:text-charcoal-900">{{ po.po_name }}</td>
             <td class="py-3.5 text-center">
               <span class="px-2 py-0.5 bg-charcoal-700 border border-charcoal-600 rounded text-brand-orange print:bg-charcoal-50 print:border-charcoal-200 print:text-orange-700">
-                {{ po.initial_code || 'N/A' }}
+                {{ po.initial_code || '-' }}
               </span>
             </td>
             <td class="py-3.5 text-center text-charcoal-200 print:text-charcoal-800">{{ po.total_projects }}</td>
@@ -61,13 +61,8 @@ defineProps({
 })
 
 const formatMoney = (val) => {
-  if (val >= 1e9) {
-    return 'Rp ' + (val / 1e9).toFixed(2) + ' B'
-  }
-  if (val >= 1e6) {
-    return 'Rp ' + (val / 1e6).toFixed(1) + ' M'
-  }
-  return 'Rp ' + Number(val || 0).toLocaleString('id-ID')
+  if (val === undefined || val === null || isNaN(val)) return 'Rp0'
+  return 'Rp' + Math.round(val).toLocaleString('id-ID')
 }
 </script>
 

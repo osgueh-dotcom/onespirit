@@ -16,7 +16,7 @@
         </div>
         <div class="p-3 bg-charcoal-900/60 border border-charcoal-800 rounded-xl print:bg-charcoal-50 print:border print:border-charcoal-200">
           <span class="text-[9px] uppercase tracking-wider text-charcoal-400 block font-bold print:text-charcoal-500">Conversion Rate</span>
-          <span class="text-sm font-black text-sky-400 print:text-sky-700">{{ conversionRate.toFixed(1) }}%</span>
+          <span class="text-sm font-black text-sky-400 print:text-sky-700">{{ formatPercent(conversionRate) }}</span>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@
           />
         </svg>
         <span class="absolute text-sm font-black text-white print:text-charcoal-900">
-          {{ calculatePercentage(confirmedRevenue, target.revenue_target) }}%
+          {{ formatPercent(calculatePercentage(confirmedRevenue, target.revenue_target)) }}
         </span>
       </div>
       <span class="text-[9px] uppercase font-black text-charcoal-400 mt-1 print:text-charcoal-500">Target Achievement</span>
@@ -75,18 +75,18 @@ const potentialRevenue = computed(() => props.executive.potential_revenue || 0.0
 const conversionRate = computed(() => props.executive.revenue_conversion_rate || 0.0)
 
 const formatMoney = (val) => {
-  if (val >= 1e9) {
-    return 'Rp ' + (val / 1e9).toFixed(2) + ' B'
-  }
-  if (val >= 1e6) {
-    return 'Rp ' + (val / 1e6).toFixed(1) + ' M'
-  }
-  return 'Rp ' + Number(val || 0).toLocaleString('id-ID')
+  if (val === undefined || val === null || isNaN(val)) return 'Rp0'
+  return 'Rp' + Math.round(val).toLocaleString('id-ID')
+}
+
+const formatPercent = (val) => {
+  if (val === undefined || val === null || isNaN(val)) return '0,0%'
+  return Number(val).toFixed(2).replace('.', ',') + '%'
 }
 
 const calculatePercentage = (part, total) => {
-  if (!total || total <= 0) return 0
-  return Math.min(100, Math.round((part / total) * 100))
+  if (!total || total <= 0) return 0.0
+  return Math.min(100.0, (part / total) * 100.0)
 }
 
 const calculateDashoffset = (received, targetValue) => {

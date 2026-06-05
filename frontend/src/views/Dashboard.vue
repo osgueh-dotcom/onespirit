@@ -2,7 +2,13 @@
   <div class="space-y-6 pb-12 print:bg-white print:text-charcoal-900 print:p-0">
     
     <!-- A. Dashboard Header -->
-    <DashboardHeader :filters="analyticsFilters" @print="triggerPrint" />
+    <DashboardHeader 
+      :filters="analyticsFilters" 
+      :loading="analyticsLoading"
+      :lastSync="lastSyncTime"
+      @print="triggerPrint" 
+      @refresh="onRefresh"
+    />
     
     <!-- B. Dashboard Filters -->
     <DashboardFilters 
@@ -12,16 +18,41 @@
       @reset="onFiltersReset" 
     />
     
+    <!-- API Error State Banner -->
+    <div v-if="analyticsError" class="p-6 bg-red-500/10 border border-red-500/20 rounded-3xl text-center space-y-4 print:hidden select-none">
+      <div class="flex flex-col items-center justify-center gap-2">
+        <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <h4 class="text-sm font-extrabold text-white">Gagal Memuat Dashboard Analytics</h4>
+        <p class="text-xs text-charcoal-300 font-semibold max-w-md mx-auto">
+          Gagal memuat dashboard analytics. Periksa koneksi backend atau coba muat ulang.
+        </p>
+      </div>
+      <button 
+        @click="onRefresh"
+        class="py-2.5 px-6 bg-red-500 hover:bg-red-600 text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all duration-200"
+      >
+        Coba Muat Ulang
+      </button>
+    </div>
+    
     <!-- Loading Indicators -->
-    <div v-if="analyticsLoading" class="h-96 flex flex-col items-center justify-center gap-3 print:hidden">
+    <div v-else-if="analyticsLoading" class="h-96 flex flex-col items-center justify-center gap-3 print:hidden select-none">
       <svg class="animate-spin h-10 w-10 text-brand-orange" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      <span class="text-xs font-bold text-charcoal-400 tracking-wider">Compiling executive analytics...</span>
+      <span class="text-xs font-bold text-charcoal-400 tracking-wider">Memuat data dashboard...</span>
     </div>
     
-    <div v-else-if="analyticsData" class="space-y-6">
+    <!-- Empty State -->
+    <div v-else-if="!hasProjects" class="p-8 text-center text-xs font-bold text-charcoal-500 print:text-charcoal-400">
+      Belum ada data untuk periode atau filter yang dipilih.
+    </div>
+
+    <!-- Main Dashboard Body -->
+    <div v-else class="space-y-6">
       
       <!-- D. Executive Summary Narrative -->
       <ExecutiveSummaryNarrative 
@@ -45,17 +76,22 @@
       <StatusSummary 
         :quotation="analyticsData.quotation" 
         :program="analyticsData.program" 
-        :payment="analyticsData.payment" 
         :project="analyticsData.project" 
       />
+
+      <!-- G. Finance & Payment Summary -->
+      <PaymentSummary 
+        :payment="analyticsData.payment"
+        :executive="analyticsData.executive"
+      />
       
-      <!-- G & H. PO & PM tables -->
+      <!-- H & I. PO & PM tables -->
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 print:grid-cols-1">
         <PoPerformanceTable :data="analyticsData.po_performance" />
         <PmWorkloadTable :data="analyticsData.pm_workload" />
       </div>
       
-      <!-- I. Source & Market Analytics -->
+      <!-- J. Source & Market Analytics -->
       <SourceAnalytics 
         :sources="analyticsData.source_analytics" 
         :customers="analyticsData.customer_analytics" 
@@ -63,7 +99,7 @@
         :programTypes="analyticsData.program_type_analytics" 
       />
       
-      <!-- J & K & L. Finance, Data Quality & Management Notes -->
+      <!-- K & L. Data Quality & Management Notes -->
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 print:grid-cols-1">
         <DataQualityPanel :quality="analyticsData.data_quality" />
         <ManagementEvaluationNotes 
@@ -72,8 +108,23 @@
         />
       </div>
       
+      <!-- Developer Utilities (Client Demo Mode) -->
+      <div class="border-t border-charcoal-800/80 pt-6 mt-6 flex items-center justify-between print:hidden">
+        <div class="flex items-center gap-2 select-none">
+          <input 
+            id="toggle-dev-tools" 
+            type="checkbox" 
+            v-model="showDeveloperTools"
+            class="rounded border-charcoal-700 bg-charcoal-900 text-brand-orange focus:ring-brand-orange focus:ring-offset-charcoal-800 h-4.5 w-4.5 transition-colors cursor-pointer"
+          />
+          <label for="toggle-dev-tools" class="text-xs font-bold text-charcoal-400 cursor-pointer hover:text-charcoal-300">
+            Tampilkan Fitur Developer (Show Developer Tools)
+          </label>
+        </div>
+      </div>
+
       <!-- Collapsible Legacy BI section -->
-      <div class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:hidden">
+      <div v-if="showDeveloperTools" class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:hidden">
         <div class="flex items-center justify-between cursor-pointer select-none" @click="showLegacyBI = !showLegacyBI">
           <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
             <svg class="w-4.5 h-4.5 text-charcoal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -103,16 +154,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import axios from 'axios'
 
-// Import Refactored Subcomponents
+// Import Subcomponents
 import DashboardHeader from '../components/dashboard/DashboardHeader.vue'
 import DashboardFilters from '../components/dashboard/DashboardFilters.vue'
 import ExecutiveKpiCards from '../components/dashboard/ExecutiveKpiCards.vue'
 import ExecutiveSummaryNarrative from '../components/dashboard/ExecutiveSummaryNarrative.vue'
 import RevenueSummary from '../components/dashboard/RevenueSummary.vue'
 import StatusSummary from '../components/dashboard/StatusSummary.vue'
+import PaymentSummary from '../components/dashboard/PaymentSummary.vue'
 import PoPerformanceTable from '../components/dashboard/PoPerformanceTable.vue'
 import PmWorkloadTable from '../components/dashboard/PmWorkloadTable.vue'
 import SourceAnalytics from '../components/dashboard/SourceAnalytics.vue'
@@ -123,9 +175,12 @@ import DashboardLegacy from '../components/dashboard/DashboardLegacy.vue'
 const stats = ref({})
 const legacyLoading = ref(false)
 const showLegacyBI = ref(false)
+const showDeveloperTools = ref(false)
 
 const analyticsData = ref(null)
 const analyticsLoading = ref(true)
+const analyticsError = ref(false)
+const lastSyncTime = ref('')
 
 const analyticsFilters = ref({
   year: '',
@@ -146,6 +201,23 @@ const analyticsFilters = ref({
 
 const usersList = ref([])
 
+const hasProjects = computed(() => {
+  return analyticsData.value && analyticsData.value.executive && analyticsData.value.executive.total_projects > 0
+})
+
+const updateSyncTime = () => {
+  const now = new Date()
+  lastSyncTime.value = now.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }) + ' (' + now.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }) + ')'
+}
+
 // Load users list for filters
 const loadUsers = async () => {
   try {
@@ -159,6 +231,7 @@ const loadUsers = async () => {
 // Fetch master analytics response
 const fetchAnalytics = async () => {
   analyticsLoading.value = true
+  analyticsError.value = false
   try {
     const params = {}
     for (const key in analyticsFilters.value) {
@@ -168,8 +241,10 @@ const fetchAnalytics = async () => {
     }
     const response = await axios.get('/api/v1/dashboard/analytics', { params })
     analyticsData.value = response.data
+    updateSyncTime()
   } catch (err) {
     console.error('Failed to load dashboard analytics metrics', err)
+    analyticsError.value = true
   } finally {
     analyticsLoading.value = false
   }
@@ -205,7 +280,7 @@ watch(showLegacyBI, (val) => {
 const onFiltersChanged = (newFilters) => {
   analyticsFilters.value = newFilters
   fetchAnalytics()
-  if (showLegacyBI.value) {
+  if (showLegacyBI.value && showDeveloperTools.value) {
     fetchDashboard()
   }
 }
@@ -228,7 +303,14 @@ const onFiltersReset = () => {
     program_type: ''
   }
   fetchAnalytics()
-  if (showLegacyBI.value) {
+  if (showLegacyBI.value && showDeveloperTools.value) {
+    fetchDashboard()
+  }
+}
+
+const onRefresh = () => {
+  fetchAnalytics()
+  if (showDeveloperTools.value && showLegacyBI.value) {
     fetchDashboard()
   }
 }
@@ -260,7 +342,7 @@ onMounted(() => {
   }
   
   /* Hide navigation panels, app sidebar, reset buttons and BI tabs */
-  header, nav, aside, .sidebar, .navbar, .no-print, button, .print\:hidden {
+  header, nav, aside, .sidebar, .navbar, .no-print, button, .print\:hidden, input[type="checkbox"], label[for="toggle-dev-tools"] {
     display: none !important;
   }
 

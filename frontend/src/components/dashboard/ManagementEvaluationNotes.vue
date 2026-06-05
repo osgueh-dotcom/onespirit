@@ -1,7 +1,7 @@
 <template>
   <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:bg-white print:border-none print:p-0 print:rounded-none">
     <h3 class="text-xs font-bold text-brand-orange uppercase tracking-widest print:text-charcoal-800 print:text-sm">
-      Catatan Evaluasi Manajemen (Management Review Notes)
+      Catatan Evaluasi Manajemen
     </h3>
     
     <div v-if="!hasData" class="text-xs font-semibold text-charcoal-400 leading-relaxed print:text-charcoal-600">

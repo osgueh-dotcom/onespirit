@@ -29,7 +29,7 @@
       <div class="absolute -top-10 -right-10 w-24 h-24 bg-brand-emerald/5 rounded-full blur-2xl print:hidden"></div>
       <p class="text-[9px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1 print:text-charcoal-500">Deal Conversion Rate</p>
       <h3 class="text-3xl font-black text-brand-emerald font-sans print:text-emerald-700">
-        {{ (executive.deal_rate || 0).toFixed(1) }}%
+        {{ formatPercent(executive.deal_rate) }}
       </h3>
       <span class="inline-flex mt-3 text-[10px] font-bold text-charcoal-400 print:text-charcoal-600">
         Deal / Total inquiry
@@ -41,7 +41,7 @@
       <div class="absolute -top-10 -right-10 w-24 h-24 bg-red-500/5 rounded-full blur-2xl print:hidden"></div>
       <p class="text-[9px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1 print:text-charcoal-500">Cancellation Rate</p>
       <h3 class="text-3xl font-black text-red-400 font-sans print:text-red-700">
-        {{ (executive.cancel_rate || 0).toFixed(1) }}%
+        {{ formatPercent(executive.cancel_rate) }}
       </h3>
       <span class="inline-flex mt-3 text-[10px] font-bold text-red-400 px-2.5 py-1 bg-red-500/10 rounded-lg print:border print:border-charcoal-200 print:text-red-800 print:bg-charcoal-50">
         {{ executive.total_cancel || 0 }} Cancelled
@@ -77,7 +77,7 @@
       <div class="absolute -top-10 -right-10 w-24 h-24 bg-brand-orange/5 rounded-full blur-2xl print:hidden"></div>
       <p class="text-[9px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1 print:text-charcoal-500">Target Achievement</p>
       <h3 class="text-3xl font-black text-brand-orange font-sans print:text-orange-700">
-        {{ (target.achievement_rate || 0).toFixed(1) }}%
+        {{ formatPercent(target.achievement_rate) }}
       </h3>
       <span class="inline-flex mt-3 text-[10px] font-bold text-charcoal-400 print:text-charcoal-600">
         Target: {{ formatMoney(target.revenue_target) }}
@@ -89,7 +89,7 @@
       <div class="absolute -top-10 -right-10 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl print:hidden"></div>
       <p class="text-[9px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1 print:text-charcoal-500">Revenue Conversion Rate</p>
       <h3 class="text-3xl font-black text-sky-400 font-sans print:text-sky-700">
-        {{ (executive.revenue_conversion_rate || 0).toFixed(1) }}%
+        {{ formatPercent(executive.revenue_conversion_rate) }}
       </h3>
       <span class="inline-flex mt-3 text-[10px] font-bold text-charcoal-400 print:text-charcoal-600">
         Confirmed / Potential
@@ -125,13 +125,13 @@ const props = defineProps({
 })
 
 const formatMoney = (val) => {
-  if (val >= 1e9) {
-    return 'Rp ' + (val / 1e9).toFixed(2) + ' B'
-  }
-  if (val >= 1e6) {
-    return 'Rp ' + (val / 1e6).toFixed(1) + ' M'
-  }
-  return 'Rp ' + Number(val || 0).toLocaleString('id-ID')
+  if (val === undefined || val === null || isNaN(val)) return 'Rp0'
+  return 'Rp' + Math.round(val).toLocaleString('id-ID')
+}
+
+const formatPercent = (val) => {
+  if (val === undefined || val === null || isNaN(val)) return '0,0%'
+  return Number(val).toFixed(2).replace('.', ',') + '%'
 }
 </script>
 

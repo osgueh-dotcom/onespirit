@@ -4,15 +4,15 @@
       <div class="flex flex-col">
         <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2 print:text-charcoal-900 print:text-sm">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse print:hidden"></span>
-          Operational Data Quality & Integrity Audits
+          Review Kualitas Data Operasional (Data Quality Review)
         </h3>
-        <span class="text-[9px] text-charcoal-400 font-semibold mt-0.5 print:text-charcoal-500">Identifies workflow and mapping inconsistencies in active records</span>
+        <span class="text-[9px] text-charcoal-400 font-semibold mt-0.5 print:text-charcoal-500">Identifikasi inkonsistensi alur kerja dan pemetaan data</span>
       </div>
       <div 
         class="text-[10px] uppercase font-black px-2.5 py-1 rounded print:border"
         :class="hasIssues ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 print:bg-charcoal-50 print:border-charcoal-350 print:text-charcoal-700' : 'bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20 print:bg-charcoal-50 print:border-charcoal-300 print:text-emerald-700'"
       >
-        {{ hasIssues ? 'Inconsistencies Detected' : 'Data Integrity Nominal' }}
+        {{ hasIssues ? 'Terdeteksi Inkonsistensi' : 'Kualitas Data Nominal' }}
       </div>
     </div>
 
@@ -32,8 +32,8 @@
         </svg>
       </div>
       <div>
-        <p class="text-xs text-white font-bold print:text-charcoal-900">100% Data Integrity Score</p>
-        <p class="text-[10px] text-charcoal-400 font-semibold mt-0.5 print:text-charcoal-500">No missing owners, invalid budgets, or untagged sources found.</p>
+        <p class="text-xs text-white font-bold print:text-charcoal-900">Skor Kualitas Data 100%</p>
+        <p class="text-[10px] text-charcoal-400 font-semibold mt-0.5 print:text-charcoal-500">Tidak ada data penugasan, anggaran, atau sumber event yang terdeteksi tidak lengkap.</p>
       </div>
     </div>
 
@@ -45,7 +45,7 @@
         :class="quality.missing_po > 0 ? 'border-amber-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_po > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Missing PO</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_po > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">PO Belum Ditunjuk</span>
           <span 
             v-if="quality.missing_po > 0"
             class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -57,7 +57,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Active projects that do not have a Program Owner assigned.
+          Proyek aktif yang belum memiliki penugasan Program Owner.
         </p>
       </div>
 
@@ -67,7 +67,7 @@
         :class="quality.missing_pm > 0 ? 'border-amber-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_pm > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Missing PM</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_pm > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">PM Belum Ditunjuk</span>
           <span 
             v-if="quality.missing_pm > 0"
             class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -79,7 +79,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Active projects that do not have a Program Manager assigned.
+          Proyek aktif yang belum memiliki penugasan Program Manager.
         </p>
       </div>
 
@@ -89,7 +89,7 @@
         :class="quality.missing_customer > 0 ? 'border-red-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_customer > 0 ? 'text-red-400 print:text-red-700' : 'text-charcoal-400 print:text-charcoal-500'">Missing Customer</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_customer > 0 ? 'text-red-400 print:text-red-700' : 'text-charcoal-400 print:text-charcoal-500'">Pelanggan Kosong</span>
           <span 
             v-if="quality.missing_customer > 0"
             class="text-[10px] bg-red-500/10 text-red-400 border border-red-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -101,7 +101,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Projects without any associated client or partner profile.
+          Proyek yang belum terhubung dengan profil pelanggan/klien.
         </p>
       </div>
 
@@ -111,7 +111,7 @@
         :class="quality.missing_budget > 0 ? 'border-amber-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_budget > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Missing Budget</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.missing_budget > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Anggaran Kosong</span>
           <span 
             v-if="quality.missing_budget > 0"
             class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -123,7 +123,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Active or signed projects with no budget allocated or budget &lt;= 0.
+          Proyek aktif yang nilai anggarannya kosong atau bernilai nol.
         </p>
       </div>
 
@@ -133,7 +133,7 @@
         :class="quality.cancel_without_reason > 0 ? 'border-amber-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.cancel_without_reason > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Cancel w/o Reason</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.cancel_without_reason > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Batal Tanpa Alasan</span>
           <span 
             v-if="quality.cancel_without_reason > 0"
             class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -145,7 +145,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Canceled quotations with empty cancellation notes.
+          Proyek batal dengan kolom alasan pembatalan (cancel reason) kosong.
         </p>
       </div>
 
@@ -155,7 +155,7 @@
         :class="quality.closed_not_paid > 0 ? 'border-red-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.closed_not_paid > 0 ? 'text-red-400 print:text-red-700' : 'text-charcoal-400 print:text-charcoal-500'">Closed Not Paid</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.closed_not_paid > 0 ? 'text-red-400 print:text-red-700' : 'text-charcoal-400 print:text-charcoal-500'">Closed Belum Lunas</span>
           <span 
             v-if="quality.closed_not_paid > 0"
             class="text-[10px] bg-red-500/10 text-red-400 border border-red-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -167,7 +167,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Projects marked Closed but payment is not marked Paid.
+          Proyek berstatus Closed tetapi pembayarannya belum berstatus Paid.
         </p>
       </div>
 
@@ -177,7 +177,7 @@
         :class="quality.documentation_missing > 0 ? 'border-amber-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.documentation_missing > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">No Documents</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.documentation_missing > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Dokumen Kosong</span>
           <span 
             v-if="quality.documentation_missing > 0"
             class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -189,7 +189,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Projects with no Google Drive assets or contracts linked.
+          Proyek aktif tanpa tautan Google Drive dokumen pendukung.
         </p>
       </div>
 
@@ -199,7 +199,7 @@
         :class="quality.unknown_source > 0 ? 'border-amber-500/30' : 'border-charcoal-800'"
       >
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.unknown_source > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Unknown Source</span>
+          <span class="text-[9px] uppercase tracking-wider font-black" :class="quality.unknown_source > 0 ? 'text-amber-400 print:text-orange-700' : 'text-charcoal-400 print:text-charcoal-500'">Sumber Tidak Jelas</span>
           <span 
             v-if="quality.unknown_source > 0"
             class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded font-black font-sans print:border-charcoal-250 print:text-charcoal-700"
@@ -211,7 +211,7 @@
           </svg>
         </div>
         <p class="text-[10px] text-charcoal-300 font-semibold leading-normal print:text-charcoal-600">
-          Projects with no source, or type set to Other or Unknown.
+          Proyek dengan sumber event kosong atau berkategori Other/Unknown.
         </p>
       </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none print:grid-cols-2 print:gap-4 print:text-charcoal-900">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 select-none print:grid-cols-3 print:gap-4 print:text-charcoal-900">
     <!-- Quotation Status Summary -->
     <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col print:bg-white print:border print:border-charcoal-200 print:rounded-xl">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 flex items-center gap-2 print:text-charcoal-900 print:text-sm">
@@ -40,29 +40,6 @@
       </div>
     </div>
 
-    <!-- Payment Status Summary -->
-    <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col print:bg-white print:border print:border-charcoal-200 print:rounded-xl">
-      <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 flex items-center gap-2 print:text-charcoal-900 print:text-sm">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 print:hidden"></span>
-        Finance Billing Status
-      </h3>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <div 
-          v-for="(count, status) in payment.count_by_status" 
-          :key="status"
-          class="p-3 bg-charcoal-900/60 border border-charcoal-800 rounded-xl print:bg-charcoal-50 print:border print:border-charcoal-200"
-        >
-          <span class="text-[9px] uppercase tracking-wider text-charcoal-400 block font-bold print:text-charcoal-500">{{ status }}</span>
-          <span class="text-lg font-black text-white print:text-charcoal-900">{{ count }}</span>
-        </div>
-      </div>
-      <div class="flex items-center justify-between mt-4 pt-3 border-t border-charcoal-700/60 text-xs font-bold print:border-charcoal-200 print:text-charcoal-700">
-        <span class="text-emerald-400 print:text-emerald-700">Fully Paid: {{ payment.paid_count }}</span>
-        <span class="text-brand-orange print:text-orange-700">Outstanding: {{ payment.outstanding_count }}</span>
-        <span class="text-charcoal-400 print:text-charcoal-500">Not Invoiced: {{ payment.not_invoiced_count }}</span>
-      </div>
-    </div>
-
     <!-- Project Status Summary -->
     <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col print:bg-white print:border print:border-charcoal-200 print:rounded-xl">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 flex items-center gap-2 print:text-charcoal-900 print:text-sm">
@@ -99,11 +76,6 @@ defineProps({
     type: Object,
     required: true,
     default: () => ({ count_by_status: {} })
-  },
-  payment: {
-    type: Object,
-    required: true,
-    default: () => ({ count_by_status: {}, paid_count: 0, outstanding_count: 0, not_invoiced_count: 0 })
   },
   project: {
     type: Object,

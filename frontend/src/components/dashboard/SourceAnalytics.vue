@@ -4,11 +4,11 @@
     <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[350px] print:bg-white print:border print:border-charcoal-200 print:rounded-xl print:h-auto print:p-5">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 flex items-center gap-2 print:text-charcoal-900 print:text-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-orange print:hidden"></span>
-        Event Source Analytics
+        Analitik Sumber Event (Event Source Analytics)
       </h3>
       <div class="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar print:overflow-visible print:h-auto">
         <div v-if="sources.length === 0" class="text-center py-12 text-charcoal-500 font-bold print:text-charcoal-400">
-          No Event Source data available.
+          Belum ada data untuk periode atau filter yang dipilih.
         </div>
         <div 
           v-for="src in sources" 
@@ -33,11 +33,11 @@
     <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[350px] print:bg-white print:border print:border-charcoal-200 print:rounded-xl print:h-auto print:p-5">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 flex items-center gap-2 print:text-charcoal-900 print:text-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-sky-400 print:hidden"></span>
-        Customer Category Shares
+        Rasio Kategori Pelanggan (Customer Category Shares)
       </h3>
       <div class="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar print:overflow-visible print:h-auto">
         <div v-if="customers.length === 0" class="text-center py-12 text-charcoal-500 font-bold print:text-charcoal-400">
-          No Customer Category data available.
+          Belum ada data untuk periode atau filter yang dipilih.
         </div>
         <div 
           v-for="cust in customers" 
@@ -62,11 +62,11 @@
     <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[350px] print:bg-white print:border print:border-charcoal-200 print:rounded-xl print:h-auto print:p-5">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 flex items-center gap-2 print:text-charcoal-900 print:text-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-purple-400 print:hidden"></span>
-        Event Category Breakdown
+        Analitik Kategori Event (Event Category Breakdown)
       </h3>
       <div class="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar print:overflow-visible print:h-auto">
         <div v-if="eventCategories.length === 0" class="text-center py-12 text-charcoal-500 font-bold print:text-charcoal-400">
-          No Event Category data available.
+          Belum ada data untuk periode atau filter yang dipilih.
         </div>
         <div 
           v-for="ev in eventCategories" 
@@ -91,11 +91,11 @@
     <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[350px] print:bg-white print:border print:border-charcoal-200 print:rounded-xl print:h-auto print:p-5">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 flex items-center gap-2 print:text-charcoal-900 print:text-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 print:hidden"></span>
-        Program Type Analytics
+        Analitik Tipe Program (Program Type Analytics)
       </h3>
       <div class="flex-1 overflow-y-auto space-y-4 pr-1 custom-scrollbar print:overflow-visible print:h-auto">
         <div v-if="programTypes.length === 0" class="text-center py-12 text-charcoal-500 font-bold print:text-charcoal-400">
-          No Program Type data available.
+          Belum ada data untuk periode atau filter yang dipilih.
         </div>
         <div 
           v-for="prog in programTypes" 
@@ -149,13 +149,8 @@ const totalConfirmedRevenue = computed(() => {
 })
 
 const formatMoney = (val) => {
-  if (val >= 1e9) {
-    return 'Rp ' + (val / 1e9).toFixed(2) + ' B'
-  }
-  if (val >= 1e6) {
-    return 'Rp ' + (val / 1e6).toFixed(1) + ' M'
-  }
-  return 'Rp ' + Number(val || 0).toLocaleString('id-ID')
+  if (val === undefined || val === null || isNaN(val)) return 'Rp0'
+  return 'Rp' + Math.round(val).toLocaleString('id-ID')
 }
 
 const calculatePercentage = (part, total) => {

@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2 print:text-charcoal-900 print:text-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-sky-400 print:hidden"></span>
-        Program Manager (PM) Workload Balance
+        Review Beban Kerja Program Manager (PM)
       </h3>
     </div>
     
@@ -11,20 +11,20 @@
       <table class="w-full text-left text-xs font-bold border-collapse print:text-charcoal-900">
         <thead>
           <tr class="border-b border-charcoal-700 text-charcoal-400 uppercase tracking-widest text-[9px] print:border-charcoal-200 print:text-charcoal-500">
-            <th class="pb-3 pl-2">Name</th>
-            <th class="pb-3 text-center">Initials</th>
-            <th class="pb-3 text-center">Total Projects</th>
-            <th class="pb-3 text-center">Active</th>
-            <th class="pb-3 text-center">Preparation</th>
+            <th class="pb-3 pl-2">Nama</th>
+            <th class="pb-3 text-center">Inisial</th>
+            <th class="pb-3 text-center">Total Proyek</th>
+            <th class="pb-3 text-center">Aktif</th>
+            <th class="pb-3 text-center">Persiapan</th>
             <th class="pb-3 text-center">Running</th>
-            <th class="pb-3 text-center">Reporting</th>
-            <th class="pb-3 text-center pr-2">Closed</th>
+            <th class="pb-3 text-center">Pelaporan</th>
+            <th class="pb-3 text-center pr-2">Selesai</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="data.length === 0">
             <td colspan="8" class="py-8 text-center text-charcoal-500 font-bold print:text-charcoal-400">
-              No Program Manager workload data matching filters.
+              Belum ada data untuk periode atau filter yang dipilih.
             </td>
           </tr>
           <tr 
@@ -35,7 +35,7 @@
             <td class="py-3.5 pl-2 text-white print:text-charcoal-900">{{ pm.pm_name }}</td>
             <td class="py-3.5 text-center">
               <span class="px-2 py-0.5 bg-charcoal-700 border border-charcoal-600 rounded text-sky-400 print:bg-charcoal-50 print:border-charcoal-200 print:text-sky-700">
-                {{ pm.initial_code || 'N/A' }}
+                {{ pm.initial_code || '-' }}
               </span>
             </td>
             <td class="py-3.5 text-center text-white print:text-charcoal-900">{{ pm.total_projects }}</td>

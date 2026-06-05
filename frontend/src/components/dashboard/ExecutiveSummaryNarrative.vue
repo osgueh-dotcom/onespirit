@@ -10,7 +10,7 @@
     
     <div v-else class="space-y-4">
       <p class="text-sm font-semibold text-white leading-relaxed print:text-charcoal-800">
-        Pada periode ini, PT. One Spirit Asia mencatat sebanyak <span class="text-brand-orange print:text-charcoal-900 font-extrabold">{{ totalInquiry }}</span> record inquiry masuk dengan total <span class="text-brand-emerald print:text-charcoal-900 font-extrabold">{{ totalDeal }}</span> project deal yang berhasil ditandatangani. Tingkat pencapaian deal (Deal Rate) tercatat di angka <span class="text-white print:text-charcoal-900 font-extrabold">{{ dealRate.toFixed(1) }}%</span>, sedangkan tingkat pembatalan (Cancel Rate) berada pada angka <span class="text-white print:text-charcoal-900 font-extrabold">{{ cancelRate.toFixed(1) }}%</span>. Confirmed revenue (nilai proyek yang disepakati) saat ini mencapai <span class="text-brand-emerald print:text-charcoal-900 font-extrabold">{{ formatMoney(confirmedRevenue) }}</span>, yang menyumbang sekitar <span class="text-brand-orange print:text-charcoal-900 font-extrabold">{{ targetAchievement.toFixed(1) }}%</span> dari target tahunan Rp 9.2 Miliar yang dicanangkan oleh direksi untuk tahun {{ targetYear }}. 
+        Pada periode ini, PT. One Spirit Asia mencatat sebanyak <span class="text-brand-orange print:text-charcoal-900 font-extrabold">{{ totalInquiry }}</span> record inquiry masuk dengan total <span class="text-brand-emerald print:text-charcoal-900 font-extrabold">{{ totalDeal }}</span> project deal yang berhasil ditandatangani. Tingkat pencapaian deal (Deal Rate) tercatat di angka <span class="text-white print:text-charcoal-900 font-extrabold">{{ formatPercent(dealRate) }}</span>, sedangkan tingkat pembatalan (Cancel Rate) berada pada angka <span class="text-white print:text-charcoal-900 font-extrabold">{{ formatPercent(cancelRate) }}</span>. Confirmed revenue (nilai proyek yang disepakati) saat ini mencapai <span class="text-brand-emerald print:text-charcoal-900 font-extrabold">{{ formatMoney(confirmedRevenue) }}</span>, yang menyumbang sekitar <span class="text-brand-orange print:text-charcoal-900 font-extrabold">{{ formatPercent(targetAchievement) }}</span> dari target tahunan <span class="text-white print:text-charcoal-900 font-extrabold">{{ formatMoney(target.revenue_target) }}</span> yang dicanangkan oleh direksi untuk tahun {{ targetYear }}. 
       </p>
 
       <!-- Warnings/Issues Alert blocks -->
@@ -62,12 +62,17 @@ const targetAchievement = computed(() => props.target.achievement_rate || 0.0)
 const targetYear = computed(() => props.target.year || 2025)
 const dataIssues = computed(() => props.executive.total_data_quality_issues || 0)
 
+const formatPercent = (val) => {
+  if (val === undefined || val === null || isNaN(val)) return '0,0%'
+  return Number(val).toFixed(2).replace('.', ',') + '%'
+}
+
 const warnings = computed(() => {
   const list = []
   if (cancelRate.value > 30) {
     list.push({
       title: 'Tingkat Pembatalan Tinggi',
-      message: `Persentase pembatalan proyek (Cancel Rate: ${cancelRate.value.toFixed(1)}%) terpantau cukup tinggi pada periode ini. Disarankan melakukan tinjauan mendalam atas alasan pembatalan (cancel reason) proyek.`
+      message: `Persentase pembatalan proyek (Cancel Rate: ${formatPercent(cancelRate.value)}) terpantau cukup tinggi pada periode ini. Disarankan melakukan tinjauan mendalam atas alasan pembatalan (cancel reason) proyek.`
     })
   }
   if (dataIssues.value > 0) {
@@ -80,13 +85,8 @@ const warnings = computed(() => {
 })
 
 const formatMoney = (val) => {
-  if (val >= 1e9) {
-    return 'Rp ' + (val / 1e9).toFixed(2) + ' B'
-  }
-  if (val >= 1e6) {
-    return 'Rp ' + (val / 1e6).toFixed(1) + ' M'
-  }
-  return 'Rp ' + Number(val || 0).toLocaleString('id-ID')
+  if (val === undefined || val === null || isNaN(val)) return 'Rp0'
+  return 'Rp' + Math.round(val).toLocaleString('id-ID')
 }
 </script>
 
