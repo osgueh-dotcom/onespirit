@@ -29,11 +29,22 @@ It returns a structured, nested JSON payload detailing:
 
 *   **Potential Revenue**: Sum of budget fields for all projects matching the filter query.
 *   **Confirmed Revenue**: Sum of budgets where the project's `quotation_status` is `"Signed & Deal"` OR `program_status` is one of `["Confirmed", "Preparation", "Ready", "Running", "Completed", "Reporting", "Closed"]`.
+    *   > [!IMPORTANT]
+    *   > **Confirmed Revenue vs. Paid Cash**: Confirmed revenue represents signed/approved business pipeline value (budget) that One Spirit is contracted to execute. It is *not* the same as paid cash, which tracks actual payments received and approved in the billing ledger.
 *   **Revenue Conversion Rate**: `(Confirmed Revenue / Potential Revenue) * 100` (defaults to `0.0` if potential revenue is zero).
 *   **Average Project Value**: `Confirmed Revenue / Deal Count` (defaults to `0.0` if deal count is zero).
 
+### Target Revenue
+
+*   **Year**: 2025
+*   **Revenue Target**: Rp 9,200,000,000
+*   **Achievement Rate (%)**: `(Confirmed Revenue / Revenue Target) * 100` (defaults to `0.0` if revenue target is zero).
+
 ### Ratios & Counts
 
+*   **Total Projects**: Total number of projects matching the active filters.
+*   **Total Inquiry**: Represents all incoming inquiry/project records, equaling `Total Projects`.
+*   **Inquiry Stage Count**: Counts projects specifically in the `"Inquiry"` status phase (`program_status == "Inquiry"`).
 *   **Deal Count**: Number of projects where `quotation_status == "Signed & Deal"`.
 *   **Cancel Count**: Number of projects where `quotation_status == "Cancel"` OR `project_status == "Canceled"`.
 *   **Deal Rate (%)**: `(Deal Count / Total Projects) * 100`.

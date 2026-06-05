@@ -392,7 +392,7 @@
           <ExecutiveKpiCards :executive="analyticsData.executive" />
           
           <!-- Target Revenue Banner -->
-          <RevenueSummary :executive="analyticsData.executive" />
+          <RevenueSummary :executive="analyticsData.executive" :target="analyticsData.target" />
           
           <!-- Status Summaries (Quotation, Program, Payment, Project) -->
           <PaymentSummary 

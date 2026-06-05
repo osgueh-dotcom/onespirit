@@ -68,8 +68,11 @@ def test_analytics_endpoint_empty(client):
     
     data = response.json()
     assert data["executive"]["total_projects"] == 0
+    assert data["executive"]["total_inquiry"] == 0
+    assert data["executive"]["inquiry_stage_count"] == 0
     assert data["executive"]["confirmed_revenue"] == 0.0
     assert data["executive"]["deal_rate"] == 0.0
+    assert data["target"]["achievement_rate"] == 0.0
     assert len(data["po_performance"]) == 0
     assert len(data["pm_workload"]) == 0
     assert data["data_quality"]["missing_po"] == 0
@@ -193,6 +196,8 @@ def test_analytics_calculations(client, db: Session):
     
     exec_data = data["executive"]
     assert exec_data["total_projects"] == 3
+    assert exec_data["total_inquiry"] == 3
+    assert exec_data["inquiry_stage_count"] == 1
     assert exec_data["total_deal"] == 1
     assert exec_data["total_cancel"] == 1
     assert exec_data["potential_revenue"] == 180000000.0
@@ -200,6 +205,12 @@ def test_analytics_calculations(client, db: Session):
     assert exec_data["deal_rate"] == pytest.approx(33.33, 0.1)
     assert exec_data["cancel_rate"] == pytest.approx(33.33, 0.1)
     assert exec_data["revenue_conversion_rate"] == pytest.approx(55.55, 0.1)
+
+    # Target checks
+    target_data = data["target"]
+    assert target_data["year"] == 2025
+    assert target_data["revenue_target"] == 9200000000.0
+    assert target_data["achievement_rate"] == pytest.approx(100000000.0 / 9200000000.0 * 100.0, 0.1)
     
     # Quotation status distribution check
     quot_data = data["quotation"]

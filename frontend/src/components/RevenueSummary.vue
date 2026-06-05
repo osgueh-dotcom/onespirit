@@ -1,13 +1,13 @@
 <template>
   <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 select-none">
     <div class="space-y-2 text-center md:text-left flex-1">
-      <h4 class="text-xs font-bold uppercase tracking-widest text-brand-orange">Annual Confirmed collections vs Target 2025</h4>
+      <h4 class="text-xs font-bold uppercase tracking-widest text-brand-orange">Annual Confirmed collections vs Target {{ target.year }}</h4>
       <p class="text-base text-white font-black">
-        Target goal of <span class="text-brand-emerald">Rp 9,200,000,000</span> set by One Spirit Asia executives.
+        Target goal of <span class="text-brand-emerald">{{ formatMoney(target.revenue_target) }}</span> set by One Spirit Asia executives.
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
         <div class="p-3 bg-charcoal-900/60 border border-charcoal-800 rounded-xl">
-          <span class="text-[9px] uppercase tracking-wider text-charcoal-400 block font-bold">Confirmed Cash</span>
+          <span class="text-[9px] uppercase tracking-wider text-charcoal-400 block font-bold">Confirmed Revenue</span>
           <span class="text-sm font-black text-brand-emerald">{{ formatMoney(confirmedRevenue) }}</span>
         </div>
         <div class="p-3 bg-charcoal-900/60 border border-charcoal-800 rounded-xl">
@@ -33,12 +33,12 @@
             stroke-width="8" 
             fill="transparent" 
             :stroke-dasharray="251.2"
-            :stroke-dashoffset="calculateDashoffset(confirmedRevenue, 9200000000)"
+            :stroke-dashoffset="calculateDashoffset(confirmedRevenue, target.revenue_target)"
             class="transition-all duration-500 ease-out"
           />
         </svg>
         <span class="absolute text-sm font-black text-white">
-          {{ calculatePercentage(confirmedRevenue, 9200000000) }}%
+          {{ calculatePercentage(confirmedRevenue, target.revenue_target) }}%
         </span>
       </div>
       <span class="text-[9px] uppercase font-black text-charcoal-400 mt-1">Target Achievement</span>
@@ -57,6 +57,15 @@ const props = defineProps({
       potential_revenue: 0.0,
       confirmed_revenue: 0.0,
       revenue_conversion_rate: 0.0
+    })
+  },
+  target: {
+    type: Object,
+    required: true,
+    default: () => ({
+      year: 2025,
+      revenue_target: 9200000000.0,
+      achievement_rate: 0.0
     })
   }
 })
@@ -80,8 +89,9 @@ const calculatePercentage = (part, total) => {
   return Math.min(100, Math.round((part / total) * 100))
 }
 
-const calculateDashoffset = (received, target) => {
-  const percentage = received / target
+const calculateDashoffset = (received, targetValue) => {
+  if (!targetValue || targetValue <= 0) return 251.2
+  const percentage = received / targetValue
   const dasharray = 251.2
   if (percentage >= 1) return 0
   return dasharray - (percentage * dasharray)

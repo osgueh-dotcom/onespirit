@@ -72,7 +72,7 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
     
     # Initialize variables for in-memory calculations
     total_projects = len(projects)
-    total_inquiry = 0
+    inquiry_stage_count = 0
     total_deal = 0
     total_cancel = 0
     potential_revenue = 0.0
@@ -149,7 +149,7 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
         if is_cancel:
             total_cancel += 1
         if pr_status == "Inquiry":
-            total_inquiry += 1
+            inquiry_stage_count += 1
             
         # Revenue Logic
         if budget > 0:
@@ -302,12 +302,19 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
         if p.event_source_id is None or s_type.lower() in ["other", "unknown"]:
             unknown_source += 1
 
+    # Set total_inquiry as total_projects per requirements
+    total_inquiry = total_projects
+    
     # Calculate ratios and averages safely
     deal_rate = (total_deal / total_projects * 100.0) if total_projects > 0 else 0.0
     cancel_rate = (total_cancel / total_projects * 100.0) if total_projects > 0 else 0.0
     revenue_conversion_rate = (confirmed_revenue / potential_revenue * 100.0) if potential_revenue > 0 else 0.0
     average_project_value = (confirmed_revenue / total_deal) if total_deal > 0 else 0.0
     
+    # Calculate target achievement rate
+    revenue_target = 9200000000.0
+    achievement_rate = (confirmed_revenue / revenue_target * 100.0) if revenue_target > 0 else 0.0
+
     # Process PO Performance list
     po_performance_list = []
     for po_id_key, d in po_map.items():
@@ -349,6 +356,7 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
         "executive": {
             "total_projects": total_projects,
             "total_inquiry": total_inquiry,
+            "inquiry_stage_count": inquiry_stage_count,
             "total_deal": total_deal,
             "total_cancel": total_cancel,
             "deal_rate": deal_rate,
@@ -357,6 +365,11 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
             "confirmed_revenue": confirmed_revenue,
             "revenue_conversion_rate": revenue_conversion_rate,
             "average_project_value": average_project_value
+        },
+        "target": {
+            "year": 2025,
+            "revenue_target": revenue_target,
+            "achievement_rate": achievement_rate
         },
         "quotation": {
             "count_by_status": quot_counts,

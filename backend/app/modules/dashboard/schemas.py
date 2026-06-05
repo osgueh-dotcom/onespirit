@@ -5,6 +5,7 @@ from uuid import UUID
 class ExecutiveSummarySchema(BaseModel):
     total_projects: int
     total_inquiry: int
+    inquiry_stage_count: int
     total_deal: int
     total_cancel: int
     deal_rate: float
@@ -92,8 +93,14 @@ class DataQualitySchema(BaseModel):
     documentation_missing: int
     unknown_source: int
 
+class TargetSummarySchema(BaseModel):
+    year: int
+    revenue_target: float
+    achievement_rate: float
+
 class DashboardAnalyticsResponse(BaseModel):
     executive: ExecutiveSummarySchema
+    target: TargetSummarySchema
     quotation: QuotationSummarySchema
     program: ProgramSummarySchema
     payment: PaymentSummarySchema
