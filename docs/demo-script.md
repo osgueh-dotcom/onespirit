@@ -10,7 +10,7 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 > 
 > Seperti yang kita diskusikan sebelumnya bersama Bapak Abdul Patah, operasional One Spirit sangat padat dengan berbagai event. Selama ini, data penawaran, status persiapan program, penagihan invoice, hingga pembagian beban kerja tim dikelola secara manual menggunakan file-file Excel yang tersebar. Hal ini rawan memicu ketidakselarasan data.
 >
-> Hari ini, kami mempersembahkan solusi modernisasi sistem web terintegrasi yang akan memusatkan seluruh alur kerja operasional dan laporan analitik bisnis Anda secara real-time. Mari kita masuk ke aplikasinya."
+> Hari ini, kami mempersembahkan solusi modernisasi sistem web terintegrasi yang akan memusatkan seluruh alur kerja operasional dan laporan analitik bisnis Anda secara terstruktur dan terpadu. Mari kita masuk ke aplikasinya."
 
 ---
 
@@ -28,7 +28,7 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 > **Presenter**:
 > "Setelah sukses masuk, pengguna langsung disambut oleh **Executive Dashboard**. Dashboard ini dirancang khusus sebagai alat evaluasi performa bagi manajemen senior dan direksi One Spirit.
 > 
-> Di bagian atas, Bapak dan Ibu dapat melihat KPI Utama: **Total Inquiry**, **Total Deal**, **Deal Rate**, hingga **Cancel Rate** yang semuanya diperbarui secara instan.
+> Di bagian atas, Bapak dan Ibu dapat melihat KPI Utama: **Total Inquiry**, **Total Deal**, **Deal Rate**, hingga **Cancel Rate** yang semuanya terbarui berdasarkan database terpusat.
 > 
 > Di sisi kanan, sistem menampilkan persentase pencapaian target penjualan tahunan secara dinamis dari database, membandingkan akumulasi *Confirmed Revenue* (nilai kontrak yang disepakati) dengan target pendapatan direksi. 
 > 
@@ -60,9 +60,11 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 ## 6. Detail Proyek & Audit Trail
 *(Presenter membuka salah satu detail proyek contoh)*
 > **Presenter**:
-> "Mari kita buka salah satu detail proyek. Di halaman ini, semua informasi penting dikonsolidasikan dalam satu tempat: detail anggaran, penanggung jawab PO/PM, tautan dokumen drive pendukung, hingga detail pembayaran.
+> "Mari kita buka salah satu detail proyek. Di halaman ini, semua informasi penting dikonsolidasikan dalam satu tempat: detail anggaran, penanggung jawab PO/PM, tautan dokumen pendukung, hingga detail pembayaran.
 > 
-> Dua fitur penting untuk kepatuhan operasional adalah **Status Timeline** dan **Activity Log**. Melalui Activity Log, manajemen memiliki audit trail lengkap tentang siapa yang mengubah status proyek, kapan dilakukan, dan apa nilainya. Hal ini mencegah staf mengubah status atau menghapus data tanpa persetujuan."
+> Di dalam alur kerja operasional One Spirit, terdapat beberapa instrumen penting seperti **CL (Contract Letter)**, **ROS (Rundown of Show)**, **CK (Check List)**, dan **PNL (Profit & Loss)**. Pada fase validasi local MVP ini, instrumen-instrumen tersebut dapat kita catat dan akses melalui tautan dokumentasi proyek. Kita juga perlu memvalidasi bersama apakah di fase berikutnya instrumen-instrumen tersebut cukup dicatat sebagai link dokumen atau perlu dikembangkan menjadi modul checklist/status pelacakan khusus per proyek.
+> 
+> Dua fitur penting untuk kepatuhan operasional yang sudah ada saat ini adalah **Status Timeline** dan **Activity Log**. Melalui Activity Log, manajemen memiliki audit trail lengkap tentang siapa yang mengubah status proyek, kapan dilakukan, dan apa nilainya. Hal ini mencegah staf mengubah status atau menghapus data tanpa persetujuan."
 
 ---
 
@@ -71,7 +73,7 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 > **Presenter**:
 > "Sebagai penutup demonstrasi fitur, kami ingin menunjukkan panel **Review Kualitas Data**. Salah satu kelemahan pengelolaan data Excel adalah banyaknya baris data yang kosong atau tidak lengkap.
 > 
-> Sistem One Spirit secara otomatis melakukan audit data internal secara real-time. Jika ada proyek aktif yang belum ditunjuk PO/PM-nya, bernilai anggaran nol rupiah, dibatalkan tanpa mencantumkan alasan pembatalan, atau ditutup namun status pembayaran belum lunas, sistem akan mendeteksinya sebagai isu data quality. Ini memastikan kualitas data Anda selalu bersih untuk laporan keuangan akhir tahun."
+> Sistem One Spirit secara otomatis melakukan audit data internal berdasarkan data yang tersimpan. Jika ada proyek aktif yang belum ditunjuk PO/PM-nya, bernilai anggaran nol rupiah, dibatalkan tanpa mencantumkan alasan pembatalan, atau ditutup namun status pembayaran belum lunas, sistem akan mendeteksinya sebagai isu kualitas data. Ini memastikan kualitas data Anda selalu bersih untuk laporan keuangan akhir tahun."
 
 ---
 

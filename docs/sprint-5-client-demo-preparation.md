@@ -11,21 +11,21 @@ Tujuan utama Sprint 5 adalah mempersiapkan sistem **One Spirit Workflow & Busine
 
 ## 2. Output Dokumentasi yang Dibuat (Deliverables)
 
-Seluruh panduan presentasi dan penyelarasan proposal telah berhasil disusun di folder [docs/](file:///E:/GVsys%20Project/One%20Spirit/docs/):
-1. **[Alur Demo Sistem](file:///E:/GVsys%20Project/One%20Spirit/docs/client-demo-flow.md)**: Panduan langkah demi langkah menyajikan modul dashboard, alur kerja, rincian proyek, kualitas data, hingga cetak laporan.
-2. **[Skrip Demonstrasi](file:///E:/GVsys%20Project/One%20Spirit/docs/demo-script.md)**: Panduan naskah bicara bahasa Indonesia yang terstruktur untuk presenter GVSys saat memandu jalannya presentasi di depan direksi.
-3. **[Checklist Persiapan](file:///E:/GVsys%20Project/One%20Spirit/docs/demo-checklist.md)**: Daftar tugas wajib sebelum demo (verifikasi Docker, health check), selama demo, dan setelah demo berakhir.
-4. **[Rekomendasi Data Demo](file:///E:/GVsys%20Project/One%20Spirit/docs/demo-data-recommendation.md)**: Petunjuk pemilihan record data yang ideal untuk demo (Good Data vs Data Quality Issues).
-5. **[Penyelarasan Proposal](file:///E:/GVsys%20Project/One%20Spirit/docs/proposal-alignment.md)**: Tabel pencocokan antara 24 fitur proposal GVSys dengan status implementasi nyata (100% Implemented).
-6. **[Cakupan MVP & Fase Lanjutan](file:///E:/GVsys%20Project/One%20Spirit/docs/mvp-scope.md)**: Penegasan batasan sistem yang masuk dalam MVP saat ini dan daftar fitur yang direkomendasikan bergeser ke Fase 2.
-7. **[Pertanyaan Validasi Bisnis](file:///E:/GVsys%20Project/One%20Spirit/docs/client-validation-questions.md)**: Daftar kuesioner untuk memicu umpan balik klien mengenai transisi status proyek, peran PO/PM, dan detail termin billing.
-8. **[Daftar Batasan MVP](file:///E:/GVsys%20Project/One%20Spirit/docs/known-limitations-before-client-demo.md)**: Rangkuman batasan teknis saat ini dalam bahasa yang aman dan profesional bagi klien.
-9. **[Daftar Indeks Dokumentasi](file:///E:/GVsys%20Project/One%20Spirit/docs/README.md)**: Peta panduan yang menautkan seluruh berkas dokumentasi sprint.
+Seluruh panduan presentasi dan penyelarasan proposal telah berhasil disusun di folder [docs/](README.md):
+1. **[Alur Demo Sistem](client-demo-flow.md)**: Panduan langkah demi langkah menyajikan modul dashboard, alur kerja, rincian proyek, kualitas data, hingga cetak laporan.
+2. **[Skrip Demonstrasi](demo-script.md)**: Panduan naskah bicara bahasa Indonesia yang terstruktur untuk presenter GVSys saat memandu jalannya presentasi di depan direksi.
+3. **[Checklist Persiapan](demo-checklist.md)**: Daftar tugas wajib sebelum demo (verifikasi Docker, health check), selama demo, dan setelah demo berakhir.
+4. **[Rekomendasi Data Demo](demo-data-recommendation.md)**: Petunjuk pemilihan record data yang ideal untuk demo (Good Data vs Data Quality Issues).
+5. **[Penyelarasan Proposal](proposal-alignment.md)**: Tabel pencocokan antara fitur proposal GVSys dengan status implementasi nyata (tahap MVP).
+6. **[Cakupan MVP & Fase Lanjutan](mvp-scope.md)**: Penegasan batasan sistem yang masuk dalam MVP saat ini dan daftar fitur yang direkomendasikan bergeser ke Fase Lanjutan.
+7. **[Pertanyaan Validasi Bisnis](client-validation-questions.md)**: Daftar kuesioner untuk memicu umpan balik klien mengenai transisi status proyek, peran PO/PM, dan detail termin billing.
+8. **[Daftar Batasan MVP](known-limitations-before-client-demo.md)**: Rangkuman batasan teknis saat ini dalam bahasa yang aman dan profesional bagi klien.
+9. **[Daftar Indeks Dokumentasi](README.md)**: Peta panduan yang menautkan seluruh berkas dokumentasi sprint.
 
 ---
 
 ## 3. Hasil Penyelarasan Fungsional
-Berdasarkan audit proposal teknis, **seluruh 24 modul operasional inti yang dijanjikan telah selesai diimplementasikan**. Dashboard telah dipoles pada Sprint 4.1 dengan format Rupiah tanpa spasi (`Rp10.573.503.222`), desimal persentase menggunakan koma (`46,21%`), dan panel kualitas data berbahasa Indonesia.
+Berdasarkan audit proposal teknis, fitur-fitur inti untuk demonstrasi MVP telah tersedia dan siap divalidasi bersama PT. One Spirit Asia. Sistem saat ini berada pada tahap *working local MVP* untuk kebutuhan validasi alur kerja (*workflow*), *dashboard*, dan kebutuhan bisnis. Dashboard telah dipoles pada Sprint 4.1 dengan format Rupiah tanpa spasi (`Rp10.573.503.222`), desimal persentase menggunakan koma (`46,21%`), and panel kualitas data berbahasa Indonesia.
 
 Sistem siap didemonstrasikan tanpa crash karena didukung oleh penanganan error API yang kuat serta tombol muat ulang data.
 

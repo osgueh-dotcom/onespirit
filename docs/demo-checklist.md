@@ -32,9 +32,10 @@ Dokumen checklist ini digunakan oleh presenter **GVSys** untuk memastikan seluru
 - [ ] Buka tab **Imports** dan lakukan import data Excel dari sampel spreadsheet yang valid untuk memastikan database memiliki records proyek.
 - [ ] Masuk ke menu Dashboard, periksa apakah charts, KPI cards, tables PO/PM, dan analitik sumber event menampilkan data dan tidak crash/kosong.
 - [ ] Siapkan **dua jenis proyek** untuk demo detail:
-  1. **Proyek Model Utama (Good Data)**: Proyek dengan data lengkap (Customer, Source, PO, PM, Budget terisi) untuk menunjukkan visualisasi timeline progres proyek yang ideal.
+  1. **Proyek Model Utama (Good Data)**: Proyek dengan data lengkap (Customer, Source, PO, PM, Budget terisi) untuk menunjukkan visualisasi timeline progres proyek yang ideal, termasuk kelengkapan instrumen (CL, ROS, CK, PNL) yang dicatat melalui link dokumen.
   2. **Proyek Bermasalah (Data Quality Issue)**: Proyek dengan beberapa field kosong (misal: PM belum diisi, drive doc kosong) untuk menunjukkan keandalan panel audit Data Quality.
 - [ ] Pastikan setelan printer browser dalam keadaan siap untuk mendemonstrasikan fitur *Print / Save Report* ke file PDF lokal.
+- [ ] Ingat bahwa tujuan demo ini adalah validasi local MVP, bukan presentasi sistem siap produksi.
 
 ---
 
@@ -53,6 +54,6 @@ Dokumen checklist ini digunakan oleh presenter **GVSys** untuk memastikan seluru
 
 ## 3. Setelah Demo (After Demo)
 
-- [ ] Catat seluruh masukan, feedback, dan keluhan klien terkait alur kerja status atau pembagian penugasan PO/PM.
-- [ ] Lakukan konfirmasi terhadap cakupan fitur MVP (yang disepakati selesai) dan fitur yang digeser ke fase 2 (misal WhatsApp notification, termin payment detail).
-- [ ] Dapatkan tanda tangan persetujuan / konfirmasi tertulis via email terkait hasil presentasi sistem sebagai acuan pengerjaan sprint penutup.
+- [ ] Catat seluruh masukan, feedback, dan keluhan klien terkait alur kerja status, pembagian penugasan PO/PM, dan instrumen proyek (CL, ROS, CK, PNL).
+- [ ] Lakukan konfirmasi terhadap cakupan fitur MVP (yang disepakati selesai untuk divalidasi) dan fitur yang digeser ke fase berikutnya/Fase 2 (misal WhatsApp/email notification, termin payment detail, advanced PDF report, cloud hosting).
+- [ ] Dapatkan konfirmasi atau catatan feedback resmi terkait hasil demo sistem sebagai acuan penyelarasan proposal dan rencana pengembangan lanjutan.

@@ -40,3 +40,11 @@ Kuesioner ini digunakan oleh presenter **GVSys** saat berdiskusi dengan manajeme
 ## 7. Pelaporan & Ekspor (Reporting)
 1. **Format Ekspor**: Apakah fitur cetak instan ke PDF (*Print to PDF*) lewat browser sudah cukup untuk kebutuhan pelaporan cepat, atau apakah manajemen memerlukan file Excel (.xlsx) yang dapat diunduh untuk diolah kembali?
 2. **Template Laporan**: Apakah One Spirit memiliki format template laporan evaluasi bulanan tertentu yang harus diikuti oleh sistem di masa depan?
+
+## 8. Instrumen Proyek / Daftar Periksa Operasional (Project Instruments / Operational Checklist)
+1. **Kewajiban Dokumen**: Apakah CL, ROS, CK, dan PNL sudah menjadi dokumen wajib untuk setiap proyek/event?
+2. **Status Instrumen**: Apakah setiap instrumen operasional membutuhkan pelacakan status khusus seperti *Not Started, In Progress, Done, Need Revision*, atau *Not Required*?
+3. **Hak Akses Keuangan (PNL)**: Apakah dokumen PNL (Profit & Loss) hanya boleh diakses secara ketat oleh manajemen/finance/admin, dan disembunyikan dari PM/PO biasa?
+4. **Penyimpanan Berkas**: Apakah CL, ROS, CK, dan PNL cukup disimpan sebagai tautan/link dokumen luar (misalnya link Google Drive seperti saat ini), atau perlu diunggah langsung ke database server sistem?
+5. **Instrumen Tambahan**: Apakah instrumen lain seperti berkas PF (Project Form) atau matriks operasional tertentu tetap digunakan dan perlu diintegrasikan?
+6. **Variasi Checklist**: Apakah daftar periksa (checklist) operasional perlu dibedakan secara otomatis berdasarkan kategori event (*event category*) atau tipe program (*program type*)?

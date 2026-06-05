@@ -15,7 +15,7 @@ Sistem modern ini diisi oleh data awal dari proses pembacaan Excel (*seed data*)
 - **Status Quotation**: `Signed & Deal`.
 - **Staf Ditugaskan**: PO (Program Owner) dan PM (Program Manager) terisi secara valid.
 - **Data Keuangan**: Budget terisi nominal wajar (misal: > Rp50.000.000), status pembayaran terisi (misal: `Invoice Sent` atau `Partial Paid`).
-- **Dokumen**: Tautan Google Drive dokumen penawaran/kontrak terisi.
+- **Dokumen / Instrumen Proyek**: Tautan dokumen penting proyek seperti Contract Letter (CL), Rundown of Show (ROS), Check List (CK), atau Profit & Loss (PNL) terisi.
 
 ### Poin Utama yang Harus Ditunjukkan:
 - Tunjukkan panel **Status Timeline** di halaman detail proyek untuk memperlihatkan transisi alur progres yang teratur dari tahap Inquiry hingga Closed.
@@ -33,11 +33,12 @@ Sistem modern ini diisi oleh data awal dari proses pembacaan Excel (*seed data*)
 - **Staf Ditugaskan**: PO atau PM dibiarkan kosong (`None`) pada proyek aktif.
 - ATAU
 - **Data Keuangan**: Nilai budget diisi `0` atau dibiarkan kosong, atau proyek berstatus `Closed` tetapi status pembayaran masih `Invoice Sent` (belum bayar).
+- **Dokumen / Instrumen Proyek**: Tautan dokumen penting proyek (CL, ROS, CK, PNL) kosong pada proyek aktif yang membutuhkan dokumen tersebut.
 
 ### Poin Utama yang Harus Ditunjukkan:
-- Buka detail proyek ini, tunjukkan kotak **Validation Warnings** (Peringatan Validasi) berwarna kuning/merah yang secara instan menunjukkan apa saja berkas atau tugas yang kurang.
+- Buka detail proyek ini, tunjukkan kotak **Validation Warnings** (Peringatan Validasi) berwarna kuning/merah yang secara otomatis menunjukkan apa saja berkas atau tugas yang kurang.
 - Kembali ke Dashboard utama, tunjukkan bagaimana jumlah masalah di proyek ini terakumulasi secara akurat pada panel **Review Kualitas Data** (misalnya meningkatkan angka *Missing PO* atau *Cancel without Reason*).
-- Jelaskan bahwa fitur audit otomatis ini membantu direksi One Spirit memastikan semua staf melengkapi data sebelum rapat koordinasi bulanan.
+- Jelaskan bahwa fitur audit otomatis ini membantu direksi One Spirit memastikan semua staf melengkapi data dan instrumen proyek sebelum rapat koordinasi bulanan.
 
 ---
 

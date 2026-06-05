@@ -11,7 +11,7 @@ Tujuan utama demo ini adalah memvalidasi hasil modernisasi alur kerja dari *spre
 - **Poin Penyampaian**:
   - GVSys (Gueh Visual Systems) mendesain sistem ini untuk memodernisasi alur kerja operasional PT. One Spirit Asia yang sebelumnya dikelola manual menggunakan file Excel terpisah.
   - Memperkenalkan nama aplikasi: **One Spirit Workflow & Business Analytics System**.
-  - Menjelaskan nilai modernisasi: menghilangkan risiko duplikasi data, meningkatkan transparansi beban kerja tim internal, memantau *pipeline* penjualan secara real-time, dan mengidentifikasi ketidaklengkapan data operasional secara otomatis sebelum rapat evaluasi bulanan.
+  - Menjelaskan nilai modernisasi: menghilangkan risiko duplikasi data, meningkatkan transparansi beban kerja tim internal, memantau *pipeline* penjualan dengan data yang terpusat dan terbarui, serta mengidentifikasi ketidaklengkapan data operasional secara otomatis sebelum rapat evaluasi bulanan.
 
 ## 2. Halaman Login dan Konteks Pengguna (Login & Role Context)
 - **Tujuan**: Membuka aplikasi dan menjelaskan model penugasan internal.
@@ -61,7 +61,7 @@ Tujuan utama demo ini adalah memvalidasi hasil modernisasi alur kerja dari *spre
     - Rincian Tahapan Siklus Proyek (Quotation, Program, Payment, dan Project Status).
     - **Status Timeline**: Alur progres proyek dari tahap awal hingga penutupan secara visual.
     - **Activity Log**: Rekam jejak perubahan status dan tindakan yang dilakukan pengguna sistem untuk audit operasional.
-    - **Documentation**: Tautan Google Drive atau link dokumen resmi kontrak kerja sama.
+    - **Documentation / Project Instruments (CL, ROS, CK, PNL)**: Tautan dokumen penting proyek (Contract Letter, Rundown of Show, Check List, Profit & Loss) yang saat ini disediakan melalui tautan dokumentasi terintegrasi. Jelaskan bahwa instrumen ini diidentifikasi sebagai bagian penting dari kelengkapan operasional proyek yang akan divalidasi alur status spesifiknya.
 
 ## 6. Penjelasan Konteks Bisnis Khusus (Sales & PO/PM)
 - **Tujuan**: Menyelaraskan konsep operasional khusus yang disepakati.
@@ -83,7 +83,7 @@ Tujuan utama demo ini adalah memvalidasi hasil modernisasi alur kerja dari *spre
 - **Langkah Tindakan**:
   - Kembali ke Dashboard, gulir ke panel **Review Kualitas Data**.
   - **Poin Penjelasan**:
-    - Panel ini mendeteksi ketidaklengkapan data secara real-time seperti: PO/PM belum ditunjuk, anggaran bernilai nol, pembatalan tanpa mencantumkan alasan (cancel reason), proyek Closed tapi invoice belum dibayar, atau dokumen pendukung drive kosong.
+    - Panel ini mendeteksi ketidaklengkapan data secara otomatis berdasarkan kondisi terkini database seperti: PO/PM belum ditunjuk, anggaran bernilai nol, pembatalan tanpa mencantumkan alasan (cancel reason), proyek Closed tapi invoice belum dibayar, atau dokumen pendukung drive kosong.
 
 ## 9. Laporan Cetak (Print / Save PDF Report)
 - **Tujuan**: Mendemonstrasikan kesiapan ekspor laporan fisik untuk rapat manajemen.

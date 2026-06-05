@@ -29,3 +29,8 @@ Tujuan dokumen ini adalah membantu tim presenter menyajikan keterbatasan sistem 
 ## 6. Pembatasan Hak Akses Granular (Granular Permission Matrix)
 - **Kondisi Saat Ini**: Hak akses pengguna sistem masih bersifat dasar (Administrator dapat mengakses semua menu, sementara staf internal memiliki hak akses pengeditan umum).
 - **Penjelasan Klien**: Sistem keamanan saat ini menjamin perlindungan data utama. Matriks izin hak akses yang sangat granular (misalnya melarang PM tertentu melihat anggaran uang proyek) dapat disempurnakan pada **fase audit keamanan & manajemen pengguna**.
+
+## 7. Pengelolaan Instrumen Operasional Khusus (CL, ROS, CK, PNL)
+- **Kondisi Saat Ini**: Modul instrumen proyek khusus untuk CL (Contract Letter / Confirmation Letter), ROS (Rundown of Show), CK (Check List), dan PNL (Profit & Loss) belum dikembangkan sebagai modul status pelacakan mandiri. Saat ini berkas-berkas tersebut direpresentasikan sebagai tautan/link dokumen Google Drive eksternal pada bagian rincian proyek.
+- **Penjelasan Klien**: Untuk tahap local MVP, pencatatan berbasis link sudah mencukupi untuk kebutuhan validasi keterkaitan data. Pengembangan alur kerja pelacakan status instrumen (misalnya melacak apakah ROS sudah disetujui atau CK sudah selesai) beserta pembatasan akses ketat untuk dokumen PNL (yang berisi informasi keuangan sensitif) direkomendasikan untuk **fase pengembangan instrumen operasional**.
+

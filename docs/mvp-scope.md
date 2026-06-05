@@ -11,9 +11,10 @@ Fitur-fitur ini telah teruji secara lokal, stabil, dan siap disajikan penuh saat
 - **Catatan Evaluasi Manajemen**: Pendeteksian kekuatan operasional, bottlenecks, dan rekomendasi aksi secara dinamis.
 - **Analisis Pendapatan & Target**: Pencapaian omset terhadap target tahunan direksi.
 - **Ringkasan Keuangan & Pembayaran**: Pemantauan billing count, Received Cash, Collection Rate, dan sisa piutang.
-- **Review Kualitas Data**: Audit real-time ketidaklengkapan berkas/anggaran/penanggung jawab proyek.
+- **Review Kualitas Data**: Audit otomatis ketidaklengkapan berkas/anggaran/penanggung jawab proyek berdasarkan database terpusat.
 - **Alur Kerja Proyek**: Kanban board terintegrasi dengan filter pencarian lanjut (PO, PM, Customer, Source).
 - **Rincian Proyek (Detail)**: Profil klien, status daur hidup proyek, linimasa visual status (*Status Timeline*), dan audit trail log aktivitas (*Activity Log*).
+- **Project Documentation Links**: Penautan langsung tautan dokumen eksternal Google Drive proyek pada halaman rincian proyek (siap demo).
 - **Excel Import**: Alat migrasi data *spreadsheet* lama disertai deteksi kesalahan format otomatis.
 - **Ekspor Laporan Cetak**: Fitur browser print layout putih bersih bebas sidebar untuk ekspor PDF instan.
 
@@ -23,6 +24,7 @@ Fitur-fitur ini telah teruji secara lokal, stabil, dan siap disajikan penuh saat
 Fitur-fitur ini sudah berjalan, namun GVSys memerlukan masukan dan konfirmasi alur bisnis dari PT. One Spirit Asia:
 - **Definisi Peran PO & PM**: Apakah penunjukan staf internal sebagai PO dan PM per proyek sudah sesuai dengan praktik lapangan?
 - **Status Lifecycles**: Apakah daftar pilihan status untuk Quotation, Program, Payment, dan Project sudah mencakup seluruh variasi proses bisnis Anda?
+- **Project Instruments (CL, ROS, CK, PNL)**: Konsep instrumen proyek seperti CL (Contract Letter / Confirmation Letter), ROS (Rundown of Show), CK (Check List), dan PNL (Profit & Loss) sudah teridentifikasi sebagai bagian penting dari alur kerja operasional One Spirit. Kami ingin memvalidasi apakah instrumen-instrumen ini cukup dicatat sebagai tautan dokumen proyek (seperti pada MVP saat ini) atau perlu dikembangkan menjadi modul pelacakan status khusus per proyek di fase lanjutan.
 - **Sifat Data Sales Eksternal**: Apakah sales eksternal (sisi vendor/sumber hotel) sudah cukup dicatat sebagai teks penanda saja atau perlu dibuatkan tabel database khusus dengan informasi kontak detail?
 - **Setelan Target Target Tahunan**: Apakah target tahunan 2025 senilai Rp9.2 Miliar sudah tepat dan apakah target ini perlu diubah sendiri oleh manajemen dari menu administrasi?
 
@@ -38,7 +40,10 @@ Fitur-fitur di bawah ini **tidak termasuk** dalam lingkup MVP awal GVSys dan dip
   - **WhatsApp / Email Notifications**: Pengiriman notifikasi pengingat otomatis ke PM/PO jika target persiapan event sudah mendekati hari-H atau invoice mendekati tanggal jatuh tempo.
 - **Keamanan & Administrasi Lanjut**:
   - **Advanced Role Permission Matrix**: Pembatasan menu edit/view secara granular berdasarkan departemen staf (misal: PM tidak bisa melihat detail omset keuangan, hanya admin dan PO yang bisa).
+  - **PNL Access Control Refinement**: Pembatasan akses khusus untuk berkas keuangan sensitif Profit & Loss (PNL) agar hanya dapat dibuka oleh peran Manajemen/Finance/Admin.
   - **Advanced Audit Trail**: Pencatatan riwayat revisi data field demi field secara mendetail (misalnya: mencatat perubahan budget dari nilai A menjadi B).
+- **Project Instrument Status Workflow**:
+  - **Status & Checklist Tracking**: Pengembangan alur kerja status khusus untuk memantau kelengkapan instrumen operasional (CL, ROS, CK, PNL) per proyek secara mandiri (misal: *Not Started, In Progress, Done, Need Revision*).
 - **Analitik Lanjut**:
   - **Multi-year Comparative Analytics**: Grafik perbandingan performa penjualan antar tahun.
   - **Monthly/Quarterly Executive Report Export**: Ekspor otomatis laporan kuartalan untuk bahan rapat komisaris.
