@@ -57,6 +57,12 @@ const router = createRouter({
       name: 'PMControlCenter',
       component: () => import('../views/PmControlCenter.vue'),
       meta: { requiresAuth: true, permission: 'projects:read' }
+    },
+    {
+      path: '/po-control-center',
+      name: 'POControlCenter',
+      component: () => import('../views/PoControlCenter.vue'),
+      meta: { requiresAuth: true, permission: 'projects:read' }
     }
   ]
 })
