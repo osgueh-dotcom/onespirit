@@ -23,6 +23,11 @@ Dokumen ini mendefinisikan istilah-istilah operasional dan instrumen proyek yang
 | **Event Execution Control** | **Kontrol Eksekusi Event** | Panel antarmuka di detail proyek untuk membantu memantau kesiapan, hari tersisa, tindakan yang direkomendasikan, dan melakukan transisi status secara aman. |
 | **Force Update** | **Pembaruan Paksa** | Opsi override untuk melewati status transition blockers kritis dalam situasi darurat atas izin otoritas yang berwenang. |
 | **Event Date Indicator** | **Indikator Urgensi Tanggal** | Penanda visual yang menunjukkan seberapa dekat event ke pelaksanaan (misal: "X hari lagi", "Hari ini", "Sudah lewat"). |
+| **PO Control Center** | **Pusat Kontrol PO** | Workspace komersial terintegrasi bagi Program Owner untuk memantau status quotation, total revenue, kinerja konversi deal/cancel, kontribusi lead source, dan daftar risiko komersial. |
+| **Follow-up Priority** | **Prioritas Follow-up** | Daftar tindakan komersial mendesak bagi PO (diurutkan dari Critical, High, Medium, Low) untuk mengawal penawaran proposal, pengisian budget, dan penagihan pembayaran outstanding. |
+| **Lead Source / Event Source** | **Sumber Peluang Event** | Data asal diperolehnya peluang proyek (misal: hotel, direct, partner) yang dihubungkan dengan vendor partner dan sales eksternal untuk melacak kontribusi dan tingkat konversi komersial. |
+| **Commercial Risks** | **Risiko Komersial** | Indikator pengecualian / exception komersial kritis, seperti proyek batal tanpa alasan (cancel reason), proyek deal tanpa budget, serta status pembayaran terlambat (outstanding/overdue). |
+
 
 ---
 

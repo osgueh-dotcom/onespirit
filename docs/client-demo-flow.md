@@ -85,7 +85,22 @@ Tujuan utama demo ini adalah memvalidasi hasil modernisasi alur kerja dari *spre
   - **Poin Penjelasan**:
     - Panel ini mendeteksi ketidaklengkapan data secara otomatis berdasarkan kondisi terkini database seperti: PO/PM belum ditunjuk, anggaran bernilai nol, pembatalan tanpa mencantumkan alasan (cancel reason), proyek Closed tapi invoice belum dibayar, atau dokumen pendukung drive kosong.
 
-## 9. Laporan Cetak (Print / Save PDF Report)
+## 9. PM Control Center & Operational Priorities
+- **Tujuan**: Menunjukkan workspace PM dalam memantau event mendatang, kesiapan operasional instrumen, dan penentuan prioritas aksi.
+- **Langkah Tindakan**:
+  - Arahkan ke menu **PM Control Center**.
+  - Tunjukkan KPI summary harian operasional.
+  - Jelaskan tab: Prioritas Tindakan (Critical/High), Jadwal Event, Checklist & Overdue, PM Workload.
+
+## 10. PO Control Center & Commercial Dashboard
+- **Tujuan**: Menunjukkan workspace PO dalam memantau status quotation, total revenue (potential vs confirmed), deal/cancel rate, kontribusi partner hotel, outstanding payment, dan prioritas follow-up tindakan komersial.
+- **Langkah Tindakan**:
+  - Arahkan ke menu **PO Control Center**.
+  - Tunjukkan KPI komersial di bagian atas (Deal Rate, Confirmed Revenue, Outstanding).
+  - Tunjukkan tab **Prioritas Follow-up** (misal: proyek deal Rp 0, piutang overdue) dan **Risiko Komersial** (cancel without reason, missing PO/source).
+  - Tunjukkan tab **Kinerja Komersial** (PO Performance workloads, Source/Vendor lead contribution).
+
+## 11. Laporan Cetak (Print / Save PDF Report)
 - **Tujuan**: Mendemonstrasikan kesiapan ekspor laporan fisik untuk rapat manajemen.
 - **Langkah Tindakan**:
   - Klik tombol **Print / Save Report** di bagian kanan atas Dashboard Header.
@@ -93,7 +108,7 @@ Tujuan utama demo ini adalah memvalidasi hasil modernisasi alur kerja dari *spre
   - **Poin Penjelasan**:
     - CSS cetak khusus otomatis menyembunyikan sidebar navigasi, filter pencarian, tombol aksi, serta beralih ke latar belakang putih bersih agar hasil cetak PDF terlihat profesional dan siap dibagikan kepada komisaris.
 
-## 10. Penutup & Rangkuman MVP (Closing)
+## 12. Penutup & Rangkuman MVP (Closing)
 - **Tujuan**: Menjelaskan batasan sistem saat ini dan mengarahkan diskusi ke validasi masa depan.
 - **Poin Penyampaian**:
   - Menjelaskan bahwa fitur-fitur di atas adalah inti dari fase MVP.

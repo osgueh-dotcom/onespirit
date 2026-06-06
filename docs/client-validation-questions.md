@@ -62,3 +62,14 @@ Kuesioner ini digunakan oleh presenter **GVSys** saat berdiskusi dengan manajeme
    Apakah kriteria tingkat urgensi prioritas ini sudah sesuai dengan prioritas nyata di lapangan?
 2. **Event Window**: Untuk menyaring event di dashboard operasional, kami menyediakan filter periode: *Hari Ini, 7 Hari Mendatang, 14 Hari Mendatang, Bulan Ini, Terlambat (Overdue), Semua*. Apakah pembagian rentang waktu ini sudah mencakup kebutuhan pemantauan harian PM?
 3. **Penyembunyian Proyek Selesai/Batal**: Secara bawaan, PM Control Center menyembunyikan proyek berstatus Closed dan Canceled agar halaman tetap fokus pada prioritas aktif. Apakah perilaku default ini sudah tepat?
+
+## 10. PO Control Center & Prioritas Follow-up Komersial (PO Control Center & Commercial follow-up)
+1. **Algoritma Prioritas Follow-up**: Sistem secara otomatis mengelompokkan tindak lanjut komersial bagi Program Owner:
+   - **Critical**: Proyek Signed & Deal dengan budget Rp 0, proyek Batal (Cancel) tanpa alasan, proyek aktif dengan pembayaran Outstanding/Overdue, atau Invoice terkirim melewati jatuh tempo belum lunas.
+   - **High**: Proposal belum deal (Sent/Follow Up/Revision) mendekati H-14 event, proyek potensial bernilai tinggi (>= Rp 100M) belum deal, atau proyek Signed & Deal belum ditugaskan PM.
+   - **Medium**: Draft penawaran dengan jadwal terisi belum terkirim, proyek aktif tanpa Lead Source/vendor, proyek aktif tanpa kategori klien, atau proyek aktif selesai tanpa dokumentasi berkas.
+   - **Low**: Proyek berjalan normal.
+   Apakah penggolongan tingkat urgensi follow-up komersial ini sudah tepat membantu PO dalam bekerja sehari-hari?
+2. **Kinerja Partner & Lead Source**: Kami menyajikan performa lead source berdasarkan total proyek, deal rate, dan confirmed revenue untuk melacak hotel atau partner penyumbang omset terbesar. Apakah format pelacakan komersial partner ini sudah mencukupi?
+3. **Risiko Komersial (Commercial Risks)**: Sistem mendeteksi proyek bermasalah keuangan secara instan. Apakah kategori risiko yang kami pantau (seperti proyek deal tanpa budget atau tagihan overdue) sudah mencakup kekhawatiran utama jajaran direksi?
+

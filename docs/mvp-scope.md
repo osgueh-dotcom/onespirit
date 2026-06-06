@@ -16,6 +16,7 @@ Fitur-fitur ini telah teruji secara lokal, stabil, dan siap disajikan penuh saat
 - **Rincian Proyek (Detail)**: Profil klien, status daur hidup proyek, linimasa visual status (*Status Timeline*), dan audit trail log aktivitas (*Activity Log*).
 - **Gerbang Kesiapan & Kontrol Eksekusi Event**: Validasi otomatis transisi status (Ready, Running, Completed, Closed, Cancel) dengan deteksi warning/blocker, override via pembaruan paksa (force update), serta integrasi panel kontrol eksekusi event (Execution Control Panel) di detail proyek.
 - **PM Control Center (Operational Dashboard)**: Pusat kontrol harian/mingguan bagi Program Manager untuk memantau event mendatang, project tidak siap, instrument overdue, instrument butuh revisi, serta daftar aksi prioritas (Priority Actions) berdasarkan tingkat urgensi.
+- **PO Control Center (Commercial Dashboard)**: Pusat kontrol komersial bagi Program Owner untuk memantau status quotation, revenue (potential vs confirmed), deal/cancel rate, kontribusi lead source/partner, outstanding payment, serta daftar prioritas follow-up tindakan komersial.
 - **Project Documentation Links**: Penautan langsung tautan dokumen eksternal Google Drive proyek pada halaman rincian proyek (siap demo).
 - **Excel Import**: Alat migrasi data *spreadsheet* lama disertai deteksi kesalahan format otomatis.
 - **Ekspor Laporan Cetak**: Fitur browser print layout putih bersih bebas sidebar untuk ekspor PDF instan.

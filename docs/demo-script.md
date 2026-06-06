@@ -107,10 +107,26 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 
 ---
 
-## 9. Cetak Laporan & Penutup
+## 9. PO Control Center & Commercial follow-up
+*(Presenter mengklik item menu 'PO Control Center' di sidebar)*
+> **Presenter**:
+> "Selanjutnya, mari kita masuk ke fitur terbaru yang kami bangun di Sprint 10: **PO Control Center** (Pusat Kontrol Pemilik Program). Jika PM Control Center berfokus pada kesiapan teknis operasional di lapangan, PO Control Center dirancang khusus untuk Program Owner memantau kesehatan aspek komersial dan keuangan proyek.
+> 
+> Di bagian atas, Bapak dan Ibu disuguhkan dengan KPI komersial tingkat tinggi: total proyek di bawah kepemilikan PO, rasio deal-to-cancel, potential vs confirmed revenue, outstanding tagihan klien, serta jumlah aksi follow-up yang mendesak.
+> 
+> Kami membagi workspace ini ke dalam beberapa tab:
+> 1. **Prioritas Follow-up**: Menampilkan daftar aksi komersial mendesak secara otomatis, mulai dari status *Critical* (seperti proyek deal tetapi budget kosong, proyek batal tanpa alasan, atau piutang yang telah jatuh tempo), status *High* (penawaran yang belum deal padahal H-14 event), hingga status *Medium* dan *Low*. Ini membantu PO mengetahui klien mana yang harus dikontak pagi ini.
+> 2. **Daftar Proyek PO**: Master data proyek dengan ringkasan status quotation, program, dan payment.
+> 3. **Kinerja Komersial**: Grafik dan tabel detail mengenai struktur quotation, statistik nilai proyek, performa deal rate per PO, serta kontribusi lead source (melacak hotel atau partner mana yang menyumbang konversi revenue terbesar).
+> 4. **Risiko Komersial**: Panel audit otomatis yang mengelompokkan proyek berdasarkan warning finansial, seperti proyek Signed & Deal Rp 0 atau piutang overdue.
+> 
+> Dengan PO Control Center, manajemen dapat meminimalisir piutang macet dan mempercepat konversi pipeline penawaran menjadi deal komersial secara efektif."
+
+---
+
+## 10. Cetak Laporan & Penutup
 *(Presenter menekan tombol Print / Save Report)*
 > **Presenter**:
 > "Terakhir, laporan dashboard ini dapat langsung dicetak atau disimpan ke file PDF. Dengan menekan tombol **Print / Save Report**, sistem otomatis memicu cetak browser dengan tata letak khusus yang menghilangkan navigasi menu dan latar belakang gelap, menghasilkan dokumen cetak putih bersih yang rapi dan profesional.
-
 > 
 > Demikian demonstrasi dari sistem web One Spirit dengan instrumen proyek terintegrasi. Kami ingin menyelaraskan beberapa pertanyaan validasi dengan Bapak dan Ibu untuk memastikan alur status keuangan, penugasan PO/PM, dan detail instrumen operasional ini sudah tepat sebelum kita melangkah ke fase implementasi selanjutnya. Terima kasih."

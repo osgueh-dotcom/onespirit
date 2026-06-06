@@ -39,4 +39,10 @@ Tujuan dokumen ini adalah membantu tim presenter menyajikan keterbatasan sistem 
 ## 9. Penjadwalan Kerja Kru dan Kalender Operasional (Crew Scheduling & Operational Calendar)
 - **Kondisi Saat Ini**: PM Control Center merangkum event mendatang dalam daftar tabel linimasa periode (7 hari / 14 hari) berdasarkan tanggal proyek, namun belum terintegrasi dengan tampilan kalender visual bulanan interaktif atau modul penugasan jadwal kru per jam secara detail.
 - **Penjelasan Klien**: Modul PM Control Center fokus pada pemantauan gerbang kesiapan berkas operasional dan instrumen event. Visualisasi kalender operasional interaktif (*interactive operational calendar*) dan manajemen jadwal tim Kru lapangan direncanakan untuk **fase manajemen penjadwalan & logistik lanjutan**.
+## 10. Pendeteksian Aktivitas Komersial & Riwayat Follow-up
+- **Kondisi Saat Ini**: PO Control Center merekomendasikan prioritas follow-up berdasarkan kondisi statis data (seperti budget, status, dan sisa hari event), namun belum melacak aktivitas komunikasi nyata (log telepon, histori chat WhatsApp, atau email terkirim).
+- **Penjelasan Klien**: Fitur ini sangat krusial untuk melacak produktivitas. Sistem pencatatan log aktivitas komunikasi komersial secara dinamis dengan klien direncanakan untuk **fase penyempurnaan CRM & aktivitas penjualan**.
+## 11. Pelacakan Jatuh Tempo Faktur Sederhana
+- **Kondisi Saat Ini**: Peringatan tagihan overdue didasarkan pada perbandingan tanggal jatuh tempo faktur secara sederhana pada database, belum terintegrasi dengan sistem akuntansi eksternal resmi.
+- **Penjelasan Klien**: Di MVP, pelacakan difokuskan untuk memberikan warning kepada PO agar segera melakukan follow-up. Rekonsiliasi mutasi bank otomatis dan sinkronisasi sistem akuntansi pihak ketiga direncanakan pada **fase modul keuangan terintegrasi**.
 
