@@ -103,6 +103,15 @@ class TargetSummarySchema(BaseModel):
     revenue_target: float
     achievement_rate: float
 
+class InstrumentSummarySchema(BaseModel):
+    missing_cl: int
+    missing_ros: int
+    missing_ck: int
+    missing_pnl: int
+    instruments_need_revision: int
+    instruments_overdue: int
+    average_instrument_completion_rate: float
+
 class DashboardAnalyticsResponse(BaseModel):
     executive: ExecutiveSummarySchema
     target: TargetSummarySchema
@@ -117,6 +126,7 @@ class DashboardAnalyticsResponse(BaseModel):
     event_category_analytics: List[EventCategoryAnalyticsSchema]
     program_type_analytics: List[ProgramTypeAnalyticsSchema]
     data_quality: DataQualitySchema
+    instrument_summary: InstrumentSummarySchema
 
     class Config:
         from_attributes = True

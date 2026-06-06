@@ -16,7 +16,7 @@ from app.modules.projects.models import Project
 from app.modules.tasks.models import Task
 
 # Local fixtures for self-contained testing execution
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_imports.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/test_imports.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

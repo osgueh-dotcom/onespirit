@@ -166,8 +166,55 @@ class ProjectResponse(ProjectBase):
     class Config:
         from_attributes = True
 
+class ProjectInstrumentCreate(BaseModel):
+    project_id: UUID
+    instrument_type: str
+    status: Optional[str] = "Not Started"
+    title: Optional[str] = None
+    document_url: Optional[str] = None
+    notes: Optional[str] = None
+    due_date: Optional[date] = None
+    completed_date: Optional[date] = None
+
+class ProjectInstrumentUpdate(BaseModel):
+    status: Optional[str] = None
+    title: Optional[str] = None
+    document_url: Optional[str] = None
+    notes: Optional[str] = None
+    due_date: Optional[date] = None
+    completed_date: Optional[date] = None
+
+class ProjectInstrumentRead(BaseModel):
+    id: UUID
+    project_id: UUID
+    instrument_type: str
+    status: str
+    title: Optional[str] = None
+    document_url: Optional[str] = None
+    notes: Optional[str] = None
+    due_date: Optional[date] = None
+    completed_date: Optional[date] = None
+    updated_by_user_id: Optional[UUID] = None
+    updated_by_user: Optional[UserBriefResponse] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
 class ProjectDetailResponse(ProjectResponse):
     documents: List[ProjectDocumentResponse] = []
     status_logs: List[ProjectStatusLogResponse] = []
     activity_logs: List[ProjectActivityLogResponse] = []
     validation_warnings: List[str] = []
+    instruments: List[ProjectInstrumentRead] = []
+    
+    # Readiness score & calculations
+    required_instruments_count: int = 0
+    completed_required_instruments_count: int = 0
+    instrument_completion_rate: Optional[float] = 0.0
+    missing_required_instruments_count: int = 0
+    revision_required_count: int = 0
+    overdue_instruments_count: int = 0
+    project_readiness_score: Optional[float] = 0.0
+

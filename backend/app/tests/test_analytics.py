@@ -17,7 +17,7 @@ from app.modules.documents.models import Document
 from app.modules.finance.models import Invoice, Payment
 
 # Use in-memory SQLite for extremely fast unit tests
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test_analytics.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/test_analytics.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -81,6 +81,15 @@ def test_analytics_endpoint_empty(client):
     assert len(data["po_performance"]) == 0
     assert len(data["pm_workload"]) == 0
     assert data["data_quality"]["missing_po"] == 0
+    
+    # Verify empty instrument summary
+    assert data["instrument_summary"]["missing_cl"] == 0
+    assert data["instrument_summary"]["missing_ros"] == 0
+    assert data["instrument_summary"]["missing_ck"] == 0
+    assert data["instrument_summary"]["missing_pnl"] == 0
+    assert data["instrument_summary"]["instruments_need_revision"] == 0
+    assert data["instrument_summary"]["instruments_overdue"] == 0
+    assert data["instrument_summary"]["average_instrument_completion_rate"] == 0.0
 
 def test_analytics_calculations(client, db: Session):
     # 1. Login to retrieve bearer token
@@ -272,6 +281,16 @@ def test_analytics_calculations(client, db: Session):
     assert dq_data["cancel_without_reason"] == 1
     assert dq_data["documentation_missing"] == 2
     assert dq_data["unknown_source"] == 2
+    
+    # Verify instrument summary metrics
+    inst_summary = data["instrument_summary"]
+    assert inst_summary["missing_cl"] == 1
+    assert inst_summary["missing_pnl"] == 1
+    assert inst_summary["missing_ros"] == 0
+    assert inst_summary["missing_ck"] == 0
+    assert inst_summary["instruments_need_revision"] == 0
+    assert inst_summary["instruments_overdue"] == 0
+    assert inst_summary["average_instrument_completion_rate"] == 0.0
     
     # 4. Test Filters
     # Filter by Year 2026

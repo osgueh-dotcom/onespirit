@@ -24,7 +24,7 @@ Fitur-fitur ini telah teruji secara lokal, stabil, dan siap disajikan penuh saat
 Fitur-fitur ini sudah berjalan, namun GVSys memerlukan masukan dan konfirmasi alur bisnis dari PT. One Spirit Asia:
 - **Definisi Peran PO & PM**: Apakah penunjukan staf internal sebagai PO dan PM per proyek sudah sesuai dengan praktik lapangan?
 - **Status Lifecycles**: Apakah daftar pilihan status untuk Quotation, Program, Payment, dan Project sudah mencakup seluruh variasi proses bisnis Anda?
-- **Project Instruments (CL, ROS, CK, PNL)**: Konsep instrumen proyek seperti CL (Contract Letter / Confirmation Letter), ROS (Rundown of Show), CK (Check List), dan PNL (Profit & Loss) sudah teridentifikasi sebagai bagian penting dari alur kerja operasional One Spirit. Kami ingin memvalidasi apakah instrumen-instrumen ini cukup dicatat sebagai tautan dokumen proyek (seperti pada MVP saat ini) atau perlu dikembangkan menjadi modul pelacakan status khusus per proyek di fase lanjutan.
+- **Project Readiness & Instruments**: Kami telah membangun pelacakan status operasional instrumen proyek (**CL, ROS, CK, PNL, PF, MATRIX**) beserta formula **Skor Kesiapan Proyek (Readiness Score)**. Kami memerlukan masukan apakah pembobotan formula (60% instrumen, 20% ketersediaan dokumen, 20% konsistensi status) serta aturan peringatan otomatis (seperti penyerahan CL wajib saat quotation Signed & Deal) sudah sesuai dengan regulasi operasional internal.
 - **Sifat Data Sales Eksternal**: Apakah sales eksternal (sisi vendor/sumber hotel) sudah cukup dicatat sebagai teks penanda saja atau perlu dibuatkan tabel database khusus dengan informasi kontak detail?
 - **Setelan Target Target Tahunan**: Apakah target tahunan 2025 senilai Rp9.2 Miliar sudah tepat dan apakah target ini perlu diubah sendiri oleh manajemen dari menu administrasi?
 
@@ -39,11 +39,8 @@ Fitur-fitur di bawah ini **tidak termasuk** dalam lingkup MVP awal GVSys dan dip
   - **Google Drive Integration**: Upload berkas dari sistem langsung terbuat folder otomatis di Google Drive proyek.
   - **WhatsApp / Email Notifications**: Pengiriman notifikasi pengingat otomatis ke PM/PO jika target persiapan event sudah mendekati hari-H atau invoice mendekati tanggal jatuh tempo.
 - **Keamanan & Administrasi Lanjut**:
-  - **Advanced Role Permission Matrix**: Pembatasan menu edit/view secara granular berdasarkan departemen staf (misal: PM tidak bisa melihat detail omset keuangan, hanya admin dan PO yang bisa).
-  - **PNL Access Control Refinement**: Pembatasan akses khusus untuk berkas keuangan sensitif Profit & Loss (PNL) agar hanya dapat dibuka oleh peran Manajemen/Finance/Admin.
+  - **Advanced Role Permission Matrix**: Pembatasan menu edit/view secara granular berdasarkan departemen staf (misal: PM tidak bisa melihat detail omset keuangan sama sekali). *Catatan: Di MVP Sprint 7, pembatasan dasar tautan PNL sensitif untuk peran Staff telah diimplementasikan.*
   - **Advanced Audit Trail**: Pencatatan riwayat revisi data field demi field secara mendetail (misalnya: mencatat perubahan budget dari nilai A menjadi B).
-- **Project Instrument Status Workflow**:
-  - **Status & Checklist Tracking**: Pengembangan alur kerja status khusus untuk memantau kelengkapan instrumen operasional (CL, ROS, CK, PNL) per proyek secara mandiri (misal: *Not Started, In Progress, Done, Need Revision*).
 - **Analitik Lanjut**:
   - **Multi-year Comparative Analytics**: Grafik perbandingan performa penjualan antar tahun.
   - **Monthly/Quarterly Executive Report Export**: Ekspor otomatis laporan kuartalan untuk bahan rapat komisaris.

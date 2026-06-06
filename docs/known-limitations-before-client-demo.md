@@ -27,10 +27,10 @@ Tujuan dokumen ini adalah membantu tim presenter menyajikan keterbatasan sistem 
 - **Penjelasan Klien**: Integrasi otomatis dengan folder Google Drive serta pengiriman notifikasi pengingat via WhatsApp atau Email (seperti alarm pengingat termin pembayaran) dijadwalkan untuk **fase integrasi pihak ketiga**.
 
 ## 6. Pembatasan Hak Akses Granular (Granular Permission Matrix)
-- **Kondisi Saat Ini**: Hak akses pengguna sistem masih bersifat dasar (Administrator dapat mengakses semua menu, sementara staf internal memiliki hak akses pengeditan umum).
-- **Penjelasan Klien**: Sistem keamanan saat ini menjamin perlindungan data utama. Matriks izin hak akses yang sangat granular (misalnya melarang PM tertentu melihat anggaran uang proyek) dapat disempurnakan pada **fase audit keamanan & manajemen pengguna**.
+- **Kondisi Saat Ini**: Sistem keamanan dasar telah diimplementasikan, termasuk penyembunyian tautan dokumen PNL sensitif untuk peran `Staff`. Namun, pembatasan hak akses menu atau tombol edit/view secara menyeluruh untuk halaman lain belum bersifat granular per divisi.
+- **Penjelasan Klien**: Sistem keamanan saat ini telah menjamin perlindungan data keuangan utama (PNL). Matriks izin hak akses yang sangat mendalam (misalnya membatasi PM agar tidak bisa mengedit data customer) dijadwalkan untuk disempurnakan pada **fase audit keamanan & manajemen pengguna lanjut**.
 
-## 7. Pengelolaan Instrumen Operasional Khusus (CL, ROS, CK, PNL)
-- **Kondisi Saat Ini**: Modul instrumen proyek khusus untuk CL (Contract Letter / Confirmation Letter), ROS (Rundown of Show), CK (Check List), dan PNL (Profit & Loss) belum dikembangkan sebagai modul status pelacakan mandiri. Saat ini berkas-berkas tersebut direpresentasikan sebagai tautan/link dokumen Google Drive eksternal pada bagian rincian proyek.
-- **Penjelasan Klien**: Untuk tahap local MVP, pencatatan berbasis link sudah mencukupi untuk kebutuhan validasi keterkaitan data. Pengembangan alur kerja pelacakan status instrumen (misalnya melacak apakah ROS sudah disetujui atau CK sudah selesai) beserta pembatasan akses ketat untuk dokumen PNL (yang berisi informasi keuangan sensitif) direkomendasikan untuk **fase pengembangan instrumen operasional**.
+## 7. Penyimpanan Berkas Langsung di Server (Direct Document Storage)
+- **Kondisi Saat Ini**: Modul instrumen proyek (**CL, ROS, CK, PNL, PF, MATRIX**) telah memiliki pelacakan status operasional, tanggal jatuh tempo, dan skor kesiapan terintegrasi. Namun berkas-berkas tersebut masih dilampirkan menggunakan tautan (URL) Google Drive luar, bukan diunggah langsung ke database server sistem.
+- **Penjelasan Klien**: Untuk tahap MVP saat ini, pencatatan berbasis tautan luar sangat praktis untuk fleksibilitas penyimpanan. Fitur unggah berkas PDF/Excel secara langsung ke server internal atau folder otomatis Google Drive terintegrasi direkomendasikan untuk **fase manajemen dokumen terintegrasi**.
 

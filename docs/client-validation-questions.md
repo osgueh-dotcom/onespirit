@@ -41,10 +41,14 @@ Kuesioner ini digunakan oleh presenter **GVSys** saat berdiskusi dengan manajeme
 1. **Format Ekspor**: Apakah fitur cetak instan ke PDF (*Print to PDF*) lewat browser sudah cukup untuk kebutuhan pelaporan cepat, atau apakah manajemen memerlukan file Excel (.xlsx) yang dapat diunduh untuk diolah kembali?
 2. **Template Laporan**: Apakah One Spirit memiliki format template laporan evaluasi bulanan tertentu yang harus diikuti oleh sistem di masa depan?
 
-## 8. Instrumen Proyek / Daftar Periksa Operasional (Project Instruments / Operational Checklist)
-1. **Kewajiban Dokumen**: Apakah CL, ROS, CK, dan PNL sudah menjadi dokumen wajib untuk setiap proyek/event?
-2. **Status Instrumen**: Apakah setiap instrumen operasional membutuhkan pelacakan status khusus seperti *Not Started, In Progress, Done, Need Revision*, atau *Not Required*?
-3. **Hak Akses Keuangan (PNL)**: Apakah dokumen PNL (Profit & Loss) hanya boleh diakses secara ketat oleh manajemen/finance/admin, dan disembunyikan dari PM/PO biasa?
-4. **Penyimpanan Berkas**: Apakah CL, ROS, CK, dan PNL cukup disimpan sebagai tautan/link dokumen luar (misalnya link Google Drive seperti saat ini), atau perlu diunggah langsung ke database server sistem?
-5. **Instrumen Tambahan**: Apakah instrumen lain seperti berkas PF (Project Form) atau matriks operasional tertentu tetap digunakan dan perlu diintegrasikan?
-6. **Variasi Checklist**: Apakah daftar periksa (checklist) operasional perlu dibedakan secara otomatis berdasarkan kategori event (*event category*) atau tipe program (*program type*)?
+## 8. Instrumen Proyek / Daftar Periksa Operasional (Project Instruments & Readiness)
+1. **Skor Kesiapan Proyek (Readiness Score)**: Sistem menggunakan formula otomatis: `Readiness Score = (Instrument Completion Rate * 60%) + (Documentation Score * 20%) + (Status Consistency Score * 20%)`. Apakah pembobotan ini sudah mencerminkan tingkat kesiapan proyek yang sebenarnya menurut manajemen?
+2. **Kewajiban Dokumen**: Aturan validasi sistem menyatakan bahwa:
+   - Proyek dengan status Quotation `Signed & Deal` wajib memiliki **CL (Contract Letter)** dan **PNL (Profit & Loss)** yang berstatus `Done`.
+   - Proyek dengan status Program `Ready`, `Running`, `Completed`, `Reporting`, atau `Closed` wajib memiliki **ROS (Rundown of Show)** dan **CK (Check List)** yang berstatus `Done`.
+   Apakah ada instrumen lain yang wajib pada tahapan status tertentu?
+3. **Status Instrumen**: Pelacakan status instrumen saat ini menggunakan: `Not Started`, `In Progress`, `Done`, `Need Revision`, dan `Not Required`. Apakah alur status ini sudah cukup untuk seluruh jenis instrumen operasional?
+4. **Hak Akses Keuangan (PNL)**: Saat ini, tautan dokumen PNL dikunci secara ketat di backend dan disembunyikan dari peran `Staff` (misalnya PM/PO biasa), namun status instrumen PNL tetap terlihat agar mereka tahu instrumen tersebut sudah diisi atau belum. Apakah pendekatan pembatasan akses ini sudah tepat?
+5. **Tanggal Jatuh Tempo (Due Date)**: Sistem secara otomatis memberikan indikator merah **Overdue** jika tanggal jatuh tempo instrumen telah terlewati dan status belum `Done`. Apakah durasi pengerjaan instrumen biasanya dihitung mundur dari hari-H event (misalnya ROS harus selesai 3 hari sebelum event)?
+6. **Instrumen Tambahan (PF & MATRIX)**: Sistem sekarang menyertakan instrumen **PF (Project Form)** dan **MATRIX** sebagai bagian dari checklist kesiapan proyek. Apakah instrumen-instrumen ini wajib diisi oleh PM/PO di setiap event?
+7. **Aturan Unggah Excel**: Saat mengimpor Excel, status instrumen dipetakan secara cerdas (misal: "Ada"/"Done"/"Yes" dipetakan menjadi `Done`, teks berupa link dipetakan sebagai `Done` dengan tautan terisi). Apakah ada kolom atau istilah lain pada file Excel Anda yang perlu dipetakan secara khusus?

@@ -57,23 +57,31 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 
 ---
 
-## 6. Detail Proyek & Audit Trail
+## 6. Detail Proyek, Readiness Score, & Project Instruments
 *(Presenter membuka salah satu detail proyek contoh)*
 > **Presenter**:
-> "Mari kita buka salah satu detail proyek. Di halaman ini, semua informasi penting dikonsolidasikan dalam satu tempat: detail anggaran, penanggung jawab PO/PM, tautan dokumen pendukung, hingga detail pembayaran.
+> "Mari kita buka salah satu detail proyek. Di halaman ini, semua informasi penting dikonsolidasikan dalam satu tempat: detail anggaran, penanggung jawab PO/PM, detail pembayaran, hingga instrumen kesiapan operasional proyek.
 > 
-> Di dalam alur kerja operasional One Spirit, terdapat beberapa instrumen penting seperti **CL (Contract Letter)**, **ROS (Rundown of Show)**, **CK (Check List)**, dan **PNL (Profit & Loss)**. Pada fase validasi local MVP ini, instrumen-instrumen tersebut dapat kita catat dan akses melalui tautan dokumentasi proyek. Kita juga perlu memvalidasi bersama apakah di fase berikutnya instrumen-instrumen tersebut cukup dicatat sebagai link dokumen atau perlu dikembangkan menjadi modul checklist/status pelacakan khusus per proyek.
+> Pertama, perhatikan sidebar kanan. Di sini terdapat kartu **Project Readiness Indicator** yang menampilkan **Readiness Score** (Skor Kesiapan Proyek) berbasis formula objektif. Skor ini dihitung dari 60% completion rate instrumen operasional, 20% ketersediaan dokumen, dan 20% konsistensi status.
 > 
-> Dua fitur penting untuk kepatuhan operasional yang sudah ada saat ini adalah **Status Timeline** dan **Activity Log**. Melalui Activity Log, manajemen memiliki audit trail lengkap tentang siapa yang mengubah status proyek, kapan dilakukan, dan apa nilainya. Hal ini mencegah staf mengubah status atau menghapus data tanpa persetujuan."
+> Di bawahnya, terdapat panel **Project Instruments & Checklist** untuk melacak dokumen utama kita: **CL (Contract Letter)**, **ROS (Rundown of Show)**, **CK (Check List)**, **PNL (Profit & Loss)**, serta berkas client validation **PF** dan **MATRIX**.
+> 
+> Di panel ini, PM/PO dapat langsung mengubah status instrumen secara inline (*Not Started, In Progress, Done, Need Revision*), mengatur tanggal jatuh tempo, dan mengisi catatan. Jika status diubah ke **Done**, sistem secara otomatis mengunci tanggal selesai (*Completed Date*) hari ini. Jika ada dokumen yang melewati tanggal jatuh tempo, indikator **Overdue** berwarna merah akan menyala untuk memberikan alarm visual bagi tim.
+> 
+> Keamanan berkas keuangan sensitif seperti **PNL** juga telah kami proteksi di level database. Jika pengguna masuk sebagai peran `Staff` (staf biasa), tautan dokumen PNL akan disembunyikan secara otomatis dengan label *Restricted*, sedangkan peran `Admin`, `Management`, dan `Finance` tetap dapat melihat dan membukanya.
+> 
+> Terakhir, semua riwayat perubahan status, due date, dan note instrumen terekam secara otomatis pada tabel **Activity Log** di bagian bawah, memberikan audit trail yang transparan bagi manajemen."
 
 ---
 
-## 7. Review Kualitas Data (Data Quality)
-*(Presenter kembali ke Dashboard dan menunjuk panel Data Quality)*
+## 7. Dashboard Instrument Summary & Review Kualitas Data
+*(Presenter kembali ke Dashboard utama)*
 > **Presenter**:
-> "Sebagai penutup demonstrasi fitur, kami ingin menunjukkan panel **Review Kualitas Data**. Salah satu kelemahan pengelolaan data Excel adalah banyaknya baris data yang kosong atau tidak lengkap.
+> "Sebagai penutup demonstrasi fitur dashboard, kami ingin menunjukkan panel **Instrument Readiness Summary** dan **Review Kualitas Data** yang baru.
 > 
-> Sistem One Spirit secara otomatis melakukan audit data internal berdasarkan data yang tersimpan. Jika ada proyek aktif yang belum ditunjuk PO/PM-nya, bernilai anggaran nol rupiah, dibatalkan tanpa mencantumkan alasan pembatalan, atau ditutup namun status pembayaran belum lunas, sistem akan mendeteksinya sebagai isu kualitas data. Ini memastikan kualitas data Anda selalu bersih untuk laporan keuangan akhir tahun."
+> Pada dashboard utama, jajaran direksi dapat melihat rangkuman kesiapan operasional secara agregat untuk seluruh proyek aktif: jumlah proyek yang kehilangan dokumen CL, ROS, CK, atau PNL, jumlah instrumen yang butuh revisi (*Need Revision*), instrumen yang terlambat (*Overdue*), hingga rata-rata persentase kesiapan instrumen (*Average Completion Rate*).
+> 
+> Selain itu, jika ada proyek berstatus Quotation `Signed & Deal` tetapi belum melengkapi CL atau PNL, atau status Program sudah `Ready/Running` namun ROS belum `Done`, sistem secara cerdas akan langsung memunculkannya sebagai peringatan kualitas data di panel **Review Kualitas Data**."
 
 ---
 
@@ -82,4 +90,4 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 > **Presenter**:
 > "Terakhir, laporan dashboard ini dapat langsung dicetak atau disimpan ke file PDF. Dengan menekan tombol **Print / Save Report**, sistem otomatis memicu cetak browser dengan tata letak khusus yang menghilangkan navigasi menu dan latar belakang gelap, menghasilkan dokumen cetak putih bersih yang rapi dan profesional.
 > 
-> Demikian demonstrasi dari sistem web MVP One Spirit. Kami ingin menyelaraskan beberapa pertanyaan validasi dengan Bapak dan Ibu untuk memastikan alur status keuangan, penugasan PO/PM, dan detail billing sudah tepat sebelum kita melangkah ke fase implementasi selanjutnya. Terima kasih."
+> Demikian demonstrasi dari sistem web One Spirit dengan instrumen proyek terintegrasi. Kami ingin menyelaraskan beberapa pertanyaan validasi dengan Bapak dan Ibu untuk memastikan alur status keuangan, penugasan PO/PM, dan detail instrumen operasional ini sudah tepat sebelum kita melangkah ke fase implementasi selanjutnya. Terima kasih."

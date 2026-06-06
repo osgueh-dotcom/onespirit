@@ -53,7 +53,29 @@ def get_project_by_id(
             detail="Project not found"
         )
     project.validation_warnings = service.check_project_validation_warnings(project)
-    return project
+    project.instruments = [inst for inst in project.instruments if not inst.deleted_at]
+    
+    # Manually serialize to Pydantic to avoid dynamic attribute session commit side effects
+    response_data = schemas.ProjectDetailResponse.from_orm(project)
+    
+    # Calculate readiness score and counts
+    readiness = service.calculate_project_readiness(project)
+    response_data.required_instruments_count = readiness["required_instruments_count"]
+    response_data.completed_required_instruments_count = readiness["completed_required_instruments_count"]
+    response_data.instrument_completion_rate = readiness["instrument_completion_rate"]
+    response_data.missing_required_instruments_count = readiness["missing_required_instruments_count"]
+    response_data.revision_required_count = readiness["revision_required_count"]
+    response_data.overdue_instruments_count = readiness["overdue_instruments_count"]
+    response_data.project_readiness_score = readiness["project_readiness_score"]
+    
+    # Mask PNL document link if unauthorized
+    user_role = current_user.role.name if current_user and current_user.role else None
+    if user_role not in ["Super Admin", "Management", "Finance"]:
+        for inst in response_data.instruments:
+            if inst.instrument_type == "PNL":
+                inst.document_url = None
+                
+    return response_data
 
 @router.post("/projects", response_model=schemas.ProjectResponse, status_code=status.HTTP_201_CREATED)
 def create_project_entry(
@@ -234,3 +256,176 @@ def delete_project_entry(
         )
     service.delete_project(db, db_project=project)
     return {"message": "Project successfully archived."}
+
+@router.get("/projects/{project_id}/instruments", response_model=List[schemas.ProjectInstrumentRead])
+def get_instruments_for_project(
+    project_id: str,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.PermissionChecker(["projects:read"]))
+):
+    """List operational instruments for a project"""
+    project = service.get_project(db, project_id=project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+    instruments = service.get_project_instruments(db, project_id=project_id)
+    response_list = [schemas.ProjectInstrumentRead.from_orm(inst) for inst in instruments]
+    
+    # Mask PNL document link if unauthorized
+    user_role = current_user.role.name if current_user and current_user.role else None
+    if user_role not in ["Super Admin", "Management", "Finance"]:
+        for inst in response_list:
+            if inst.instrument_type == "PNL":
+                inst.document_url = None
+                
+    return response_list
+
+@router.post("/projects/{project_id}/instruments", response_model=schemas.ProjectInstrumentRead, status_code=status.HTTP_201_CREATED)
+def create_instrument_for_project(
+    project_id: str,
+    payload: schemas.ProjectInstrumentCreate,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.PermissionChecker(["projects:write"]))
+):
+    """Create a new custom operational instrument for a project"""
+    project = service.get_project(db, project_id=project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+    
+    # Validate payload.instrument_type and status choices
+    valid_types = ["CL", "ROS", "CK", "PNL", "PF", "MATRIX", "OTHER"]
+    if payload.instrument_type not in valid_types:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid instrument type. Must be one of {valid_types}"
+        )
+        
+    valid_statuses = ["Not Required", "Not Started", "In Progress", "Done", "Need Revision"]
+    if payload.status not in valid_statuses:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid status. Must be one of {valid_statuses}"
+        )
+
+    try:
+        inst = service.create_project_instrument(
+            db,
+            project_id=project_id,
+            instrument_in=payload,
+            user_id=str(current_user.id)
+        )
+        response_data = schemas.ProjectInstrumentRead.from_orm(inst)
+        
+        # Mask PNL document link if unauthorized
+        user_role = current_user.role.name if current_user and current_user.role else None
+        if user_role not in ["Super Admin", "Management", "Finance"]:
+            if response_data.instrument_type == "PNL":
+                response_data.document_url = None
+                
+        return response_data
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+@router.patch("/projects/{project_id}/instruments/{instrument_id}", response_model=schemas.ProjectInstrumentRead)
+def update_instrument_in_project(
+    project_id: str,
+    instrument_id: str,
+    payload: schemas.ProjectInstrumentUpdate,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.PermissionChecker(["projects:write"]))
+):
+    """Update status, notes, or URL link of an operational instrument"""
+    project = service.get_project(db, project_id=project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+        
+    if payload.status is not None:
+        valid_statuses = ["Not Required", "Not Started", "In Progress", "Done", "Need Revision"]
+        if payload.status not in valid_statuses:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid status. Must be one of {valid_statuses}"
+            )
+
+    try:
+        inst = service.update_project_instrument(
+            db,
+            instrument_id=instrument_id,
+            instrument_in=payload,
+            user_id=str(current_user.id)
+        )
+        response_data = schemas.ProjectInstrumentRead.from_orm(inst)
+        
+        # Mask PNL document link if unauthorized
+        user_role = current_user.role.name if current_user and current_user.role else None
+        if user_role not in ["Super Admin", "Management", "Finance"]:
+            if response_data.instrument_type == "PNL":
+                response_data.document_url = None
+                
+        return response_data
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+@router.delete("/projects/{project_id}/instruments/{instrument_id}", status_code=status.HTTP_200_OK)
+def delete_instrument_from_project(
+    project_id: str,
+    instrument_id: str,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.PermissionChecker(["projects:write"]))
+):
+    """Remove an operational instrument from a project"""
+    project = service.get_project(db, project_id=project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+        
+    success = service.delete_project_instrument(db, instrument_id=instrument_id)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Instrument not found or already deleted"
+        )
+    return {"message": "Instrument successfully deleted."}
+
+@router.post("/projects/{project_id}/instruments/defaults", response_model=List[schemas.ProjectInstrumentRead], status_code=status.HTTP_200_OK)
+def generate_default_instruments_for_project(
+    project_id: str,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.PermissionChecker(["projects:write"]))
+):
+    """Auto-generate default operational instruments (CL, ROS, CK, PNL) for a project if they don't exist"""
+    project = service.get_project(db, project_id=project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+        
+    service.ensure_default_project_instruments(db, project_id=project.id)
+    instruments = service.get_project_instruments(db, project_id=project_id)
+    response_list = [schemas.ProjectInstrumentRead.from_orm(inst) for inst in instruments]
+    
+    # Mask PNL document link if unauthorized
+    user_role = current_user.role.name if current_user and current_user.role else None
+    if user_role not in ["Super Admin", "Management", "Finance"]:
+        for inst in response_list:
+            if inst.instrument_type == "PNL":
+                inst.document_url = None
+                
+    return response_list

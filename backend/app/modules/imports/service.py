@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.modules.auth.models import User
 from app.modules.crm.models import Customer, Contact
-from app.modules.projects.models import Project, ProjectStatusLog
+from app.modules.projects.models import Project, ProjectStatusLog, ProjectInstrument
 from app.modules.event_sources.models import EventSource
 from app.modules.events.models import EventSchedule
 from app.modules.tasks.models import Task
@@ -332,6 +332,24 @@ def resolve_or_create_event_source(db: Session, partner_val: Any, sales_val: Any
     db.refresh(source)
     return source.id, warning
 
+def map_excel_instrument_val(val: Any) -> Tuple[str, Optional[str], Optional[str], Optional[str]]:
+    val_str = str(val or "").strip()
+    if not val_str or val_str == "-":
+        return "Not Started", None, None, None
+        
+    val_lower = val_str.lower()
+    if val_lower in ["done", "yes", "ada", "ok", "complete", "completed", "1", "x", "true", "check"]:
+        return "Done", None, None, None
+    elif val_str.startswith("http"):
+        return "Done", val_str, None, None
+    elif val_lower in ["n/a", "not required"]:
+        return "Not Required", None, None, None
+    elif val_lower in ["revision", "revise", "need revision"]:
+        return "Need Revision", None, None, None
+    else:
+        warning_msg = f"Ambiguous instrument value '{val_str}'"
+        return "In Progress", None, val_str, warning_msg
+
 def parse_excel_sheet(db: Session, file_bytes: bytes) -> Dict[str, Any]:
     wb = openpyxl.load_workbook(filename=io.BytesIO(file_bytes), data_only=True)
     
@@ -459,6 +477,24 @@ def parse_excel_sheet(db: Session, file_bytes: bytes) -> Dict[str, Any]:
             simulated_paid=simulated_paid
         )
         temp_proj.documents = docs_list
+        
+        # Simulate Project Instruments for validation warnings checking in preview (Sprint 7)
+        sim_instruments = []
+        for chk in ["cl", "ros", "ck", "pnl", "pf", "matrix"]:
+            chk_val = get_row_val(row, indices[chk])
+            inst_status, inst_doc_url, inst_notes, warning_msg = map_excel_instrument_val(chk_val)
+            if warning_msg:
+                warnings.append({
+                    "row": r_idx,
+                    "message": f"{warning_msg} for instrument {chk.upper()} (Set to 'In Progress' with notes)."
+                })
+            sim_instruments.append(ProjectInstrument(
+                instrument_type=chk.upper(),
+                status=inst_status,
+                document_url=inst_doc_url,
+                notes=inst_notes
+            ))
+        temp_proj.instruments = sim_instruments
         
         proj_warns = check_project_validation_warnings(temp_proj)
         for pw in proj_warns:
@@ -821,6 +857,57 @@ def commit_excel_import(db: Session, file_bytes: bytes, user_id: str) -> Dict[st
                 else:
                     if task.status != chk_status:
                         task.status = chk_status
+                        db.commit()
+
+            # 7.5. Project Instruments syncing (CL, ROS, CK, PNL, PF, MATRIX) (Sprint 7)
+            checklists = ["cl", "ros", "ck", "pnl", "pf", "matrix"]
+            for chk in checklists:
+                chk_val = get_row_val(row, indices[chk])
+                instrument_type = chk.upper()
+                inst_status, inst_doc_url, inst_notes, warning_msg = map_excel_instrument_val(chk_val)
+                
+                if warning_msg:
+                    row_warns.append(f"{warning_msg} for instrument {instrument_type}. Set to 'In Progress' with notes.")
+                
+                inst = db.query(ProjectInstrument).filter(
+                    ProjectInstrument.project_id == project.id,
+                    ProjectInstrument.instrument_type == instrument_type,
+                    ProjectInstrument.deleted_at == None
+                ).first()
+                
+                if not inst:
+                    inst = ProjectInstrument(
+                        project_id=project.id,
+                        instrument_type=instrument_type,
+                        status=inst_status,
+                        title=instrument_type,
+                        document_url=inst_doc_url,
+                        notes=inst_notes,
+                        updated_by_user_id=pm_id or (uuid.UUID(executor_id) if executor_id else None)
+                    )
+                    # For Sprint 7: Done status sets completed_date automatically
+                    if inst_status == "Done":
+                        inst.completed_date = date.today()
+                    db.add(inst)
+                    db.commit()
+                else:
+                    updated = False
+                    if inst.status != inst_status:
+                        inst.status = inst_status
+                        if inst_status == "Done" and not inst.completed_date:
+                            inst.completed_date = date.today()
+                        # Prefer not to clear completed_date automatically in Sprint 7.
+                        updated = True
+                    if inst_doc_url and inst.document_url != inst_doc_url:
+                        inst.document_url = inst_doc_url
+                        updated = True
+                    if inst_notes and inst.notes != inst_notes:
+                        inst.notes = inst_notes
+                        updated = True
+                    
+                    if updated:
+                        inst.updated_by_user_id = pm_id or (uuid.UUID(executor_id) if executor_id else None)
+                        inst.updated_at = datetime.utcnow()
                         db.commit()
 
             # 8. Document Asset links syncing (improved standard types mapping)

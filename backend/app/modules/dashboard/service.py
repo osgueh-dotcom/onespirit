@@ -70,6 +70,7 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
         joinedload(Project.customer),
         joinedload(Project.event_source),
         joinedload(Project.documents),
+        joinedload(Project.instruments),
         joinedload(Project.invoices).joinedload(Invoice.payments)
     ).all()
     
@@ -112,6 +113,16 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
     closed_not_paid = 0
     documentation_missing = 0
     unknown_source = 0
+    
+    # Instrument analytics indicators (Sprint 7)
+    missing_cl = 0
+    missing_ros = 0
+    missing_ck = 0
+    missing_pnl = 0
+    instruments_need_revision = 0
+    instruments_overdue = 0
+    total_instrument_completion_rate_sum = 0.0
+    today = date.today()
     
     # Confirmed program statuses for revenue logic
     confirmed_prog_statuses = {"Confirmed", "Preparation", "Ready", "Running", "Completed", "Reporting", "Closed"}
@@ -309,6 +320,47 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
         if p.event_source_id is None or s_type.lower() in ["other", "unknown"]:
             unknown_source += 1
 
+        # Project Instruments checks (Sprint 7)
+        proj_instruments = {inst.instrument_type: inst for inst in p.instruments if not inst.deleted_at}
+        
+        # 1. Missing CL (if program_status in confirmed_prog_statuses)
+        cl_inst = proj_instruments.get("CL")
+        if pr_status in confirmed_prog_statuses:
+            if not cl_inst or cl_inst.status != "Done":
+                missing_cl += 1
+                
+        # 2. Missing ROS (if program_status in ["Ready", "Running", "Completed", "Reporting", "Closed"])
+        ros_inst = proj_instruments.get("ROS")
+        if pr_status in ["Ready", "Running", "Completed", "Reporting", "Closed"]:
+            if not ros_inst or ros_inst.status != "Done":
+                missing_ros += 1
+                
+        # 3. Missing CK (if program_status in ["Ready", "Running", "Completed", "Reporting", "Closed"])
+        ck_inst = proj_instruments.get("CK")
+        if pr_status in ["Ready", "Running", "Completed", "Reporting", "Closed"]:
+            if not ck_inst or ck_inst.status != "Done":
+                missing_ck += 1
+                
+        # 4. Missing PNL (if quotation_status is Signed & Deal)
+        pnl_inst = proj_instruments.get("PNL")
+        if q_status == "Signed & Deal":
+            if not pnl_inst or pnl_inst.status != "Done" or not pnl_inst.document_url:
+                missing_pnl += 1
+                
+        # 5. instruments_need_revision, instruments_overdue, average_instrument_completion_rate
+        req_insts = [inst for inst in p.instruments if not inst.deleted_at and inst.status != "Not Required"]
+        req_count = len(req_insts)
+        done_count = sum(1 for inst in req_insts if inst.status == "Done")
+        proj_completion_rate = done_count / req_count if req_count > 0 else 0.0
+        total_instrument_completion_rate_sum += proj_completion_rate
+        
+        for inst in p.instruments:
+            if not inst.deleted_at:
+                if inst.status == "Need Revision":
+                    instruments_need_revision += 1
+                if inst.due_date and inst.due_date < today and inst.status != "Done" and inst.status != "Not Required":
+                    instruments_overdue += 1
+
     # Set total_inquiry as total_projects per requirements
     total_inquiry = total_projects
     
@@ -366,6 +418,8 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
     customer_analytics_list = list(customer_map.values())
     event_category_analytics_list = list(event_cat_map.values())
     program_type_analytics_list = list(prog_type_map.values())
+    
+    average_instrument_completion_rate = (total_instrument_completion_rate_sum / total_projects * 100.0) if total_projects > 0 else 0.0
     
     return {
         "executive": {
@@ -426,5 +480,14 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
             "closed_not_paid": closed_not_paid,
             "documentation_missing": documentation_missing,
             "unknown_source": unknown_source
+        },
+        "instrument_summary": {
+            "missing_cl": missing_cl,
+            "missing_ros": missing_ros,
+            "missing_ck": missing_ck,
+            "missing_pnl": missing_pnl,
+            "instruments_need_revision": instruments_need_revision,
+            "instruments_overdue": instruments_overdue,
+            "average_instrument_completion_rate": average_instrument_completion_rate
         }
     }

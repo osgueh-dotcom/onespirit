@@ -21,12 +21,12 @@ Dokumen ini memetakan butir-butir penawaran fitur dalam proposal **GVSys (Gueh V
 | **Project Status** | Implemented (MVP) | **Ya** | Status proyek utama: *Open*, *Active*, *Reporting*, *Closed*, *Canceled*. |
 | **Documentation Links** | Implemented (MVP) | **Ya** | Kolom tautan dokumen eksternal Google Drive resmi untuk mempermudah arsip dokumen legal/kontrak. |
 | **Project Documentation Links** | Implemented (MVP) | **Ya** | Penyimpanan tautan/link berkas Google Drive untuk melampirkan instrumen proyek. |
-| **Project Instruments / Operational Checklist** | Partially Implemented | **Ya** | Diidentifikasi sebagai instrumen operasional penting (CL, ROS, CK, PNL), saat ini direpresentasikan melalui tautan dokumen. |
-| **CL Tracking** | Planned / Future Phase | **Tidak** | Pelacakan status kontrak kerja sama (Contract Letter / Confirmation Letter) khusus per proyek. |
-| **ROS Tracking** | Planned / Future Phase | **Tidak** | Pelacakan status rundown detail acara (Rundown of Show) khusus per proyek. |
-| **CK Tracking** | Planned / Future Phase | **Tidak** | Pelacakan checklist persiapan logistik/peralatan (Check List) khusus per proyek. |
-| **PNL Tracking** | Planned / Future Phase | **Tidak** | Pelacakan status instrumen keuangan proyek (Profit and Loss) khusus per proyek. |
-| **Instrument Status Workflow** | Future Phase | **Tidak** | Alur persetujuan status instrumen proyek (CL, ROS, CK, PNL) oleh admin/manajemen. |
+| **Project Instruments / Operational Checklist** | Implemented (Sprint 7) | **Ya** | Pelacakan status operasional instrumen proyek (CL, ROS, CK, PNL, PF, MATRIX) terintegrasi dengan Readiness Score. |
+| **CL Tracking** | Implemented (Sprint 7) | **Ya** | Pelacakan status dan tautan Contract Letter / Confirmation Letter per proyek. |
+| **ROS Tracking** | Implemented (Sprint 7) | **Ya** | Pelacakan status dan tautan Rundown of Show per proyek. |
+| **CK Tracking** | Implemented (Sprint 7) | **Ya** | Pelacakan status dan tautan Check List persiapan operasional per proyek. |
+| **PNL Tracking** | Implemented (Sprint 7) | **Ya** | Pelacakan status Profit and Loss per proyek disertai dengan pembatasan hak akses tautan dokumen sensitif. |
+| **Instrument Status Workflow** | Implemented (Sprint 7) | **Ya** | Alur perubahan status instrumen (Done, In Progress, Need Revision, Not Required) dengan tanggal penyelesaian otomatis dan activity log. |
 | **Activity Log** | Implemented (MVP) | **Ya** | Audit trail otomatis mencatat riwayat perubahan status, tanggal, dan inisiator pengguna. |
 | **Status Timeline** | Implemented (MVP) | **Ya** | Tampilan visual linimasa tahapan status proyek di halaman detail untuk transparansi progres. |
 | **Excel Import** | Implemented (MVP) | **Ya** | Pengunggahan file Excel operasional lama dengan fitur pratinjau validasi baris data sebelum masuk database. |
@@ -43,4 +43,4 @@ Dokumen ini memetakan butir-butir penawaran fitur dalam proposal **GVSys (Gueh V
 ---
 
 ## Ringkasan Kesiapan
-Fitur-fitur inti untuk demonstrasi MVP telah tersedia dan siap divalidasi bersama PT. One Spirit Asia. Sistem saat ini berada pada tahap *working local MVP* untuk kebutuhan validasi alur kerja (*workflow*), *dashboard*, dan kebutuhan bisnis operasional. Beberapa fitur lanjutan seperti modul *Project Instruments* khusus (CL, ROS, CK, PNL), penanganan status instrumen terintegrasi, generator *invoice*, dan integrasi otomatis Google Drive direkomendasikan untuk masuk ke tahap rencana pengembangan lanjutan/Fase berikutnya setelah umpan balik dari sesi demo ini dikonsolidasikan.
+Fitur-fitur inti untuk demonstrasi MVP telah tersedia dan siap divalidasi bersama PT. One Spirit Asia. Sistem saat ini berada pada tahap *working local MVP* untuk kebutuhan validasi alur kerja (*workflow*), *dashboard*, instrumen kesiapan proyek terintegrasi (**CL, ROS, CK, PNL, PF, MATRIX**), dan analisis bisnis operasional. Beberapa fitur lanjutan seperti generator *invoice* formal otomatis dan integrasi langsung Google Drive API direkomendasikan untuk masuk ke tahap rencana pengembangan lanjutan/Fase berikutnya setelah umpan balik dari sesi demo ini dikonsolidasikan.

@@ -1,9 +1,10 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.modules.projects.models import Project, ProjectStatusLog, ProjectActivityLog
-from app.modules.projects.schemas import ProjectCreate, ProjectUpdate
+from app.modules.projects.models import Project, ProjectStatusLog, ProjectActivityLog, ProjectInstrument
+from app.modules.projects.schemas import ProjectCreate, ProjectUpdate, ProjectInstrumentCreate, ProjectInstrumentUpdate
 from app.core.activity import log_activity
 from app.core.database import db_commit_safety
+from datetime import date, datetime
 
 import uuid
 
@@ -91,7 +92,113 @@ def check_project_validation_warnings(project: Project) -> List[str]:
     if paid > budget and budget > 0:
         warnings.append(f"Total payment collected (Rp {paid:,.0f}) exceeds the allocated budget (Rp {budget:,.0f}).")
         
+    # Project Instruments Validation warnings (Sprint 6 & 7)
+    instruments = {inst.instrument_type: inst for inst in project.instruments if not inst.deleted_at}
+    today = date.today()
+    
+    # CL missing or not Done for confirmed project
+    if (project.program_status or "").lower() in ["confirmed", "preparation", "ready", "running", "completed", "reporting", "closed"]:
+        cl = instruments.get("CL")
+        if not cl or (cl.status or "").lower() != "done":
+            warnings.append("Contract/Confirmation Letter (CL) is missing or not marked as 'Done' for this confirmed project.")
+            
+    # CL missing or not Done for Signed & Deal project
+    if (project.quotation_status or "").lower() in ["signed & deal", "signed", "deal", "approved"]:
+        cl = instruments.get("CL")
+        if not cl or (cl.status or "").lower() != "done":
+            warnings.append("Contract/Confirmation Letter (CL) is missing or not marked as 'Done' for this Signed & Deal project.")
+            
+    # ROS not Done when Program Status is Ready, Running, Completed, Reporting, or Closed
+    if (project.program_status or "").lower() in ["ready", "running", "completed", "reporting", "closed"]:
+        ros = instruments.get("ROS")
+        if not ros or (ros.status or "").lower() != "done":
+            warnings.append("Rundown of Show (ROS) is missing or not marked as 'Done' for this project (Status: Ready/Running/Completed/Reporting/Closed).")
+            
+    # CK not Done when Program Status is Ready, Running, Completed, Reporting, or Closed
+    if (project.program_status or "").lower() in ["ready", "running", "completed", "reporting", "closed"]:
+        ck = instruments.get("CK")
+        if not ck or (ck.status or "").lower() != "done":
+            warnings.append("Check List (CK) is missing or not marked as 'Done' for this project (Status: Ready/Running/Completed/Reporting/Closed).")
+            
+    # PNL missing for Signed & Deal project
+    if (project.quotation_status or "").lower() in ["signed & deal", "signed", "deal", "approved"]:
+        pnl = instruments.get("PNL")
+        if not pnl or not pnl.document_url:
+            warnings.append("Profit & Loss (PNL) document link is missing for this Signed & Deal project.")
+            
+    # Instrument has status Need Revision
+    for inst in project.instruments:
+        if not inst.deleted_at and inst.status == "Need Revision":
+            warnings.append(f"Instrument {inst.instrument_type} ('{inst.title}') requires revision.")
+            
+    # Instrument has due date passed and status is not Done
+    for inst in project.instruments:
+        if not inst.deleted_at and inst.due_date and inst.due_date < today and inst.status != "Done" and inst.status != "Not Required":
+            warnings.append(f"Instrument {inst.instrument_type} ('{inst.title}') is overdue (due date: {inst.due_date} was passed).")
+            
+    # PNL sensitive visibility access warning
+    pnl = instruments.get("PNL")
+    if pnl:
+        warnings.append("PNL access warning: PNL document is sensitive and should be restricted to Management/Finance/Admin in production.")
+        
     return warnings
+
+def calculate_project_readiness(project: Project) -> dict:
+    today = date.today()
+    
+    # 1. Filter out deleted instruments
+    active_instruments = [inst for inst in project.instruments if not inst.deleted_at]
+    
+    # 2. Required instruments: status is not "Not Required"
+    required_instruments = [inst for inst in active_instruments if inst.status != "Not Required"]
+    required_count = len(required_instruments)
+    
+    # 3. Completed required instruments: status is "Done"
+    completed_required_count = sum(1 for inst in required_instruments if inst.status == "Done")
+    
+    # 4. Completion rate
+    completion_rate = 0.0
+    if required_count > 0:
+        completion_rate = completed_required_count / required_count
+        
+    # 5. Missing required instruments
+    missing_count = required_count - completed_required_count
+    
+    # 6. Revision required count
+    revision_count = sum(1 for inst in required_instruments if inst.status == "Need Revision")
+    
+    # 7. Overdue instruments: due_date in the past and status is not Done or Not Required
+    overdue_count = sum(
+        1 for inst in active_instruments
+        if inst.due_date and inst.due_date < today and inst.status != "Done" and inst.status != "Not Required"
+    )
+    
+    # 8. Readiness score formula
+    # - instrument_completion_rate contributes 60%
+    # - documentation availability contributes 20%
+    # - status consistency contributes 20%
+    
+    # Documentation score: 1.0 if active documents exist, else 0.0
+    active_docs = [doc for doc in project.documents if not doc.deleted_at]
+    documentation_score = 1.0 if len(active_docs) > 0 else 0.0
+    
+    # Status consistency score: based on validation warnings
+    warnings = check_project_validation_warnings(project)
+    status_consistency_score = max(0.0, 1.0 - 0.2 * len(warnings))
+    
+    # Combined score
+    readiness_score = (completion_rate * 0.6) + (documentation_score * 0.2) + (status_consistency_score * 0.2)
+    
+    return {
+        "required_instruments_count": required_count,
+        "completed_required_instruments_count": completed_required_count,
+        "instrument_completion_rate": completion_rate,
+        "missing_required_instruments_count": missing_count,
+        "revision_required_count": revision_count,
+        "overdue_instruments_count": overdue_count,
+        "project_readiness_score": readiness_score
+    }
+
 
 def create_project(db: Session, project_in: ProjectCreate, created_by_id: str) -> Project:
     parsed_creator_id = None
@@ -144,6 +251,10 @@ def create_project(db: Session, project_in: ProjectCreate, created_by_id: str) -
     )
     db.add(db_project)
     db_commit_safety(db)
+    db.refresh(db_project)
+    
+    # Auto-create default project instruments
+    ensure_default_project_instruments(db, db_project.id)
     db.refresh(db_project)
     
     # Create initial transition log
@@ -526,3 +637,223 @@ def get_project_logs(db: Session, project_id: str) -> List[ProjectStatusLog]:
         except ValueError:
             pass
     return db.query(ProjectStatusLog).filter(ProjectStatusLog.project_id == parsed_id).order_by(ProjectStatusLog.created_at.desc()).all()
+
+def get_project_instruments(db: Session, project_id: str) -> List[ProjectInstrument]:
+    parsed_id = project_id
+    if isinstance(project_id, str):
+        try:
+            parsed_id = uuid.UUID(project_id)
+        except ValueError:
+            pass
+    return db.query(ProjectInstrument).filter(ProjectInstrument.project_id == parsed_id, ProjectInstrument.deleted_at == None).order_by(ProjectInstrument.created_at.asc()).all()
+
+def create_project_instrument(db: Session, project_id: str, instrument_in: ProjectInstrumentCreate, user_id: str) -> ProjectInstrument:
+    parsed_proj_id = project_id
+    if isinstance(project_id, str):
+        try:
+            parsed_proj_id = uuid.UUID(project_id)
+        except ValueError:
+            pass
+    parsed_user_id = user_id
+    if isinstance(user_id, str):
+        try:
+            parsed_user_id = uuid.UUID(user_id)
+        except ValueError:
+            pass
+
+    # For MVP, prevent duplicate instrument type per project unless instrument_type is OTHER
+    if instrument_in.instrument_type != "OTHER":
+        existing = db.query(ProjectInstrument).filter(
+            ProjectInstrument.project_id == parsed_proj_id,
+            ProjectInstrument.instrument_type == instrument_in.instrument_type,
+            ProjectInstrument.deleted_at == None
+        ).first()
+        if existing:
+            raise ValueError(f"Instrument of type {instrument_in.instrument_type} already exists for this project.")
+
+    db_instrument = ProjectInstrument(
+        project_id=parsed_proj_id,
+        instrument_type=instrument_in.instrument_type,
+        status=instrument_in.status or "Not Started",
+        title=instrument_in.title or instrument_in.instrument_type,
+        document_url=instrument_in.document_url,
+        notes=instrument_in.notes,
+        due_date=instrument_in.due_date,
+        completed_date=instrument_in.completed_date,
+        updated_by_user_id=parsed_user_id
+    )
+    db.add(db_instrument)
+    
+    # Log to ProjectActivityLog
+    db.add(ProjectActivityLog(
+        project_id=parsed_proj_id,
+        user_id=parsed_user_id,
+        action="instrument_created",
+        field_name="instrument_type",
+        new_value=instrument_in.instrument_type,
+        notes=f"Instrument {instrument_in.instrument_type} created with status {db_instrument.status}"
+    ))
+    db_commit_safety(db)
+    db.refresh(db_instrument)
+    return db_instrument
+
+def update_project_instrument(db: Session, instrument_id: str, instrument_in: ProjectInstrumentUpdate, user_id: str) -> ProjectInstrument:
+    parsed_inst_id = instrument_id
+    if isinstance(instrument_id, str):
+        try:
+            parsed_inst_id = uuid.UUID(instrument_id)
+        except ValueError:
+            pass
+    parsed_user_id = user_id
+    if isinstance(user_id, str):
+        try:
+            parsed_user_id = uuid.UUID(user_id)
+        except ValueError:
+            pass
+
+    db_instrument = db.query(ProjectInstrument).filter(ProjectInstrument.id == parsed_inst_id, ProjectInstrument.deleted_at == None).first()
+    if not db_instrument:
+        raise ValueError("Instrument not found.")
+
+    # Track fields changed for logging
+    old_status = db_instrument.status
+    old_doc_url = db_instrument.document_url
+    old_notes = db_instrument.notes
+    old_due_date = db_instrument.due_date
+    old_completed_date = db_instrument.completed_date
+
+    update_data = instrument_in.dict(exclude_unset=True)
+
+    if "status" in update_data:
+        db_instrument.status = update_data["status"]
+        if update_data["status"].lower() == "done" and not db_instrument.completed_date:
+            db_instrument.completed_date = date.today()
+            
+    if "title" in update_data:
+        db_instrument.title = update_data["title"]
+    if "document_url" in update_data:
+        db_instrument.document_url = update_data["document_url"]
+    if "notes" in update_data:
+        db_instrument.notes = update_data["notes"]
+    if "due_date" in update_data:
+        db_instrument.due_date = update_data["due_date"]
+    if "completed_date" in update_data:
+        db_instrument.completed_date = update_data["completed_date"]
+
+    db_instrument.updated_by_user_id = parsed_user_id
+    db_instrument.updated_at = datetime.utcnow()
+
+    # Log specific updates to ProjectActivityLog
+    if "status" in update_data and old_status != db_instrument.status:
+        action = "instrument_status_changed"
+        if db_instrument.status == "Not Required":
+            action = "instrument_marked_not_required"
+        elif db_instrument.status == "Need Revision":
+            action = "instrument_marked_need_revision"
+            
+        db.add(ProjectActivityLog(
+            project_id=db_instrument.project_id,
+            user_id=parsed_user_id,
+            action=action,
+            field_name=f"{db_instrument.instrument_type}_status",
+            old_value=old_status,
+            new_value=db_instrument.status,
+            notes=f"Instrument {db_instrument.instrument_type} status updated to {db_instrument.status}"
+        ))
+        
+    if "document_url" in update_data and old_doc_url != db_instrument.document_url:
+        db.add(ProjectActivityLog(
+            project_id=db_instrument.project_id,
+            user_id=parsed_user_id,
+            action="instrument_document_url_updated",
+            field_name=f"{db_instrument.instrument_type}_document_url",
+            old_value=old_doc_url,
+            new_value=db_instrument.document_url,
+            notes=f"Instrument {db_instrument.instrument_type} document URL updated"
+        ))
+        
+    if "notes" in update_data and old_notes != db_instrument.notes:
+        db.add(ProjectActivityLog(
+            project_id=db_instrument.project_id,
+            user_id=parsed_user_id,
+            action="instrument_notes_updated",
+            field_name=f"{db_instrument.instrument_type}_notes",
+            old_value=old_notes,
+            new_value=db_instrument.notes,
+            notes=f"Instrument {db_instrument.instrument_type} notes updated"
+        ))
+
+    if "due_date" in update_data and old_due_date != db_instrument.due_date:
+        db.add(ProjectActivityLog(
+            project_id=db_instrument.project_id,
+            user_id=parsed_user_id,
+            action="instrument_due_date_changed",
+            field_name=f"{db_instrument.instrument_type}_due_date",
+            old_value=str(old_due_date) if old_due_date else None,
+            new_value=str(db_instrument.due_date) if db_instrument.due_date else None,
+            notes=f"Instrument {db_instrument.instrument_type} due date updated to {db_instrument.due_date}"
+        ))
+
+    if "completed_date" in update_data and old_completed_date != db_instrument.completed_date:
+        db.add(ProjectActivityLog(
+            project_id=db_instrument.project_id,
+            user_id=parsed_user_id,
+            action="instrument_completed_date_changed",
+            field_name=f"{db_instrument.instrument_type}_completed_date",
+            old_value=str(old_completed_date) if old_completed_date else None,
+            new_value=str(db_instrument.completed_date) if db_instrument.completed_date else None,
+            notes=f"Instrument {db_instrument.instrument_type} completed date updated to {db_instrument.completed_date}"
+        ))
+
+    db_commit_safety(db)
+    db.refresh(db_instrument)
+    return db_instrument
+
+def delete_project_instrument(db: Session, instrument_id: str) -> bool:
+    parsed_inst_id = instrument_id
+    if isinstance(instrument_id, str):
+        try:
+            parsed_inst_id = uuid.UUID(instrument_id)
+        except ValueError:
+            pass
+    db_instrument = db.query(ProjectInstrument).filter(ProjectInstrument.id == parsed_inst_id, ProjectInstrument.deleted_at == None).first()
+    if not db_instrument:
+        return False
+    db_instrument.soft_delete()
+    db_commit_safety(db)
+    return True
+
+def ensure_default_project_instruments(db: Session, project_id: uuid.UUID) -> List[ProjectInstrument]:
+    default_types = ["CL", "ROS", "CK", "PNL"]
+    created_instruments = []
+    
+    # We fetch existing active instruments first to avoid duplicate creation
+    existing_types = {
+        inst.instrument_type for inst in db.query(ProjectInstrument).filter(
+            ProjectInstrument.project_id == project_id,
+            ProjectInstrument.deleted_at == None
+        ).all()
+    }
+    
+    for itype in default_types:
+        if itype not in existing_types:
+            db_inst = ProjectInstrument(
+                project_id=project_id,
+                instrument_type=itype,
+                status="Not Started",
+                title=itype,
+                document_url=None,
+                notes=None
+            )
+            db.add(db_inst)
+            created_instruments.append(db_inst)
+            
+    if created_instruments:
+        db.add(ProjectActivityLog(
+            project_id=project_id,
+            action="instrument_defaults_generated",
+            notes=f"Default instruments generated: {', '.join([i.instrument_type for i in created_instruments])}"
+        ))
+        db_commit_safety(db)
+        
+    return created_instruments

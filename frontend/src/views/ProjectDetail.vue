@@ -275,12 +275,23 @@
               <ProjectDocumentsPanel :documents="documents" @save-doc="saveDocLink" @delete-doc="deleteDoc" />
             </div>
 
-            <!-- TAB 4: STATUS TIMELINE -->
+            <!-- TAB 4: PROJECT INSTRUMENTS -->
+            <div v-if="activeTab === 'instruments'">
+              <ProjectInstrumentsPanel 
+                :instruments="instruments" 
+                @generate-defaults="generateDefaultInstruments"
+                @create-instrument="createInstrument"
+                @update-instrument="updateInstrument"
+                @delete-instrument="deleteInstrument"
+              />
+            </div>
+
+            <!-- TAB 5: STATUS TIMELINE -->
             <div v-if="activeTab === 'timeline'">
               <ProjectStatusTimeline :logs="logs" />
             </div>
 
-            <!-- TAB 5: ACTIVITY LOG -->
+            <!-- TAB 6: ACTIVITY LOG -->
             <div v-if="activeTab === 'activity'">
               <ProjectActivityLog :activity-logs="activityLogs" />
             </div>
@@ -313,6 +324,53 @@
                 <span v-if="project.program_manager?.initial_code" class="px-2 py-1 bg-brand-orange/15 text-brand-orange text-xs font-black rounded border border-brand-orange/20">
                   {{ project.program_manager.initial_code }}
                 </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Readiness Scorecard (Sprint 7) -->
+          <div v-if="project" class="glass-panel p-5 space-y-4 select-none">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Project Readiness Indicator</h4>
+            <div class="space-y-3 text-xs">
+              <div class="flex justify-between items-center bg-brand-charcoal-light/10 p-2.5 rounded-xl border border-brand-charcoal-light/15">
+                <div>
+                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Readiness Score</p>
+                  <p class="text-white font-extrabold mt-1 text-sm">
+                    {{ project.project_readiness_score !== null ? Math.round(project.project_readiness_score * 100) + '%' : '0%' }}
+                  </p>
+                </div>
+                <span class="px-2 py-1 text-xs font-black rounded border" :class="getReadinessScoreBadgeStyles(project.project_readiness_score)">
+                  {{ getReadinessLabel(project.project_readiness_score) }}
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+                <div>
+                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Completion Rate</p>
+                  <p class="text-white font-extrabold text-sm">{{ project.instrument_completion_rate !== null ? Math.round(project.instrument_completion_rate * 100) + '%' : '0%' }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Done / Required</p>
+                  <p class="text-brand-emerald font-black text-sm">{{ project.completed_required_instruments_count }} / {{ project.required_instruments_count }}</p>
+                </div>
+              </div>
+              <div class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/20 h-2 rounded-full overflow-hidden mt-2">
+                <div 
+                  class="bg-brand-orange h-full rounded-full transition-all duration-500" 
+                  :style="{ width: (project.project_readiness_score !== null ? Math.round(project.project_readiness_score * 100) : 0) + '%' }"
+                ></div>
+              </div>
+              <!-- Alerts inside readiness card -->
+              <div class="grid grid-cols-2 gap-2 pt-1 border-t border-brand-charcoal-light/10 mt-2 text-[10px]">
+                <div class="flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full" :class="project.overdue_instruments_count > 0 ? 'bg-red-400 animate-pulse' : 'bg-gray-600'"></span>
+                  <span class="text-gray-400 font-medium">Overdue:</span>
+                  <span class="font-extrabold" :class="project.overdue_instruments_count > 0 ? 'text-red-400' : 'text-gray-300'">{{ project.overdue_instruments_count }}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full" :class="project.revision_required_count > 0 ? 'bg-rose-400 animate-pulse' : 'bg-gray-600'"></span>
+                  <span class="text-gray-400 font-medium">Revision:</span>
+                  <span class="font-extrabold" :class="project.revision_required_count > 0 ? 'text-rose-400' : 'text-gray-300'">{{ project.revision_required_count }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -473,6 +531,7 @@ import ProjectValidationWarnings from '../components/ProjectValidationWarnings.v
 import ProjectStatusTimeline from '../components/ProjectStatusTimeline.vue'
 import ProjectActivityLog from '../components/ProjectActivityLog.vue'
 import ProjectDocumentsPanel from '../components/ProjectDocumentsPanel.vue'
+import ProjectInstrumentsPanel from '../components/ProjectInstrumentsPanel.vue'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -486,6 +545,7 @@ const logs = ref([])
 const activityLogs = ref([])
 const validationWarnings = ref([])
 const users = ref([])
+const instruments = ref([])
 
 const loading = ref(true)
 const activeTab = ref('schedules')
@@ -496,6 +556,7 @@ const showAddTaskModal = ref(false)
 const tabs = [
   { id: 'schedules', name: 'Event Timeline' },
   { id: 'tasks', name: 'Checklist Operations' },
+  { id: 'instruments', name: 'Project Instruments' },
   { id: 'documents', name: 'Shared Documents' },
   { id: 'timeline', name: 'Status Timeline' },
   { id: 'activity', name: 'Activity Log' }
@@ -540,15 +601,25 @@ const fetchProjectDetail = async () => {
   }
 }
 
+const fetchInstruments = async () => {
+  try {
+    const res = await axios.get(`/api/v1/projects/${projectId}/instruments`)
+    instruments.value = res.data
+  } catch (err) {
+    console.error('Failed to load project instruments', err)
+  }
+}
+
 const fetchData = async () => {
   try {
-    const [projRes, schedsRes, tasksRes, docsRes, logsRes, usersRes] = await Promise.all([
+    const [projRes, schedsRes, tasksRes, docsRes, logsRes, usersRes, instsRes] = await Promise.all([
       axios.get(`/api/v1/projects/${projectId}`),
       axios.get(`/api/v1/projects/${projectId}/events`),
       axios.get(`/api/v1/projects/${projectId}/tasks`),
       axios.get(`/api/v1/projects/${projectId}/documents`),
       axios.get(`/api/v1/projects/${projectId}/logs`),
-      axios.get('/api/v1/auth/users')
+      axios.get('/api/v1/auth/users'),
+      axios.get(`/api/v1/projects/${projectId}/instruments`)
     ])
     
     project.value = projRes.data
@@ -557,6 +628,7 @@ const fetchData = async () => {
     documents.value = docsRes.data
     logs.value = logsRes.data
     users.value = usersRes.data
+    instruments.value = instsRes.data
     
     validationWarnings.value = projRes.data.validation_warnings || []
     activityLogs.value = projRes.data.activity_logs || []
@@ -564,6 +636,54 @@ const fetchData = async () => {
     console.error('Failed to load project detailed context', err)
   } finally {
     loading.value = false
+  }
+}
+
+const generateDefaultInstruments = async () => {
+  try {
+    await axios.post(`/api/v1/projects/${projectId}/instruments/defaults`)
+    await Promise.all([
+      fetchInstruments(),
+      fetchProjectDetail()
+    ])
+  } catch (err) {
+    alert(err.response?.data?.detail || 'Failed to generate default instruments')
+  }
+}
+
+const createInstrument = async (payload) => {
+  try {
+    await axios.post(`/api/v1/projects/${projectId}/instruments`, payload)
+    await Promise.all([
+      fetchInstruments(),
+      fetchProjectDetail()
+    ])
+  } catch (err) {
+    alert(err.response?.data?.detail || 'Failed to create operational instrument')
+  }
+}
+
+const updateInstrument = async ({ id, data }) => {
+  try {
+    await axios.patch(`/api/v1/projects/${projectId}/instruments/${id}`, data)
+    await Promise.all([
+      fetchInstruments(),
+      fetchProjectDetail()
+    ])
+  } catch (err) {
+    alert(err.response?.data?.detail || 'Failed to update operational instrument')
+  }
+}
+
+const deleteInstrument = async (id) => {
+  try {
+    await axios.delete(`/api/v1/projects/${projectId}/instruments/${id}`)
+    await Promise.all([
+      fetchInstruments(),
+      fetchProjectDetail()
+    ])
+  } catch (err) {
+    alert(err.response?.data?.detail || 'Failed to delete operational instrument')
   }
 }
 
@@ -733,5 +853,19 @@ const deleteDoc = async (id) => {
   } catch (err) {
     alert('Failed to delete document reference')
   }
+}
+
+const getReadinessScoreBadgeStyles = (score) => {
+  if (score === null || score === undefined) return 'bg-gray-500/10 text-gray-400 border-gray-500/20'
+  if (score >= 0.8) return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+  if (score >= 0.5) return 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+  return 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+}
+
+const getReadinessLabel = (score) => {
+  if (score === null || score === undefined) return 'UNKNOWN'
+  if (score >= 0.8) return 'READY'
+  if (score >= 0.5) return 'PREPARING'
+  return 'NOT READY'
 }
 </script>

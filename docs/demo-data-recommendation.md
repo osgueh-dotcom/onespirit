@@ -7,7 +7,7 @@ Sistem modern ini diisi oleh data awal dari proses pembacaan Excel (*seed data*)
 ---
 
 ## 1. Proyek Model Utama (Good Data Profile)
-*Tujuan: Menunjukkan tampilan sistem yang ideal saat seluruh staf disiplin mengisi data administrasi proyek.*
+*Tujuan: Menunjukkan tampilan sistem yang ideal saat seluruh staf disiplin mengisi data administrasi proyek dan seluruh instrumen operasional terpenuhi.*
 
 ### Karakteristik Proyek:
 - **Status Program**: `Ready`, `Running`, atau `Completed`.
@@ -15,40 +15,47 @@ Sistem modern ini diisi oleh data awal dari proses pembacaan Excel (*seed data*)
 - **Status Quotation**: `Signed & Deal`.
 - **Staf Ditugaskan**: PO (Program Owner) dan PM (Program Manager) terisi secara valid.
 - **Data Keuangan**: Budget terisi nominal wajar (misal: > Rp50.000.000), status pembayaran terisi (misal: `Invoice Sent` atau `Partial Paid`).
-- **Dokumen / Instrumen Proyek**: Tautan dokumen penting proyek seperti Contract Letter (CL), Rundown of Show (ROS), Check List (CK), atau Profit & Loss (PNL) terisi.
+- **Dokumen / Instrumen Proyek**: Seluruh instrumen proyek (**CL, ROS, CK, PNL, PF, MATRIX**) berstatus `Done` dengan tautan dokumen terisi.
+- **Readiness Score**: Mendekati `100%` (hijau) karena completion rate instrumen tinggi dan tidak ada peringatan status.
 
 ### Poin Utama yang Harus Ditunjukkan:
-- Tunjukkan panel **Status Timeline** di halaman detail proyek untuk memperlihatkan transisi alur progres yang teratur dari tahap Inquiry hingga Closed.
-- Tunjukkan tabel **Activity Log** untuk melihat rekaman historis audit alur kerja (siapa staf yang mengubah status, kapan diubah).
-- Tunjukkan tautan Google Drive dokumen yang dapat diklik langsung.
+- Tunjukkan kartu **Project Readiness Indicator** di sidebar kanan dengan skor kesiapan `100%`.
+- Perlihatkan tabel **Project Instruments & Checklist** yang bersih tanpa ada badge merah Overdue atau oranye Need Revision.
+- **PNL Access Demonstration**: 
+  - Masuk/simulasikan login sebagai `Admin`/`Finance` -> tautan PNL aktif dan dapat diklik.
+  - Masuk/simulasikan login sebagai `Staff` -> tautan PNL tersembunyi/sensor (*Restricted*), menjaga kerahasiaan profit margin perusahaan.
+- Tunjukkan tabel **Activity Log** di bagian bawah yang mencatat riwayat perubahan status instrumen secara terperinci.
 
 ---
 
-## 2. Proyek Bermasalah Administratif (Data Quality Issue Profile)
-*Tujuan: Menunjukkan kecerdasan sistem dalam mendeteksi kesalahan input operasional secara otomatis tanpa audit manual.*
+## 2. Proyek Bermasalah Administratif (Data Quality & Instrument Issue Profile)
+*Tujuan: Menunjukkan kemampuan sistem dalam mendeteksi ketidaksiapan operasional proyek secara otomatis dan memberikan alarm visual kepada PM/PO.*
 
 ### Karakteristik Proyek:
-- **Status Quotation**: `Cancel` (Batal) tetapi kolom **Alasan Pembatalan (Cancel Reason)** dibiarkan kosong oleh staf.
-- ATAU
-- **Staf Ditugaskan**: PO atau PM dibiarkan kosong (`None`) pada proyek aktif.
-- ATAU
-- **Data Keuangan**: Nilai budget diisi `0` atau dibiarkan kosong, atau proyek berstatus `Closed` tetapi status pembayaran masih `Invoice Sent` (belum bayar).
-- **Dokumen / Instrumen Proyek**: Tautan dokumen penting proyek (CL, ROS, CK, PNL) kosong pada proyek aktif yang membutuhkan dokumen tersebut.
+- **Status Quotation**: `Signed & Deal` tetapi instrumen **CL** atau **PNL** berstatus `Not Started` / `Need Revision` (atau link kosong).
+- **Status Program**: `Ready` atau `Running` tetapi instrumen **ROS** atau **CK** belum berstatus `Done`.
+- **Tanggal Jatuh Tempo**: Salah satu instrumen memiliki tanggal jatuh tempo (`Due Date`) yang telah lewat hari ini tetapi status belum `Done`.
+- **Readiness Score**: Rendah (misal: < `50%` berwarna merah/oranye).
 
 ### Poin Utama yang Harus Ditunjukkan:
-- Buka detail proyek ini, tunjukkan kotak **Validation Warnings** (Peringatan Validasi) berwarna kuning/merah yang secara otomatis menunjukkan apa saja berkas atau tugas yang kurang.
-- Kembali ke Dashboard utama, tunjukkan bagaimana jumlah masalah di proyek ini terakumulasi secara akurat pada panel **Review Kualitas Data** (misalnya meningkatkan angka *Missing PO* atau *Cancel without Reason*).
-- Jelaskan bahwa fitur audit otomatis ini membantu direksi One Spirit memastikan semua staf melengkapi data dan instrumen proyek sebelum rapat koordinasi bulanan.
+- Buka detail proyek ini, tunjukkan penurunan drastis pada **Readiness Score** di kartu sidebar.
+- Tunjukkan indikator **Overdue** merah yang menyala di sebelah instrumen yang telat.
+- Tunjukkan kotak **Validation Warnings** (Peringatan Validasi) yang secara otomatis mencantumkan masalah instrumen (misalnya: *"CL missing for Signed & Deal project"*, *"Instrument [ROS] is overdue"*).
+- Kembali ke Dashboard utama, tunjukkan bagaimana data proyek bermasalah ini secara agregat terakumulasi pada **Instrument Readiness Summary** (misalnya meningkatkan angka *Missing CL* atau *Instruments Overdue*).
 
 ---
 
 ## 3. Cara Mempersiapkan Data Demo di Database Lokal
-Jika database dalam keadaan bersih (baru dideploy lokal), presenter dapat mempersiapkan data contoh langsung dari UI aplikasi atau dengan mengecek database:
+Jika database dalam keadaan bersih (baru dideploy lokal), presenter dapat mempersiapkan data contoh langsung dari UI aplikasi atau melalui file impor:
 1. **Membuat Data Bagus**:
-   - Masuk ke menu **Projects**, klik tombol tambah proyek atau edit proyek yang ada.
-   - Isi seluruh input form secara lengkap. Tunjuk salah satu user sebagai PO dan user lainnya sebagai PM. Hubungkan dengan Customer resmi dan Event Source resmi.
+   - Tambah atau edit proyek yang ada di menu **Projects**.
+   - Isi seluruh input form secara lengkap. Hubungkan dengan Customer dan Event Source resmi.
+   - Pada panel **Project Instruments**, ubah status seluruh dokumen (**CL, ROS, CK, PNL, PF, MATRIX**) menjadi `Done`, isi URL tautan dokumen dengan link dummy, dan set tanggal jatuh tempo di masa depan.
 2. **Membuat Data Masalah**:
-   - Buat satu proyek baru. Kosongkan nilai budget (isi `0`).
-   - Jangan tunjuk PO atau PM (biarkan kosong).
-   - Ubah status quotation menjadi `Cancel`, namun biarkan text area alasan pembatalan kosong. Simpan proyek tersebut.
-   - Verifikasi bahwa dashboard langsung menampilkan penambahan 1 isu baru di panel kualitas data.
+   - Buat satu proyek baru, set status Quotation menjadi `Signed & Deal` dan status Program menjadi `Ready`.
+   - Di panel instrumen, set status **CL** ke `Need Revision`.
+   - Set tanggal jatuh tempo instrumen **ROS** ke kemarin (lalu simpan statusnya tetap `In Progress`).
+   - Verifikasi bahwa Readiness Score proyek langsung merosot dan dashboard utama memperbarui metrik instrumen yang terlewat secara real-time.
+3. **Menguji Impor Excel**:
+   - Unggah file Excel contoh. Isi kolom instrumen dengan nilai `"Revision"`, `"Ada"`, atau link URL.
+   - Verifikasi bahwa sistem impor memetakan status instrumen dengan tepat ke database (`Need Revision`, `Done` dengan URL) dan menampilkan warning impor jika ada nilai ambigu.

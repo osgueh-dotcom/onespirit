@@ -61,6 +61,7 @@ class Project(Base, BaseModelMixin):
     invoices = relationship("Invoice", back_populates="project", cascade="all, delete-orphan")
     documents = relationship("Document", back_populates="project", cascade="all, delete-orphan")
     event_schedules = relationship("EventSchedule", back_populates="project", cascade="all, delete-orphan")
+    instruments = relationship("ProjectInstrument", back_populates="project", cascade="all, delete-orphan")
 
     @property
     def paid_amount(self) -> float:
@@ -106,3 +107,21 @@ class ProjectActivityLog(Base, BaseModelMixin):
     old_value = Column(Text, nullable=True)
     new_value = Column(Text, nullable=True)
     notes = Column(Text, nullable=True)
+
+class ProjectInstrument(Base, BaseModelMixin):
+    __tablename__ = "project_instruments"
+
+    project_id = Column(ForeignKey("projects.id", ondelete="CASCADE"), nullable=False)
+    project = relationship("Project", back_populates="instruments")
+
+    instrument_type = Column(String(50), nullable=False)  # CL, ROS, CK, PNL, PF, MATRIX, OTHER
+    status = Column(String(50), nullable=False, default="Not Started")  # Not Required, Not Started, In Progress, Done, Need Revision
+    title = Column(String(150), nullable=True)
+    document_url = Column(String(255), nullable=True)
+    notes = Column(Text, nullable=True)
+    due_date = Column(Date, nullable=True)
+    completed_date = Column(Date, nullable=True)
+
+    updated_by_user_id = Column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    updated_by_user = relationship("User", foreign_keys=[updated_by_user_id])
+
