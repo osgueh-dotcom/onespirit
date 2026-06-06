@@ -269,3 +269,164 @@ class PMControlCenterResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+class POControlCenterSummary(BaseModel):
+    total_owned_projects: int
+    total_deal: int
+    total_cancel: int
+    deal_rate: float
+    cancel_rate: float
+    potential_revenue: float
+    confirmed_revenue: float
+    average_project_value: float
+    outstanding_count: int
+    invoice_sent_count: int
+    paid_count: int
+    follow_up_needed_count: int
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterQuotationSummary(BaseModel):
+    count_by_status: Dict[str, int]
+    draft_count: int
+    sent_count: int
+    follow_up_count: int
+    revision_count: int
+    signed_deal_count: int
+    cancel_count: int
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterRevenueSummary(BaseModel):
+    potential_revenue: float
+    confirmed_revenue: float
+    revenue_conversion_rate: float
+    average_project_value: float
+    highest_project_value: float
+    lowest_project_value: float
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterFollowUpPriority(BaseModel):
+    priority_level: str
+    project_id: UUID
+    project_code: Optional[str] = None
+    customer_name: Optional[str] = None
+    program_name: Optional[str] = None
+    po_name: Optional[str] = None
+    pm_name: Optional[str] = None
+    quotation_status: str
+    program_status: str
+    payment_status: str
+    budget: float
+    event_date_start: Optional[date] = None
+    reason: str
+    recommended_action: str
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterOwnedProject(BaseModel):
+    project_id: UUID
+    project_code: Optional[str] = None
+    customer_name: Optional[str] = None
+    source_type: Optional[str] = None
+    vendor_name: Optional[str] = None
+    sales_name: Optional[str] = None
+    po_name: Optional[str] = None
+    pm_name: Optional[str] = None
+    quotation_status: str
+    program_status: str
+    payment_status: str
+    project_status: str
+    budget: float
+    event_date_start: Optional[date] = None
+    follow_up_status: Optional[str] = None
+    recommended_action: str
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterPOPerformance(BaseModel):
+    po_id: UUID
+    po_name: str
+    initial_code: Optional[str] = None
+    total_projects: int
+    deal_count: int
+    cancel_count: int
+    deal_rate: float
+    confirmed_revenue: float
+    potential_revenue: float
+    average_project_value: float
+    outstanding_count: int
+    follow_up_needed_count: int
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterSourceContribution(BaseModel):
+    source_type: str
+    vendor_name: Optional[str] = None
+    sales_name: Optional[str] = None
+    total_projects: int
+    deal_count: int
+    cancel_count: int
+    confirmed_revenue: float
+    potential_revenue: float
+    average_project_value: float
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterRiskProject(BaseModel):
+    project_id: UUID
+    project_code: Optional[str] = None
+    customer_name: Optional[str] = None
+    program_name: Optional[str] = None
+    budget: float
+    quotation_status: str
+    program_status: str
+    payment_status: str
+    po_name: Optional[str] = None
+    pm_name: Optional[str] = None
+    reason: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterCommercialRisks(BaseModel):
+    cancel_without_reason: List[POControlCenterRiskProject]
+    signed_deal_without_budget: List[POControlCenterRiskProject]
+    outstanding_payment: List[POControlCenterRiskProject]
+    invoice_sent_not_paid: List[POControlCenterRiskProject]
+    missing_po: List[POControlCenterRiskProject]
+    missing_source: List[POControlCenterRiskProject]
+
+    class Config:
+        from_attributes = True
+
+
+class POControlCenterResponse(BaseModel):
+    summary: POControlCenterSummary
+    quotation_summary: POControlCenterQuotationSummary
+    revenue_summary: POControlCenterRevenueSummary
+    follow_up_priorities: List[POControlCenterFollowUpPriority]
+    owned_projects: List[POControlCenterOwnedProject]
+    po_performance: List[POControlCenterPOPerformance]
+    source_contribution: List[POControlCenterSourceContribution]
+    commercial_risks: POControlCenterCommercialRisks
+
+    class Config:
+        from_attributes = True
+

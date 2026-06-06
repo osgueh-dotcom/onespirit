@@ -12,7 +12,7 @@ from app.modules.events.models import EventSchedule
 from app.modules.tasks.models import Task
 from app.modules.finance.models import Invoice, Payment
 from app.models.activity import ActivityLog
-from app.modules.dashboard.schemas import DashboardAnalyticsResponse, PMControlCenterResponse
+from app.modules.dashboard.schemas import DashboardAnalyticsResponse, PMControlCenterResponse, POControlCenterResponse
 from app.modules.dashboard.service import get_dashboard_analytics
 from uuid import UUID
 
@@ -685,5 +685,43 @@ def get_pm_control_center(
         include_canceled=include_canceled,
         instrument_status=instrument_status,
         event_window=event_window
+    )
+
+
+@router.get("/po-control-center", response_model=POControlCenterResponse)
+def get_po_control_center(
+    db: Session = Depends(deps.get_db),
+    po_id: Optional[str] = Query(None),
+    pm_id: Optional[str] = Query(None),
+    source_type: Optional[str] = Query(None),
+    customer_category: Optional[str] = Query(None),
+    quotation_status: Optional[str] = Query(None),
+    program_status: Optional[str] = Query(None),
+    payment_status: Optional[str] = Query(None),
+    project_status: Optional[str] = Query(None),
+    date_from: Optional[date] = Query(None),
+    date_to: Optional[date] = Query(None),
+    event_window: str = Query("all"),
+    include_closed: bool = Query(False),
+    include_canceled: bool = Query(False),
+    current_user: User = Depends(deps.get_current_user)
+):
+    """Retrieve PO Control Center commercial aggregates, quotation tracking, revenue conversion, workloads, and risks."""
+    from app.modules.dashboard import po_control_service
+    return po_control_service.get_po_control_center_data(
+        db,
+        po_id=po_id,
+        pm_id=pm_id,
+        source_type=source_type,
+        customer_category=customer_category,
+        quotation_status=quotation_status,
+        program_status=program_status,
+        payment_status=payment_status,
+        project_status=project_status,
+        date_from=date_from,
+        date_to=date_to,
+        event_window=event_window,
+        include_closed=include_closed,
+        include_canceled=include_canceled
     )
 
