@@ -118,6 +118,54 @@
           </label>
         </div>
       </div>
+
+      <!-- Advanced Filters Row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 border-t border-brand-charcoal-light/10 pt-4">
+        <!-- Filter Readiness Min -->
+        <div>
+          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Readiness Min (%)</label>
+          <input 
+            v-model.number="filterReadinessMin" 
+            type="number"
+            min="0"
+            max="100"
+            placeholder="0"
+            @change="fetchControlCenterData"
+            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          />
+        </div>
+
+        <!-- Filter Readiness Max -->
+        <div>
+          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Readiness Max (%)</label>
+          <input 
+            v-model.number="filterReadinessMax" 
+            type="number"
+            min="0"
+            max="100"
+            placeholder="100"
+            @change="fetchControlCenterData"
+            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          />
+        </div>
+
+        <!-- Filter Instrument Status -->
+        <div>
+          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Instrumen</label>
+          <select 
+            v-model="filterInstrumentStatus" 
+            @change="fetchControlCenterData"
+            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          >
+            <option value="">Semua Status</option>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Need Revision">Need Revision</option>
+            <option value="Done">Done</option>
+            <option value="Not Required">Not Required</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <!-- Error State -->
@@ -187,7 +235,7 @@
         <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
           <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Rata Kesiapan</p>
           <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-black text-brand-emerald">{{ Math.round(summary.average_readiness_score) }}%</span>
+            <span class="text-2xl font-black text-brand-emerald">{{ Math.round(summary.average_readiness_score || 0) }}%</span>
             <span class="text-[10px] text-brand-emerald font-bold">Skor</span>
           </div>
         </div>
@@ -304,8 +352,8 @@
                   </td>
                   <td class="px-4 py-3 text-center whitespace-nowrap">
                     <div class="flex flex-col items-center">
-                      <span class="font-bold text-white">{{ Math.round(ev.readiness_score) }}% Ready</span>
-                      <span class="text-[9px] text-gray-500">({{ Math.round(ev.instrument_completion_rate) }}% Inst)</span>
+                      <span class="font-bold text-white">{{ Math.round(ev.readiness_score || 0) }}% Ready</span>
+                      <span class="text-[9px] text-gray-500">({{ Math.round(ev.instrument_completion_rate || 0) }}% Inst)</span>
                     </div>
                   </td>
                   <td class="px-4 py-3 text-center whitespace-nowrap text-gray-400 font-semibold">{{ ev.pm_name }}</td>
@@ -358,7 +406,7 @@
                   </td>
                   <td class="px-4 py-3 font-semibold text-gray-400 font-mono">{{ formatDate(p.event_date_start) }}</td>
                   <td class="px-4 py-3 text-center whitespace-nowrap font-bold text-red-400">
-                    {{ Math.round(p.readiness_score) }}%
+                    {{ Math.round(p.readiness_score || 0) }}%
                   </td>
                   <td class="px-4 py-3 whitespace-nowrap">
                     <div class="flex gap-1">
@@ -535,8 +583,8 @@
                   <td class="px-4 py-3 text-center text-red-400 font-bold">{{ pm.not_ready_projects }}</td>
                   <td class="px-4 py-3 text-center text-amber-500 font-bold">{{ pm.overdue_instruments }}</td>
                   <td class="px-4 py-3 text-center whitespace-nowrap">
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold inline-block" :class="getReadinessScoreBadgeStyles(pm.average_readiness_score / 100)">
-                      {{ Math.round(pm.average_readiness_score) }}% Ready
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold inline-block" :class="getReadinessScoreBadgeStyles(pm.average_readiness_score)">
+                      {{ Math.round(pm.average_readiness_score || 0) }}% Ready
                     </span>
                   </td>
                 </tr>
@@ -550,7 +598,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 
 const users = ref([])
@@ -584,6 +632,9 @@ const filterDateFrom = ref('')
 const filterDateTo = ref('')
 const filterIncludeClosed = ref(false)
 const filterIncludeCanceled = ref(false)
+const filterReadinessMin = ref('')
+const filterReadinessMax = ref('')
+const filterInstrumentStatus = ref('')
 
 const tabs = computed(() => [
   { id: 'priority', name: 'Prioritas Tindakan', count: priorityActions.value.length },
@@ -614,6 +665,9 @@ const fetchControlCenterData = async () => {
     if (filterPo.value) params.po_id = filterPo.value
     if (filterDateFrom.value) params.date_from = filterDateFrom.value
     if (filterDateTo.value) params.date_to = filterDateTo.value
+    if (filterReadinessMin.value !== '' && filterReadinessMin.value !== null) params.readiness_min = filterReadinessMin.value
+    if (filterReadinessMax.value !== '' && filterReadinessMax.value !== null) params.readiness_max = filterReadinessMax.value
+    if (filterInstrumentStatus.value) params.instrument_status = filterInstrumentStatus.value
 
     const res = await axios.get('/api/v1/dashboard/pm-control-center', { params })
     
@@ -640,6 +694,9 @@ const resetFilters = () => {
   filterDateTo.value = ''
   filterIncludeClosed.value = false
   filterIncludeCanceled.value = false
+  filterReadinessMin.value = ''
+  filterReadinessMax.value = ''
+  filterInstrumentStatus.value = ''
   fetchControlCenterData()
 }
 
@@ -683,8 +740,8 @@ const getDaysUrgencyClass = (days) => {
 
 const getReadinessScoreBadgeStyles = (score) => {
   const s = score || 0
-  if (s >= 0.8) return 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20'
-  if (s >= 0.5) return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+  if (s >= 80) return 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20'
+  if (s >= 50) return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
   return 'bg-red-500/10 text-red-400 border border-red-500/20'
 }
 </script>

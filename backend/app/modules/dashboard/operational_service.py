@@ -313,7 +313,7 @@ def get_pm_control_center_data(
                 "priority_level": prio,
                 "project_id": p.id,
                 "project_code": p.project_code or "UNCODED",
-                "title": p.title,
+                "title": p.title or p.program_name or p.project_code or "Untitled Project",
                 "description": prio_reasons[0],
                 "recommended_action": rec_action,
                 "reason": ", ".join(prio_reasons)
@@ -326,7 +326,7 @@ def get_pm_control_center_data(
                 pm_workload_aggregates[pm.id] = {
                     "pm_id": pm.id,
                     "pm_name": pm.full_name,
-                    "initial_code": pm.email.split("@")[0].upper()[:3],
+                    "initial_code": pm.initial_code if pm.initial_code else pm.email.split("@")[0].upper()[:3],
                     "total_projects": 0,
                     "upcoming_events_7_days": 0,
                     "not_ready_projects": 0,
