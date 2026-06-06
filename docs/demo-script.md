@@ -92,9 +92,25 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 
 ---
 
-## 8. Cetak Laporan & Penutup
+## 8. PM Control Center & Operational Priorities
+*(Presenter mengklik item menu 'PM Control Center' di sidebar)*
+> **Presenter**:
+> "Sekarang, mari kita lihat salah satu fitur terpenting bagi tim operasional Anda: **PM Control Center** (Pusat Kontrol Manajer Program). Berbeda dengan dashboard eksekutif sebelumnya yang berfokus pada KPI bisnis tingkat tinggi, PM Control Center dirancang khusus untuk memandu PM dan PO dalam memilah pekerjaan operasional harian.
+> 
+> Di bagian atas, kami menyediakan rangkuman operasional cepat: jumlah event hari ini, event mendatang dalam 7 hari, instrumen checklist yang terlewat atau butuh revisi, serta rata-rata tingkat kesiapan seluruh event aktif secara real-time.
+> 
+> Di bawahnya, sistem menyajikan panel **Priority Actions List** (Daftar Aksi Prioritas). Algoritma sistem secara cerdas menyaring dan mengelompokkan proyek-proyek bermasalah menjadi empat kategori urgensi: Critical, High, Medium, dan Low. Misalnya, jika ada event yang diadakan hari ini tetapi skor kesiapannya di bawah 80%, sistem akan langsung menaikkannya sebagai status **Critical** dengan rekomendasi tindakan nyata agar PM segera menindaklanjuti kelalaian berkas.
+> 
+> Kami juga menyediakan tab menu interaktif untuk melihat **Jadwal Event & Kesiapan**, **Checklist & Revisi**, serta **Beban Kerja PM**. Di dalam tab instrumen checklist, tim operasional dapat memantau dengan tepat berapa hari keterlambatan (*Days Overdue*) suatu berkas kontrak (CL) atau Rundown (ROS) yang jatuh tempo, lengkap dengan penanggung jawab PM-nya.
+> 
+> Tentu saja, PM dapat langsung menyaring data berdasarkan nama mereka sendiri atau periode waktu tertentu, dan mengklik tautan proyek untuk langsung membuka halaman detail proyek."
+
+---
+
+## 9. Cetak Laporan & Penutup
 *(Presenter menekan tombol Print / Save Report)*
 > **Presenter**:
 > "Terakhir, laporan dashboard ini dapat langsung dicetak atau disimpan ke file PDF. Dengan menekan tombol **Print / Save Report**, sistem otomatis memicu cetak browser dengan tata letak khusus yang menghilangkan navigasi menu dan latar belakang gelap, menghasilkan dokumen cetak putih bersih yang rapi dan profesional.
+
 > 
 > Demikian demonstrasi dari sistem web One Spirit dengan instrumen proyek terintegrasi. Kami ingin menyelaraskan beberapa pertanyaan validasi dengan Bapak dan Ibu untuk memastikan alur status keuangan, penugasan PO/PM, dan detail instrumen operasional ini sudah tepat sebelum kita melangkah ke fase implementasi selanjutnya. Terima kasih."

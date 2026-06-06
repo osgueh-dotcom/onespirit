@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 from uuid import UUID
+from datetime import date
 
 class ExecutiveSummarySchema(BaseModel):
     total_projects: int
@@ -148,3 +149,123 @@ class DashboardAnalyticsResponse(BaseModel):
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+
+
+class PMControlCenterSummary(BaseModel):
+    total_active_projects: int
+    events_today: int
+    upcoming_events_7_days: int
+    overdue_events: int
+    not_ready_projects: int
+    overdue_instruments: int
+    need_revision_instruments: int
+    average_readiness_score: float
+
+    class Config:
+        from_attributes = True
+
+
+class PMControlCenterUpcomingEvent(BaseModel):
+    project_id: UUID
+    project_code: Optional[str] = None
+    customer_name: Optional[str] = None
+    program_name: Optional[str] = None
+    event_date_start: Optional[date] = None
+    event_date_end: Optional[date] = None
+    days_until_event: Optional[int] = None
+    po_name: Optional[str] = None
+    pm_name: Optional[str] = None
+    program_status: str
+    project_status: str
+    readiness_score: float
+    instrument_completion_rate: float
+    priority_level: str
+    recommended_action: str
+
+    class Config:
+        from_attributes = True
+
+
+class PMControlCenterNotReadyProject(BaseModel):
+    project_id: UUID
+    project_code: Optional[str] = None
+    customer_name: Optional[str] = None
+    event_date_start: Optional[date] = None
+    pm_name: Optional[str] = None
+    readiness_score: float
+    missing_items: List[str]
+    recommended_action: str
+
+    class Config:
+        from_attributes = True
+
+
+class PMControlCenterOverdueInstrument(BaseModel):
+    project_id: UUID
+    project_code: Optional[str] = None
+    customer_name: Optional[str] = None
+    instrument_type: str
+    instrument_label: Optional[str] = None
+    status: str
+    due_date: Optional[date] = None
+    days_overdue: int
+    pm_name: Optional[str] = None
+    recommended_action: str
+
+    class Config:
+        from_attributes = True
+
+
+class PMControlCenterNeedRevisionInstrument(BaseModel):
+    project_id: UUID
+    project_code: Optional[str] = None
+    customer_name: Optional[str] = None
+    instrument_type: str
+    notes: Optional[str] = None
+    pm_name: Optional[str] = None
+    recommended_action: str
+
+    class Config:
+        from_attributes = True
+
+
+class PMControlCenterPMWorkload(BaseModel):
+    pm_id: UUID
+    pm_name: str
+    initial_code: Optional[str] = None
+    total_projects: int
+    upcoming_events_7_days: int
+    not_ready_projects: int
+    overdue_instruments: int
+    need_revision_instruments: int
+    average_readiness_score: float
+
+    class Config:
+        from_attributes = True
+
+
+class PMControlCenterPriorityAction(BaseModel):
+    priority_level: str
+    project_id: UUID
+    project_code: Optional[str] = None
+    title: str
+    description: str
+    recommended_action: str
+    reason: str
+
+    class Config:
+        from_attributes = True
+
+
+class PMControlCenterResponse(BaseModel):
+    summary: PMControlCenterSummary
+    upcoming_events: List[PMControlCenterUpcomingEvent]
+    not_ready_projects: List[PMControlCenterNotReadyProject]
+    overdue_instruments: List[PMControlCenterOverdueInstrument]
+    need_revision_instruments: List[PMControlCenterNeedRevisionInstrument]
+    pm_workload: List[PMControlCenterPMWorkload]
+    priority_actions: List[PMControlCenterPriorityAction]
+
+    class Config:
+        from_attributes = True
+

@@ -36,3 +36,7 @@ Tujuan dokumen ini adalah membantu tim presenter menyajikan keterbatasan sistem 
 ## 8. Sifat Peringatan Gerbang Kesiapan (Readiness Warning Flexibility)
 - **Kondisi Saat Ini**: Sebagian besar kondisi gerbang kesiapan (seperti dokumen CL/ROS/CK belum selesai saat masuk status Ready/Running) disajikan sebagai peringatan (*warnings*), bukan pemblokir keras (*hard blockers*) yang langsung menghentikan proses kerja. Hanya kondisi yang benar-benar tidak aman (seperti menjalankan proyek yang berstatus Canceled) yang diblok secara kritis dan memerlukan override pembaruan paksa (*force update*).
 - **Penjelasan Klien**: Hal ini dirancang agar sistem tidak menghambat kelancaran operasional di lapangan jika terjadi kondisi mendesak. Sistem memberikan rekomendasi tindakan preventif tanpa mematikan fleksibilitas pengambilan keputusan PM/PO secara kaku.
+## 9. Penjadwalan Kerja Kru dan Kalender Operasional (Crew Scheduling & Operational Calendar)
+- **Kondisi Saat Ini**: PM Control Center merangkum event mendatang dalam daftar tabel linimasa periode (7 hari / 14 hari) berdasarkan tanggal proyek, namun belum terintegrasi dengan tampilan kalender visual bulanan interaktif atau modul penugasan jadwal kru per jam secara detail.
+- **Penjelasan Klien**: Modul PM Control Center fokus pada pemantauan gerbang kesiapan berkas operasional dan instrumen event. Visualisasi kalender operasional interaktif (*interactive operational calendar*) dan manajemen jadwal tim Kru lapangan direncanakan untuk **fase manajemen penjadwalan & logistik lanjutan**.
+

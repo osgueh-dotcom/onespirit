@@ -51,6 +51,12 @@ const router = createRouter({
       name: 'Imports',
       component: () => import('../views/Imports.vue'),
       meta: { requiresAuth: true, permission: 'projects:write' }
+    },
+    {
+      path: '/pm-control-center',
+      name: 'PMControlCenter',
+      component: () => import('../views/PmControlCenter.vue'),
+      meta: { requiresAuth: true, permission: 'projects:read' }
     }
   ]
 })

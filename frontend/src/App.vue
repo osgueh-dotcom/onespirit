@@ -115,7 +115,8 @@ import {
   BriefcaseIcon, 
   CurrencyDollarIcon, 
   FolderIcon,
-  ArrowUpTrayIcon
+  ArrowUpTrayIcon,
+  ClipboardDocumentCheckIcon
 } from '@heroicons/vue/24/outline'
 
 const auth = useAuthStore()
@@ -142,7 +143,8 @@ const navItems = [
   { name: 'Projects Workflow', path: '/projects', icon: BriefcaseIcon, permission: 'projects:read' },
   { name: 'Finance Tracker', path: '/finance', icon: CurrencyDollarIcon, permission: 'finance:read' },
   { name: 'Documents Hub', path: '/documents', icon: FolderIcon, permission: 'documents:read' },
-  { name: 'Excel Importer', path: '/imports', icon: ArrowUpTrayIcon, permission: 'projects:write' }
+  { name: 'Excel Importer', path: '/imports', icon: ArrowUpTrayIcon, permission: 'projects:write' },
+  { name: 'PM Control Center', path: '/pm-control-center', icon: ClipboardDocumentCheckIcon, permission: 'projects:read' }
 ]
 
 const toggleTheme = () => {

@@ -83,6 +83,19 @@
         </div>
       </div>
     </div>
+
+    <!-- View in PM Control Center Link -->
+    <div class="border-t border-brand-charcoal-light/10 pt-3.5 flex justify-center select-none">
+      <router-link 
+        to="/pm-control-center" 
+        class="text-[10px] font-bold text-brand-orange hover:text-brand-orange-light transition-colors uppercase tracking-wider flex items-center gap-1.5"
+      >
+        <span>Buka di PM Control Center</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+        </svg>
+      </router-link>
+    </div>
   </div>
 </template>
 

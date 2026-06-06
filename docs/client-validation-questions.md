@@ -52,3 +52,13 @@ Kuesioner ini digunakan oleh presenter **GVSys** saat berdiskusi dengan manajeme
 5. **Tanggal Jatuh Tempo (Due Date)**: Sistem secara otomatis memberikan indikator merah **Overdue** jika tanggal jatuh tempo instrumen telah terlewati dan status belum `Done`. Apakah durasi pengerjaan instrumen biasanya dihitung mundur dari hari-H event (misalnya ROS harus selesai 3 hari sebelum event)?
 6. **Instrumen Tambahan (PF & MATRIX)**: Sistem sekarang menyertakan instrumen **PF (Project Form)** dan **MATRIX** sebagai bagian dari checklist kesiapan proyek. Apakah instrumen-instrumen ini wajib diisi oleh PM/PO di setiap event?
 7. **Aturan Unggah Excel**: Saat mengimpor Excel, status instrumen dipetakan secara cerdas (misal: "Ada"/"Done"/"Yes" dipetakan menjadi `Done`, teks berupa link dipetakan sebagai `Done` dengan tautan terisi). Apakah ada kolom atau istilah lain pada file Excel Anda yang perlu dipetakan secara khusus?
+
+## 9. PM Control Center & Prioritas Aksi (PM Control Center & Priorities)
+1. **Algoritma Prioritas**: Sistem secara otomatis menandai proyek dengan tingkat prioritas:
+   - **Critical**: Event hari ini dengan kesiapan < 80%, event overdue belum lengkap, atau ada blocker kritis.
+   - **High**: Event dalam 7 hari dengan kesiapan < 80%, ada instrumen overdue, ada instrumen butuh revisi, atau missing ROS/CK untuk proyek aktif.
+   - **Medium**: Event dalam 14 hari dengan kesiapan < 90%, atau missing CL/PNL untuk Signed & Deal.
+   - **Low**: Proyek aktif lainnya.
+   Apakah kriteria tingkat urgensi prioritas ini sudah sesuai dengan prioritas nyata di lapangan?
+2. **Event Window**: Untuk menyaring event di dashboard operasional, kami menyediakan filter periode: *Hari Ini, 7 Hari Mendatang, 14 Hari Mendatang, Bulan Ini, Terlambat (Overdue), Semua*. Apakah pembagian rentang waktu ini sudah mencakup kebutuhan pemantauan harian PM?
+3. **Penyembunyian Proyek Selesai/Batal**: Secara bawaan, PM Control Center menyembunyikan proyek berstatus Closed dan Canceled agar halaman tetap fokus pada prioritas aktif. Apakah perilaku default ini sudah tepat?

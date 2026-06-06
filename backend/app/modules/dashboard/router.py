@@ -12,7 +12,7 @@ from app.modules.events.models import EventSchedule
 from app.modules.tasks.models import Task
 from app.modules.finance.models import Invoice, Payment
 from app.models.activity import ActivityLog
-from app.modules.dashboard.schemas import DashboardAnalyticsResponse
+from app.modules.dashboard.schemas import DashboardAnalyticsResponse, PMControlCenterResponse
 from app.modules.dashboard.service import get_dashboard_analytics
 from uuid import UUID
 
@@ -654,3 +654,36 @@ def get_analytics(
         "program_type": program_type,
     }
     return get_dashboard_analytics(db, filters)
+
+
+@router.get("/pm-control-center", response_model=PMControlCenterResponse)
+def get_pm_control_center(
+    db: Session = Depends(deps.get_db),
+    pm_id: Optional[str] = Query(None),
+    po_id: Optional[str] = Query(None),
+    date_from: Optional[date] = Query(None),
+    date_to: Optional[date] = Query(None),
+    readiness_min: Optional[float] = Query(None),
+    readiness_max: Optional[float] = Query(None),
+    include_closed: bool = Query(False),
+    include_canceled: bool = Query(False),
+    instrument_status: Optional[str] = Query(None),
+    event_window: str = Query("all"),
+    current_user: User = Depends(deps.get_current_user)
+):
+    """Retrieve day-to-day operational schedules, checklists, instrument alerts, workloads and priority action recommendations."""
+    from app.modules.dashboard import operational_service
+    return operational_service.get_pm_control_center_data(
+        db,
+        pm_id=pm_id,
+        po_id=po_id,
+        date_from=date_from,
+        date_to=date_to,
+        readiness_min=readiness_min,
+        readiness_max=readiness_max,
+        include_closed=include_closed,
+        include_canceled=include_canceled,
+        instrument_status=instrument_status,
+        event_window=event_window
+    )
+
