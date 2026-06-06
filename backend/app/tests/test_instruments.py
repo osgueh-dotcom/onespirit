@@ -318,3 +318,76 @@ def test_sprint_7_instrument_refinements(client, db):
     assert staff_insts_res.status_code == 200
     staff_pnl_in_list = next(i for i in staff_insts_res.json() if i["instrument_type"] == "PNL")
     assert staff_pnl_in_list["document_url"] is None
+
+def test_sprint_7_1_readiness_safeguards(client, db):
+    # 1. Login
+    login_response = client.post(
+        "/api/v1/auth/login",
+        data={"username": "admin@onespirit.asia", "password": "OneSpirit2026!"}
+    )
+    assert login_response.status_code == 200
+    token = login_response.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Fetch customer
+    cust = db.query(Customer).first()
+    assert cust is not None
+
+    # 2. Create project
+    project_payload = {
+        "title": "Safeguards Test Project",
+        "customer_id": str(cust.id),
+        "budget": 50000000.0,
+        "revenue": 55000000.0,
+        "quotation_status": "Draft",
+        "program_status": "Inquiry",
+        "payment_status": "Not Invoiced",
+        "project_status": "Open",
+        "event_date_start": "2026-09-01",
+        "event_date_end": "2026-09-03"
+    }
+    create_res = client.post("/api/v1/projects", json=project_payload, headers=headers)
+    assert create_res.status_code == 201
+    proj_id = create_res.json()["id"]
+
+    # 3. Retrieve project details
+    # PNL access warning should not penalize readiness score, so project_readiness_score should be 0.20 (0.0 * 0.6 + 0.0 * 0.2 + 1.0 * 0.2)
+    detail_res = client.get(f"/api/v1/projects/{proj_id}", headers=headers)
+    assert detail_res.status_code == 200
+    detail_data = detail_res.json()
+    assert detail_data["project_readiness_score"] == 0.20
+    # The warning should still be listed in validation warnings
+    assert any("PNL access warning" in w for w in detail_data["validation_warnings"])
+
+    # 4. Set all default instruments to Not Required, verify no division by zero and rates are 0%
+    instruments = detail_data["instruments"]
+    for inst in instruments:
+        inst_id = inst["id"]
+        patch_res = client.patch(
+            f"/api/v1/projects/{proj_id}/instruments/{inst_id}",
+            json={"status": "Not Required"},
+            headers=headers
+        )
+        assert patch_res.status_code == 200
+
+    detail_res2 = client.get(f"/api/v1/projects/{proj_id}", headers=headers)
+    detail_data2 = detail_res2.json()
+    assert detail_data2["required_instruments_count"] == 0
+    assert detail_data2["completed_required_instruments_count"] == 0
+    assert detail_data2["instrument_completion_rate"] == 0.0
+    assert detail_data2["project_readiness_score"] == 0.20
+
+    # 5. Delete all instruments, verify empty instrument logic
+    for inst in instruments:
+        inst_id = inst["id"]
+        del_res = client.delete(f"/api/v1/projects/{proj_id}/instruments/{inst_id}", headers=headers)
+        assert del_res.status_code == 200
+
+    detail_res3 = client.get(f"/api/v1/projects/{proj_id}", headers=headers)
+    detail_data3 = detail_res3.json()
+    assert detail_data3["required_instruments_count"] == 0
+    assert detail_data3["completed_required_instruments_count"] == 0
+    assert detail_data3["instrument_completion_rate"] == 0.0
+    assert detail_data3["project_readiness_score"] == 0.20
+    assert len(detail_data3["instruments"]) == 0
+

@@ -304,3 +304,10 @@ def test_analytics_calculations(client, db: Session):
     # Filter by PO ID
     res_po = client.get(f"/api/v1/dashboard/analytics?po_id={po_user.id}", headers=headers)
     assert res_po.json()["executive"]["total_projects"] == 2
+
+    # Filter by non-existent year to guarantee empty results behavior
+    res_empty = client.get("/api/v1/dashboard/analytics?year=2099", headers=headers)
+    assert res_empty.status_code == 200
+    assert res_empty.json()["executive"]["total_projects"] == 0
+    assert res_empty.json()["instrument_summary"]["average_instrument_completion_rate"] == 0.0
+

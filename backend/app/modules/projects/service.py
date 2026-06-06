@@ -182,9 +182,10 @@ def calculate_project_readiness(project: Project) -> dict:
     active_docs = [doc for doc in project.documents if not doc.deleted_at]
     documentation_score = 1.0 if len(active_docs) > 0 else 0.0
     
-    # Status consistency score: based on validation warnings
+    # Status consistency score: based on validation warnings (excluding PNL sensitivity security note)
     warnings = check_project_validation_warnings(project)
-    status_consistency_score = max(0.0, 1.0 - 0.2 * len(warnings))
+    operational_warnings = [w for w in warnings if "PNL access warning" not in w]
+    status_consistency_score = max(0.0, 1.0 - 0.2 * len(operational_warnings))
     
     # Combined score
     readiness_score = (completion_rate * 0.6) + (documentation_score * 0.2) + (status_consistency_score * 0.2)

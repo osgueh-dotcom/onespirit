@@ -101,7 +101,7 @@
         </div>
 
         <div class="flex-1 overflow-x-auto custom-scrollbar">
-          <div v-if="instruments.length === 0" class="h-full flex flex-col items-center justify-center text-center p-8 select-none">
+          <div v-if="!instruments || instruments.length === 0" class="h-full flex flex-col items-center justify-center text-center p-8 select-none">
             <p class="text-xs font-semibold text-gray-500 mb-4">Belum ada instrument untuk project ini.</p>
             <button 
               v-if="auth.hasPermission('projects:write')"
@@ -400,11 +400,13 @@ const isAuthorizedForPnl = computed(() => {
 })
 
 const totalRequired = computed(() => {
-  return props.instruments.filter(i => i.status !== 'Not Required').length
+  const list = props.instruments || []
+  return list.filter(i => i && i.status !== 'Not Required').length
 })
 
 const doneCount = computed(() => {
-  return props.instruments.filter(i => i.status === 'Done').length
+  const list = props.instruments || []
+  return list.filter(i => i && i.status === 'Done').length
 })
 
 const completionPercentage = computed(() => {
@@ -413,13 +415,15 @@ const completionPercentage = computed(() => {
 })
 
 const needRevisionCount = computed(() => {
-  return props.instruments.filter(i => i.status === 'Need Revision').length
+  const list = props.instruments || []
+  return list.filter(i => i && i.status === 'Need Revision').length
 })
 
 const overdueCount = computed(() => {
   const todayStr = new Date().toISOString().split('T')[0]
-  return props.instruments.filter(i => {
-    return i.due_date && i.due_date < todayStr && i.status !== 'Done' && i.status !== 'Not Required'
+  const list = props.instruments || []
+  return list.filter(i => {
+    return i && i.due_date && i.due_date < todayStr && i.status !== 'Done' && i.status !== 'Not Required'
   }).length
 })
 

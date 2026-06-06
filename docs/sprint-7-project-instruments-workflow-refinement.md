@@ -87,5 +87,16 @@ The import logic parses instrument status column inputs case-insensitively:
 
 ---
 
+---
+
+## Sprint 7.1: Instruments Readiness Stabilization Patch
+Sprint 7.1 stabilizes the readiness calculations, warning score penalties, and empty-state safeguards:
+- **Scoring Adjustment on PNL Security Notes**: The system-wide PNL sensitivity note (*"PNL access warning: PNL document is sensitive..."*) is treated as a security reminder rather than an operational checklist failure. It is now excluded from the readiness score calculation (it no longer reduces the operational readiness score) but remains visible in the UI validation warnings.
+- **Empty-State and Filter Division by Zero Safeguards**: All dashboard aggregation metrics (including `average_instrument_completion_rate`) and frontend Vue panel metrics handle empty lists, missing fields, `NaN`, and `null` gracefully without crash or layout deformation.
+- **Verification Coverage**: Backend tests now assert that empty instruments, non-existent years in dashboards, and PNL warnings are processed cleanly.
+
+---
+
 ## Next Sprint Recommendation
 Implement Sprint 8: Role-based document access controls for all modules to graduate the PNL sensitivity foundation into a complete system-wide file access authorization layer.
+

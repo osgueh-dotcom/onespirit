@@ -336,7 +336,7 @@
                 <div>
                   <p class="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Readiness Score</p>
                   <p class="text-white font-extrabold mt-1 text-sm">
-                    {{ project.project_readiness_score !== null ? Math.round(project.project_readiness_score * 100) + '%' : '0%' }}
+                    {{ (project && project.project_readiness_score !== null && !isNaN(project.project_readiness_score)) ? Math.round(project.project_readiness_score * 100) + '%' : '0%' }}
                   </p>
                 </div>
                 <span class="px-2 py-1 text-xs font-black rounded border" :class="getReadinessScoreBadgeStyles(project.project_readiness_score)">
@@ -346,7 +346,7 @@
               <div class="grid grid-cols-2 gap-2 text-xs pt-1">
                 <div>
                   <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Completion Rate</p>
-                  <p class="text-white font-extrabold text-sm">{{ project.instrument_completion_rate !== null ? Math.round(project.instrument_completion_rate * 100) + '%' : '0%' }}</p>
+                  <p class="text-white font-extrabold text-sm">{{ (project && project.instrument_completion_rate !== null && !isNaN(project.instrument_completion_rate)) ? Math.round(project.instrument_completion_rate * 100) + '%' : '0%' }}</p>
                 </div>
                 <div>
                   <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Done / Required</p>
@@ -356,7 +356,7 @@
               <div class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/20 h-2 rounded-full overflow-hidden mt-2">
                 <div 
                   class="bg-brand-orange h-full rounded-full transition-all duration-500" 
-                  :style="{ width: (project.project_readiness_score !== null ? Math.round(project.project_readiness_score * 100) : 0) + '%' }"
+                  :style="{ width: (project && project.project_readiness_score !== null && !isNaN(project.project_readiness_score)) ? Math.round(project.project_readiness_score * 100) + '%' : '0%' }"
                 ></div>
               </div>
               <!-- Alerts inside readiness card -->
