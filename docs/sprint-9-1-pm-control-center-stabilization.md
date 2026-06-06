@@ -1,58 +1,42 @@
-# Sprint 9.1 — PM Control Center Stabilization Patch
+# Sprint 9.1: PM Control Center Stabilization
+
+This patch addresses several critical quality-of-life and performance bugs in the PM Control Center module before proceeding with Sprint 10 features.
 
 ## Objective
-This stabilization patch fixes a series of minor stability, usability, and correctness issues identified in the PM Control Center (Operational Dashboard) prior to the launch of Sprint 10 features.
+Stabilize the PM Control Center dashboard by fixing import errors, displaying the correct scales for project readiness, and adding necessary fallbacks for project titles and PM initial codes.
 
-## Changes & Fixes
+## Bugs Fixed
 
-### 1. Vue Import Correction
-- **File**: [PmControlCenter.vue](file:///e:/GVsys%20Project/One%20Spirit/frontend/src/views/PmControlCenter.vue)
-- **Fix**: Added missing `computed` utility import from the `'vue'` module, resolving runtime errors during compilation and rendering.
+### 1. Frontend Vue computed Import
+- **File**: `frontend/src/views/PmControlCenter.vue`
+- **Fix**: Corrected the import statement to include `computed` alongside `ref` and `onMounted` from `'vue'`. This resolves runtime errors when rendering computed properties.
 
 ### 2. Readiness Score Scale Correction
-- **File**: [PmControlCenter.vue](file:///e:/GVsys%20Project/One%20Spirit/frontend/src/views/PmControlCenter.vue)
-- **Fix**: Adjusted `getReadinessScoreBadgeStyles(score)` to evaluate thresholds on a raw `0–100` percentage scale (`>= 80` for green/emerald, `>= 50` for yellow, `< 50` for red) rather than comparing against decimal values (`0.8` / `0.5`). 
-- Passed raw readiness score values directly to the badge styling helper rather than dividing them by 100.
+- **File**: `frontend/src/views/PmControlCenter.vue`
+- **Fix**: The backend returns `readiness_score` in a 0–100 scale (e.g. `85` for 85%). The UI was updated to ensure that `average_readiness_score` is not divided by 100 before calling `getReadinessScoreBadgeStyles`.
+- **Badge Rules**: Updated `getReadinessScoreBadgeStyles(score)` to apply:
+  - `>= 80`: Green (`bg-brand-emerald/15 text-brand-emerald`)
+  - `>= 50`: Yellow (`bg-yellow-500/10 text-yellow-500`)
+  - `< 50`: Red (`bg-red-500/10 text-red-400`)
 
-### 3. Priority Action Title Fallback
-- **File**: [operational_service.py](file:///e:/GVsys%20Project/One%20Spirit/backend/app/modules/dashboard/operational_service.py)
-- **Fix**: Replaced the direct reference to `p.title` on the recommended priority action builder with a safe chain of fallbacks: `p.title or p.program_name or p.project_code or "Untitled Project"`. This prevents pydantic model schema validation exceptions if a project has a null title.
+### 3. Backend Priority Action Title Fallback
+- **File**: `backend/app/modules/dashboard/operational_service.py`
+- **Fix**: Implemented a robust fallback sequence for operational priority action titles. When `p.title` is missing, the system falls back to `p.program_name`, then `p.project_code`, and finally "Untitled Project" to prevent empty/broken UI elements.
 
-### 4. Database-first PM Initial Code
-- **File**: [operational_service.py](file:///e:/GVsys%20Project/One%20Spirit/backend/app/modules/dashboard/operational_service.py)
-- **Fix**: Updated PM workload aggregation to check for and prioritize `pm.initial_code` fetched directly from the database user record, fallback to email prefix parsing ONLY if the database value is null.
+### 4. PM Workload initial_code Fallback
+- **File**: `backend/app/modules/dashboard/operational_service.py`
+- **Fix**: Replaced the conditional assignment of the PM's initial code with a cleaner pythonic OR fallback: `pm.initial_code or pm.email.split("@")[0].upper()[:3]`.
 
-### 5. Advanced Frontend Filters
-- **File**: [PmControlCenter.vue](file:///e:/GVsys%20Project/One%20Spirit/frontend/src/views/PmControlCenter.vue)
-- **Improvement**: Added advanced filter options inside the dashboard filters bar:
-  - **Readiness Min (%)**
-  - **Readiness Max (%)**
-  - **Status Instrumen** (select dropdown with options: Not Started, In Progress, Need Revision, Done, Not Required)
-- These values bind to `readiness_min`, `readiness_max`, and `instrument_status` query parameters sent to the backend `/pm-control-center` API.
+## How to Test
+1. Start the system via Docker Compose:
+   ```bash
+   docker compose up -d --build
+   ```
+2. Navigate to the PM Control Center in the browser: `http://localhost:5173/pm-control-center`
+3. Verify that the page loads without any JavaScript console errors.
+4. Verify that the readiness score badge colors align with the scale (e.g. a readiness score of 80% shows as green, not red).
+5. Verify that priority actions with missing titles fallback gracefully to their program name or project code.
 
-### 6. Empty State & NaN Safety Checks
-- **File**: [PmControlCenter.vue](file:///e:/GVsys%20Project/One%20Spirit/frontend/src/views/PmControlCenter.vue)
-- **Fix**: Applied null/undefined guards (`val || 0`) inside template `Math.round()` calculations, ensuring the dashboard never shows `NaN` values when data load is in progress or when metrics are missing.
-
----
-
-## Verification & Testing
-
-### Backend Unit Tests
-Run backend tests to verify endpoints and business calculations remain functional:
-```bash
-docker exec onespirit_backend pytest
-```
-
-### Production Build Test
-Verify that the frontend builds and compiles cleanly without compile-time warnings:
-```bash
-docker exec onespirit_frontend npm run build
-```
-
-### Manual Verification
-1. Access `/pm-control-center`.
-2. Inspect the **Beban Kerja PM** tab: verify PM initials match their database `initial_code` (e.g. `POT`, `PMT`) and the average readiness badge color scale displays correctly based on percentage values.
-3. Test filters: Set readiness thresholds and verify projects filter dynamically.
-4. Try filtering by instrument status and check dashboard updates.
-5. Verify priority actions display safe fallbacks when project titles are empty.
+## Known Limitations
+- The PM initial code calculation assumes the email follows standard naming conventions if the user profile field `initial_code` is empty.
+- Project readiness calculation remains synchronous in the dashboard context.
