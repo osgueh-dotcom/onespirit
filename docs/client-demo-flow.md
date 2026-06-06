@@ -98,6 +98,7 @@ Tujuan utama demo ini adalah memvalidasi hasil modernisasi alur kerja dari *spre
   - Arahkan ke menu **PO Control Center**.
   - Tunjukkan KPI komersial di bagian atas (Deal Rate, Confirmed Revenue, Outstanding).
   - Tunjukkan tab **Prioritas Follow-up** (misal: proyek deal Rp 0, piutang overdue) dan **Risiko Komersial** (cancel without reason, missing PO/source).
+    *(Catatan: Follow-up priority adalah indikator bantu untuk membantu PO melihat project yang membutuhkan perhatian. Prioritas ini bukan keputusan final otomatis dan tetap perlu divalidasi oleh tim One Spirit berdasarkan konteks operasional dan komersial)*
   - Tunjukkan tab **Kinerja Komersial** (PO Performance workloads, Source/Vendor lead contribution).
 
 ## 11. Laporan Cetak (Print / Save PDF Report)

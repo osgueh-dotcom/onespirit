@@ -46,3 +46,8 @@ Tujuan dokumen ini adalah membantu tim presenter menyajikan keterbatasan sistem 
 - **Kondisi Saat Ini**: Peringatan tagihan overdue didasarkan pada perbandingan tanggal jatuh tempo faktur secara sederhana pada database, belum terintegrasi dengan sistem akuntansi eksternal resmi.
 - **Penjelasan Klien**: Di MVP, pelacakan difokuskan untuk memberikan warning kepada PO agar segera melakukan follow-up. Rekonsiliasi mutasi bank otomatis dan sinkronisasi sistem akuntansi pihak ketiga direncanakan pada **fase modul keuangan terintegrasi**.
 
+## 12. Sifat Rekomendasi Prioritas Follow-up PO
+- **Kondisi Saat Ini**: Daftar prioritas follow-up yang ditampilkan pada PO Control Center diurutkan secara otomatis berdasarkan aturan logika statis (Critical, High, Medium, Low).
+- **Penjelasan Klien**: Follow-up priority adalah indikator bantu untuk membantu PO melihat project yang membutuhkan perhatian. Prioritas ini bukan keputusan final otomatis dan tetap perlu divalidasi oleh tim One Spirit berdasarkan konteks operasional dan komersial nyata.
+
+

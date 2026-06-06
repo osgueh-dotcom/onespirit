@@ -512,8 +512,9 @@
               <h3 class="text-sm font-bold text-white uppercase tracking-wider">Statistik Nilai Proyek & Konversi</h3>
               <div class="grid grid-cols-2 gap-4">
                 <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Rata-rata Nilai Proyek</p>
+                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Rata-rata Nilai Proyek Potensial</p>
                   <p class="text-sm font-black text-white">{{ formatCurrency(revenueSummary.average_project_value) }}</p>
+                  <span class="text-[8px] text-gray-400 font-semibold block mt-0.5">Average value of all owned project opportunities.</span>
                 </div>
                 <div class="bg-black/20 p-3 rounded-xl border border-white/5">
                   <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Tingkat Konversi Pendapatan</p>

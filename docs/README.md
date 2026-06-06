@@ -18,6 +18,13 @@ Catatan lengkap mengenai arsitektur, modifikasi kode, hasil pengujian, dan walkt
 - **[Sprint 4.1 — Polish Demo Dashboard](sprint-4-1-dashboard-demo-polish.md)**: Pemisahan kartu ringkasan billing keuangan, standardisasi format mata uang/persentase Indonesia, penambahan error banner, dan tombol refresh data.
 - **[Sprint 5 — Persiapan Demo Klien](sprint-5-client-demo-preparation.md)**: Ringkasan kesiapan sistem, pemetaan cakupan MVP, dan panduan data demo.
 - **[Sprint 5.1 — Polish Redaksi & Keamanan Dokumentasi](sprint-5-1-client-demo-copy-safety.md)**: Penyempurnaan redaksi bahasa, pembersihan klaim overclaims, glosarium istilah operasional (CL, ROS, CK, PNL), dan relativitas link.
+- **[Sprint 7 — Refinement Workflow & Instrumen Proyek](sprint-7-project-instruments-workflow-refinement.md)**: Implementasi tab instrumen operasional proyek (CL, ROS, CK, PNL) dan checklist item.
+- **[Sprint 7.1 — Stabilisasi Kesiapan Instrumen](sprint-7-1-instruments-readiness-stabilization.md)**: Sinkronisasi status instrumen dengan readiness gates dan validasi.
+- **[Sprint 8 — Kesiapan Proyek & Kontrol Eksekusi Event](sprint-8-project-readiness-event-execution-control.md)**: Pembangunan Event Execution Control, logic transisi status, dan integrasi force-update override.
+- **[Sprint 9 — Dashboard Operasional & PM Control Center](sprint-9-operational-dashboard-pm-control-center.md)**: Dashboard operasional PM untuk tracking event mendatang dan instrument overdue.
+- **[Sprint 9.1 — Stabilisasi PM Control Center](sprint-9-1-pm-control-center-stabilization.md)**: Patch stabilisasi untuk computed import, skala readiness score, dan PM initial code fallback.
+- **[Sprint 10 — PO Control Center & Commercial Follow-up](sprint-10-po-control-center-commercial-follow-up.md)**: Pusat kontrol komersial PO untuk tracking quotation, revenue conversion, dan outstanding payments.
+- **[Sprint 10.1 — Penyelarasan Dokumentasi & Kontrol Komersial](sprint-10-1-documentation-commercial-control-cleanup.md)**: Pembersihan tautan absolute, standardisasi formula finansial PO, dan disclaimer prioritas follow-up.
 
 ---
 

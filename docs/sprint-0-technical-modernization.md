@@ -7,7 +7,7 @@ This document reports on the completed tasks and modernization baseline establis
 ## 1. What Was Changed
 
 ### Backend Component
-- **Dependency Upgrades**: Modernized all python packages in [requirements.txt](file:///E:/GVsys%20Project/One%20Spirit/backend/requirements.txt) to stable modern releases:
+- **Dependency Upgrades**: Modernized all python packages in [requirements.txt](../backend/requirements.txt) to stable modern releases:
   - `fastapi` $\ge$ `0.111.0` (from `0.100.0`)
   - `uvicorn[standard]` $\ge$ `0.30.1` (from `0.22.0`)
   - `sqlalchemy` $\ge$ `2.0.31` (from `2.0.0`)
@@ -20,7 +20,7 @@ This document reports on the completed tasks and modernization baseline establis
   - `email-validator` $\ge$ `2.2.0` (from `2.0.0`)
   - `openpyxl` $\ge$ `3.1.5` (from `3.1.0`)
   - `bcrypt` $\ge$ `4.1.3` (from `4.0.1`)
-- **Health Check Endpoint**: Added a new `/health` GET endpoint in [main.py](file:///E:/GVsys%20Project/One%20Spirit/backend/app/main.py) which returns the current service status and identifier:
+- **Health Check Endpoint**: Added a new `/health` GET endpoint in [main.py](../backend/app/main.py) which returns the current service status and identifier:
   ```json
   {
     "status": "ok",
@@ -29,7 +29,7 @@ This document reports on the completed tasks and modernization baseline establis
   ```
 
 ### Frontend Component
-- **Package Updates**: Modernized [package.json](file:///E:/GVsys%20Project/One%20Spirit/frontend/package.json) dependencies to stable newer versions:
+- **Package Updates**: Modernized [package.json](../frontend/package.json) dependencies to stable newer versions:
   - `vue` $\ge$ `^3.4.27`
   - `vite` $\ge$ `^5.2.11` (upgraded from Vite 4 to Vite 5)
   - `pinia` $\ge$ `^2.1.7`
@@ -41,10 +41,10 @@ This document reports on the completed tasks and modernization baseline establis
   - `autoprefixer` $\ge$ `^10.4.19`
 
 ### Docker & Infrastructure Component
-- **Database Port Conflict Mitigation**: Mapped PostgreSQL host-exposed port from `5432` to the configurable `DB_PORT_HOST` (defaulting to `5433` in `.env`) in [docker-compose.yml](file:///E:/GVsys%20Project/One%20Spirit/docker-compose.yml). This ensures the stack can run on developer environments with existing PostgreSQL instances running on the host port `5432`. Internally within the Docker network, service-to-service communication continues to use port `5432`.
+- **Database Port Conflict Mitigation**: Mapped PostgreSQL host-exposed port from `5432` to the configurable `DB_PORT_HOST` (defaulting to `5433` in `.env`) in [docker-compose.yml](../docker-compose.yml). This ensures the stack can run on developer environments with existing PostgreSQL instances running on the host port `5432`. Internally within the Docker network, service-to-service communication continues to use port `5432`.
 - **Health check Configuration**: Added a Docker container health check to the `backend` service utilizing Python's built-in `urllib.request` against the `/health` endpoint (eliminating external curl dependency).
 - **Service Dependency Order**: Configured the `frontend` container to only launch after the `backend` container is fully healthy (`condition: service_healthy`).
-- **Environment config**: Added the new `DB_PORT_HOST=5433` environment config variables in `.env` and [.env.example](file:///E:/GVsys%20Project/One%20Spirit/.env.example).
+- **Environment config**: Added the new `DB_PORT_HOST=5433` environment config variables in `.env` and [.env.example](../.env.example).
 
 ---
 

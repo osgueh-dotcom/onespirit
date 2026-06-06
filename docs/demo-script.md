@@ -116,6 +116,7 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 > 
 > Kami membagi workspace ini ke dalam beberapa tab:
 > 1. **Prioritas Follow-up**: Menampilkan daftar aksi komersial mendesak secara otomatis, mulai dari status *Critical* (seperti proyek deal tetapi budget kosong, proyek batal tanpa alasan, atau piutang yang telah jatuh tempo), status *High* (penawaran yang belum deal padahal H-14 event), hingga status *Medium* dan *Low*. Ini membantu PO mengetahui klien mana yang harus dikontak pagi ini.
+>    *(Catatan: Follow-up priority adalah indikator bantu untuk membantu PO melihat project yang membutuhkan perhatian. Prioritas ini bukan keputusan final otomatis dan tetap perlu divalidasi oleh tim One Spirit berdasarkan konteks operasional dan komersial)*
 > 2. **Daftar Proyek PO**: Master data proyek dengan ringkasan status quotation, program, dan payment.
 > 3. **Kinerja Komersial**: Grafik dan tabel detail mengenai struktur quotation, statistik nilai proyek, performa deal rate per PO, serta kontribusi lead source (melacak hotel atau partner mana yang menyumbang konversi revenue terbesar).
 > 4. **Risiko Komersial**: Panel audit otomatis yang mengelompokkan proyek berdasarkan warning finansial, seperti proyek Signed & Deal Rp 0 atau piutang overdue.

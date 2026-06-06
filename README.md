@@ -58,10 +58,23 @@ Untuk mendukung jalannya presentasi di hadapan direksi PT. One Spirit Asia, guna
 - **[Daftar Pertanyaan Validasi Klien](docs/client-validation-questions.md)**: Kuesioner interaktif untuk menyelaraskan alur kerja nyata dengan logika sistem.
 - **[Batasan Fungsional MVP](docs/known-limitations-before-client-demo.md)**: Dokumen batasan sistem dalam bahasa bisnis yang aman bagi klien.
 
-Indeks lengkap seluruh log teknis pengembang dari Sprint 0 hingga Sprint 5.1 dapat diakses melalui **[Dokumentasi Indeks Utama](docs/README.md)**.
+Indeks lengkap seluruh log teknis pengembang dari Sprint 0 hingga Sprint 10.1 dapat diakses melalui **[Dokumentasi Indeks Utama](docs/README.md)**.
 
 ---
 
-## 4. Batasan Tahap MVP Awal
+## 4. Pusat Kontrol Utama (Current Control Centers)
+
+Sistem One Spirit menyediakan tiga panel kontrol utama yang dirancang untuk kebutuhan pengguna yang berbeda:
+
+- **Executive Dashboard**
+  Berfokus pada evaluasi manajemen senior dan direksi, menampilkan target pendapatan, Target Achievement Rate, Received Cash, Collection Rate, sisa piutang, dan narasi evaluasi bahasa Indonesia otomatis.
+- **PM Control Center**
+  Workspace operasional bagi Program Manager (PM) untuk memantau kesiapan proyek, jadwal event mendatang, alarm instrumen overdue/revisi, dan prioritas tindakan operasional (Critical, High, Medium, Low).
+- **PO Control Center**
+  Workspace komersial bagi Program Owner (PO) untuk memantau quotation, deal/cancel rate, confirmed vs potential revenue, outstanding payment exposure, prioritas follow-up tindakan komersial, dan kontribusi lead source/vendor.
+
+---
+
+## 5. Batasan Tahap MVP Awal
 - **Uji Coba Lokal**: Sistem dikonfigurasi untuk dijalankan secara lokal via kontainer Docker. Pemasangan server awan (cloud hosting) dan sistem pencadangan terpusat direkomendasikan pada fase lanjutan.
 - **Validasi Data Awal**: Database relasional lokal diisi oleh data uji coba operasional bawaan. Migrasi database final akan disesuaikan setelah struktur data divalidasi bersama klien.

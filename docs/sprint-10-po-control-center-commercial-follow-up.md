@@ -11,6 +11,26 @@ The PO Control Center answers:
 
 ---
 
+## Commercial Metric Definitions
+
+- **Potential Revenue**:
+  Sum of budget from all owned projects with a valid budget.
+- **Confirmed Revenue**:
+  Sum of budget from projects where quotation status is Signed & Deal or the project/program status indicates confirmed execution.
+- **Revenue Conversion Rate**:
+  Confirmed Revenue / Potential Revenue x 100.
+- **Average Potential Value**:
+  Potential Revenue / Total Owned Projects.
+- **Average Deal Value**:
+  Confirmed Revenue / Total Deal.
+- **Average Project Value**:
+  The current MVP dashboard uses Average Potential Value unless explicitly labeled otherwise.
+
+> [!IMPORTANT]
+> **A Note on Value Metrics**: Average Potential Value and Average Deal Value are calculated differently and should not be interpreted the same way. Average Potential Value averages all opportunities (including draft, sent, and canceled projects), while Average Deal Value focuses strictly on successfully closed/signed deals.
+
+---
+
 ## API Endpoint Details
 
 ### `GET /api/v1/dashboard/po-control-center`
@@ -51,6 +71,8 @@ Returns a structured JSON payload mapping exactly to `POControlCenterResponse`:
 
 ## Commercial Follow-up Priority Logic
 
+Follow-up priority adalah indikator bantu untuk membantu PO melihat project yang membutuhkan perhatian. Prioritas ini bukan keputusan final otomatis dan tetap perlu divalidasi oleh tim One Spirit berdasarkan konteks operasional dan komersial.
+
 - **Critical**:
   - Signed & Deal project with missing budget (`budget == 0` or null).
   - Project status Canceled but `cancel_reason` is missing/empty.
@@ -72,7 +94,7 @@ Returns a structured JSON payload mapping exactly to `POControlCenterResponse`:
 
 ## Frontend Layout & Design
 
-The PO Control Center is implemented at `/po-control-center` in [PoControlCenter.vue](file:///e:/GVsys%20Project/One%20Spirit/frontend/src/views/PoControlCenter.vue) using the project's glassmorphic dark-theme design system.
+The PO Control Center is implemented at `/po-control-center` in [PoControlCenter.vue](../frontend/src/views/PoControlCenter.vue) using the project's glassmorphic dark-theme design system.
 
 ### Key Sections:
 - **Filters**: Responsive 2-row layout containing filters for PO, PM, Source Type, Customer Category, Date range, Quotation/Program/Payment Statuses, Event Window, and Closed/Canceled checkboxes.
@@ -92,7 +114,7 @@ The PO Control Center is implemented at `/po-control-center` in [PoControlCenter
 ## Verification & Testing
 
 ### Backend Unit Tests
-We have added a complete suite of unit tests in [test_po_control_center.py](file:///e:/GVsys%20Project/One%20Spirit/backend/app/tests/test_po_control_center.py). Run them inside the backend container:
+We have added a complete suite of unit tests in [test_po_control_center.py](../backend/app/tests/test_po_control_center.py). Run them inside the backend container:
 ```bash
 docker exec onespirit_backend pytest app/tests/test_po_control_center.py
 ```
@@ -102,3 +124,17 @@ Validate that there are no compile-time or routing syntax errors:
 ```bash
 docker exec onespirit_frontend npm run build
 ```
+
+---
+
+## Recommended Next Sprint
+
+### Sprint 11 — Source & Vendor Performance Center
+
+Focus:
+- Source/vendor analytics and performance tracking
+- External sales contribution reporting
+- Source conversion rate and cancel rate metrics
+- Source confirmed revenue vs potential revenue statistics
+- Lead performance analysis (hotel vs direct vs repeater vs partner vs instagram vs web)
+- Source quality indicators
