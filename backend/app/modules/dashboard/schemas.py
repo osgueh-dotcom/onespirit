@@ -62,6 +62,12 @@ class PMWorkloadSchema(BaseModel):
     running_count: int
     reporting_count: int
     closed_count: int
+    # Sprint 8 operational readiness fields
+    upcoming_projects_7_days: int = 0
+    projects_not_ready: int = 0
+    average_readiness_score: float = 0.0
+    overdue_instruments_count: int = 0
+    need_revision_count: int = 0
 
 class SourceAnalyticsSchema(BaseModel):
     source_type: str
@@ -112,6 +118,16 @@ class InstrumentSummarySchema(BaseModel):
     instruments_overdue: int
     average_instrument_completion_rate: float
 
+class ReadinessSummarySchema(BaseModel):
+    projects_ready_count: int
+    projects_not_ready_count: int
+    average_readiness_score: float
+    upcoming_events_7_days: int
+    overdue_events: int
+    events_missing_readiness_items: int
+    total_overdue_instruments: int
+    total_need_revision_instruments: int
+
 class DashboardAnalyticsResponse(BaseModel):
     executive: ExecutiveSummarySchema
     target: TargetSummarySchema
@@ -127,6 +143,7 @@ class DashboardAnalyticsResponse(BaseModel):
     program_type_analytics: List[ProgramTypeAnalyticsSchema]
     data_quality: DataQualitySchema
     instrument_summary: InstrumentSummarySchema
+    readiness_summary: ReadinessSummarySchema
 
     class Config:
         from_attributes = True

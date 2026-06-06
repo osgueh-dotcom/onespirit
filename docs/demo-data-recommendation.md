@@ -45,7 +45,25 @@ Sistem modern ini diisi oleh data awal dari proses pembacaan Excel (*seed data*)
 
 ---
 
-## 3. Cara Mempersiapkan Data Demo di Database Lokal
+## 3. Skenario Transisi Status & Gerbang Kesiapan (Status Transition & Readiness Gate Demo)
+*Tujuan: Memperagakan kecerdasan sistem dalam memandu pengguna saat mengganti status program/proyek serta penanganan override.*
+
+### Langkah Uji Coba Demo:
+1. **Skenario Peringatan Non-Bloking**:
+   - Buka proyek yang instrumennya belum lengkap (misal: CL/ROS belum 'Done').
+   - Di panel status, coba ubah status Program ke `Ready`.
+   - Sistem akan memicu gerbang kesiapan dan menampilkan **Modal Peringatan Kesiapan (Readiness Warning Modal)** yang menyajikan daftar berkas yang belum lengkap sebelum status berubah.
+   - Klik **"Tetap Lanjutkan"** untuk memperagakan kelonggaran sistem (fleksibilitas bisnis) yang membolehkan transisi dengan catatan.
+2. **Skenario Pemblokiran Kritis (Critical Blocker)**:
+   - Pilih proyek yang dibatalkan (Project Status: `Canceled`).
+   - Coba ubah status Program ke `Running`.
+   - Gerbang kesiapan akan memblokir penuh secara kritis karena kondisi tidak aman (tidak boleh menjalankan event yang sudah batal).
+   - Tunjukkan kotak peringatan merah yang mengunci tombol simpan biasa.
+   - Aktifkan opsi **"Pembaruan Paksa (Force Update)"** untuk memperagakan kemampuan override administrator untuk melanjutkan perubahan status dalam kasus darurat, kemudian simpan.
+
+---
+
+## 4. Cara Mempersiapkan Data Demo di Database Lokal
 Jika database dalam keadaan bersih (baru dideploy lokal), presenter dapat mempersiapkan data contoh langsung dari UI aplikasi atau melalui file impor:
 1. **Membuat Data Bagus**:
    - Tambah atau edit proyek yang ada di menu **Projects**.
@@ -59,3 +77,4 @@ Jika database dalam keadaan bersih (baru dideploy lokal), presenter dapat memper
 3. **Menguji Impor Excel**:
    - Unggah file Excel contoh. Isi kolom instrumen dengan nilai `"Revision"`, `"Ada"`, atau link URL.
    - Verifikasi bahwa sistem impor memetakan status instrumen dengan tepat ke database (`Need Revision`, `Done` dengan URL) dan menampilkan warning impor jika ada nilai ambigu.
+

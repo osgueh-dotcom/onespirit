@@ -57,20 +57,27 @@ Skrip ini dirancang untuk memandu presenter dari **GVSys (Gueh Visual Systems)**
 
 ---
 
-## 6. Detail Proyek, Readiness Score, & Project Instruments
+## 6. Detail Proyek, Readiness Score, & Kontrol Eksekusi Event
 *(Presenter membuka salah satu detail proyek contoh)*
 > **Presenter**:
 > "Mari kita buka salah satu detail proyek. Di halaman ini, semua informasi penting dikonsolidasikan dalam satu tempat: detail anggaran, penanggung jawab PO/PM, detail pembayaran, hingga instrumen kesiapan operasional proyek.
 > 
-> Pertama, perhatikan sidebar kanan. Di sini terdapat kartu **Project Readiness Indicator** yang menampilkan **Readiness Score** (Skor Kesiapan Proyek) berbasis formula objektif. Skor ini dihitung dari 60% completion rate instrumen operasional, 20% ketersediaan dokumen, dan 20% konsistensi status.
+> Pertama, perhatikan sidebar kanan. Di sini terdapat panel baru **Event Execution Control**. Panel ini menampilkan **Readiness Score** (Skor Kesiapan Proyek) dan **Instrument Completion Rate** yang terperinci. Selain itu, terdapat **Indikator Urgensi Tanggal Event** yang secara dinamis menghitung hari tersisa sebelum acara dimulai (misal: 'Event dalam X hari' atau 'Event sudah lewat').
 > 
-> Di bawahnya, terdapat panel **Project Instruments & Checklist** untuk melacak dokumen utama kita: **CL (Contract Letter)**, **ROS (Rundown of Show)**, **CK (Check List)**, **PNL (Profit & Loss)**, serta berkas client validation **PF** dan **MATRIX**.
+> Panel ini juga menyajikan **Rekomendasi Aksi Operasional** secara otomatis, seperti menyarankan pengisian CL, ROS, atau CK sebelum event berjalan.
+> 
+> Di bawahnya, terdapat panel **Project Status Timeline & Transition**. Jika kita mencoba mengubah status (misalnya mengubah status program dari Inquiry langsung ke Running), sistem tidak akan membiarkan perubahan konyol tanpa peringatan. Sistem akan memicu **Gerbang Kesiapan (Readiness Gate)**:
+> 1. Sistem memeriksa kelengkapan berkas CL/ROS/CK/PNL.
+> 2. Jika ada kekurangan, sistem memunculkan pop-up modal peringatan berisi daftar catatan kesiapan operasional yang belum terpenuhi dan meminta konfirmasi eksplisit dari user sebelum status diubah.
+> 3. Jika terdapat kondisi tidak aman kritis (misalnya mencoba menjalankan proyek yang berstatus Canceled), sistem secara ketat memblokir transisi tersebut. Pengguna dengan otoritas khusus dapat memilih opsi **Force Update** untuk memaksakan pembaruan tersebut jika diperlukan dalam kondisi darurat.
+> 
+> Di bawah panel kontrol, terdapat daftar instrumen utama kita: **CL (Contract Letter)**, **ROS (Rundown of Show)**, **CK (Check List)**, **PNL (Profit & Loss)**, serta berkas client validation **PF** dan **MATRIX**.
 > 
 > Di panel ini, PM/PO dapat langsung mengubah status instrumen secara inline (*Not Started, In Progress, Done, Need Revision*), mengatur tanggal jatuh tempo, dan mengisi catatan. Jika status diubah ke **Done**, sistem secara otomatis mengunci tanggal selesai (*Completed Date*) hari ini. Jika ada dokumen yang melewati tanggal jatuh tempo, indikator **Overdue** berwarna merah akan menyala untuk memberikan alarm visual bagi tim.
 > 
 > Keamanan berkas keuangan sensitif seperti **PNL** juga telah kami proteksi di level database. Jika pengguna masuk sebagai peran `Staff` (staf biasa), tautan dokumen PNL akan disembunyikan secara otomatis dengan label *Restricted*, sedangkan peran `Admin`, `Management`, dan `Finance` tetap dapat melihat dan membukanya.
 > 
-> Terakhir, semua riwayat perubahan status, due date, dan note instrumen terekam secara otomatis pada tabel **Activity Log** di bagian bawah, memberikan audit trail yang transparan bagi manajemen."
+> Terakhir, semua riwayat pemblokiran gerbang kesiapan, perubahan status dengan peringatan, serta penggunaan force update terekam secara otomatis pada tabel **Activity Log** di bagian bawah, memberikan audit trail yang transparan bagi manajemen."
 
 ---
 

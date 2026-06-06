@@ -1,6 +1,7 @@
-from datetime import date
+from datetime import date, timedelta
 from typing import Optional, Dict, Any, List
 from uuid import UUID
+from app.modules.projects.service import calculate_project_readiness, check_project_validation_warnings
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from app.modules.projects.models import Project
@@ -124,6 +125,16 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
     total_instrument_completion_rate_sum = 0.0
     today = date.today()
     
+    # Sprint 8 dashboard readiness indicators
+    projects_ready_count = 0
+    projects_not_ready_count = 0
+    total_readiness_score_sum = 0.0
+    upcoming_events_7_days = 0
+    overdue_events = 0
+    events_missing_readiness_items = 0
+    total_overdue_instruments = 0
+    total_need_revision_instruments = 0
+    
     # Confirmed program statuses for revenue logic
     confirmed_prog_statuses = {"Confirmed", "Preparation", "Ready", "Running", "Completed", "Reporting", "Closed"}
     
@@ -221,8 +232,28 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
                     "preparation_count": 0,
                     "running_count": 0,
                     "reporting_count": 0,
-                    "closed_count": 0
+                    "closed_count": 0,
+                    # Sprint 8 metrics
+                    "upcoming_projects_7_days": 0,
+                    "projects_not_ready": 0,
+                    "readiness_score_sum": 0.0,
+                    "overdue_instruments_count": 0,
+                    "need_revision_count": 0
                 }
+            # Calculate PM workload readiness indicators
+            p_readiness = calculate_project_readiness(p)
+            p_readiness_score = p_readiness["project_readiness_score"]
+            p_overdue_instruments = p_readiness["overdue_instruments_count"]
+            p_revision_count = p_readiness["revision_required_count"]
+            
+            is_upcoming_7 = False
+            if p.event_date_start:
+                days_diff = (p.event_date_start - today).days
+                if 0 <= days_diff <= 7:
+                    is_upcoming_7 = True
+                    
+            is_not_ready = p_readiness_score < 0.8
+            
             pm_data = pm_map[pm_id_val]
             pm_data["total_projects"] += 1
             if pj_status == "Active":
@@ -235,6 +266,15 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
                 pm_data["reporting_count"] += 1
             if pj_status == "Closed":
                 pm_data["closed_count"] += 1
+                
+            # Accumulate PM workload aggregates
+            if is_upcoming_7:
+                pm_data["upcoming_projects_7_days"] += 1
+            if is_not_ready:
+                pm_data["projects_not_ready"] += 1
+            pm_data["readiness_score_sum"] += p_readiness_score
+            pm_data["overdue_instruments_count"] += p_overdue_instruments
+            pm_data["need_revision_count"] += p_revision_count
                 
         # Event Source analytics
         s_type = p.event_source.source_type if p.event_source else "Unknown"
@@ -361,6 +401,33 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
                 if inst.due_date and inst.due_date < today and inst.status != "Done" and inst.status != "Not Required":
                     instruments_overdue += 1
 
+        # General dashboard-wide readiness statistics (all projects)
+        gen_readiness = calculate_project_readiness(p)
+        gen_readiness_score = gen_readiness["project_readiness_score"]
+        total_readiness_score_sum += gen_readiness_score
+        
+        if gen_readiness_score >= 0.8:
+            projects_ready_count += 1
+        else:
+            projects_not_ready_count += 1
+            
+        if p.event_date_start:
+            days_diff = (p.event_date_start - today).days
+            if 0 <= days_diff <= 7:
+                upcoming_events_7_days += 1
+                
+        if p.event_date_end and p.event_date_end < today:
+            if p.program_status not in ["Completed", "Closed", "Cancel"]:
+                overdue_events += 1
+                
+        p_warnings = check_project_validation_warnings(p)
+        p_operational_warnings = [w for w in p_warnings if "PNL access warning" not in w]
+        if len(p_operational_warnings) > 0:
+            events_missing_readiness_items += 1
+            
+        total_overdue_instruments += gen_readiness["overdue_instruments_count"]
+        total_need_revision_instruments += gen_readiness["revision_required_count"]
+
     # Set total_inquiry as total_projects per requirements
     total_inquiry = total_projects
     
@@ -401,6 +468,7 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
     # Process PM Workload list
     pm_workload_list = []
     for pm_id_key, d in pm_map.items():
+        avg_readiness = (d["readiness_score_sum"] / d["total_projects"] * 100.0) if d["total_projects"] > 0 else 0.0
         pm_workload_list.append({
             "pm_id": d["pm_id"],
             "pm_name": d["pm_name"],
@@ -410,7 +478,13 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
             "preparation_count": d["preparation_count"],
             "running_count": d["running_count"],
             "reporting_count": d["reporting_count"],
-            "closed_count": d["closed_count"]
+            "closed_count": d["closed_count"],
+            # Sprint 8 metrics
+            "upcoming_projects_7_days": d["upcoming_projects_7_days"],
+            "projects_not_ready": d["projects_not_ready"],
+            "average_readiness_score": avg_readiness,
+            "overdue_instruments_count": d["overdue_instruments_count"],
+            "need_revision_count": d["need_revision_count"]
         })
         
     # Convert dict mapping arrays to lists
@@ -489,5 +563,15 @@ def get_dashboard_analytics(db: Session, filters: Dict[str, Any]) -> Dict[str, A
             "instruments_need_revision": instruments_need_revision,
             "instruments_overdue": instruments_overdue,
             "average_instrument_completion_rate": average_instrument_completion_rate
+        },
+        "readiness_summary": {
+            "projects_ready_count": projects_ready_count,
+            "projects_not_ready_count": projects_not_ready_count,
+            "average_readiness_score": (total_readiness_score_sum / total_projects * 100.0) if total_projects > 0 else 0.0,
+            "upcoming_events_7_days": upcoming_events_7_days,
+            "overdue_events": overdue_events,
+            "events_missing_readiness_items": events_missing_readiness_items,
+            "total_overdue_instruments": total_overdue_instruments,
+            "total_need_revision_instruments": total_need_revision_instruments
         }
     }

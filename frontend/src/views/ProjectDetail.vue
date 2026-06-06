@@ -375,6 +375,13 @@
             </div>
           </div>
 
+          <!-- Event Execution Control panel (Sprint 8) -->
+          <ProjectExecutionControlPanel 
+            v-if="project" 
+            :project="project" 
+            :warnings="validationWarnings"
+          />
+
           <!-- Customer details -->
           <div class="glass-panel p-5 space-y-3 select-none">
             <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Client Profile</h4>
@@ -518,6 +525,134 @@
         </form>
       </div>
     </div>
+
+    <!-- Unified Readiness & Status Transition Modal (Sprint 8) -->
+    <div v-if="showReadinessModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
+      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-xl shadow-2xl p-6 relative">
+        <h3 class="text-base font-bold text-white tracking-wide mb-2 flex items-center gap-2">
+          <span>Ubah Status Project</span>
+          <span v-if="pendingTransition.newStatus" class="px-2 py-0.5 text-[10px] bg-brand-orange/15 text-brand-orange border border-brand-orange/20 rounded font-black">
+            {{ pendingTransition.newStatus }}
+          </span>
+        </h3>
+        <p class="text-xs text-gray-400 font-semibold mb-5">
+          Sistem sedang menganalisis tingkat kesiapan (readiness) operasional event Anda.
+        </p>
+
+        <!-- Loading state -->
+        <div v-if="readinessCheckLoading" class="py-12 flex flex-col items-center justify-center gap-3">
+          <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-xs text-gray-400 font-semibold">Menganalisis checklist readiness...</span>
+        </div>
+
+        <!-- Loaded Check state -->
+        <div v-else-if="readinessGateData" class="space-y-4">
+          <!-- Readiness Scores -->
+          <div class="grid grid-cols-2 gap-3 p-3 bg-brand-charcoal-dark border border-brand-charcoal-light/10 rounded-2xl text-xs select-none">
+            <div>
+              <p class="text-gray-400 font-bold text-[9px] uppercase tracking-widest">Readiness Score</p>
+              <p class="text-white font-extrabold text-sm mt-0.5">{{ Math.round(readinessGateData.readiness_score) }}%</p>
+            </div>
+            <div>
+              <p class="text-gray-400 font-bold text-[9px] uppercase tracking-widest">Completion Rate</p>
+              <p class="text-brand-emerald font-black text-sm mt-0.5">{{ Math.round(readinessGateData.instrument_completion_rate) }}%</p>
+            </div>
+          </div>
+
+          <!-- Severity indicator callout -->
+          <div v-if="readinessGateData.severity === 'critical'" class="p-3 bg-red-500/10 border border-red-500/20 text-red-200 rounded-xl text-[11px] font-semibold leading-relaxed flex items-start gap-2">
+            <span>❌</span>
+            <div>
+              <p class="font-extrabold text-red-400 uppercase tracking-wider text-[9px]">Critical Blockers Detected</p>
+              <p class="mt-0.5">Sistem mendeteksi blocker kritis yang berisiko merusak alur kerja. Silakan periksa rekomendasi di bawah.</p>
+            </div>
+          </div>
+          <div v-else-if="readinessGateData.warnings.length > 0" class="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-200 rounded-xl text-[11px] font-semibold leading-relaxed flex items-start gap-2">
+            <span>⚠️</span>
+            <div>
+              <p class="font-extrabold text-amber-400 uppercase tracking-wider text-[9px]">Operational Warnings Detected</p>
+              <p class="mt-0.5">Sistem mendeteksi beberapa catatan kesiapan. Anda dapat mengabaikan ini namun pastikan untuk melengkapinya segera.</p>
+            </div>
+          </div>
+          <div v-else class="p-3 bg-brand-emerald/10 border border-brand-emerald/20 text-brand-emerald rounded-xl text-[11px] font-semibold leading-relaxed flex items-start gap-2">
+            <span>✅</span>
+            <div>
+              <p class="font-extrabold text-brand-emerald uppercase tracking-wider text-[9px]">Ready for Transition</p>
+              <p class="mt-0.5">Project ini sepenuhnya siap untuk transisi status ini tanpa catatan apapun.</p>
+            </div>
+          </div>
+
+          <!-- Blockers List -->
+          <div v-if="readinessGateData.blockers.length > 0" class="space-y-1.5">
+            <p class="text-[9px] font-extrabold uppercase tracking-widest text-red-400">Blocker Kritis (Blockers)</p>
+            <div class="p-3 bg-red-950/20 border border-red-900/30 rounded-xl space-y-1 text-xs text-red-300 font-semibold leading-relaxed max-h-32 overflow-y-auto custom-scrollbar">
+              <p v-for="(b, idx) in readinessGateData.blockers" :key="idx" class="flex gap-1.5 items-start">
+                <span class="text-red-400 shrink-0">•</span>
+                <span>{{ b }}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Warnings List -->
+          <div v-if="readinessGateData.warnings.length > 0" class="space-y-1.5">
+            <p class="text-[9px] font-extrabold uppercase tracking-widest text-amber-400">Peringatan Operasional (Warnings)</p>
+            <div class="p-3 bg-amber-950/10 border border-amber-900/20 rounded-xl space-y-1 text-xs text-amber-300 font-semibold leading-relaxed max-h-32 overflow-y-auto custom-scrollbar">
+              <p v-for="(w, idx) in readinessGateData.warnings" :key="idx" class="flex gap-1.5 items-start">
+                <span class="text-amber-400 shrink-0">•</span>
+                <span>{{ w }}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Recommendations -->
+          <div v-if="readinessGateData.recommendations.length > 0" class="space-y-1.5">
+            <p class="text-[9px] font-extrabold uppercase tracking-widest text-brand-blue">Rekomendasi Tindakan (Recommendations)</p>
+            <div class="p-3 bg-blue-950/10 border border-blue-900/20 rounded-xl space-y-1 text-xs text-blue-200 font-semibold leading-relaxed max-h-32 overflow-y-auto custom-scrollbar">
+              <p v-for="(r, idx) in readinessGateData.recommendations" :key="idx" class="flex gap-1.5 items-start">
+                <span class="text-brand-blue shrink-0">•</span>
+                <span>{{ r }}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Notes textarea -->
+          <div>
+            <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Catatan Perubahan Status (Wajib)</label>
+            <textarea v-model="transitionNotes" rows="2.5" placeholder="Masukkan alasan transisi atau tindakan mitigasi..." class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white focus:border-brand-orange"></textarea>
+          </div>
+
+          <!-- Override switch if critical blockers -->
+          <div v-if="readinessGateData.severity === 'critical'" class="flex items-center gap-2 p-3 bg-red-950/10 border border-red-900/20 rounded-xl select-none">
+            <input 
+              id="force-override" 
+              type="checkbox" 
+              v-model="forceTransition"
+              class="rounded border-red-900 bg-brand-charcoal-dark text-red-500 focus:ring-red-500 h-4.5 w-4.5 cursor-pointer"
+            />
+            <label for="force-override" class="text-xs font-bold text-red-300 cursor-pointer select-none">
+              Saya memahami risiko kritis di atas dan setuju untuk melakukan Force Update status.
+            </label>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="flex items-center justify-end gap-3 pt-2">
+            <button type="button" @click="showReadinessModal = false" class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all">Cancel</button>
+            <button 
+              type="button" 
+              @click="confirmTransition"
+              :disabled="readinessGateData.severity === 'critical' && !forceTransition"
+              class="px-5 py-2.5 rounded-xl text-white font-bold text-xs shadow-lg transition-all"
+              :class="(readinessGateData.severity === 'critical' && !forceTransition) ? 'bg-gray-700/50 text-gray-500 border border-gray-600/30 cursor-not-allowed' : 'bg-gradient-to-r from-brand-orange to-brand-orange-light hover:brightness-110'"
+            >
+              Ubah Status Project
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -532,6 +667,7 @@ import ProjectStatusTimeline from '../components/ProjectStatusTimeline.vue'
 import ProjectActivityLog from '../components/ProjectActivityLog.vue'
 import ProjectDocumentsPanel from '../components/ProjectDocumentsPanel.vue'
 import ProjectInstrumentsPanel from '../components/ProjectInstrumentsPanel.vue'
+import ProjectExecutionControlPanel from '../components/projects/ProjectExecutionControlPanel.vue'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -546,6 +682,13 @@ const activityLogs = ref([])
 const validationWarnings = ref([])
 const users = ref([])
 const instruments = ref([])
+
+const showReadinessModal = ref(false)
+const readinessCheckLoading = ref(false)
+const readinessGateData = ref(null)
+const transitionNotes = ref('')
+const forceTransition = ref(false)
+const pendingTransition = ref({ statusType: '', newStatus: '' })
 
 const loading = ref(true)
 const activeTab = ref('schedules')
@@ -731,21 +874,55 @@ const getPaymentStatusStyles = (status) => {
 
 // Transition Status Action
 const transitionStatus = async (statusType, newStatus) => {
-  const notes = prompt(`Please enter transition notes for shifting ${statusType.replace('_', ' ')} to "${newStatus}":`, "")
-  if (notes === null) return // cancelled
+  pendingTransition.value = { statusType, newStatus }
+  transitionNotes.value = ''
+  forceTransition.value = false
+  readinessGateData.value = null
+  showReadinessModal.value = true
+  readinessCheckLoading.value = true
+  
+  try {
+    const res = await axios.post(`/api/v1/projects/${projectId}/readiness/check`, {
+      status_type: statusType,
+      target_status: newStatus
+    })
+    readinessGateData.value = res.data
+  } catch (err) {
+    console.error('Failed to run readiness gate check', err)
+    alert(err.response?.data?.detail || 'Gagal menjalankan analisis readiness check.')
+    showReadinessModal.value = false
+  } finally {
+    readinessCheckLoading.value = false
+  }
+}
+
+const confirmTransition = async () => {
+  const { statusType, newStatus } = pendingTransition.value
+  
+  if (!transitionNotes.value.trim()) {
+    alert('Catatan perubahan status wajib diisi.')
+    return
+  }
+  
   try {
     await axios.patch(`/api/v1/projects/${projectId}/status`, {
       status_type: statusType,
       new_status: newStatus,
-      notes: notes
+      notes: transitionNotes.value,
+      force: forceTransition.value
     })
+    
+    showReadinessModal.value = false
     await fetchProjectDetail()
-    // Fetch logs again
+    
+    // Refresh logs
     const logsRes = await axios.get(`/api/v1/projects/${projectId}/logs`)
     logs.value = logsRes.data
     alert('Workflow status transitioned successfully')
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to transition workflow status')
+    const detail = err.response?.data?.detail
+    const errMsg = typeof detail === 'object' && detail.message ? detail.message : (detail || 'Gagal mengubah status project.')
+    alert(errMsg)
   }
 }
 

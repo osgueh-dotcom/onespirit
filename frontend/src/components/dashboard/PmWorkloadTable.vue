@@ -18,12 +18,15 @@
             <th class="pb-3 text-center">Persiapan</th>
             <th class="pb-3 text-center">Running</th>
             <th class="pb-3 text-center">Pelaporan</th>
-            <th class="pb-3 text-center pr-2">Selesai</th>
+            <th class="pb-3 text-center">Selesai</th>
+            <th class="pb-3 text-center text-brand-blue">Upcoming (7H)</th>
+            <th class="pb-3 text-center text-red-400">Belum Ready</th>
+            <th class="pb-3 text-center pr-2">Avg Readiness</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="data.length === 0">
-            <td colspan="8" class="py-8 text-center text-charcoal-500 font-bold print:text-charcoal-400">
+            <td colspan="11" class="py-8 text-center text-charcoal-500 font-bold print:text-charcoal-400">
               Belum ada data untuk periode atau filter yang dipilih.
             </td>
           </tr>
@@ -43,7 +46,10 @@
             <td class="py-3.5 text-center text-sky-400 print:text-sky-700">{{ pm.preparation_count }}</td>
             <td class="py-3.5 text-center text-brand-orange print:text-orange-700">{{ pm.running_count }}</td>
             <td class="py-3.5 text-center text-purple-400 print:text-purple-700">{{ pm.reporting_count }}</td>
-            <td class="py-3.5 text-center text-brand-emerald pr-2 print:text-emerald-700">{{ pm.closed_count }}</td>
+            <td class="py-3.5 text-center text-brand-emerald print:text-emerald-700">{{ pm.closed_count }}</td>
+            <td class="py-3.5 text-center text-brand-blue font-mono">{{ pm.upcoming_projects_7_days || 0 }}</td>
+            <td class="py-3.5 text-center text-red-400 font-mono">{{ pm.projects_not_ready || 0 }}</td>
+            <td class="py-3.5 text-center text-brand-orange pr-2 font-mono">{{ Math.round(pm.average_readiness_score || 0) }}%</td>
           </tr>
         </tbody>
       </table>

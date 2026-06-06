@@ -295,13 +295,14 @@
               <th class="px-6 py-4">Program Status</th>
               <th class="px-6 py-4">Payment Status</th>
               <th class="px-6 py-4">Project Status</th>
+              <th class="px-6 py-4">Readiness</th>
               <th class="px-6 py-4">Budget</th>
               <th class="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
             <tr v-if="projects.length === 0">
-              <td colspan="13" class="px-6 py-12 text-center text-gray-500 font-semibold">
+              <td colspan="14" class="px-6 py-12 text-center text-gray-500 font-semibold">
                 No active event projects cataloged.
               </td>
             </tr>
@@ -369,6 +370,16 @@
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getProjectStyles(proj.project_status)">
                   {{ proj.project_status }}
                 </span>
+              </td>
+              <td class="px-6 py-4 select-none">
+                <div class="flex flex-col gap-1">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold text-center inline-block" :class="getReadinessScoreBadgeStyles(proj.project_readiness_score)">
+                    {{ Math.round((proj.project_readiness_score || 0) * 100) }}% Ready
+                  </span>
+                  <span class="text-[9px] text-gray-400 font-semibold text-center block">
+                    {{ Math.round((proj.instrument_completion_rate || 0) * 100) }}% Instruments
+                  </span>
+                </div>
               </td>
               <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(proj.budget) }}</td>
               <td class="px-6 py-4 text-right select-none space-x-2.5 whitespace-nowrap">
@@ -872,6 +883,13 @@ const getProjectStyles = (status) => {
   if (cleaned === 'closed') return 'bg-gray-500/10 text-gray-400 border border-gray-500/20'
   if (cleaned === 'canceled') return 'bg-red-500/10 text-red-400 border border-red-500/20'
   return 'bg-brand-charcoal-light/35 text-gray-400'
+}
+
+const getReadinessScoreBadgeStyles = (score) => {
+  const s = score || 0
+  if (s >= 0.8) return 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20'
+  if (s >= 0.5) return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+  return 'bg-red-500/10 text-red-400 border border-red-500/20'
 }
 
 const openAddModal = () => {

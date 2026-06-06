@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.core import deps
 from app.modules.auth.models import User
 from app.modules.projects import service, schemas
+from app.modules.projects.models import ProjectActivityLog
 
 router = APIRouter(tags=["Project Workflow Module"])
 
@@ -25,7 +26,7 @@ def get_all_projects(
     current_user: User = Depends(deps.PermissionChecker(["projects:read"]))
 ):
     """Retrieve the list of active projects, optionally filtered by various attributes"""
-    return service.get_projects(
+    projects = service.get_projects(
         db, 
         status=status, 
         skip=skip, 
@@ -38,6 +39,16 @@ def get_all_projects(
         payment_status=payment_status,
         project_status=project_status
     )
+    
+    response_list = []
+    for p in projects:
+        p_res = schemas.ProjectResponse.from_orm(p)
+        readiness = service.calculate_project_readiness(p)
+        p_res.project_readiness_score = readiness["project_readiness_score"]
+        p_res.instrument_completion_rate = readiness["instrument_completion_rate"]
+        response_list.append(p_res)
+        
+    return response_list
 
 @router.get("/projects/{project_id}", response_model=schemas.ProjectDetailResponse)
 def get_project_by_id(
@@ -204,7 +215,7 @@ def patch_project_status(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Project not found"
         )
-    
+        
     # Gate validation for generic endpoint
     user_role = current_user.role.name
     if payload.status_type == "program_status":
@@ -226,8 +237,59 @@ def patch_project_status(
                 detail="Only Management, Staff, the assigned Program Manager, or Administrators can confirm or complete active event projects."
             )
 
+    # Sprint 8: Perform operational readiness gate check
+    gate = service.evaluate_project_readiness_gate(project, payload.status_type, payload.new_status)
+    old_status_val = getattr(project, payload.status_type)
+    
+    if gate["severity"] == "critical" and not payload.force:
+        # Log blocked attempt
+        db.add(ProjectActivityLog(
+            project_id=project.id,
+            user_id=current_user.id,
+            action="status_change_blocked",
+            field_name=payload.status_type,
+            old_value=old_status_val,
+            new_value=payload.new_status,
+            notes=f"Blocked status change to '{payload.new_status}' due to critical blockers: {', '.join(gate['blockers'])}"
+        ))
+        db.commit()
+        
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={
+                "message": "Status update blocked by critical readiness issues.",
+                "severity": "critical",
+                "blockers": gate["blockers"],
+                "warnings": gate["warnings"],
+                "recommendations": gate["recommendations"],
+                "can_override": gate["can_override"]
+            }
+        )
+    
+    # Log forced or warning state transition outcomes
+    if gate["severity"] == "critical" and payload.force:
+        db.add(ProjectActivityLog(
+            project_id=project.id,
+            user_id=current_user.id,
+            action="status_force_updated",
+            field_name=payload.status_type,
+            old_value=old_status_val,
+            new_value=payload.new_status,
+            notes=f"Forced status update to '{payload.new_status}'. Overrode critical blockers: {', '.join(gate['blockers'])}"
+        ))
+    elif gate["warnings"]:
+        db.add(ProjectActivityLog(
+            project_id=project.id,
+            user_id=current_user.id,
+            action="status_changed_with_readiness_warning",
+            field_name=payload.status_type,
+            old_value=old_status_val,
+            new_value=payload.new_status,
+            notes=f"Status changed to '{payload.new_status}' with warnings: {', '.join(gate['warnings'])}"
+        ))
+
     try:
-        return service.update_project_status_generic(
+        updated_project = service.update_project_status_generic(
             db,
             db_project=project,
             status_type=payload.status_type,
@@ -235,11 +297,53 @@ def patch_project_status(
             notes=payload.notes,
             changed_by_id=str(current_user.id)
         )
+        return updated_project
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
+
+@router.post("/projects/{project_id}/readiness/check", response_model=schemas.ProjectReadinessCheckResponse)
+def check_project_readiness_gate(
+    project_id: str,
+    payload: schemas.ProjectReadinessCheckRequest,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.PermissionChecker(["projects:read"]))
+):
+    """Preview project readiness state before making a status transition"""
+    project = service.get_project(db, project_id=project_id)
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found"
+        )
+        
+    gate = service.evaluate_project_readiness_gate(project, payload.status_type, payload.target_status)
+    
+    # Log readiness check action in ProjectActivityLog
+    db.add(ProjectActivityLog(
+        project_id=project.id,
+        user_id=current_user.id,
+        action="readiness_check",
+        notes=f"Readiness check performed for target status '{payload.target_status}' ({payload.status_type}). Score: {gate['readiness_score']:.1f}%"
+    ))
+    db.commit()
+    
+    return {
+        "project_id": project.id,
+        "status_type": payload.status_type,
+        "target_status": payload.target_status,
+        "allowed": gate["allowed"],
+        "severity": gate["severity"],
+        "can_override": gate["can_override"],
+        "readiness_score": gate["readiness_score"],
+        "instrument_completion_rate": gate["instrument_completion_rate"],
+        "warnings": gate["warnings"],
+        "blockers": gate["blockers"],
+        "recommendations": gate["recommendations"]
+    }
+
 
 @router.delete("/projects/{project_id}", status_code=status.HTTP_200_OK)
 def delete_project_entry(

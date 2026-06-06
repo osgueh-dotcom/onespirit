@@ -66,6 +66,12 @@
         :target="analyticsData.target" 
       />
       
+      <!-- Sprint 8. Event Readiness Summary -->
+      <ReadinessSummary 
+        v-if="analyticsData.readiness_summary" 
+        :summary="analyticsData.readiness_summary" 
+      />
+      
       <!-- E. Revenue & Target Section -->
       <RevenueSummary 
         :executive="analyticsData.executive" 
@@ -163,6 +169,7 @@ import DashboardFilters from '../components/dashboard/DashboardFilters.vue'
 import ExecutiveKpiCards from '../components/dashboard/ExecutiveKpiCards.vue'
 import ExecutiveSummaryNarrative from '../components/dashboard/ExecutiveSummaryNarrative.vue'
 import RevenueSummary from '../components/dashboard/RevenueSummary.vue'
+import ReadinessSummary from '../components/dashboard/ReadinessSummary.vue'
 import StatusSummary from '../components/dashboard/StatusSummary.vue'
 import PaymentSummary from '../components/dashboard/PaymentSummary.vue'
 import PoPerformanceTable from '../components/dashboard/PoPerformanceTable.vue'

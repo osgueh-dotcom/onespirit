@@ -19,6 +19,10 @@ Dokumen ini mendefinisikan istilah-istilah operasional dan instrumen proyek yang
 | **Completion Rate** | **Tingkat Penyelesaian Instrumen** | Persentase instrumen wajib (wajib jika status bukan 'Not Required') yang berstatus 'Done'. |
 | **Need Revision** | **Butuh Revisi** | Status instrumen yang memerlukan perbaikan dokumen atau data. Menghasilkan warning di halaman detail proyek. |
 | **Overdue** | **Keterlambatan** | Status peringatan ketika tanggal jatuh tempo (due date) instrumen telah berlalu dan status belum 'Done'. |
+| **Readiness Gate** | **Gerbang Kesiapan** | Sistem validasi backend yang mengevaluasi kelengkapan instrumen, tanggal, dan keuangan sebelum transisi status (misal: Running/Completed/Closed). |
+| **Event Execution Control** | **Kontrol Eksekusi Event** | Panel antarmuka di detail proyek untuk membantu memantau kesiapan, hari tersisa, tindakan yang direkomendasikan, dan melakukan transisi status secara aman. |
+| **Force Update** | **Pembaruan Paksa** | Opsi override untuk melewati status transition blockers kritis dalam situasi darurat atas izin otoritas yang berwenang. |
+| **Event Date Indicator** | **Indikator Urgensi Tanggal** | Penanda visual yang menunjukkan seberapa dekat event ke pelaksanaan (misal: "X hari lagi", "Hari ini", "Sudah lewat"). |
 
 ---
 

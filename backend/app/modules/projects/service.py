@@ -858,3 +858,257 @@ def ensure_default_project_instruments(db: Session, project_id: uuid.UUID) -> Li
         db_commit_safety(db)
         
     return created_instruments
+
+def categorize_warning(warning: str) -> str:
+    warning_lower = warning.lower()
+    if "pnl access warning" in warning_lower:
+        return "security"
+    elif any(term in warning_lower for term in ["budget", "payment", "paid", "invoice", "pnl document"]):
+        return "finance"
+    elif any(term in warning_lower for term in ["document", "documentation"]):
+        return "documentation"
+    elif any(term in warning_lower for term in ["instrument", "cl is missing", "cl not marked", "ros is missing", "ros not marked", "ck is missing", "ck not marked"]):
+        return "instrument"
+    elif any(term in warning_lower for term in ["event end date", "budget allocation is missing"]):
+        return "operational"
+    else:
+        return "data_quality"
+
+def evaluate_project_readiness_gate(project: Project, status_type: str, target_status: str) -> dict:
+    warnings = []
+    blockers = []
+    recommendations = []
+    
+    # Calculate current readiness metrics
+    readiness = calculate_project_readiness(project)
+    readiness_score = readiness["project_readiness_score"] * 100.0  # as percentage
+    instrument_completion_rate = readiness["instrument_completion_rate"] * 100.0  # as percentage
+    
+    # Get active instruments list (non-deleted)
+    active_instruments = [inst for inst in project.instruments if not inst.deleted_at]
+    instruments_dict = {inst.instrument_type: inst for inst in active_instruments}
+    
+    # Check date utilities
+    today = date.today()
+    
+    # Evaluate rules based on status_type
+    if status_type == "program_status":
+        if target_status == "Ready":
+            # CL missing or not Done
+            cl = instruments_dict.get("CL")
+            if not cl or cl.status != "Done":
+                warnings.append("Contract/Confirmation Letter (CL) is missing or not marked as 'Done'.")
+                recommendations.append("Lengkapi dan setujui Contract/Confirmation Letter (CL).")
+                
+            # ROS missing or not Done
+            ros = instruments_dict.get("ROS")
+            if not ros or ros.status != "Done":
+                warnings.append("Rundown of Show (ROS) is missing or not marked as 'Done'.")
+                recommendations.append("Susun dan selesaikan Rundown of Show (ROS).")
+                
+            # CK missing or not Done
+            ck = instruments_dict.get("CK")
+            if not ck or ck.status != "Done":
+                warnings.append("Check List (CK) is missing or not marked as 'Done'.")
+                recommendations.append("Verifikasi kesiapan via Check List (CK).")
+                
+            # PNL is missing or not Done for Signed & Deal project
+            if project.quotation_status == "Signed & Deal":
+                pnl = instruments_dict.get("PNL")
+                if not pnl or pnl.status != "Done" or not pnl.document_url:
+                    warnings.append("Profit & Loss (PNL) instrument is missing or not marked as 'Done' with valid document URL for this Signed & Deal project.")
+                    recommendations.append("Unggah draft PNL dan set status menjadi Done.")
+            
+            # project has instrument Need Revision
+            need_revision_list = [inst for inst in active_instruments if inst.status == "Need Revision"]
+            if need_revision_list:
+                warnings.append(f"Project has {len(need_revision_list)} instrument(s) needing revision.")
+                recommendations.append("Revisi instrumen yang memerlukan perbaikan.")
+                
+            # project has overdue instruments
+            overdue_list = [
+                inst for inst in active_instruments
+                if inst.due_date and inst.due_date < today and inst.status != "Done" and inst.status != "Not Required"
+            ]
+            if overdue_list:
+                warnings.append(f"Project has {len(overdue_list)} overdue instrument(s).")
+                recommendations.append("Perbarui tenggat waktu atau selesaikan instrumen yang telat.")
+                
+            # event_date_start is missing
+            if not project.event_date_start:
+                warnings.append("Event start date is missing.")
+                recommendations.append("Tentukan tanggal mulai event di detail project.")
+                
+            # PM is missing
+            if not project.program_manager_id:
+                warnings.append("Program Manager (PM) is not assigned.")
+                recommendations.append("Tunjuk PM untuk mengelola eksekusi event.")
+                
+            # PO is missing
+            if not project.program_owner_id:
+                warnings.append("Program Owner (PO) is not assigned.")
+                recommendations.append("Tunjuk PO untuk kepemilikan program.")
+                
+        elif target_status == "Running":
+            # project_status is Canceled is a critical blocker
+            if project.project_status == "Canceled":
+                blockers.append("Cannot run an event that is marked as Canceled.")
+                recommendations.append("Aktifkan kembali project (ubah project_status dari Canceled) sebelum menjalankan event.")
+                
+            # readiness_score < 80
+            if readiness_score < 80.0:
+                warnings.append(f"Project readiness score ({readiness_score:.1f}%) is below the operational threshold of 80%.")
+                recommendations.append("Lengkapi checklist operational dan unggah dokumen pendukung untuk meningkatkan score.")
+                
+            # ROS is not Done
+            ros = instruments_dict.get("ROS")
+            if not ros or ros.status != "Done":
+                warnings.append("Rundown of Show (ROS) is not marked as 'Done'. Running event requires a finalized rundown.")
+                recommendations.append("Finalisasi Rundown of Show (ROS).")
+                
+            # CK is not Done
+            ck = instruments_dict.get("CK")
+            if not ck or ck.status != "Done":
+                warnings.append("Check List (CK) is not marked as 'Done'. Running event requires completed pre-execution checks.")
+                recommendations.append("Selesaikan pre-execution checklist.")
+                
+            # any required instrument is Need Revision
+            need_revision_list = [inst for inst in active_instruments if inst.status == "Need Revision"]
+            if need_revision_list:
+                warnings.append(f"Project has {len(need_revision_list)} instrument(s) marked as 'Need Revision'.")
+                recommendations.append("Selesaikan revisi instrumen.")
+                
+            # event date is missing
+            if not project.event_date_start:
+                warnings.append("Event start date is missing.")
+                recommendations.append("Isi tanggal mulai event.")
+            else:
+                # event date is in the future by more than 7 days (premature run)
+                days_until = (project.event_date_start - today).days
+                if days_until > 7:
+                    warnings.append(f"Event is scheduled to start in {days_until} days. Running this event now might be premature.")
+                    recommendations.append("Verifikasi apakah eksekusi dipercepat.")
+                    
+        elif target_status == "Completed":
+            # documentation is missing
+            active_docs = [d for d in project.documents if not d.deleted_at]
+            if not active_docs or len(active_docs) == 0:
+                warnings.append("No active documents are uploaded. Event completion requires post-event reports/documentation.")
+                recommendations.append("Unggah dokumentasi/Laporan Pertanggungjawaban (LPJ).")
+                
+            # project still has overdue instruments
+            overdue_list = [
+                inst for inst in active_instruments
+                if inst.due_date and inst.due_date < today and inst.status != "Done" and inst.status != "Not Required"
+            ]
+            if overdue_list:
+                warnings.append(f"Project has {len(overdue_list)} overdue instrument(s).")
+                recommendations.append("Tandai instrumen yang sudah selesai atau update statusnya.")
+                
+            # ROS/CK are not Done
+            ros = instruments_dict.get("ROS")
+            if not ros or ros.status != "Done":
+                warnings.append("Rundown of Show (ROS) was not completed.")
+            ck = instruments_dict.get("CK")
+            if not ck or ck.status != "Done":
+                warnings.append("Check List (CK) was not completed.")
+                
+            # event_date_end is missing
+            if not project.event_date_end:
+                warnings.append("Event end date is missing.")
+                recommendations.append("Isi tanggal berakhir event.")
+            elif project.event_date_end > today:
+                # event_date_end is in the future
+                warnings.append(f"Event end date ({project.event_date_end}) is in the future. Completing the event now is premature.")
+                recommendations.append("Tunggu hingga event selesai dijalankan sesuai jadwal.")
+                
+        elif target_status == "Closed":
+            # payment_status is not Paid
+            if project.payment_status != "Paid":
+                warnings.append("Payment status is not 'Paid'. Closing requires full payment settlement.")
+                recommendations.append("Lakukan penagihan invoice atau verifikasi approval pembayaran.")
+                
+            # documentation is missing
+            active_docs = [d for d in project.documents if not d.deleted_at]
+            if not active_docs or len(active_docs) == 0:
+                warnings.append("No active documents are uploaded.")
+                recommendations.append("Unggah LPJ/Dokumentasi penutupan.")
+                
+            # reporting status is unclear (not Reporting or Completed or Closed)
+            if project.program_status not in ["Reporting", "Completed", "Closed"]:
+                warnings.append(f"Current program status is '{project.program_status}'. Standard flow requires Completed/Reporting stage before Closing.")
+                recommendations.append("Selesaikan tahapan pelaporan (Reporting) sebelum menutup.")
+                
+            # PNL missing or not Done
+            pnl = instruments_dict.get("PNL")
+            if not pnl or pnl.status != "Done" or not pnl.document_url:
+                warnings.append("PNL document is missing or not marked as 'Done'. Closing requires finalized Profit & Loss statement.")
+                recommendations.append("Finalisasi PNL sheet.")
+                
+    elif status_type == "project_status":
+        if target_status == "Closed":
+            # payment_status is not Paid
+            if project.payment_status != "Paid":
+                warnings.append("Payment status is not 'Paid'. Closing requires full payment settlement.")
+                recommendations.append("Selesaikan outstanding invoice.")
+                
+            # program_status is not Completed/Reporting/Closed
+            if project.program_status not in ["Completed", "Reporting", "Closed"]:
+                warnings.append(f"Program status is '{project.program_status}'. Event execution should be Completed or Reporting before closing.")
+                
+            # documentation is missing
+            active_docs = [d for d in project.documents if not d.deleted_at]
+            if not active_docs or len(active_docs) == 0:
+                warnings.append("No active operational documents uploaded.")
+                
+            # PNL is missing or not Done
+            pnl = instruments_dict.get("PNL")
+            if not pnl or pnl.status != "Done" or not pnl.document_url:
+                warnings.append("PNL document is missing or not finalized.")
+                
+            # project has unresolved Need Revision instruments
+            need_revision_list = [inst for inst in active_instruments if inst.status == "Need Revision"]
+            if need_revision_list:
+                warnings.append(f"Project has {len(need_revision_list)} instrument(s) with 'Need Revision' status.")
+                
+        elif target_status == "Canceled":
+            # cancel_reason is missing
+            if not project.cancel_reason or not project.cancel_reason.strip():
+                warnings.append("Cancel reason is not provided.")
+                recommendations.append("Tuliskan alasan pembatalan pada mom_notes or cancel_reason.")
+                
+            # project has Signed & Deal quotation
+            if project.quotation_status == "Signed & Deal":
+                warnings.append("Project has a 'Signed & Deal' quotation. Canceling a signed contract involves high commercial risk.")
+                recommendations.append("Koordinasikan dengan manajemen sebelum membatalkan kontrak deal.")
+                
+            # payment_status is Paid or Partial Paid
+            if project.payment_status in ["Paid", "Partial Paid"]:
+                warnings.append(f"Project has already received payment (Status: {project.payment_status}). Canceling requires processing refunds/finance review.")
+                recommendations.append("Hubungi departemen Finance untuk settlement invoice/refund.")
+
+    # Determine allowed, severity, and can_override
+    if blockers:
+        allowed = False
+        severity = "critical"
+        can_override = True
+    elif warnings:
+        allowed = True
+        severity = "warning"
+        can_override = True
+    else:
+        allowed = True
+        severity = "info"
+        can_override = True
+        
+    return {
+        "allowed": allowed,
+        "severity": severity,
+        "warnings": warnings,
+        "blockers": blockers,
+        "recommendations": recommendations,
+        "readiness_score": readiness_score,
+        "instrument_completion_rate": instrument_completion_rate,
+        "can_override": can_override
+    }
+

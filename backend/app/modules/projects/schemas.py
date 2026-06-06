@@ -112,6 +112,26 @@ class ProjectStatusUpdate(BaseModel):
     status_type: str
     new_status: str
     notes: Optional[str] = None
+    force: Optional[bool] = False
+
+class ProjectReadinessCheckRequest(BaseModel):
+    status_type: str
+    target_status: str
+    notes: Optional[str] = None
+
+class ProjectReadinessCheckResponse(BaseModel):
+    project_id: UUID
+    status_type: str
+    target_status: str
+    allowed: bool
+    severity: str # "info" | "warning" | "critical"
+    can_override: bool
+    readiness_score: float
+    instrument_completion_rate: float
+    warnings: List[str]
+    blockers: List[str]
+    recommendations: List[str]
+
 
 class ProjectDocumentResponse(BaseModel):
     id: UUID
@@ -162,6 +182,9 @@ class ProjectResponse(ProjectBase):
     program_manager: Optional[UserBriefResponse] = None
     
     paid_amount: Decimal = Decimal("0.00")
+    
+    project_readiness_score: Optional[float] = 0.0
+    instrument_completion_rate: Optional[float] = 0.0
 
     class Config:
         from_attributes = True

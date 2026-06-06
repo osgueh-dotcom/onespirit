@@ -27,6 +27,7 @@ Dokumen ini memetakan butir-butir penawaran fitur dalam proposal **GVSys (Gueh V
 | **CK Tracking** | Implemented (Sprint 7) | **Ya** | Pelacakan status dan tautan Check List persiapan operasional per proyek. |
 | **PNL Tracking** | Implemented (Sprint 7) | **Ya** | Pelacakan status Profit and Loss per proyek disertai dengan pembatasan hak akses tautan dokumen sensitif. |
 | **Instrument Status Workflow** | Implemented (Sprint 7) | **Ya** | Alur perubahan status instrumen (Done, In Progress, Need Revision, Not Required) dengan tanggal penyelesaian otomatis dan activity log. |
+| **Readiness Gates & Event Execution Control** | Implemented (Sprint 8) | **Ya** | Gerbang validasi transisi status (Ready, Running, Completed, Closed, Cancel) dengan deteksi warning/blocker, override via pembaruan paksa (force update), serta panel kontrol visual di detail proyek dan dashboard readiness. |
 | **Activity Log** | Implemented (MVP) | **Ya** | Audit trail otomatis mencatat riwayat perubahan status, tanggal, dan inisiator pengguna. |
 | **Status Timeline** | Implemented (MVP) | **Ya** | Tampilan visual linimasa tahapan status proyek di halaman detail untuk transparansi progres. |
 | **Excel Import** | Implemented (MVP) | **Ya** | Pengunggahan file Excel operasional lama dengan fitur pratinjau validasi baris data sebelum masuk database. |

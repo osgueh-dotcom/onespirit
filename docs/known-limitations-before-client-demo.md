@@ -33,4 +33,6 @@ Tujuan dokumen ini adalah membantu tim presenter menyajikan keterbatasan sistem 
 ## 7. Penyimpanan Berkas Langsung di Server (Direct Document Storage)
 - **Kondisi Saat Ini**: Modul instrumen proyek (**CL, ROS, CK, PNL, PF, MATRIX**) telah memiliki pelacakan status operasional, tanggal jatuh tempo, dan skor kesiapan terintegrasi. Namun berkas-berkas tersebut masih dilampirkan menggunakan tautan (URL) Google Drive luar, bukan diunggah langsung ke database server sistem.
 - **Penjelasan Klien**: Untuk tahap MVP saat ini, pencatatan berbasis tautan luar sangat praktis untuk fleksibilitas penyimpanan. Fitur unggah berkas PDF/Excel secara langsung ke server internal atau folder otomatis Google Drive terintegrasi direkomendasikan untuk **fase manajemen dokumen terintegrasi**.
-
+## 8. Sifat Peringatan Gerbang Kesiapan (Readiness Warning Flexibility)
+- **Kondisi Saat Ini**: Sebagian besar kondisi gerbang kesiapan (seperti dokumen CL/ROS/CK belum selesai saat masuk status Ready/Running) disajikan sebagai peringatan (*warnings*), bukan pemblokir keras (*hard blockers*) yang langsung menghentikan proses kerja. Hanya kondisi yang benar-benar tidak aman (seperti menjalankan proyek yang berstatus Canceled) yang diblok secara kritis dan memerlukan override pembaruan paksa (*force update*).
+- **Penjelasan Klien**: Hal ini dirancang agar sistem tidak menghambat kelancaran operasional di lapangan jika terjadi kondisi mendesak. Sistem memberikan rekomendasi tindakan preventif tanpa mematikan fleksibilitas pengambilan keputusan PM/PO secara kaku.
