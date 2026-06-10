@@ -168,6 +168,12 @@ def test_po_control_center_endpoint(client, db):
     assert summary["total_cancel"] >= 1
     assert summary["deal_rate"] > 0
     assert summary["cancel_rate"] > 0
+    assert summary["active_projects"] >= 2
+    assert summary["pending_quotation_projects"] >= 1
+    assert summary["follow_up_needed_projects"] >= 2
+    assert summary["cancelled_projects"] >= 1
+    assert summary["outstanding_payment"] == 0.0
+    assert summary["commercial_risk_count"] >= 2
 
     # Verify potential and confirmed revenue logic
     rev = cc_data["revenue_summary"]

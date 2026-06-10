@@ -1,80 +1,177 @@
-# One Spirit Workflow & Business Analytics System
+# OneSpirit Workflow System
 
-Sistem manajemen alur kerja operasional dan dashboard evaluasi bisnis berbasis web yang dikembangkan oleh **GVSys (Gueh Visual Systems)** untuk memodernisasi pengelolaan event dan proyek di **PT. One Spirit Asia**.
+## Ringkasan Project
 
-Sistem ini mendigitalisasi alur kerja manual berbasis spreadsheet Excel lama menjadi aplikasi web terintegrasi dengan database relasional terpusat serta dashboard analitik eksekutif.
+`OneSpirit Workflow` adalah sistem workflow operasional dan komersial yang dirancang khusus untuk PT One Spirit Asia. Sistem ini membantu mengelola siklus hidup proyek dan event secara end-to-end, mulai dari inquiry awal pelanggan hingga pelaporan laba/rugi akhir (Profit and Loss / PNL).
+
+Sistem ini dikembangkan secara bertahap untuk mendigitalkan koordinasi operasional, melacak kesiapan proyek (readiness), meminimalkan kesalahan manusia, dan meningkatkan visibilitas finansial proyek bagi manajemen.
 
 ---
 
-## 1. Panduan Menjalankan Sistem Secara Lokal (Local Running Environment)
+## Status Project
 
-Sistem saat ini disiapkan sebagai **working local MVP (prototype)** untuk divalidasi secara lokal menggunakan Docker Desktop:
+| Informasi | Keterangan |
+|---|---|
+| Nama Project | OneSpirit Workflow System |
+| Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
+| Status | MVP Demo Readiness (Sprint 10 Finalization) |
+| Owner | PT One Spirit Asia |
+| Lokasi Folder | `e:/GVsys Project/One Spirit` |
+| Tech Stack | FastAPI (Backend) & Vue 3 + Tailwind CSS (Frontend) |
+| Database | PostgreSQL (Production/Docker) & SQLite (Testing/Lokal) |
 
-### Langkah Menjalankan:
-Jalankan perintah berikut di direktori root proyek melalui terminal:
-```bash
-docker compose down
-docker compose up -d --build
+---
+
+## Fitur Utama
+
+1. **CRM & Customer Management**: Manajemen klien, kategori klien (Corporate, Agency, dll.), dan kontak terasosiasi.
+2. **Project & Event Management**: Pelacakan siklus hidup proyek (Inquiry -> Confirmed -> Prep -> Ready -> Running -> Completed -> Reporting -> Closed).
+3. **Readiness Control Center & Instruments**: Manajemen dokumen Contract Letter (CL), Rundown of Show (ROS), Checklist (CK), dan Profit & Loss (PNL).
+4. **PM Control Center**: Dashboard Program Manager untuk melihat upcoming events, readiness scores, overdue instruments, dan workload staff.
+5. **PO Control Center**: Dashboard Program Owner (Commercial) untuk memantau status quotation, potensi & konversi revenue, kontribusi lead source, dan resiko komersial.
+6. **Excel Imports**: Modul untuk melakukan import data proyek dari format Excel standar One Spirit secara massal dengan validasi kualitas data.
+7. **Finance Tracking**: Pembuatan dan pelacakan invoice serta status pembayaran (Invoice Sent, Paid, Outstanding, Overdue).
+
+---
+
+## Struktur Folder Utama
+
+```text
+One Spirit/
+├── backend/                  # Kode Backend (FastAPI)
+│   ├── alembic/              # File migrasi database Alembic
+│   └── app/                  # Sumber kode utama backend
+│       ├── core/             # Konfigurasi, db connection, security, deps
+│       ├── models/           # Model data global
+│       ├── modules/          # Modul fungsional (auth, crm, projects, dll.)
+│       └── tests/            # Suite unit testing backend (pytest)
+├── frontend/                 # Kode Frontend (Vue 3, Vite, Tailwind)
+│   ├── dist/                 # Hasil build produksi frontend
+│   └── src/                  # Sumber kode utama Vue 3
+│       ├── components/       # Komponen UI modular
+│       ├── views/            # Halaman utama (Dashboard, Control Centers)
+│       └── router/           # Konfigurasi vue-router
+├── docs/                     # Dokumentasi sprint, terminologi, dan demo
+├── docker-compose.yml        # Konfigurasi multi-container Docker
+└── run.cmd                   # Script launcher otomatis untuk Windows
 ```
 
-### Verifikasi Kesehatan Layanan (Health Checks):
-- Pastikan status semua layanan kontainer aktif dan berjalan:
-  ```bash
-  docker compose ps
-  ```
-- **Backend API Diagnostics**: Akses `http://localhost:8000/health` di browser. Harus mengembalikan respon:
-  ```json
-  {"status":"ok","service":"onespirit-backend"}
-  ```
-- **Dokumentasi API Interaktif**: Akses `http://localhost:8000/docs` untuk melihat Swagger OpenAPI endpoints.
+---
+
+## Cara Menjalankan Project
+
+### 1. Menjalankan dengan Docker (Rekomendasi untuk Demo)
+
+Pastikan Docker Desktop sudah aktif di komputer Anda. Cukup jalankan script launcher di root folder:
+
+```bash
+run.cmd
+```
+
+Atau jalankan perintah docker compose secara manual:
+
+```bash
+docker-compose up -d --build
+```
+
+Setelah berhasil, aplikasi akan dapat diakses di:
+- **Frontend / Web Portal**: [http://localhost:5173](http://localhost:5173)
+- **Backend Swagger API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs) (atau port 8001 tergantung pemetaan host)
 
 ---
 
-## 2. Alamat Port Layanan Utama
+### 2. Menjalankan Secara Lokal (Langkah Developer)
 
-| Layanan (Service) | URL Lokal (Local URL) | Konteks & Kegunaan |
-| :--- | :--- | :--- |
-| **Frontend Web App** | [http://localhost:5173/](http://localhost:5173/) | Papan alur proyek, Dashboard Eksekutif, Impor Excel |
-| **Backend REST API** | [http://localhost:8000/](http://localhost:8000/) | Layanan server backend (FastAPI) |
-| **API Docs (Swagger)** | [http://localhost:8000/docs](http://localhost:8000/docs) | Dokumentasi teknis endpoints pengembang |
-| **Layanan Diagnostics** | [http://localhost:8000/health](http://localhost:8000/health) | Status kesehatan sistem |
+#### A. Backend (FastAPI)
 
-*Catatan: Akun login administrator awal telah disiapkan di database seed bawaan.*
+1. Masuk ke folder backend:
+   ```bash
+   cd backend
+   ```
+2. Buat python virtual environment dan aktifkan:
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Buat file `.env` berdasarkan `.env.example`.
+5. Jalankan backend:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
 
----
+#### B. Frontend (Vue 3 / Vite)
 
-## 3. Aset Pendukung Demonstrasi & Penyelarasan Klien
-
-Untuk mendukung jalannya presentasi di hadapan direksi PT. One Spirit Asia, gunakan dokumen panduan di folder `docs/` dengan tautan relatif berikut:
-
-- **[Panduan Posisi Demo (Demo Positioning)](docs/demo-positioning.md)**: Konsep menyajikan aplikasi sebagai working local MVP untuk validasi kebutuhan bisnis.
-- **[Glosarium Istilah Operasional (One Spirit Glossary)](docs/onespirit-terminology.md)**: Daftar istilah domain (PO, PM, Sales, PNL, CL, ROS, CK) dan model penugasan dinamisnya.
-- **[Alur Demo Langkah Demi Langkah](docs/client-demo-flow.md)**: Panduan alur navigasi menu selama demo berlangsung.
-- **[Skrip Demonstrasi (Speech Script)](docs/demo-script.md)**: Template panduan percakapan presenter dalam bahasa Indonesia yang terstruktur.
-- **[Daftar Periksa Persiapan (Checklist)](docs/demo-checklist.md)**: Checklist teknis sebelum, selama, dan sesudah rapat demo berjalan.
-- **[Panduan Memilih Data Demo](docs/demo-data-recommendation.md)**: Rekomendasi data sampel ideal vs data peringatan masalah administrasi.
-- **[Penyelarasan Proposal Teknis](docs/proposal-alignment.md)**: Pemetaan fitur proposal terhadap status implementasi sistem (lingkup MVP).
-- **[Cakupan Sistem MVP & Fase Lanjutan](docs/mvp-scope.md)**: Daftar fitur yang tersedia di MVP vs fitur yang direkomendasikan masuk Fase 2 (termin billing, WhatsApp).
-- **[Daftar Pertanyaan Validasi Klien](docs/client-validation-questions.md)**: Kuesioner interaktif untuk menyelaraskan alur kerja nyata dengan logika sistem.
-- **[Batasan Fungsional MVP](docs/known-limitations-before-client-demo.md)**: Dokumen batasan sistem dalam bahasa bisnis yang aman bagi klien.
-
-Indeks lengkap seluruh log teknis pengembang dari Sprint 0 hingga Sprint 10.1 dapat diakses melalui **[Dokumentasi Indeks Utama](docs/README.md)**.
-
----
-
-## 4. Pusat Kontrol Utama (Current Control Centers)
-
-Sistem One Spirit menyediakan tiga panel kontrol utama yang dirancang untuk kebutuhan pengguna yang berbeda:
-
-- **Executive Dashboard**
-  Berfokus pada evaluasi manajemen senior dan direksi, menampilkan target pendapatan, Target Achievement Rate, Received Cash, Collection Rate, sisa piutang, dan narasi evaluasi bahasa Indonesia otomatis.
-- **PM Control Center**
-  Workspace operasional bagi Program Manager (PM) untuk memantau kesiapan proyek, jadwal event mendatang, alarm instrumen overdue/revisi, dan prioritas tindakan operasional (Critical, High, Medium, Low).
-- **PO Control Center**
-  Workspace komersial bagi Program Owner (PO) untuk memantau quotation, deal/cancel rate, confirmed vs potential revenue, outstanding payment exposure, prioritas follow-up tindakan komersial, dan kontribusi lead source/vendor.
+1. Masuk ke folder frontend:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm.cmd install
+   ```
+3. Jalankan server development:
+   ```bash
+   npm.cmd run dev
+   ```
+4. Buka browser pada alamat [http://localhost:5173](http://localhost:5173).
 
 ---
 
-## 5. Batasan Tahap MVP Awal
-- **Uji Coba Lokal**: Sistem dikonfigurasi untuk dijalankan secara lokal via kontainer Docker. Pemasangan server awan (cloud hosting) dan sistem pencadangan terpusat direkomendasikan pada fase lanjutan.
-- **Validasi Data Awal**: Database relasional lokal diisi oleh data uji coba operasional bawaan. Migrasi database final akan disesuaikan setelah struktur data divalidasi bersama klien.
+## Cara Menjalankan Test Backend
+
+Pastikan Anda berada di virtual environment backend, lalu jalankan:
+
+```bash
+pytest app/tests -q
+```
+
+*Catatan: Tes menggunakan database SQLite in-memory / lokal di `E:\tmp` sehingga tidak memerlukan database PostgreSQL Docker berjalan.*
+
+---
+
+## Cara Build Frontend
+
+Untuk mengompilasi frontend ke dalam bentuk production bundle (dist folder):
+
+```bash
+cd frontend
+npm.cmd run build
+```
+
+---
+
+## Alur Demo Bawaan (Default Demo Flow)
+
+Untuk melakukan demo sistem dalam waktu 15–30 menit, silakan gunakan alur berikut:
+1. **Login**: Gunakan akun super admin `admin@onespirit.asia` / password `OneSpirit2026!`.
+2. **Dashboard**: Tinjau statistik keseluruhan, pipeline proyek, tren pendapatan bulanan, dan aktivitas terbaru.
+3. **CRM**: Lihat daftar klien dan kontak.
+4. **Projects**: Buka daftar proyek komprehensif, buat proyek baru dengan status `inquiry`.
+5. **Project Detail**: Buka detail proyek dan periksa status readiness gates (CL, ROS, CK, PNL). Cobalah melakukan transisi status.
+6. **PM Control Center**: Masuk ke dashboard PM untuk memantau status operasional dan readiness score.
+7. **PO Control Center**: Masuk ke dashboard PO untuk melihat performa komersial, quotation, dan resiko pembayaran.
+8. **Excel Import**: Coba upload template Excel proyek One Spirit untuk menguji kecocokan import masal.
+
+---
+
+## Batasan Sistem (Known Limitations)
+
+1. **Keamanan**: Saat ini masih menggunakan JWT rahasia bawaan untuk development. Belum ada HTTPS hardening secara cloud-native.
+2. **Permission**: Hak akses role (Admin, PO, PM, Finance, Management) sudah divalidasi pada level API gate, namun penyesuaian UI secara granular berdasarkan role masih dalam tahap MVP awal.
+3. **Data Backup**: Belum mendukung backup database otomatis ke penyimpanan cloud.
+4. **Integrasi Eksternal**: Belum terhubung dengan sistem e-mail otomatis untuk follow-up klien atau export PDF langsung.
+
+---
+
+## Dokumentasi Tambahan
+
+Semua panduan detail lainnya terletak di folder `docs/`:
+- `docs/demo-readiness.md` — Panduan alur demo dan checklist pertanyaan validasi klien.
+- `docs/mvp-limitations.md` — Batasan teknis sistem secara mendalam dan backlog Sprint 11.
+- `PROJECT_CONTEXT.md` — Detail bisnis dan istilah operasional (CL, ROS, CK, PNL).
+- `CHANGELOG.md` — Log perubahan versi aplikasi.
+- `SPRINT_LOG.md` — Log riwayat pengerjaan sprint pengembangan.

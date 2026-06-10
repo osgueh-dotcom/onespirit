@@ -41,6 +41,10 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup():
+    import sys
+    if "pytest" in sys.modules:
+        return
+        
     # 1. Create tables automatically (highly robust for immediate startup)
     if settings.AUTO_CREATE_TABLES:
         Base.metadata.create_all(bind=engine)
