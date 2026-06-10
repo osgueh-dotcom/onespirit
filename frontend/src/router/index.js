@@ -63,6 +63,12 @@ const router = createRouter({
       name: 'POControlCenter',
       component: () => import('../views/PoControlCenter.vue'),
       meta: { requiresAuth: true, permission: 'projects:read' }
+    },
+    {
+      path: '/source-vendor-performance',
+      name: 'SourceVendorPerformance',
+      component: () => import('../views/SourceVendorPerformance.vue'),
+      meta: { requiresAuth: true, permission: 'projects:read' }
     }
   ]
 })

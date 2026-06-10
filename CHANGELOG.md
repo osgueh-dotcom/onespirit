@@ -4,6 +4,19 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 11] - 2026-06-10
+
+### Added
+- Membuat endpoint baru `/api/v1/dashboard/source-vendor-performance` untuk melacak kinerja lead source dan vendor.
+- Membuat halaman frontend baru `SourceVendorPerformance.vue` yang menampilkan dashboard metrik kinerja source, vendor partner, alokasi PO + Source, panel alert risiko, dan kualitas data.
+- Menambahkan route `/source-vendor-performance` dan menu navigasi bersimbol `ChartBarIcon` ke sidebar utama.
+- Membuat dokumen logika analitik dan fallback di `docs/source-vendor-performance-logic.md`.
+- Menambahkan unit testing backend `/dashboard/source-vendor-performance` pada `backend/app/tests/test_source_vendor_performance.py` untuk memvalidasi perhitungan metrik komersial, pengecualian pembatalan, dan perhitungan konversi secara presisi.
+
+### Changed
+- Memperbarui `PROJECT_CONTEXT.md` untuk mengintegrasikan modul Source & Vendor Performance Center ke daftar fitur utama.
+- Memperbarui batasan vendor pada `docs/mvp-limitations.md` untuk memperjelas keterbatasan data vendor yang masih berupa field teks pada tabel EventSource.
+
 ## [Sprint 10 Finalization] - 2026-06-10
 
 ### Added

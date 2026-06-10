@@ -436,3 +436,99 @@ class POControlCenterResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+class SourceVendorSummary(BaseModel):
+    total_sources: int
+    total_vendors: int
+    total_projects_analyzed: int
+    total_potential_revenue: float
+    total_confirmed_revenue: float
+    total_outstanding_payment: float
+    average_conversion_rate: float
+    commercial_risk_count: int
+
+    class Config:
+        from_attributes = True
+
+
+class SourcePerformanceSchema(BaseModel):
+    source_type: str
+    total_projects: int
+    active_projects: int
+    confirmed_projects: int
+    cancelled_projects: int
+    pending_quotation_projects: int
+    potential_revenue: float
+    confirmed_revenue: float
+    outstanding_payment: float
+    average_project_value: float
+    conversion_rate: float
+    cancel_rate: float
+    follow_up_needed: int
+    commercial_risk: int
+
+    class Config:
+        from_attributes = True
+
+
+class VendorPerformanceSchema(BaseModel):
+    vendor_name: str
+    total_projects: int
+    active_projects: int
+    confirmed_projects: int
+    cancelled_projects: int
+    potential_revenue: float
+    confirmed_revenue: float
+    average_project_value: float
+    usage_frequency: int
+    risk_count: int
+
+    class Config:
+        from_attributes = True
+
+
+class POSourcePerformanceSchema(BaseModel):
+    po_id: Optional[UUID] = None
+    po_name: str
+    source_type: str
+    total_projects: int
+    confirmed_projects: int
+    pending_projects: int
+    potential_revenue: float
+    confirmed_revenue: float
+    follow_up_needed: int
+
+    class Config:
+        from_attributes = True
+
+
+class RiskAlertSchema(BaseModel):
+    level: str
+    category: str
+    message: str
+
+    class Config:
+        from_attributes = True
+
+
+class DataQualityReportSchema(BaseModel):
+    missing_source_count: int
+    missing_vendor_count: int
+    limited_vendor_data: bool
+    notes: List[str]
+
+    class Config:
+        from_attributes = True
+
+
+class SourceVendorPerformanceResponse(BaseModel):
+    summary: SourceVendorSummary
+    source_performance: List[SourcePerformanceSchema]
+    vendor_performance: List[VendorPerformanceSchema]
+    po_source_performance: List[POSourcePerformanceSchema]
+    risk_alerts: List[RiskAlertSchema]
+    data_quality: DataQualityReportSchema
+
+    class Config:
+        from_attributes = True
+

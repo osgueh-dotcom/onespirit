@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | MVP Demo Readiness (Sprint 10 Finalization) |
+| Status Project | Sprint 11 — Source & Vendor Performance Center |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 
 ---
@@ -86,6 +86,7 @@ Inquiry (Klien Request) ➔ Client Confirmation (Deal) ➔ CL (Kontrak Terbit) �
 | **Projects** | Siklus hidup proyek, transisi status, detail pendaftaran instrumen (CL/ROS/CK/PNL). | Selesai |
 | **PM Control Center** | Visualisasi readiness score, monitoring overdue instrumen, workload tim operasional. | Selesai |
 | **PO Control Center** | Analitik performa komersial, potensi revenue, lead source contribution, prioritas follow-up. | Selesai |
+| **Source & Vendor Performance** | Dashboard analisis kinerja lead source, kontribusi vendor partner, alokasi PO-source, serta audit kualitas data. | Selesai |
 | **Imports** | Import batch proyek dari template Excel dengan data validation checks. | Selesai |
 | **Finance** | Pelacakan invoice, rekonsiliasi payment term, monitoring outstanding/overdue. | Selesai |
 
