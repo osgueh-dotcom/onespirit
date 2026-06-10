@@ -4,13 +4,16 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
-## [Sprint 10.2] - 2026-06-10
+## [Sprint 10 Finalization] - 2026-06-10
 
 ### Added
+- Melengkapi API response schema PO Control Center di backend dengan 6 metrik komersial baru: `active_projects`, `pending_quotation_projects`, `follow_up_needed_projects`, `cancelled_projects`, `outstanding_payment`, dan `commercial_risk_count`.
+- Membuat file panduan logika komersial `docs/commercial-control-logic.md` untuk memperjelas metode perhitungan revenue potensial vs terkonfirmasi, tagihan outstanding, serta penanganan resiko data.
 - Membuat dokumen baru `docs/demo-readiness.md` berisi panduan demo operasional 15-30 menit, data dummy, peran pengguna, dan pertanyaan umpan balik klien.
 - Membuat dokumen baru `docs/mvp-limitations.md` berisi batasan MVP saat ini, risiko keamanan, rekomendasi rilis produksi, dan backlog Sprint 11.
 
 ### Changed
+- Memperbarui antarmuka card Outstanding Pembayaran pada `PoControlCenter.vue` untuk merender nilai mata uang IDR riil, bukan sekadar jumlah klien.
 - Mengganti seluruh placeholder pada dokumen `README.md`, `PROJECT_CONTEXT.md`, `SPRINT_LOG.md`, dan `CHANGELOG.md` dengan informasi nyata yang mendeskripsikan stack teknologi, istilah bisnis (CL/ROS/CK/PNL), dan alur operasional PT One Spirit Asia.
 - Menambahkan roadmap refactoring komponen komersial sebagai dokumentasi JSDoc di file frontend `frontend/src/views/PoControlCenter.vue` untuk modularisasi 9 sub-komponen pada Sprint 11.
 

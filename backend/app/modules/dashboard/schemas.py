@@ -283,6 +283,12 @@ class POControlCenterSummary(BaseModel):
     invoice_sent_count: int
     paid_count: int
     follow_up_needed_count: int
+    active_projects: int
+    pending_quotation_projects: int
+    follow_up_needed_projects: int
+    cancelled_projects: int
+    outstanding_payment: float
+    commercial_risk_count: int
 
     class Config:
         from_attributes = True

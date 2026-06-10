@@ -1,6 +1,6 @@
 # DOKUMEN MVP LIMITATIONS & BACKLOG - OneSpirit Workflow System
 
-Dokumen ini menjelaskan batasan sistem pada rilis MVP saat ini (Sprint 10.2), risiko penggunaan langsung di lingkungan produksi, rekomendasi perbaikan sebelum Go-Live, serta backlog pengembangan untuk Sprint 11.
+Dokumen ini menjelaskan batasan sistem pada rilis MVP saat ini (Sprint 10 Finalization), risiko penggunaan langsung di lingkungan produksi, rekomendasi perbaikan sebelum Go-Live, serta backlog pengembangan untuk Sprint 11.
 
 ---
 

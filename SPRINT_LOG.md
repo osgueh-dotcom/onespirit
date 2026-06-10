@@ -20,65 +20,68 @@ Dokumen ini digunakan untuk mencatat riwayat sprint pengembangan OneSpirit Workf
 | **Sprint 9** | Bug Fixing & UI Polishing | 2026-06-08 | Done |
 | **Sprint 10** | PO Control Center Commercial Follow-up & Risks | 2026-06-09 | Done |
 | **Sprint 10.1** | Documentation & Commercial Control Cleanup | 2026-06-09 | Done |
-| **Sprint 10.2** | MVP Stabilization & Handover Readiness (Current) | 2026-06-10 | Done |
+| **Sprint 10 Finalization** | Commercial Control Stabilization & MVP Demo Readiness | 2026-06-10 | Done |
 
 ---
 
-## Sprint 10.2 — MVP Stabilization & Handover Readiness
+## Sprint 10 Finalization — Commercial Control Stabilization & MVP Demo Readiness
 
 Tanggal: 2026-06-10  
 Status: Done  
 AI Agent: Antigravity  
 Branch: main  
-Commit: Sprint 10.2: MVP Stabilization & Handover Readiness  
+Commit: Sprint 10: stabilize commercial control and prepare MVP demo
 
 ### Tujuan
 
-Menjadikan OneSpirit Workflow siap untuk demo MVP yang profesional, stabil, aman secara dasar, terdokumentasi, dan mudah dijalankan oleh developer/client evaluator PT One Spirit Asia.
+Menstabilkan fitur komersial, melengkapi metrik PO Control Center, merapikan dokumentasi root dan folder docs, menjaga keamanan configuration, serta memvalidasi kesiapan unit tests dan frontend build agar OneSpirit Workflow siap menjadi MVP demo yang profesional bagi PT One Spirit Asia.
 
 ### Scope
 
-- **Documentation Cleanup**: Menghapus semua placeholder root di `README.md`, `PROJECT_CONTEXT.md`, `SPRINT_LOG.md`, dan `CHANGELOG.md` serta menggantinya dengan informasi aktual.
-- **Security & Environment Hardening**: Memperbarui `.gitignore` agar mengabaikan folder `uploads/` dan file `*.env`. Melakukan review keamanan pada default credentials dan `.env.example`.
-- **Build & Test Validation**: Memperbaiki issue SQLite testing path di Windows dengan membuat folder database `E:\tmp` secara otomatis. Menghindari OperationalError PostgreSQL di unit tests dengan menambahkan deteksi runtime pytest di `backend/app/main.py`.
-- **PO Control Center Refactor Plan**: Menambahkan JSDoc annotations dan refactoring backlog di file `frontend/src/views/PoControlCenter.vue` untuk modularisasi Sprint 11 tanpa merusak kestabilan demo MVP saat ini.
-- **Handover Deliverables**: Membuat panduan demo lengkap (`docs/demo-readiness.md`) dan daftar batasan MVP (`docs/mvp-limitations.md`).
+- **Commercial Control Stabilization**: Menambahkan 6 metrik baru ke backend PO Control Center (`active_projects`, `pending_quotation_projects`, `follow_up_needed_projects`, `cancelled_projects`, `outstanding_payment`, `commercial_risk_count`) dan memperbarui endpoint dan model Pydantic.
+- **Frontend KPI Card Update**: Memodifikasi template `PoControlCenter.vue` pada card Outstanding Pembayaran untuk menampilkan nilai nominal mata uang IDR riil, disertai jumlah klien dalam tanda kurung.
+- **New Commercial Control Documentation**: Membuat dokumen baru `docs/commercial-control-logic.md` yang merinci formula bisnis, definisi status, sumber data, dan fallback untuk ketidaklengkapan data.
+- **Documentation Cleanup**: Menghapus semua placeholder di `README.md`, `PROJECT_CONTEXT.md`, `SPRINT_LOG.md`, dan `CHANGELOG.md` serta menyinkronkan isinya dengan kondisi terkini.
+- **Security & Config Audit**: Memastikan `.gitignore` melindungi file `.env`, file database local SQLite, dan upload media. Memastikan `.env.example` aman tanpa kredensial asli.
+- **Test & Build Verification**: Menghindari crash PostgreSQL pada pytest run dengan mendeteksi mode runtime pytest di `main.py`, membuat folder SQLite `E:\tmp` otomatis, dan menjalankan unit test PO Control Center dengan assertions metrik baru. Menjalankan production build Vue 3 via Vite.
 
 ### Di Luar Scope
 
-- Tidak menambahkan fitur fungsional besar baru.
-- Tidak mengubah database schema PostgreSQL atau relasi data.
-- Tidak merubah UI layout kecuali untuk komentar teknis developer.
+- Tidak menambahkan fitur baru besar di luar stabilisasi commercial control.
+- Tidak mendesain ulang arsitektur sistem.
 
 ### File/Modul Terkait
 
+- `backend/app/modules/dashboard/schemas.py`
+- `backend/app/modules/dashboard/po_control_service.py`
+- `backend/app/tests/test_po_control_center.py`
+- `frontend/src/views/PoControlCenter.vue`
+- `docs/commercial-control-logic.md`
+- `docs/demo-readiness.md`
+- `docs/mvp-limitations.md`
 - `README.md`
 - `PROJECT_CONTEXT.md`
 - `SPRINT_LOG.md`
 - `CHANGELOG.md`
 - `.gitignore`
 - `.env.example`
-- `backend/app/main.py`
-- `frontend/src/views/PoControlCenter.vue`
-- `docs/demo-readiness.md`
-- `docs/mvp-limitations.md`
 
 ### Hasil Implementasi
 
-1. **Test Suite 100% Pass**: Seluruh 16 unit tests FastAPI backend berhasil dijalankan dengan SQLite dan sukses 100% tanpa OperationalError.
-2. **Frontend Build Sukses**: Perintah `npm run build` frontend berhasil mengompilasi aset Vue 3 secara sempurna dalam waktu 5.01 detik.
-3. **Repository Clean**: File `.env` terlindung dengan aman di `.gitignore` dan file `.env.example` bersih dari rahasia nyata.
-4. **Roadmap Terintegrasi**: Modularisasi PO Control Center terdokumentasi rapi di file Vue terkait dan di backlog Sprint 11.
-5. **Dokumen Handover Siap**: Panduan demo langkah demi langkah dan dokumentasi batasan MVP tersedia di folder `docs`.
+1. **PO Control Center Stabil**: Endpoint backend dan UI frontend terintegrasi penuh untuk metrik komersial riil tanpa angka palsu/placeholder. Outstanding payment terhitung dari selisih nominal invoice terbit dikurangi payment disetujui (`status = 'approved'`).
+2. **Commercial Logic Terarsip**: Panduan formula komersial telah dibuat di [commercial-control-logic.md](file:///e:/GVsys%20Project/One%20Spirit/docs/commercial-control-logic.md).
+3. **Test Suite 100% Pass**: Seluruh 16 unit tests backend berhasil dijalankan dengan SQLite secara lokal dan lulus 100%.
+4. **Frontend Build Sukses**: Vite production build berhasil mengompilasi aset Vue 3 secara sempurna dengan command `npm.cmd run build`.
+5. **Keamanan Konfigurasi Terjaga**: File `.env` terabaikan di git, dan default credentials demo/development terdokumentasi dengan warning yang jelas.
 
 ### Test Yang Dilakukan
 
 - Menjalankan `.venv\Scripts\pytest app/tests -q` di terminal backend.
 - Menjalankan `npm.cmd run build` di terminal frontend.
-- Memeriksa file `.gitignore` terhadap pola-pola file baru.
-- Memeriksa keakuratan link file dan visualisasi alur demo.
+- Memverifikasi output visual nominal currency outstanding pembayaran pada card.
 
 ### Risiko Tersisa
 
-- Penggunaan default JWT secret di development masih perlu diganti dengan environment variable nyata saat di-deploy di server production.
-- Docker compose memerlukan instalasi manual Docker Desktop jika dijalankan di PC evaluator klien yang tidak memiliki Docker daemon aktif.
+- Kredensial super admin demo (`admin@onespirit.asia`) bersifat hardcoded pada database seed awal untuk kemudahan demo local/evaluasi. Ini harus dinonaktifkan/diubah ketika sistem dirilis ke production.
+- Cetak laporan operasional dan komersial (ROS, PNL) masih mengandalkan fitur bawaan Ctrl+P dari web browser (belum export PDF native).
+

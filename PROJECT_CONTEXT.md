@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | MVP Demo Readiness (Sprint 10.2) |
+| Status Project | MVP Demo Readiness (Sprint 10 Finalization) |
 | Lokasi Folder | `e:/GVsys Project/One Spirit` |
 
 ---

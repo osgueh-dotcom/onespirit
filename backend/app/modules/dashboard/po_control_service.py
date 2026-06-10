@@ -126,6 +126,11 @@ def get_po_control_center_data(
     invoice_sent_count = 0
     paid_count = 0
     follow_up_needed_count = 0
+    active_projects = 0
+    pending_quotation_projects = 0
+    cancelled_projects = 0
+    outstanding_payment_amount = 0.0
+    commercial_risk_count = 0
 
     quotation_statuses = ["Draft", "Sent", "Follow Up", "Revision", "Signed & Deal", "Cancel"]
     quot_counts = {s: 0 for s in quotation_statuses}
@@ -184,6 +189,49 @@ def get_po_control_center_data(
             invoice_sent_count += 1
         elif py_status == "Paid":
             paid_count += 1
+
+        # Calculate active projects (not closed and not cancelled)
+        is_closed = (pj_status == "Closed" or pr_status == "Closed")
+        if not is_closed and not is_cancel:
+            active_projects += 1
+
+        # Calculate pending quotation projects
+        if q_status in ["Draft", "Sent", "Follow Up", "Revision"]:
+            pending_quotation_projects += 1
+
+        # Calculate cancelled projects
+        if is_cancel:
+            cancelled_projects += 1
+
+        # Calculate actual outstanding payment amount for the project (invoice amount - paid amount)
+        proj_outstanding_payment = 0.0
+        for inv in p.invoices:
+            if inv.deleted_at is None:
+                inv_amt = float(inv.amount)
+                paid_amt = 0.0
+                for pay in inv.payments:
+                    if pay.deleted_at is None and pay.status == "approved":
+                        paid_amt += float(pay.amount)
+                proj_outstanding_payment += max(0.0, inv_amt - paid_amt)
+        outstanding_payment_amount += proj_outstanding_payment
+
+        # Calculate if project has commercial risks
+        has_risk = False
+        if is_cancel and not p.cancel_reason:
+            has_risk = True
+        if q_status == "Signed & Deal" and budget <= 0:
+            has_risk = True
+        if py_status in ["Outstanding", "Overdue"]:
+            has_risk = True
+        if py_status == "Invoice Sent":
+            has_risk = True
+        if not p.program_owner_id:
+            has_risk = True
+        if not p.event_source_id:
+            has_risk = True
+        
+        if has_risk:
+            commercial_risk_count += 1
 
         # Relationships
         po_name = p.program_owner.full_name if p.program_owner else "-"
@@ -462,7 +510,13 @@ def get_po_control_center_data(
             "outstanding_count": outstanding_count,
             "invoice_sent_count": invoice_sent_count,
             "paid_count": paid_count,
-            "follow_up_needed_count": follow_up_needed_count
+            "follow_up_needed_count": follow_up_needed_count,
+            "active_projects": active_projects,
+            "pending_quotation_projects": pending_quotation_projects,
+            "follow_up_needed_projects": follow_up_needed_count,
+            "cancelled_projects": cancelled_projects,
+            "outstanding_payment": outstanding_payment_amount,
+            "commercial_risk_count": commercial_risk_count
         },
         "quotation_summary": {
             "count_by_status": quot_counts,

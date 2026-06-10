@@ -290,9 +290,9 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 select-none">
         <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
           <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Outstanding Pembayaran</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-amber-500">{{ summary.outstanding_count }}</span>
-            <span class="text-[9px] text-amber-500 font-bold">Klien</span>
+          <div class="flex flex-col">
+            <span class="text-sm font-black text-amber-500 truncate select-all">{{ formatCurrency(summary.outstanding_payment) }}</span>
+            <span class="text-[9px] text-gray-400 font-semibold mt-0.5">({{ summary.outstanding_count }} Klien)</span>
           </div>
         </div>
 
@@ -955,7 +955,13 @@ const summary = ref({
   outstanding_count: 0,
   invoice_sent_count: 0,
   paid_count: 0,
-  follow_up_needed_count: 0
+  follow_up_needed_count: 0,
+  active_projects: 0,
+  pending_quotation_projects: 0,
+  follow_up_needed_projects: 0,
+  cancelled_projects: 0,
+  outstanding_payment: 0.0,
+  commercial_risk_count: 0
 })
 
 const quotationSummary = ref({

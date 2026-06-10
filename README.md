@@ -14,7 +14,7 @@ Sistem ini dikembangkan secara bertahap untuk mendigitalkan koordinasi operasion
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | MVP Demo Readiness (Sprint 10.2) |
+| Status | MVP Demo Readiness (Sprint 10 Finalization) |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `e:/GVsys Project/One Spirit` |
 | Tech Stack | FastAPI (Backend) & Vue 3 + Tailwind CSS (Frontend) |
