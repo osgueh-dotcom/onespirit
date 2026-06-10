@@ -2,8 +2,8 @@
   <div class="space-y-6 pb-12">
     <!-- Header -->
     <AppPageHeader 
-      title="Data Import Hub" 
-      subtitle="Synchronize flat Excel spreadsheets into normalized databases and transactional ledgers."
+      title="Pusat Import Data" 
+      subtitle="Sinkronisasikan spreadsheet Excel ke database dan ledger transaksi."
     />
 
     <!-- Drag & Drop Uploader Console -->
@@ -31,8 +31,8 @@
       </div>
 
       <div class="space-y-1.5">
-        <p class="text-sm font-bold text-white">Drag & drop your Excel sheet here, or <span class="text-brand-orange underline">browse files</span></p>
-        <p class="text-[10px] font-bold text-charcoal-400 uppercase tracking-widest">Supports .xlsx spreadsheets containing "Workflow" sheet</p>
+        <p class="text-sm font-bold text-white">Tarik & lepas file Excel Anda di sini, atau <span class="text-brand-orange underline">pilih file</span></p>
+        <p class="text-[10px] font-bold text-charcoal-400 uppercase tracking-widest">Mendukung spreadsheet .xlsx yang berisi sheet "Workflow"</p>
       </div>
 
       <div v-if="parsing" class="flex items-center gap-2 mt-4 text-xs font-bold text-brand-orange">
@@ -40,7 +40,7 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span>Validating spreadsheet matrix structure...</span>
+        <span>Memvalidasi struktur spreadsheet...</span>
       </div>
     </div>
 

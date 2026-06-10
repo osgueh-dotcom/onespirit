@@ -41,7 +41,7 @@
           @change="fetchProjectsOnly"
           class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
-          <option value="">All POs</option>
+          <option value="">Semua PO</option>
           <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
         </select>
       </div>
@@ -54,7 +54,7 @@
           @change="fetchProjectsOnly"
           class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
-          <option value="">All PMs</option>
+          <option value="">Semua PM</option>
           <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
         </select>
       </div>
@@ -67,7 +67,7 @@
           @change="fetchProjectsOnly"
           class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
-          <option value="">All Sources</option>
+          <option value="">Semua Sumber</option>
           <option v-for="s in eventSources" :key="s.id" :value="s.id">
             {{ s.vendor_name || 'Direct' }} {{ s.sales_name ? `(${s.sales_name})` : '' }}
           </option>
@@ -76,76 +76,76 @@
 
       <!-- Quotation Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Quote Status</label>
+        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Quote</label>
         <select 
           v-model="filterQuotationStatus" 
           @change="fetchProjectsOnly"
           class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
-          <option value="">All</option>
+          <option value="">Semua</option>
           <option value="Draft">Draft</option>
-          <option value="Sent">Sent</option>
+          <option value="Sent">Dikirim (Sent)</option>
           <option value="Follow Up">Follow Up</option>
-          <option value="Revision">Revision</option>
+          <option value="Revision">Revisi (Revision)</option>
           <option value="Signed & Deal">Signed & Deal</option>
-          <option value="Cancel">Cancel</option>
+          <option value="Cancel">Batal (Cancel)</option>
         </select>
       </div>
 
       <!-- Program Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Prog Status</label>
+        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Prog</label>
         <select 
           v-model="filterProgramStatus" 
           @change="fetchProjectsOnly"
           class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
-          <option value="">All</option>
+          <option value="">Semua</option>
           <option value="Inquiry">Inquiry</option>
-          <option value="Confirmed">Confirmed</option>
-          <option value="Preparation">Preparation</option>
-          <option value="Ready">Ready</option>
-          <option value="Running">Running</option>
-          <option value="Completed">Completed</option>
-          <option value="Reporting">Reporting</option>
-          <option value="Closed">Closed</option>
-          <option value="Cancel">Cancel</option>
+          <option value="Confirmed">Terkonfirmasi (Confirmed)</option>
+          <option value="Preparation">Persiapan (Preparation)</option>
+          <option value="Ready">Siap (Ready)</option>
+          <option value="Running">Berjalan (Running)</option>
+          <option value="Completed">Selesai (Completed)</option>
+          <option value="Reporting">Pelaporan (Reporting)</option>
+          <option value="Closed">Ditutup (Closed)</option>
+          <option value="Cancel">Batal (Cancel)</option>
         </select>
       </div>
 
       <!-- Payment Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Payment Status</label>
+        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Payment</label>
         <select 
           v-model="filterPaymentStatus" 
           @change="fetchProjectsOnly"
           class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
-          <option value="">All</option>
-          <option value="Not Invoiced">Not Invoiced</option>
-          <option value="Invoice Sent">Invoice Sent</option>
-          <option value="Partial Paid">Partial Paid</option>
-          <option value="Paid">Paid</option>
-          <option value="Outstanding">Outstanding</option>
-          <option value="Overdue">Overdue</option>
+          <option value="">Semua</option>
+          <option value="Not Invoiced">Belum Ditagih (Not Invoiced)</option>
+          <option value="Invoice Sent">Tagihan Dikirim (Invoice Sent)</option>
+          <option value="Partial Paid">Dibayar Sebagian (Partial Paid)</option>
+          <option value="Paid">Lunas (Paid)</option>
+          <option value="Outstanding">Outstanding (Belum Lunas)</option>
+          <option value="Overdue">Jatuh Tempo (Overdue)</option>
         </select>
       </div>
 
       <!-- Project Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Project Status</label>
+        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Project</label>
         <div class="flex gap-1.5 items-center">
           <select 
             v-model="filterProjectStatus" 
             @change="fetchProjectsOnly"
             class="flex-1 px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
           >
-            <option value="">All</option>
-            <option value="Open">Open</option>
-            <option value="Active">Active</option>
-            <option value="Reporting">Reporting</option>
-            <option value="Closed">Closed</option>
-            <option value="Canceled">Canceled</option>
+            <option value="">Semua</option>
+            <option value="Open">Buka (Open)</option>
+            <option value="Active">Aktif (Active)</option>
+            <option value="Reporting">Laporan (Reporting)</option>
+            <option value="Closed">Ditutup (Closed)</option>
+            <option value="Canceled">Batal (Canceled)</option>
           </select>
           <button 
             @click="resetFilters" 
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Loading matrix -->
-    <AppLoadingState v-if="loading" message="Loading project matrix pipeline..." />
+    <AppLoadingState v-if="loading" message="Memuat daftar project..." />
 
     <!-- KANBAN BOARD VIEW -->
     <div v-else-if="viewMode === 'board'" class="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-250px)] min-w-full select-none items-start">

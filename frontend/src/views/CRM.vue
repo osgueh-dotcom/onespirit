@@ -27,12 +27,12 @@
         @click="showAddModal = true"
         class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none w-full sm:w-auto text-center"
       >
-        + Add New Client Account
+        + Tambah Akun Klien Baru
       </button>
     </div>
 
     <!-- Accounts Grid -->
-    <AppLoadingState v-if="loading" message="Retrieving CRM directories..." />
+    <AppLoadingState v-if="loading" message="Memuat data CRM..." />
 
     <div v-else class="space-y-6 animate-fade-in">
       <!-- Desktop Table View -->
@@ -41,17 +41,17 @@
           <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
             <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
               <tr>
-                <th class="px-6 py-4">Company Name</th>
-                <th class="px-6 py-4">Category</th>
-                <th class="px-6 py-4">Address</th>
-                <th class="px-6 py-4">Point of Contact</th>
-                <th class="px-6 py-4 text-right">Actions</th>
+                <th class="px-6 py-4">Nama Perusahaan</th>
+                <th class="px-6 py-4">Kategori</th>
+                <th class="px-6 py-4">Alamat</th>
+                <th class="px-6 py-4">Narahubung (POC)</th>
+                <th class="px-6 py-4 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-brand-charcoal-light/10">
               <tr v-if="filteredCustomers.length === 0">
                 <td colspan="5" class="px-6 py-12 text-center font-semibold text-gray-500">
-                  No client accounts found matching the filter criteria.
+                  Tidak ada akun klien yang cocok dengan kriteria filter.
                 </td>
               </tr>
               <tr 
@@ -72,24 +72,24 @@
                       {{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span>
                     </div>
                     <span v-if="cust.contacts.length > 1" class="text-[10px] text-gray-500 font-bold block">
-                      + {{ cust.contacts.length - 1 }} other contact points
+                      + {{ cust.contacts.length - 1 }} narahubung lainnya
                     </span>
                   </div>
-                  <span v-else class="text-gray-500 font-bold italic">No contacts added</span>
+                  <span v-else class="text-gray-500 font-bold italic">Belum ada kontak</span>
                 </td>
                 <td class="px-6 py-4 text-right select-none space-x-2.5">
                   <button 
                     @click="openContactDetails(cust)"
                     class="px-2.5 py-1 text-[10px] font-bold text-brand-blue bg-brand-blue/10 rounded hover:bg-brand-blue/20 transition-all"
                   >
-                    Manage Contacts
+                    Kelola Kontak
                   </button>
                   <button 
                     v-if="auth.hasPermission('crm:write')"
                     @click="deleteCustomer(cust.id)"
                     class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
                   >
-                    Deactivate
+                    Deaktivasi
                   </button>
                 </td>
               </tr>
