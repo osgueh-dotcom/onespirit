@@ -918,6 +918,27 @@
 </template>
 
 <script setup>
+/**
+ * PO Control Center
+ * =========================================================================
+ * Roadmap Refactoring Backlog (Sprint 11 Candidate):
+ * Untuk meningkatkan maintainability dan readability, view ini direncanakan
+ * untuk dipecah menjadi komponen modular kecil:
+ * 
+ * 1. PoControlSummaryCards.vue       - KPI Card section (Total Project, Deal, Cancel, Average Value, etc.)
+ * 2. PoControlFilters.vue            - Filter Panel komersial & fungsionalitas reset
+ * 3. FollowUpPriorityList.vue        - List prioritas tindak lanjut komersial (Tab 1)
+ * 4. OwnedProjectsTable.vue          - Tabel proyek di bawah tanggung jawab PO (Tab 2)
+ * 5. QuotationSummary.vue            - Struktur status penawaran / quotation (Tab 3 - Kiri)
+ * 6. CommercialRevenueSummary.vue    - Statistik nilai proyek & konversi (Tab 3 - Kiri Bawah)
+ * 7. PoPerformanceTable.vue          - Tabel beban kerja & kinerja komersial PO (Tab 3 - Kanan)
+ * 8. SourceContributionTable.vue     - Tabel kontribusi Lead Source & Vendor Partner (Tab 3 - Bawah)
+ * 9. CommercialRisksPanel.vue        - Panel deteksi resiko & exceptions (Tab 4)
+ * 
+ * Rencana state management: Gunakan props, emit event, atau Pinia store untuk berbagi data
+ * filter dan hasil pencarian di antara komponen-komponen tersebut.
+ * =========================================================================
+ */
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 

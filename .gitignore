@@ -28,6 +28,12 @@ test.db
 .env
 .env.local
 .env.*.local
+*.env
+
+# Uploads
+uploads/
+backend/uploads/
+backend/app/uploads/
 
 # Node
 node_modules/
