@@ -24,7 +24,7 @@ Dokumen ini panduan kepatuhan keamanan operasional ketika mempublikasikan aplika
 - [ ] **Data Dummy Siap**: Verifikasi database terisi data dummy yang bersih tanpa informasi sensitif.
 - [ ] **Konfigurasi Akun Demo**: Pastikan email `demo@onespirit.asia` bisa masuk dengan password yang sudah dikonfigurasi di `.env` (Default: `OneSpiritDemo2026!`).
 - [ ] **Aktifkan Tunnel**: Jalankan tunnel ke port frontend (`5173`) dan backend (`8000`).
-- [ ] **Verifikasi CORS**: Pastikan domain tunnel frontend diizinkan masuk ke CORS setting backend jika diperlukan.
+- [ ] **Verifikasi CORS**: Pastikan domain tunnel frontend diizinkan masuk ke CORS setting backend. Untuk deployment GitHub Pages, pastikan origin `https://osgueh-dotcom.github.io` (tanpa path `/onespirit/`) sudah terdaftar di setting `CORS_ORIGINS` backend (misalnya di `.env` atau config backend).
 - [ ] **Test Akses Terisolasi**: Akses link tunnel dari mode browser Samaran (Incognito) untuk memverifikasi halaman login berjalan mulus.
 - [ ] **Siapkan Dokumen PDF**: Siapkan Panduan Demo Client PDF di desktop untuk dibagikan ke klien.
 

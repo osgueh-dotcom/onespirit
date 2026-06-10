@@ -4,6 +4,20 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 12.2] - 2026-06-11
+
+### Added
+- Membuat file GitHub Actions workflow `.github/workflows/deploy-pages.yml` untuk build dan deploy frontend otomatis ke GitHub Pages.
+- Membuat file `.env.production.example` di folder `frontend` untuk template setup URL backend tunnel.
+- Membuat dokumen panduan deployment `docs/github-pages-demo-deployment.md`.
+
+### Changed
+- Mengonfigurasi `base: '/onespirit/'` pada `frontend/vite.config.js` agar resource dan file statis dimuat relatif ke path GitHub Pages.
+- Mengubah Vue Router ke mode Hash routing (`createWebHashHistory()`) di `frontend/src/router/index.js` untuk mencegah error 404 pada routing static hosting.
+- Mengatur global baseURL Axios menggunakan environment variable `VITE_API_BASE_URL` di `frontend/src/main.js`.
+- Memperbarui `docs/public-demo-safety-checklist.md` untuk melengkapi instruksi CORS dengan origin `https://osgueh-dotcom.github.io`.
+- Memperbarui `README.md` dan `PROJECT_CONTEXT.md` dengan informasi deployment.
+
 ## [Sprint 12.1] - 2026-06-11
 
 ### Added

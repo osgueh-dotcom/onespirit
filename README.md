@@ -14,7 +14,7 @@ Sistem ini dikembangkan secara bertahap untuk mendigitalkan koordinasi operasion
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | MVP Demo Readiness (Sprint 10 Finalization) |
+| Status | GitHub Pages Demo Deployment (Sprint 12.2) |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI (Backend) & Vue 3 + Tailwind CSS (Frontend) |
@@ -170,6 +170,7 @@ Untuk melakukan demo sistem dalam waktu 15–25 menit, silakan gunakan alur beri
 ## Dokumentasi Tambahan
 
 Semua panduan detail lainnya terletak di folder `docs/`:
+- [Panduan Deployment GitHub Pages](file:///e:/GVsys Project/One Spirit/docs/github-pages-demo-deployment.md) — Konfigurasi deployment demo berbasis GitHub Pages dengan backend tunnel.
 - [Panduan Rehearsal Demo](file:///e:/GVsys Project/One Spirit/docs/client-demo-rehearsal.md) — Panduan skrip presentasi langkah-demi-langkah (15-25 menit).
 - [Checklist Keamanan Demo Publik](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md) — Aturan port-forwarding, database security, dan perlindungan data sensitif.
 - [Formulir Masukan Klien](file:///e:/GVsys Project/One Spirit/docs/client-feedback-form.md) — Kuesioner umpan balik klien untuk evaluasi alur bisnis, UI/UX, dan prioritas fitur.

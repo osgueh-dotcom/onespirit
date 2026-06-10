@@ -22,7 +22,106 @@ Dokumen ini digunakan untuk mencatat riwayat sprint pengembangan OneSpirit Workf
 | **Sprint 10.1** | Documentation & Commercial Control Cleanup | 2026-06-09 | Done |
 | **Sprint 10 Finalization** | Commercial Control Stabilization & MVP Demo Readiness | 2026-06-10 | Done |
 | **Sprint 11** | Source & Vendor Performance Center | 2026-06-10 | Done |
+| **Sprint 12.2** | GitHub Pages Demo Deployment | 2026-06-11 | Done |
+| **Sprint 12.1** | Client Demo Polish & Presentation Rehearsal | 2026-06-11 | Done |
 | **Sprint 12** | UI/UX Client Presentation & Responsive Experience | 2026-06-11 | Done |
+
+---
+
+---
+
+## Sprint 12.2 — GitHub Pages Demo Deployment
+
+Tanggal: 2026-06-11  
+Status: Done  
+AI Agent: Antigravity  
+Branch: sprint-12-ui-ux-presentation-readiness  
+Commit: Sprint 12.2: configure GitHub Pages frontend deployment workflow  
+
+### Tujuan
+
+Mengonfigurasi frontend agar dapat dideploy ke GitHub Pages secara otomatis via GitHub Actions dan menghubungkannya dengan API backend lokal menggunakan secure tunnel.
+
+### Scope
+
+- **Vite Path**: Menambahkan `base: '/onespirit/'` pada `frontend/vite.config.js`.
+- **Router Hash Mode**: Mengubah router mode ke `createWebHashHistory()` di `frontend/src/router/index.js` untuk mencegah error 404 pada GitHub Pages.
+- **Axios Configuration**: Mengatur global `baseURL` Axios dengan `import.meta.env.VITE_API_BASE_URL` di `frontend/src/main.js`.
+- **Environment Example**: Membuat file `frontend/.env.production.example` sebagai referensi setup backend tunnel URL.
+- **GitHub Actions**: Membuat `.github/workflows/deploy-pages.yml` menggunakan Node 22 dan `actions/deploy-pages@v4`.
+- **Documentation**: Membuat panduan `docs/github-pages-demo-deployment.md` dan memperbarui `docs/public-demo-safety-checklist.md` dengan CORS requirement.
+
+### Di Luar Scope
+
+- Tidak men-deploy backend dan database ke GitHub Pages.
+- Tidak menyertakan database credentials atau JWT secrets ke dalam file frontend.
+
+### File/Modul Terkait
+
+- `frontend/vite.config.js`
+- `frontend/src/router/index.js`
+- `frontend/src/main.js`
+- `frontend/.env.production.example`
+- `.github/workflows/deploy-pages.yml`
+- `docs/github-pages-demo-deployment.md`
+- `docs/public-demo-safety-checklist.md`
+
+### Hasil Implementasi
+
+1. **SPA Route Stability**: Hash routing berhasil diimplementasikan, sehingga navigasi URL (misalnya `#/login`) berjalan lancar di static site hosting tanpa 404 error saat direfresh.
+2. **Flexible API Target**: Frontend dapat dideploy satu kali dan dikoneksikan ke berbagai dynamic tunnel URL (VS Code / ngrok) hanya dengan memperbarui GitHub repository secret `VITE_API_BASE_URL`.
+3. **CORS Security**: Didefinisikan aturan origin CORS baru di backend untuk menerima request dari `https://osgueh-dotcom.github.io`.
+
+### Test Yang Dilakukan (Sprint 12.2 Validation)
+
+Backend:
+- Command: `pytest app/tests -q` (run di backend folder)
+- Result: Sukses melewati seluruh tes.
+
+Frontend:
+- Command: `npm run build` (run di frontend folder)
+- Result: Build berhasil tanpa warning.
+
+---
+
+## Sprint 12.1 — Client Demo Polish & Presentation Rehearsal
+
+Tanggal: 2026-06-11  
+Status: Done  
+AI Agent: Antigravity  
+Branch: sprint-12-ui-ux-presentation-readiness  
+Commit: Sprint 12.1: polish client demo and rehearsal readiness  
+
+### Tujuan
+
+Polishing, rehearsal, microcopy, responsive QA, demo account setup, dan safety checklist untuk persiapan demo presentasi klien.
+
+### Scope
+
+- **Keamanan Demo**: Membuat panduan kepatuhan keamanan demo di `docs/public-demo-safety-checklist.md`.
+- **Rehearsal Script**: Menyusun skrip presentasi langkah-demi-langkah (15-25 menit) di `docs/client-demo-rehearsal.md`.
+- **Feedback Form**: Menyediakan formulir umpan balik klien di `docs/client-feedback-form.md`.
+- **Demo Account**: Mengonfigurasi akun `demo@onespirit.asia` dengan password default dan mengaitkannya ke role Management dengan akses dokumen tambahan.
+- **Indonesian Translation**: Menerjemahkan semua views frontend (metrik, tombol, status, filter) ke bahasa Indonesia profesional.
+- **Password Safety**: Menambahkan validasi backend untuk menolak password default admin/demo di production environment.
+
+### File/Modul Terkait
+
+- `docs/public-demo-safety-checklist.md`
+- `docs/client-demo-rehearsal.md`
+- `docs/client-feedback-form.md`
+- `backend/app/modules/auth/router.py`
+- `frontend/src/views/` (seluruh views)
+
+### Test Yang Dilakukan (Sprint 12.1 Validation)
+
+Backend:
+- Command: `pytest app/tests -q`
+- Result: 17 passed
+
+Frontend:
+- Command: `npm run build`
+- Result: Build sukses
 
 ---
 
