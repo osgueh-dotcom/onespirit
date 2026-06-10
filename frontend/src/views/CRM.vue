@@ -1,11 +1,17 @@
 <template>
   <div class="space-y-6">
+    <!-- Header -->
+    <AppPageHeader 
+      title="CRM Client Directory" 
+      subtitle="Kelola data akun klien corporate, klasifikasi partner, dan point of contact (POC) operasional event."
+    />
+
     <!-- Top toolbar actions -->
-    <div class="flex items-center justify-between gap-4 select-none">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none">
       <div class="flex items-center gap-3">
         <select 
           v-model="filterCategory"
-          class="px-4 py-2.5 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/35 focus:border-brand-orange text-xs font-semibold text-gray-300 outline-none transition-all"
+          class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/35 focus:border-brand-orange text-xs font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">All Client Categories</option>
           <option value="Corporate">Corporate Accounts</option>
@@ -19,86 +25,130 @@
       <button 
         v-if="auth.hasPermission('crm:write')"
         @click="showAddModal = true"
-        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none"
+        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none w-full sm:w-auto text-center"
       >
         + Add New Client Account
       </button>
     </div>
 
     <!-- Accounts Grid -->
-    <div v-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
-      <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-xs text-gray-400 font-semibold">Retrieving CRM directories...</span>
-    </div>
+    <AppLoadingState v-if="loading" message="Retrieving CRM directories..." />
 
-    <div v-else class="glass-panel overflow-hidden border border-brand-charcoal-light/30">
-      <div class="overflow-x-auto min-w-full">
-        <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
-          <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
-            <tr>
-              <th class="px-6 py-4">Company Name</th>
-              <th class="px-6 py-4">Category</th>
-              <th class="px-6 py-4">Address</th>
-              <th class="px-6 py-4">Point of Contact</th>
-              <th class="px-6 py-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-brand-charcoal-light/10">
-            <tr v-if="filteredCustomers.length === 0">
-              <td colspan="5" class="px-6 py-12 text-center font-semibold text-gray-500">
-                No client accounts found matching the filter criteria.
-              </td>
-            </tr>
-            <tr 
-              v-for="cust in filteredCustomers" 
-              :key="cust.id"
-              class="hover:bg-brand-charcoal-light/10 transition-colors"
-            >
-              <td class="px-6 py-4 font-bold text-white tracking-wide text-sm">{{ cust.company_name }}</td>
-              <td class="px-6 py-4 select-none">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getCategoryStyles(cust.category)">
-                  {{ cust.category }}
-                </span>
-              </td>
-              <td class="px-6 py-4 text-gray-400 truncate max-w-xs font-medium">{{ cust.address || '-' }}</td>
-              <td class="px-6 py-4">
-                <div v-if="cust.contacts?.length > 0" class="space-y-1">
-                  <div v-for="c in cust.contacts.slice(0, 1)" :key="c.id" class="font-semibold text-white">
-                    {{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span>
-                  </div>
-                  <span v-if="cust.contacts.length > 1" class="text-[10px] text-gray-500 font-bold block">
-                    + {{ cust.contacts.length - 1 }} other contact points
+    <div v-else class="space-y-6 animate-fade-in">
+      <!-- Desktop Table View -->
+      <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
+        <div class="overflow-x-auto min-w-full">
+          <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+            <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+              <tr>
+                <th class="px-6 py-4">Company Name</th>
+                <th class="px-6 py-4">Category</th>
+                <th class="px-6 py-4">Address</th>
+                <th class="px-6 py-4">Point of Contact</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-brand-charcoal-light/10">
+              <tr v-if="filteredCustomers.length === 0">
+                <td colspan="5" class="px-6 py-12 text-center font-semibold text-gray-500">
+                  No client accounts found matching the filter criteria.
+                </td>
+              </tr>
+              <tr 
+                v-for="cust in filteredCustomers" 
+                :key="cust.id"
+                class="hover:bg-brand-charcoal-light/10 transition-colors"
+              >
+                <td class="px-6 py-4 font-bold text-white tracking-wide text-sm">{{ cust.company_name }}</td>
+                <td class="px-6 py-4 select-none">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getCategoryStyles(cust.category)">
+                    {{ cust.category }}
                   </span>
-                </div>
-                <span v-else class="text-gray-500 font-bold italic">No contacts added</span>
-              </td>
-              <td class="px-6 py-4 text-right select-none space-x-2.5">
-                <button 
-                  @click="openContactDetails(cust)"
-                  class="px-2.5 py-1 text-[10px] font-bold text-brand-blue bg-brand-blue/10 rounded hover:bg-brand-blue/20 transition-all"
-                >
-                  Manage Contacts
-                </button>
-                <button 
-                  v-if="auth.hasPermission('crm:write')"
-                  @click="deleteCustomer(cust.id)"
-                  class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
-                >
-                  Deactivate
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+                <td class="px-6 py-4 text-gray-400 truncate max-w-xs font-medium">{{ cust.address || '-' }}</td>
+                <td class="px-6 py-4">
+                  <div v-if="cust.contacts?.length > 0" class="space-y-1">
+                    <div v-for="c in cust.contacts.slice(0, 1)" :key="c.id" class="font-semibold text-white">
+                      {{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span>
+                    </div>
+                    <span v-if="cust.contacts.length > 1" class="text-[10px] text-gray-500 font-bold block">
+                      + {{ cust.contacts.length - 1 }} other contact points
+                    </span>
+                  </div>
+                  <span v-else class="text-gray-500 font-bold italic">No contacts added</span>
+                </td>
+                <td class="px-6 py-4 text-right select-none space-x-2.5">
+                  <button 
+                    @click="openContactDetails(cust)"
+                    class="px-2.5 py-1 text-[10px] font-bold text-brand-blue bg-brand-blue/10 rounded hover:bg-brand-blue/20 transition-all"
+                  >
+                    Manage Contacts
+                  </button>
+                  <button 
+                    v-if="auth.hasPermission('crm:write')"
+                    @click="deleteCustomer(cust.id)"
+                    class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
+                  >
+                    Deactivate
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mobile Card List View -->
+      <div class="block md:hidden space-y-4">
+        <div v-if="filteredCustomers.length === 0" class="py-12 text-center font-semibold text-gray-500">
+          No client accounts found matching the filter criteria.
+        </div>
+        <div 
+          v-for="cust in filteredCustomers" 
+          :key="cust.id"
+          class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
+        >
+          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+            <span class="font-bold text-white tracking-wide text-sm">{{ cust.company_name }}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getCategoryStyles(cust.category)">
+              {{ cust.category }}
+            </span>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-medium">Alamat: {{ cust.address || '-' }}</p>
+          </div>
+          <div class="bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold space-y-1">
+            <p class="text-gray-500 text-[8px] uppercase tracking-wider font-bold">Point of Contact</p>
+            <div v-if="cust.contacts?.length > 0" class="space-y-1">
+              <div v-for="c in cust.contacts" :key="c.id" class="text-white">
+                • {{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span>
+                <span class="text-[10px] text-gray-400 block pl-2" v-if="c.email || c.phone">{{ c.email || '-' }} | {{ c.phone || '-' }}</span>
+              </div>
+            </div>
+            <span v-else class="text-gray-500 font-bold italic block">No contacts added</span>
+          </div>
+          <div class="flex justify-end gap-2 pt-1">
+            <button 
+              @click="openContactDetails(cust)"
+              class="px-3 py-1.5 text-xs font-bold text-brand-blue bg-brand-blue/10 rounded-xl hover:bg-brand-blue/20 transition-all"
+            >
+              Manage Contacts
+            </button>
+            <button 
+              v-if="auth.hasPermission('crm:write')"
+              @click="deleteCustomer(cust.id)"
+              class="px-3 py-1.5 text-xs font-bold text-red-400 bg-red-500/10 rounded-xl hover:bg-red-500/20 transition-all"
+            >
+              Deactivate
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Client Account Creation Modal -->
     <div v-if="showAddModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
+      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
         <h3 class="text-base font-bold text-white tracking-wide mb-5">Register Client Profile</h3>
         
         <form @submit.prevent="saveCustomer" class="space-y-4">
@@ -157,9 +207,9 @@
       </div>
     </div>
 
-    <!-- Manage Contacts Modal -->
+    <!-- Point of Contact Modal -->
     <div v-if="showContactModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-2xl shadow-2xl p-6 relative">
+      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-2xl shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
         <h3 class="text-base font-bold text-white tracking-wide mb-4">
           Point of Contacts: <span class="text-brand-orange">{{ activeCust?.company_name }}</span>
         </h3>
@@ -259,6 +309,10 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+
+// Shared UI Components
+import AppPageHeader from '../components/ui/AppPageHeader.vue'
+import AppLoadingState from '../components/ui/AppLoadingState.vue'
 
 const auth = useAuthStore()
 const customers = ref([])
@@ -368,3 +422,11 @@ const deleteContact = async (id) => {
   }
 }
 </script>
+
+<style scoped>
+.glass-panel {
+  background: rgba(26, 32, 44, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 1.25rem;
+}
+</style>

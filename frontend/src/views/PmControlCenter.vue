@@ -1,14 +1,11 @@
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 select-none">
-      <div>
-        <h2 class="text-xl font-bold text-white tracking-wide">PM Control Center</h2>
-        <p class="text-xs text-gray-400 mt-1">
-          Pusat kontrol operasional untuk membantu PM memantau event mendatang, readiness project, instrument overdue, dan prioritas tindakan.
-        </p>
-      </div>
-      <div class="flex items-center gap-2">
+    <AppPageHeader 
+      title="PM Control Center" 
+      subtitle="Pusat kontrol operasional untuk membantu PM memantau event mendatang, readiness project, instrument overdue, dan prioritas tindakan."
+    >
+      <template #actions>
         <button 
           @click="fetchControlCenterData"
           class="px-4 py-2 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/40 text-xs font-bold text-gray-300 hover:text-white transition-all flex items-center gap-2"
@@ -18,8 +15,8 @@
           </svg>
           Refresh Data
         </button>
-      </div>
-    </div>
+      </template>
+    </AppPageHeader>
 
     <!-- Filters Bar -->
     <div class="glass-panel p-5 border border-brand-charcoal-light/30 space-y-4 select-none">
@@ -169,85 +166,65 @@
     </div>
 
     <!-- Error State -->
-    <div v-if="error" class="glass-panel p-8 border border-red-500/20 text-center space-y-3">
-      <p class="text-sm font-bold text-red-400">{{ error }}</p>
-      <button 
-        @click="fetchControlCenterData"
-        class="px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-xl text-xs font-bold transition-all border border-red-500/20"
-      >
-        Coba Lagi
-      </button>
-    </div>
+    <AppErrorState 
+      v-if="error" 
+      title="Gagal Memuat PM Control Center" 
+      :message="error" 
+      @retry="fetchControlCenterData" 
+    />
 
     <!-- Loading State -->
-    <div v-else-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
-      <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-xs text-gray-400 font-semibold">Mengompilasi data PM Control Center...</span>
-    </div>
+    <AppLoadingState v-else-if="loading" message="Mengompilasi data PM Control Center..." />
 
     <!-- Main Content Grid -->
     <div v-else class="space-y-6">
       <!-- Operational KPI summary grid -->
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 select-none">
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Event Hari Ini</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-black text-white">{{ summary.events_today }}</span>
-            <span class="text-[10px] text-brand-orange font-bold">Event</span>
-          </div>
-        </div>
-        
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Upcoming (7 Hari)</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-black text-white">{{ summary.upcoming_events_7_days }}</span>
-            <span class="text-[10px] text-indigo-400 font-bold">Event</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Belum Siap (&lt;80%)</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-black text-red-400">{{ summary.not_ready_projects }}</span>
-            <span class="text-[10px] text-red-500 font-bold">Proyek</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Instrumen Overdue</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-black text-amber-500">{{ summary.overdue_instruments }}</span>
-            <span class="text-[10px] text-amber-500 font-bold">Dokumen</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Perlu Revisi</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-black text-purple-400">{{ summary.need_revision_instruments }}</span>
-            <span class="text-[10px] text-purple-400 font-bold">Revisi</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Rata Kesiapan</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-2xl font-black text-brand-emerald">{{ Math.round(summary.average_readiness_score || 0) }}%</span>
-            <span class="text-[10px] text-brand-emerald font-bold">Skor</span>
-          </div>
-        </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 select-none">
+        <AppStatCard 
+          title="Event Hari Ini" 
+          :value="summary.events_today" 
+          subtitle="Event Hari Ini" 
+          theme="orange" 
+        />
+        <AppStatCard 
+          title="Upcoming (7 Hari)" 
+          :value="summary.upcoming_events_7_days" 
+          subtitle="Event Mendatang" 
+          theme="blue" 
+        />
+        <AppStatCard 
+          title="Belum Siap (<80%)" 
+          :value="summary.not_ready_projects" 
+          subtitle="Proyek Belum Siap" 
+          theme="red" 
+        />
+        <AppStatCard 
+          title="Instrumen Overdue" 
+          :value="summary.overdue_instruments" 
+          subtitle="Dokumen Terlambat" 
+          theme="amber" 
+        />
+        <AppStatCard 
+          title="Perlu Revisi" 
+          :value="summary.need_revision_instruments" 
+          subtitle="Revisi Diperlukan" 
+          theme="purple" 
+        />
+        <AppStatCard 
+          title="Rata Kesiapan" 
+          :value="`${Math.round(summary.average_readiness_score || 0)}%`" 
+          subtitle="Skor Kesiapan Rata-rata" 
+          theme="emerald" 
+        />
       </div>
 
       <!-- Tab Buttons -->
-      <div class="flex border-b border-brand-charcoal-light/25 select-none">
+      <div class="flex border-b border-brand-charcoal-light/25 select-none overflow-x-auto">
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
           @click="activeTab = tab.id"
-          class="px-5 py-3 text-xs font-bold tracking-wide transition-all border-b-2"
+          class="px-5 py-3 text-xs font-bold tracking-wide transition-all border-b-2 whitespace-nowrap"
           :class="activeTab === tab.id ? 'border-brand-orange text-brand-orange bg-brand-orange/5' : 'border-transparent text-gray-400 hover:text-white'"
         >
           {{ tab.name }} ({{ tab.count }})
@@ -258,21 +235,23 @@
       <div v-show="activeTab === 'priority'" class="space-y-4">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Priority Actions List</h3>
-            <span class="text-[10px] font-bold text-gray-400 bg-brand-charcoal-light/20 px-2 py-0.5 rounded">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Daftar Prioritas Tindakan (Priority Actions)</h3>
+            <span class="hidden md:inline text-[10px] font-bold text-gray-400 bg-brand-charcoal-light/20 px-2 py-0.5 rounded">
               Daftar aksi operasional yang diurutkan berdasarkan tingkat urgensi
             </span>
           </div>
 
-          <div v-if="priorityActions.length === 0" class="py-12 text-center text-xs text-gray-500 font-semibold">
-            Tidak ada tindakan prioritas terdeteksi. Semua proyek dalam kondisi aman.
-          </div>
+          <AppEmptyState 
+            v-if="priorityActions.length === 0"
+            title="Tidak Ada Tindakan Prioritas"
+            message="Semua proyek dalam kondisi aman dan siap dijalankan."
+          />
 
           <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div 
               v-for="(act, idx) in priorityActions" 
               :key="idx"
-              class="p-4 rounded-2xl border flex flex-col justify-between gap-3 text-xs group"
+              class="p-4 rounded-2xl border flex flex-col justify-between gap-3 text-xs group animate-fade-in"
               :class="getPrioClass(act.priority_level)"
             >
               <div>
@@ -308,8 +287,10 @@
       <div v-show="activeTab === 'events'" class="space-y-6">
         <!-- Upcoming Events -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Jadwal Event Mendatang (14 Hari)</h3>
-          <div class="overflow-x-auto">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Event yang Perlu Disiapkan (Upcoming 14 Hari)</h3>
+          
+          <!-- Desktop Table View -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -370,12 +351,67 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card View -->
+          <div class="block md:hidden space-y-4">
+            <div v-if="upcomingEvents.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada event mendatang untuk filter ini.
+            </div>
+            <div 
+              v-for="ev in upcomingEvents" 
+              :key="ev.project_id"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="font-mono text-[10px] font-bold text-gray-400">{{ ev.project_code || 'OSA-EVENT' }}</span>
+                <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase" :class="getDaysUrgencyClass(ev.days_until_event)">
+                  {{ ev.days_until_event === 0 ? 'Hari Ini!' : `${ev.days_until_event} Hari` }}
+                </span>
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-sm">{{ ev.program_name }}</h4>
+                <p class="text-xs text-gray-400 mt-0.5 font-semibold">{{ ev.customer_name }}</p>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Tanggal Event</p>
+                  <p class="text-white">{{ formatDate(ev.event_date_start) }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">PM In Charge</p>
+                  <p class="text-white">{{ ev.pm_name }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Kesiapan (Readiness)</p>
+                  <p class="text-brand-orange font-bold">{{ Math.round(ev.readiness_score || 0) }}% Ready</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Instrumen Done</p>
+                  <p class="text-gray-300">{{ Math.round(ev.instrument_completion_rate || 0) }}% Done</p>
+                </div>
+              </div>
+              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+                <p class="text-[8px] font-black text-brand-orange uppercase tracking-wider mb-1 select-none">Rekomendasi Tindakan:</p>
+                <p class="font-bold leading-normal">{{ ev.recommended_action }}</p>
+              </div>
+              <div class="flex justify-end pt-1">
+                <router-link 
+                  :to="'/projects/' + ev.project_id"
+                  class="px-3 py-1.5 rounded bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-bold text-[10px] transition-all"
+                >
+                  Buka Proyek →
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Not Ready Projects -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Proyek Belum Siap (Readiness &lt; 80%)</h3>
-          <div class="overflow-x-auto">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Penghambat Kesiapan (Readiness &lt; 80%)</h3>
+          
+          <!-- Desktop Table View -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -433,6 +469,59 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card View -->
+          <div class="block md:hidden space-y-4">
+            <div v-if="notReadyProjects.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada project yang terdeteksi belum siap.
+            </div>
+            <div 
+              v-for="p in notReadyProjects" 
+              :key="p.project_id"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="font-mono text-[10px] font-bold text-gray-400">{{ p.project_code || 'OSA-EVENT' }}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-red-500/10 text-red-400 border border-red-500/20">
+                  {{ Math.round(p.readiness_score || 0) }}% Ready
+                </span>
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-sm">{{ p.customer_name }}</h4>
+                <p class="text-xs text-gray-400 mt-0.5">Event: {{ formatDate(p.event_date_start) }}</p>
+              </div>
+              <div class="space-y-1.5 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px]">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider font-bold">PM In Charge</p>
+                  <p class="text-white font-semibold">{{ p.pm_name }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider font-bold mb-1">Instrumen Belum Siap</p>
+                  <div class="flex flex-wrap gap-1">
+                    <span 
+                      v-for="item in p.missing_items" 
+                      :key="item"
+                      class="px-1.5 py-0.5 rounded text-[8px] font-black uppercase bg-red-500/10 text-red-400 border border-red-500/20"
+                    >
+                      {{ item }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-red-500/5 border border-red-500/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+                <p class="text-[8px] font-black text-red-400 uppercase tracking-wider mb-1 select-none">Aksi Pemulihan:</p>
+                <p class="font-bold leading-normal">{{ p.recommended_action }}</p>
+              </div>
+              <div class="flex justify-end pt-1">
+                <router-link 
+                  :to="'/projects/' + p.project_id"
+                  class="px-3 py-1.5 rounded bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-bold text-[10px] transition-all"
+                >
+                  Buka Proyek →
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -440,8 +529,10 @@
       <div v-show="activeTab === 'instruments'" class="space-y-6">
         <!-- Overdue Instruments -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Peringatan Jatuh Tempo Instrumen (Overdue)</h3>
-          <div class="overflow-x-auto">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Dokumen Terlambat (Overdue Instruments)</h3>
+          
+          <!-- Desktop Table View -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -493,12 +584,65 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card View -->
+          <div class="block md:hidden space-y-4">
+            <div v-if="overdueInstruments.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada instrumen overdue.
+            </div>
+            <div 
+              v-for="(inst, idx) in overdueInstruments" 
+              :key="idx"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="font-mono text-[10px] font-bold text-gray-400">{{ inst.project_code || 'OSA-EVENT' }}</span>
+                <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-red-500/10 text-red-400 border border-red-500/20 font-bold">
+                  Lewat {{ inst.days_overdue }} Hari
+                </span>
+              </div>
+              <div>
+                <h4 class="font-bold text-brand-orange uppercase text-sm font-mono">{{ inst.instrument_label }}</h4>
+                <p class="text-xs text-gray-300 font-semibold mt-1">Klien: {{ inst.customer_name }}</p>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Jatuh Tempo</p>
+                  <p class="text-white">{{ formatDate(inst.due_date) }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">PM In Charge</p>
+                  <p class="text-white">{{ inst.pm_name }}</p>
+                </div>
+                <div class="col-span-2">
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Status Dokumen</p>
+                  <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    {{ inst.status }}
+                  </span>
+                </div>
+              </div>
+              <div class="bg-amber-500/5 border border-amber-500/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+                <p class="text-[8px] font-black text-amber-400 uppercase tracking-wider mb-1 select-none">Rekomendasi Tindakan:</p>
+                <p class="font-bold leading-normal">{{ inst.recommended_action }}</p>
+              </div>
+              <div class="flex justify-end pt-1">
+                <router-link 
+                  :to="'/projects/' + inst.project_id"
+                  class="px-3 py-1.5 rounded bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-bold text-[10px] transition-all"
+                >
+                  Buka Proyek →
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Need Revision Instruments -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Instrumen Membutuhkan Revisi (Need Revision)</h3>
-          <div class="overflow-x-auto">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Instrumen Perlu Tindakan (Need Revision)</h3>
+          
+          <!-- Desktop Table View -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -540,14 +684,61 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card View -->
+          <div class="block md:hidden space-y-4">
+            <div v-if="needRevisionInstruments.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada instrumen yang perlu revisi.
+            </div>
+            <div 
+              v-for="(inst, idx) in needRevisionInstruments" 
+              :key="idx"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="font-mono text-[10px] font-bold text-gray-400">{{ inst.project_code || 'OSA-EVENT' }}</span>
+                <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-purple-500/10 text-purple-400 border border-purple-500/20 font-bold">
+                  Need Revision
+                </span>
+              </div>
+              <div>
+                <h4 class="font-bold text-purple-400 uppercase text-sm font-mono">{{ inst.instrument_type }}</h4>
+                <p class="text-xs text-gray-300 font-semibold mt-1">Klien: {{ inst.customer_name }}</p>
+                <p class="text-[11px] text-gray-400 bg-black/20 p-2.5 rounded-xl border border-white/5 mt-2 leading-relaxed">
+                  <span class="text-[9px] font-bold text-purple-400 uppercase block mb-1">Catatan Revisi:</span>
+                  {{ inst.notes }}
+                </p>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider font-bold">PM In Charge</p>
+                  <p class="text-white">{{ inst.pm_name }}</p>
+                </div>
+              </div>
+              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+                <p class="text-[8px] font-black text-brand-orange uppercase tracking-wider mb-1 select-none">Rekomendasi Tindakan:</p>
+                <p class="font-bold leading-normal">{{ inst.recommended_action }}</p>
+              </div>
+              <div class="flex justify-end pt-1">
+                <router-link 
+                  :to="'/projects/' + inst.project_id"
+                  class="px-3 py-1.5 rounded bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-bold text-[10px] transition-all"
+                >
+                  Buka Proyek →
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- TAB 4: Beban Kerja PM -->
       <div v-show="activeTab === 'pm_workload'" class="space-y-4">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Beban Kerja Persiapan Event per PM</h3>
-          <div class="overflow-x-auto">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Beban Kerja PM (PM Workload)</h3>
+          
+          <!-- Desktop Table View -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -591,6 +782,48 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card View -->
+          <div class="block md:hidden space-y-4">
+            <div v-if="pmWorkload.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Belum ada data beban kerja penugasan PM.
+            </div>
+            <div 
+              v-for="pm in pmWorkload" 
+              :key="pm.pm_id"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-brand-orange-soft/10 text-brand-orange font-bold flex items-center justify-center text-[10px]">
+                    {{ pm.initial_code }}
+                  </div>
+                  <span class="text-white font-bold text-sm">{{ pm.pm_name }}</span>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getReadinessScoreBadgeStyles(pm.average_readiness_score)">
+                  {{ Math.round(pm.average_readiness_score || 0) }}% Ready
+                </span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-white text-sm font-extrabold">{{ pm.total_projects }} Proyek</p>
+                </div>
+                <div>
+                  <p class="text-indigo-400 text-[9px] uppercase tracking-wider">Upcoming (7 Hari)</p>
+                  <p class="text-white text-sm font-extrabold">{{ pm.upcoming_events_7_days }} Event</p>
+                </div>
+                <div>
+                  <p class="text-red-400 text-[9px] uppercase tracking-wider">Belum Siap</p>
+                  <p class="text-white text-sm font-extrabold">{{ pm.not_ready_projects }} Proyek</p>
+                </div>
+                <div>
+                  <p class="text-amber-500 text-[9px] uppercase tracking-wider">Instrumen Overdue</p>
+                  <p class="text-white text-sm font-extrabold">{{ pm.overdue_instruments }} Dokumen</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -600,6 +833,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+
+// Shared UI components
+import AppPageHeader from '../components/ui/AppPageHeader.vue'
+import AppStatCard from '../components/ui/AppStatCard.vue'
+import AppEmptyState from '../components/ui/AppEmptyState.vue'
+import AppLoadingState from '../components/ui/AppLoadingState.vue'
+import AppErrorState from '../components/ui/AppErrorState.vue'
 
 const users = ref([])
 const summary = ref({

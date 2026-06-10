@@ -6,43 +6,66 @@
 
   <!-- Authenticated Shell Layout -->
   <div v-else class="h-full flex bg-app-theme text-main-theme overflow-hidden font-sans">
+    <!-- Backdrop overlay for mobile sidebar -->
+    <div 
+      v-if="mobileSidebarOpen" 
+      @click="mobileSidebarOpen = false" 
+      class="fixed inset-0 bg-black/60 z-30 lg:hidden transition-opacity duration-300"
+    ></div>
+
     <!-- Sidebar navigation -->
     <aside 
-      class="bg-sidebar-theme border-r border-sidebar-theme transition-all duration-300 flex flex-col z-25 relative shrink-0"
-      :class="sidebarCollapsed ? 'w-20' : 'w-64'"
+      class="bg-sidebar-theme border-r border-sidebar-theme transition-all duration-300 flex flex-col z-40 shrink-0"
+      :class="[
+        sidebarCollapsed ? 'lg:w-20' : 'lg:w-64',
+        'fixed inset-y-0 left-0 w-64 lg:static lg:translate-x-0',
+        mobileSidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
+      ]"
     >
       <!-- Brand Logo Header -->
-      <div class="h-16 flex items-center gap-3 px-5 border-b border-sidebar-theme overflow-hidden select-none">
+      <div class="h-16 flex items-center gap-3 px-5 border-b border-sidebar-theme overflow-hidden select-none shrink-0">
         <div class="h-9 w-9 bg-gradient-to-tr from-brand-orange to-brand-orange-light rounded-xl flex items-center justify-center shadow-lg shadow-brand-orange/20 shrink-0">
           <span class="text-white font-extrabold text-lg font-sans">1</span>
         </div>
-        <span v-if="!sidebarCollapsed" class="text-main-theme font-extrabold text-lg tracking-wider font-sans whitespace-nowrap">
+        <span v-if="!sidebarCollapsed || mobileSidebarOpen" class="text-main-theme font-extrabold text-lg tracking-wider font-sans whitespace-nowrap">
           ONE<span class="text-brand-orange">SPIRIT</span>
         </span>
       </div>
 
-      <!-- Navigation Links -->
-      <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        <router-link 
-          v-for="item in navItems" 
-          :key="item.name"
-          :to="item.path"
-          v-show="item.permission ? auth.hasPermission(item.permission) : true"
-          class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group text-muted-theme hover:text-main-theme hover:bg-brand-charcoal-light/10"
-          active-class="bg-brand-orange/10 !text-brand-orange border-l-2 border-brand-orange"
-        >
-          <component :is="item.icon" class="h-5 w-5 shrink-0 group-hover:scale-105 transition-transform" />
-          <span v-if="!sidebarCollapsed" class="font-bold text-sm whitespace-nowrap">{{ item.name }}</span>
-        </router-link>
+      <!-- Grouped Navigation Links -->
+      <nav class="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
+        <div v-for="group in navGroups" :key="group.name" class="space-y-1.5">
+          <!-- Group Header -->
+          <p 
+            v-if="!sidebarCollapsed || mobileSidebarOpen" 
+            class="px-3 text-[10px] font-black uppercase tracking-widest text-gray-500 select-none"
+          >
+            {{ group.name }}
+          </p>
+          <div v-else class="border-t border-sidebar-theme/50 my-2 mx-1"></div>
+
+          <!-- Group Items -->
+          <router-link 
+            v-for="item in group.items" 
+            :key="item.name"
+            :to="item.path"
+            v-show="item.permission ? auth.hasPermission(item.permission) : true"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group text-muted-theme hover:text-main-theme hover:bg-brand-charcoal-light/10"
+            active-class="bg-brand-orange/10 !text-brand-orange border-l-2 border-brand-orange"
+          >
+            <component :is="item.icon" class="h-5 w-5 shrink-0 group-hover:scale-105 transition-transform" />
+            <span v-if="!sidebarCollapsed || mobileSidebarOpen" class="font-bold text-sm whitespace-nowrap">{{ item.name }}</span>
+          </router-link>
+        </div>
       </nav>
 
       <!-- Sidebar Footer User Profile -->
-      <div class="p-3 border-t border-sidebar-theme overflow-hidden">
+      <div class="p-3 border-t border-sidebar-theme overflow-hidden shrink-0">
         <div class="flex items-center gap-3 p-2 rounded-xl bg-brand-charcoal-light/5">
           <div class="h-9 w-9 bg-brand-orange-soft/10 text-brand-orange rounded-lg font-bold flex items-center justify-center shrink-0">
             {{ userInitial }}
           </div>
-          <div v-if="!sidebarCollapsed" class="min-w-0 flex-1">
+          <div v-if="!sidebarCollapsed || mobileSidebarOpen" class="min-w-0 flex-1">
             <p class="text-xs font-bold text-main-theme truncate">{{ auth.user?.full_name }}</p>
             <p class="text-[10px] text-brand-orange font-semibold truncate">{{ auth.user?.role?.name }}</p>
           </div>
@@ -51,15 +74,17 @@
     </aside>
 
     <!-- Main Content Workspace -->
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
       <!-- Top header panel -->
-      <header class="h-16 bg-header-theme border-b border-sidebar-theme backdrop-blur-md px-6 flex items-center justify-between shrink-0">
+      <header class="h-16 bg-header-theme border-b border-sidebar-theme backdrop-blur-md px-6 flex items-center justify-between shrink-0 z-20">
         <div class="flex items-center gap-4">
+          <!-- Sidebar Toggle Button -->
           <button 
-            @click="sidebarCollapsed = !sidebarCollapsed"
+            @click="toggleSidebar"
             class="p-1.5 rounded-lg bg-brand-charcoal-light/10 border border-sidebar-theme hover:border-brand-orange/40 text-muted-theme hover:text-main-theme transition-all shrink-0"
           >
             <span class="sr-only">Toggle Sidebar</span>
+            <!-- Hamburger Icon -->
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -68,7 +93,7 @@
         </div>
 
         <div class="flex items-center gap-4 shrink-0">
-          <span class="px-2.5 py-1 text-[10px] uppercase font-extrabold tracking-widest rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/20 select-none">
+          <span class="hidden sm:inline-block px-2.5 py-1 text-[10px] uppercase font-extrabold tracking-widest rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/20 select-none">
             {{ auth.user?.role?.name }}
           </span>
 
@@ -106,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from './store/auth'
 import { 
@@ -126,6 +151,7 @@ const route = useRoute()
 const router = useRouter()
 
 const sidebarCollapsed = ref(false)
+const mobileSidebarOpen = ref(false)
 const darkMode = ref(true)
 
 const isGuest = computed(() => route.meta.guest)
@@ -136,20 +162,51 @@ const userInitial = computed(() => {
 })
 
 const currentPageName = computed(() => {
+  if (route.name === 'PMControlCenter') return 'PM Control'
+  if (route.name === 'POControlCenter') return 'PO Control'
+  if (route.name === 'SourceVendorPerformance') return 'Source & Vendor'
   return String(route.name || 'One Spirit Asia')
 })
 
-const navItems = [
-  { name: 'Dashboard', path: '/', icon: Squares2X2Icon },
-  { name: 'CRM Module', path: '/crm', icon: UserGroupIcon, permission: 'crm:read' },
-  { name: 'Projects Workflow', path: '/projects', icon: BriefcaseIcon, permission: 'projects:read' },
-  { name: 'Finance Tracker', path: '/finance', icon: CurrencyDollarIcon, permission: 'finance:read' },
-  { name: 'Documents Hub', path: '/documents', icon: FolderIcon, permission: 'documents:read' },
-  { name: 'Excel Importer', path: '/imports', icon: ArrowUpTrayIcon, permission: 'projects:write' },
-  { name: 'PM Control Center', path: '/pm-control-center', icon: ClipboardDocumentCheckIcon, permission: 'projects:read' },
-  { name: 'PO Control Center', path: '/po-control-center', icon: BanknotesIcon, permission: 'projects:read' },
-  { name: 'Source & Vendor Center', path: '/source-vendor-performance', icon: ChartBarIcon, permission: 'projects:read' }
+const navGroups = [
+  {
+    name: 'Main',
+    items: [
+      { name: 'Dashboard', path: '/', icon: Squares2X2Icon },
+      { name: 'Projects', path: '/projects', icon: BriefcaseIcon, permission: 'projects:read' }
+    ]
+  },
+  {
+    name: 'Control Center',
+    items: [
+      { name: 'PM Control', path: '/pm-control-center', icon: ClipboardDocumentCheckIcon, permission: 'projects:read' },
+      { name: 'PO Control', path: '/po-control-center', icon: BanknotesIcon, permission: 'projects:read' },
+      { name: 'Source & Vendor', path: '/source-vendor-performance', icon: ChartBarIcon, permission: 'projects:read' }
+    ]
+  },
+  {
+    name: 'Operations',
+    items: [
+      { name: 'Finance', path: '/finance', icon: CurrencyDollarIcon, permission: 'finance:read' },
+      { name: 'Import Data', path: '/imports', icon: ArrowUpTrayIcon, permission: 'projects:write' },
+      { name: 'CRM', path: '/crm', icon: UserGroupIcon, permission: 'crm:read' },
+      { name: 'Documents', path: '/documents', icon: FolderIcon, permission: 'documents:read' }
+    ]
+  }
 ]
+
+const toggleSidebar = () => {
+  if (window.innerWidth < 1024) {
+    mobileSidebarOpen.value = !mobileSidebarOpen.value
+  } else {
+    sidebarCollapsed.value = !sidebarCollapsed.value
+  }
+}
+
+// Close mobile sidebar drawer automatically on navigation
+watch(() => route.path, () => {
+  mobileSidebarOpen.value = false
+})
 
 const toggleTheme = () => {
   darkMode.value = !darkMode.value
@@ -179,6 +236,7 @@ const logout = () => {
   router.push('/login')
 }
 </script>
+
 
 <style scoped>
 .bg-app-theme {
