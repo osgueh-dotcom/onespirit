@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 12 — UI/UX Client Presentation & Responsive Experience |
+| Status Project | Sprint 12.1 — Client Demo Polish & Presentation Rehearsal |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 
 ---

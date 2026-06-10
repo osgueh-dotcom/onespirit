@@ -46,7 +46,7 @@
     </div>
 
     <!-- Data loading indicator -->
-    <AppLoadingState v-if="loading" message="Loading ledger catalog..." />
+    <AppLoadingState v-if="loading" message="Memuat katalog keuangan..." />
 
     <div v-else class="space-y-6 animate-fade-in">
       <!-- INVOICES SUB-TAB -->

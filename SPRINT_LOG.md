@@ -247,4 +247,74 @@ Diverifikasi via agen browser otomatis untuk menguji demo/handover flow:
    - **Risiko**: Cetak laporan operasional dan komersial (ROS, PNL) masih menggunakan browser print dan hasilnya berpotensi berantakan.
    - **Mitigasi**: Ditambahkan print stylesheet khusus A4 landscape pada `frontend/src/assets/index.css`. Pengguna kini dapat mencetak laporan premium secara rapi dan bersih (menyembunyikan sidebar, navbar, dropdown, tombol, dan menyesuaikan layout) menggunakan pintasan bawaan `Ctrl+P` browser untuk cetak fisik atau Save as PDF.
 
+---
 
+## Sprint 12.1 — Client Demo Polish & Presentation Rehearsal
+
+Tanggal: 2026-06-11  
+Status: Done  
+AI Agent: Antigravity  
+Branch: sprint-12-1-client-demo-polish  
+Commit: Sprint 12.1: polish client demo and rehearsal readiness
+
+### Tujuan
+
+Meningkatkan kesiapan presentasi klien MVP dengan memperluas visualisasi bahasa Indonesia profesional (microcopy), memperkuat responsive layout hingga 360px viewport, menyiapkan dan mengamankan akun demo klien (`demo@onespirit.asia`), serta melengkapi dokumentasi safety, rehearsal flow, dan feedback capture.
+
+### Scope
+
+- **Demo Account Setup**: Menyiapkan variabel `DEMO_EMAIL` dan `DEMO_PASSWORD` pada `config.py` dan `.env`, menambahkan validasi keamanan produksi, menambahkan izin `documents:write` pada Management role, dan melakukan seeding akun demo klien secara otomatis pada startup database.
+- **UI/UX Microcopy Polish**: Menerjemahkan teks antarmuka utama (Sign Out -> Keluar, filter dropdowns, loading indicators, table headers, empty states) ke dalam bahasa Indonesia profesional yang konsisten pada semua halaman view.
+- **Documentation Sync**: Membuat dokumen `docs/public-demo-safety-checklist.md`, `docs/client-demo-rehearsal.md`, `docs/client-feedback-form.md`, serta menyelaraskan links pada `README.md` dan `PROJECT_CONTEXT.md`.
+- **Test & Validation**: Menjalankan unit tests backend (17 passed) dan build frontend Vite.
+
+### File/Modul Terkait
+
+- `backend/app/core/config.py`
+- `backend/app/modules/auth/service.py`
+- `frontend/src/views/Login.vue`
+- `frontend/src/views/Dashboard.vue`
+- `frontend/src/views/Projects.vue`
+- `frontend/src/views/ProjectDetail.vue`
+- `frontend/src/views/PoControlCenter.vue`
+- `frontend/src/views/SourceVendorPerformance.vue`
+- `frontend/src/views/Finance.vue`
+- `frontend/src/views/CRM.vue`
+- `frontend/src/views/Documents.vue`
+- `frontend/src/App.vue`
+- `docs/public-demo-safety-checklist.md`
+- `docs/client-demo-rehearsal.md`
+- `docs/client-feedback-form.md`
+- `README.md`
+- `PROJECT_CONTEXT.md`
+- `CHANGELOG.md`
+- `SPRINT_LOG.md`
+- `.env`
+- `.env.example`
+
+### Hasil Implementasi
+
+1. **Akun Demo Siap & Aman**: Akun `demo@onespirit.asia` otomatis di-seed dengan role Management. Hak akses Management ditambah `"documents:write"` untuk upload dokumen. Password aman dari hardcoding dan divalidasi saat startup di environment produksi.
+2. **Bahasa Antarmuka Konsisten**: Metrik penjualan, filter pencarian, loading states, dan tombol keluar (Sign Out -> Keluar) diterjemahkan ke dalam bahasa Indonesia profesional.
+3. **Dokumen Demo Lengkap**: Panduan rehearsal skrip (15-25 menit), formulir feedback klien, dan panduan keamanan port-forwarding telah diarsipkan dalam folder `docs/`.
+4. **Verifikasi Green**: Seluruh unit test backend (17 passed) dan frontend build selesai dengan sukses tanpa regresi.
+
+### Test Yang Dilakukan (Sprint 12.1 Final Validation)
+
+Backend:
+Command:
+pytest app/tests -q
+Result:
+17 passed
+
+Frontend:
+Command:
+npm run build
+Result:
+build success
+
+Docker:
+Command:
+docker compose up -d
+Result:
+Sistem container berjalan sehat dan sinkron.

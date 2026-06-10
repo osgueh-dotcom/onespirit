@@ -117,7 +117,7 @@
             @click="logout"
             class="px-3.5 py-1.5 rounded-lg border border-sidebar-theme hover:border-red-500/40 text-xs font-bold text-muted-theme hover:text-red-400 hover:bg-red-500/5 transition-all select-none"
           >
-            Sign Out
+            Keluar
           </button>
         </div>
       </header>
@@ -164,28 +164,28 @@ const userInitial = computed(() => {
 const currentPageName = computed(() => {
   if (route.name === 'PMControlCenter') return 'PM Control'
   if (route.name === 'POControlCenter') return 'PO Control'
-  if (route.name === 'SourceVendorPerformance') return 'Source & Vendor'
+  if (route.name === 'SourceVendorPerformance') return 'Pusat Source & Vendor'
   return String(route.name || 'One Spirit Asia')
 })
 
 const navGroups = [
   {
-    name: 'Main',
+    name: 'Utama',
     items: [
       { name: 'Dashboard', path: '/', icon: Squares2X2Icon },
       { name: 'Projects', path: '/projects', icon: BriefcaseIcon, permission: 'projects:read' }
     ]
   },
   {
-    name: 'Control Center',
+    name: 'Pusat Kontrol',
     items: [
       { name: 'PM Control', path: '/pm-control-center', icon: ClipboardDocumentCheckIcon, permission: 'projects:read' },
       { name: 'PO Control', path: '/po-control-center', icon: BanknotesIcon, permission: 'projects:read' },
-      { name: 'Source & Vendor', path: '/source-vendor-performance', icon: ChartBarIcon, permission: 'projects:read' }
+      { name: 'Pusat Source & Vendor', path: '/source-vendor-performance', icon: ChartBarIcon, permission: 'projects:read' }
     ]
   },
   {
-    name: 'Operations',
+    name: 'Operasional',
     items: [
       { name: 'Finance', path: '/finance', icon: CurrencyDollarIcon, permission: 'finance:read' },
       { name: 'Import Data', path: '/imports', icon: ArrowUpTrayIcon, permission: 'projects:write' },

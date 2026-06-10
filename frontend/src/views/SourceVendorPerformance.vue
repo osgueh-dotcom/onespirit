@@ -126,13 +126,13 @@
         <AppStatCard 
           title="Estimasi Revenue" 
           :value="formatCurrency(summary.total_potential_revenue)" 
-          subtitle="Potential Revenue" 
+          subtitle="Estimasi Pendapatan" 
           theme="neutral" 
         />
         <AppStatCard 
           title="Revenue Terkonfirmasi" 
           :value="formatCurrency(summary.total_confirmed_revenue)" 
-          subtitle="Confirmed Revenue" 
+          subtitle="Revenue Terkonfirmasi" 
           theme="emerald" 
         />
         <AppStatCard 
@@ -191,9 +191,9 @@
                   <th class="px-4 py-3 text-center">Confirmed</th>
                   <th class="px-4 py-3 text-center">Pending Q</th>
                   <th class="px-4 py-3 text-center">Canceled</th>
-                  <th class="px-4 py-3 text-right">Potential Revenue</th>
-                  <th class="px-4 py-3 text-right">Confirmed Revenue</th>
-                  <th class="px-4 py-3 text-right">Outstanding Payment</th>
+                  <th class="px-4 py-3 text-right">Estimasi Revenue</th>
+                  <th class="px-4 py-3 text-right">Revenue Terkonfirmasi</th>
+                  <th class="px-4 py-3 text-right">Belum Lunas</th>
                   <th class="px-4 py-3 text-center">Conversion</th>
                   <th class="px-4 py-3 text-center">Risk Count</th>
                 </tr>
@@ -261,14 +261,14 @@
                 </div>
                 <div>
                   <p class="text-gray-500 text-[9px] uppercase tracking-wider">Status Keuangan</p>
-                  <p class="text-brand-emerald font-mono font-bold">Confirmed: {{ formatCurrency(s.confirmed_revenue) }}</p>
-                  <p class="text-red-400 font-mono text-[10px]">Outstanding: {{ formatCurrency(s.outstanding_payment) }}</p>
+                  <p class="text-brand-emerald font-mono font-bold">Terkonfirmasi: {{ formatCurrency(s.confirmed_revenue) }}</p>
+                  <p class="text-red-400 font-mono text-[10px]">Belum Lunas: {{ formatCurrency(s.outstanding_payment) }}</p>
                 </div>
               </div>
               <div class="flex justify-between items-center text-[10px] text-gray-400">
-                <span>Potential: <b class="text-white font-mono">{{ formatCurrency(s.potential_revenue) }}</b></span>
+                <span>Estimasi: <b class="text-white font-mono">{{ formatCurrency(s.potential_revenue) }}</b></span>
                 <span v-if="s.commercial_risk > 0" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">
-                  {{ s.commercial_risk }} Risk
+                  {{ s.commercial_risk }} Risiko
                 </span>
               </div>
             </div>
@@ -303,8 +303,8 @@
                   <th class="px-4 py-3 text-center">Active</th>
                   <th class="px-4 py-3 text-center">Confirmed</th>
                   <th class="px-4 py-3 text-center">Canceled</th>
-                  <th class="px-4 py-3 text-right">Potential Revenue</th>
-                  <th class="px-4 py-3 text-right">Confirmed Revenue</th>
+                  <th class="px-4 py-3 text-right">Estimasi Revenue</th>
+                  <th class="px-4 py-3 text-right">Revenue Terkonfirmasi</th>
                   <th class="px-4 py-3 text-right">Average Value</th>
                   <th class="px-4 py-3 text-center">Usage Frequency</th>
                   <th class="px-4 py-3 text-center">Risk Count</th>
@@ -339,7 +339,7 @@
                       v-if="v.risk_count > 0" 
                       class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-black"
                     >
-                      {{ v.risk_count }} Risk
+                      {{ v.risk_count }} Risiko
                     </span>
                     <span v-else class="text-brand-emerald font-semibold">-</span>
                   </td>
@@ -370,14 +370,14 @@
                 </div>
                 <div>
                   <p class="text-gray-500 text-[9px] uppercase tracking-wider">Pendapatan Vendor</p>
-                  <p class="text-brand-emerald font-mono font-bold">Confirmed: {{ formatCurrency(v.confirmed_revenue) }}</p>
-                  <p class="text-gray-400 font-mono text-[10px]">Avg Value: {{ formatCurrency(v.average_project_value) }}</p>
+                  <p class="text-brand-emerald font-mono font-bold">Terkonfirmasi: {{ formatCurrency(v.confirmed_revenue) }}</p>
+                  <p class="text-gray-400 font-mono text-[10px]">Rata-rata: {{ formatCurrency(v.average_project_value) }}</p>
                 </div>
               </div>
               <div class="flex justify-between items-center text-[10px] text-gray-400">
-                <span>Potential: <b class="text-white font-mono">{{ formatCurrency(v.potential_revenue) }}</b></span>
+                <span>Estimasi: <b class="text-white font-mono">{{ formatCurrency(v.potential_revenue) }}</b></span>
                 <span v-if="v.risk_count > 0" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">
-                  {{ v.risk_count }} Risk
+                  {{ v.risk_count }} Risiko
                 </span>
               </div>
             </div>
@@ -400,8 +400,8 @@
                   <th class="px-4 py-3 text-center">Total Projects</th>
                   <th class="px-4 py-3 text-center">Confirmed Deals</th>
                   <th class="px-4 py-3 text-center">Pending Quotations</th>
-                  <th class="px-4 py-3 text-right">Potential Revenue</th>
-                  <th class="px-4 py-3 text-right">Confirmed Revenue</th>
+                  <th class="px-4 py-3 text-right">Estimasi Revenue</th>
+                  <th class="px-4 py-3 text-right">Revenue Terkonfirmasi</th>
                   <th class="px-4 py-3 text-center">Follow-up Load</th>
                 </tr>
               </thead>
@@ -461,8 +461,8 @@
                 </div>
                 <div>
                   <p class="text-gray-500 text-[9px] uppercase tracking-wider">Estimasi Revenue</p>
-                  <p class="text-brand-emerald font-mono font-bold">Confirmed: {{ formatCurrency(p.confirmed_revenue) }}</p>
-                  <p class="text-gray-400 font-mono text-[10px]">Potential: {{ formatCurrency(p.potential_revenue) }}</p>
+                  <p class="text-brand-emerald font-mono font-bold">Terkonfirmasi: {{ formatCurrency(p.confirmed_revenue) }}</p>
+                  <p class="text-gray-400 font-mono text-[10px]">Estimasi: {{ formatCurrency(p.potential_revenue) }}</p>
                 </div>
               </div>
               <div class="flex justify-end">

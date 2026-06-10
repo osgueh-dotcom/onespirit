@@ -4,6 +4,22 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 12.1] - 2026-06-11
+
+### Added
+- Membuat dokumen `docs/public-demo-safety-checklist.md` untuk panduan keamanan demo.
+- Membuat dokumen `docs/client-demo-rehearsal.md` berisi panduan rehearsal skrip presentasi 15-25 menit.
+- Membuat dokumen `docs/client-feedback-form.md` berisi form kuesioner masukan klien.
+
+### Changed
+- Mengintegrasikan akun demo klien `demo@onespirit.asia` / `OneSpiritDemo2026!` dengan role Management.
+- Menambahkan izin `documents:write` pada Management role agar akun demo klien dapat menguji alur upload dokumen.
+- Menerjemahkan metrik penjualan, filter, loading indicators, table headers, dan button keluar (Sign Out -> Keluar) ke bahasa Indonesia profesional di seluruh views.
+- Memperbarui `README.md` dan `PROJECT_CONTEXT.md` dengan detail akun demo klien dan dokumentasi baru.
+
+### Fixed
+- Menolak default password akun super admin/demo jika berjalan di environment `production` dengan ValueError validation.
+
 ## [Sprint 12] - 2026-06-11
 
 ### Added

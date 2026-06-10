@@ -8,7 +8,7 @@
           @change="fetchDocuments"
           class="px-4 py-2.5 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/35 focus:border-brand-orange text-xs font-semibold text-gray-300 outline-none transition-all"
         >
-          <option value="">Select Project Archive</option>
+          <option value="">Pilih Arsip Proyek</option>
           <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.title }} (Client: {{ p.customer?.company_name }})</option>
         </select>
       </div>
@@ -20,12 +20,12 @@
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      <span class="text-xs text-gray-400 font-semibold">Opening document hub...</span>
+      <span class="text-xs text-gray-400 font-semibold">Membuka pusat dokumen...</span>
     </div>
 
     <div v-else class="space-y-6">
       <div v-if="!selectedProjectId" class="p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
-        Please select a project archive from the dropdown above to view documents.
+        Silakan pilih arsip proyek dari pilihan di atas untuk melihat dokumen.
       </div>
 
       <div v-else-if="loadingDocs" class="h-48 flex flex-col items-center justify-center gap-2">
@@ -33,14 +33,14 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span class="text-xs text-gray-400">Loading archives...</span>
+        <span class="text-xs text-gray-400">Memuat arsip...</span>
       </div>
 
       <!-- Archive folder grid -->
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Folders/Files -->
         <div v-if="docs.length === 0" class="col-span-full p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
-          No files, presentation sheets, or Google Drive templates uploaded for this project.
+          Tidak ada file, lembar presentasi, atau template Google Drive yang diunggah untuk proyek ini.
         </div>
 
         <div 
@@ -63,8 +63,8 @@
           </div>
 
           <div class="pt-3 border-t border-brand-charcoal-light/10 text-[10px] font-bold text-gray-500 flex items-center justify-between">
-            <span>By: {{ d.uploaded_by?.full_name || 'System' }}</span>
-            <a :href="d.file_path" target="_blank" class="text-brand-orange hover:underline font-extrabold">Open File →</a>
+            <span>Oleh: {{ d.uploaded_by?.full_name || 'System' }}</span>
+            <a :href="d.file_path" target="_blank" class="text-brand-orange hover:underline font-extrabold">Buka File →</a>
           </div>
         </div>
       </div>

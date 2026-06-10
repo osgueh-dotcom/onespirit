@@ -146,8 +146,8 @@ npm.cmd run build
 
 ## Alur Demo Bawaan (Default Demo Flow)
 
-Untuk melakukan demo sistem dalam waktu 15–30 menit, silakan gunakan alur berikut:
-1. **Login**: Gunakan akun super admin `admin@onespirit.asia` / password `OneSpirit2026!`.
+Untuk melakukan demo sistem dalam waktu 15–25 menit, silakan gunakan alur berikut:
+1. **Login**: Gunakan akun demo klien `demo@onespirit.asia` / password `OneSpiritDemo2026!`.
 2. **Dashboard**: Tinjau statistik keseluruhan, pipeline proyek, tren pendapatan bulanan, dan aktivitas terbaru.
 3. **CRM**: Lihat daftar klien dan kontak.
 4. **Projects**: Buka daftar proyek komprehensif, buat proyek baru dengan status `inquiry`.
@@ -162,7 +162,7 @@ Untuk melakukan demo sistem dalam waktu 15–30 menit, silakan gunakan alur beri
 
 1. **Keamanan**: Saat ini masih menggunakan JWT rahasia bawaan untuk development. Belum ada HTTPS hardening secara cloud-native.
 2. **Permission**: Hak akses role (Admin, PO, PM, Finance, Management) sudah divalidasi pada level API gate, namun penyesuaian UI secara granular berdasarkan role masih dalam tahap MVP awal.
-3. **Data Backup**: Belum mendukung backup database otomatis ke penyimpanan cloud.
+3. **Data Backup**: Belum mendukung database backup otomatis ke penyimpanan cloud.
 4. **Integrasi Eksternal**: Belum terhubung dengan sistem e-mail otomatis untuk follow-up klien atau export PDF langsung.
 
 ---
@@ -170,6 +170,9 @@ Untuk melakukan demo sistem dalam waktu 15–30 menit, silakan gunakan alur beri
 ## Dokumentasi Tambahan
 
 Semua panduan detail lainnya terletak di folder `docs/`:
+- [Panduan Rehearsal Demo](file:///e:/GVsys Project/One Spirit/docs/client-demo-rehearsal.md) — Panduan skrip presentasi langkah-demi-langkah (15-25 menit).
+- [Checklist Keamanan Demo Publik](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md) — Aturan port-forwarding, database security, dan perlindungan data sensitif.
+- [Formulir Masukan Klien](file:///e:/GVsys Project/One Spirit/docs/client-feedback-form.md) — Kuesioner umpan balik klien untuk evaluasi alur bisnis, UI/UX, dan prioritas fitur.
 - `docs/demo-readiness.md` — Panduan alur demo dan checklist pertanyaan validasi klien.
 - `docs/mvp-limitations.md` — Batasan teknis sistem secara mendalam dan backlog Sprint 11.
 - `PROJECT_CONTEXT.md` — Detail bisnis dan istilah operasional (CL, ROS, CK, PNL).

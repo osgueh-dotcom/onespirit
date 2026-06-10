@@ -68,7 +68,7 @@ def seed_roles_and_admin(db: Session):
     """Seed base roles and super admin user if they don't exist"""
     role_definitions = {
         "Super Admin": ["admin"],
-        "Management": ["crm:read", "crm:write", "projects:read", "projects:write", "events:read", "events:write", "finance:read", "finance:write", "documents:read", "tasks:read", "tasks:write"],
+        "Management": ["crm:read", "crm:write", "projects:read", "projects:write", "events:read", "events:write", "finance:read", "finance:write", "documents:read", "documents:write", "tasks:read", "tasks:write"],
         "Finance": ["projects:read", "finance:read", "finance:write", "documents:read"],
         "Staff": ["crm:read", "projects:read", "projects:write", "events:read", "events:write", "tasks:read", "tasks:write", "documents:read", "documents:write"]
     }
@@ -100,6 +100,21 @@ def seed_roles_and_admin(db: Session):
         )
         create_user(db, admin_create)
         print(f"Successfully seeded Super Admin user: {admin_email} / {settings.ADMIN_PASSWORD}")
+
+    # 2b. Demo User
+    demo_email = settings.DEMO_EMAIL
+    demo_user = get_user_by_email(db, demo_email)
+    if not demo_user:
+        demo_role = created_roles["Management"]
+        demo_create = UserCreate(
+            email=demo_email,
+            password=settings.DEMO_PASSWORD,
+            full_name="Client Demo User",
+            is_active=True,
+            role_id=demo_role.id
+        )
+        create_user(db, demo_create)
+        print(f"Successfully seeded Demo user: {demo_email} / {settings.DEMO_PASSWORD}")
 
     # 3. Seed placeholder internal users for Excel PO/PM verification
     initials_to_seed = [

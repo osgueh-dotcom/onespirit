@@ -20,7 +20,7 @@
 
     <form @submit.prevent="handleLogin" class="space-y-5 relative">
       <div>
-        <label for="email" class="block text-xs font-bold text-gray-300 uppercase tracking-widest mb-2">Corporate Email</label>
+        <label for="email" class="block text-xs font-bold text-gray-300 uppercase tracking-widest mb-2">Email Korporat</label>
         <input 
           v-model="email" 
           type="email" 
@@ -33,7 +33,7 @@
 
       <div>
         <div class="flex items-center justify-between mb-2">
-          <label for="password" class="block text-xs font-bold text-gray-300 uppercase tracking-widest">Secure Credentials</label>
+          <label for="password" class="block text-xs font-bold text-gray-300 uppercase tracking-widest">Kata Sandi</label>
         </div>
         <input 
           v-model="password" 
@@ -54,7 +54,7 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span>{{ auth.loading ? 'Entering System...' : 'Sign In' }}</span>
+        <span>{{ auth.loading ? 'Memasuki Sistem...' : 'Masuk' }}</span>
       </button>
     </form>
 
@@ -63,11 +63,11 @@
       <div class="inline-block px-4 py-3 bg-brand-charcoal-light/15 border border-brand-charcoal-light/20 rounded-xl text-left max-w-xs">
         <p class="text-[10px] font-extrabold text-brand-orange uppercase tracking-wider mb-1 flex items-center gap-1.5">
           <span class="h-1.5 w-1.5 rounded-full bg-brand-orange animate-ping"></span>
-          Developer Quick Connect
+          Kredensial Akun Demo
         </p>
         <p class="text-[11px] text-gray-400 leading-relaxed">
-          Email: <span class="text-white font-mono font-medium">admin@onespirit.asia</span><br/>
-          Key: <span class="text-white font-mono font-medium">OneSpirit2026!</span>
+          Email: <span class="text-white font-mono font-medium">demo@onespirit.asia</span><br/>
+          Password: <span class="text-white font-mono font-medium">OneSpiritDemo2026!</span>
         </p>
       </div>
     </div>

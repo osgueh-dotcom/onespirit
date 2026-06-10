@@ -271,8 +271,8 @@
                     <th class="px-3 py-2.5">PO</th>
                     <th class="px-3 py-2.5 text-center">Total Proyek</th>
                     <th class="px-3 py-2.5 text-center">Deal Rate</th>
-                    <th class="px-3 py-2.5 text-right">Confirmed Rev</th>
-                    <th class="px-3 py-2.5 text-center">Risk / Overdue</th>
+                    <th class="px-3 py-2.5 text-right">Rev Terkonfirmasi</th>
+                    <th class="px-3 py-2.5 text-center">Risiko / Overdue</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
@@ -295,7 +295,7 @@
                     <td class="px-3 py-2.5 text-right text-brand-emerald font-mono font-bold">{{ formatCurrency(po.confirmed_revenue) }}</td>
                     <td class="px-3 py-2.5 text-center">
                       <span class="px-1.5 py-0.5 rounded text-[8px] font-bold" :class="po.outstanding_count > 0 ? 'bg-amber-500/10 text-amber-400' : 'bg-brand-emerald/10 text-brand-emerald'">
-                        {{ po.outstanding_count }} Risk / {{ po.follow_up_needed_count }} F-Up
+                        {{ po.outstanding_count }} Risiko / {{ po.follow_up_needed_count }} F-Up
                       </span>
                     </td>
                   </tr>
@@ -356,8 +356,8 @@
                   <th class="px-4 py-3 text-center">Total Proyek</th>
                   <th class="px-4 py-3 text-center">Deal (Signed)</th>
                   <th class="px-4 py-3 text-center">Batal</th>
-                  <th class="px-4 py-3 text-right">Potential Revenue</th>
-                  <th class="px-4 py-3 text-right">Confirmed Revenue</th>
+                  <th class="px-4 py-3 text-right">Estimasi Revenue</th>
+                  <th class="px-4 py-3 text-right">Revenue Terkonfirmasi</th>
                   <th class="px-4 py-3 text-right">Rata-rata Nilai</th>
                 </tr>
               </thead>
@@ -415,7 +415,7 @@
                 </div>
               </div>
               <div class="text-[10px] text-gray-400 text-right">
-                Potential: <span class="text-white font-mono font-bold">{{ formatCurrency(sc.potential_revenue) }}</span>
+                Estimasi: <span class="text-white font-mono font-bold">{{ formatCurrency(sc.potential_revenue) }}</span>
               </div>
             </div>
           </div>
