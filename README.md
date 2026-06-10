@@ -16,7 +16,7 @@ Sistem ini dikembangkan secara bertahap untuk mendigitalkan koordinasi operasion
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Status | MVP Demo Readiness (Sprint 10 Finalization) |
 | Owner | PT One Spirit Asia |
-| Lokasi Folder | `e:/GVsys Project/One Spirit` |
+| Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI (Backend) & Vue 3 + Tailwind CSS (Frontend) |
 | Database | PostgreSQL (Production/Docker) & SQLite (Testing/Lokal) |
 
@@ -129,7 +129,7 @@ Pastikan Anda berada di virtual environment backend, lalu jalankan:
 pytest app/tests -q
 ```
 
-*Catatan: Tes menggunakan database SQLite in-memory / lokal di `E:\tmp` sehingga tidak memerlukan database PostgreSQL Docker berjalan.*
+*Catatan: Tes menggunakan database SQLite in-memory / lokal di `<PROJECT_ROOT>/backend/tmp` sehingga tidak memerlukan database PostgreSQL Docker berjalan.*
 
 ---
 

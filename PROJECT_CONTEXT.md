@@ -16,7 +16,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
 | Status Project | MVP Demo Readiness (Sprint 10 Finalization) |
-| Lokasi Folder | `e:/GVsys Project/One Spirit` |
+| Lokasi Folder | `<PROJECT_ROOT>` |
 
 ---
 

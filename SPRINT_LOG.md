@@ -76,17 +76,34 @@ Menstabilkan fitur komersial, melengkapi metrik PO Control Center, merapikan dok
 
 ### Test Yang Dilakukan (Sprint 10 Final Validation)
 
-- **Tanggal Pengujian**: 2026-06-10
-- **Backend Test**: Menjalankan `.venv\Scripts\pytest app/tests -q` di terminal backend. Hasil: **16 passed** dalam 89.61 detik.
-- **Frontend Build**: Menjalankan `npm.cmd run build` di terminal frontend. Hasil: **Vite production build sukses** tanpa error dalam 3.01 detik.
-- **Docker Validation**: Menjalankan `docker compose down` diikuti `docker compose up --build -d`. Seluruh container (`onespirit_db`, `onespirit_backend`, `onespirit_frontend`) berjalan up dan healthy. Backend berhasil terkoneksi ke PostgreSQL dan frontend berhasil diakses via port 5173.
-- **Manual Regression Check**: Diverifikasi via agen browser otomatis untuk menguji demo/handover flow:
-  - Login berhasil menggunakan akun `admin@onespirit.asia`.
-  - Executive Dashboard memuat metrik secara normal.
-  - Projects Kanban Board menampilkan data proyek dengan benar.
-  - PM Control Center memuat operational readiness scoring dan checklist.
-  - PO Control Center (refactored) merender visual dashboard, filter dropdown, prioritas follow-up, daftar proyek, kinerja komersial, dan risiko komersial (`CommercialRisksPanel`) tanpa error runtime/JS console.
-  - Excel Migration & Sync Hub (Imports page) memuat drop-zone dengan aman.
+Tanggal Pengujian: 2026-06-10
+
+Backend:
+Command:
+pytest app/tests -q
+Result:
+16 passed
+
+Frontend:
+Command:
+npm run build
+Result:
+build success
+
+Docker:
+Command:
+docker compose up --build
+Result:
+backend, frontend, database running
+
+Manual Regression Check:
+Diverifikasi via agen browser otomatis untuk menguji demo/handover flow:
+- Login berhasil menggunakan akun `admin@onespirit.asia`.
+- Executive Dashboard memuat metrik secara normal.
+- Projects Kanban Board menampilkan data proyek dengan benar.
+- PM Control Center memuat operational readiness scoring dan checklist.
+- PO Control Center (refactored) merender visual dashboard, filter dropdown, prioritas follow-up, daftar proyek, kinerja komersial, dan risiko komersial (`CommercialRisksPanel`) tanpa error runtime/JS console.
+- Excel Migration & Sync Hub (Imports page) memuat drop-zone dengan aman.
 
 ### Penanganan Risiko Teridentifikasi (Mitigated & Resolved)
 
