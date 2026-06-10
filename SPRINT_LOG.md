@@ -21,6 +21,76 @@ Dokumen ini digunakan untuk mencatat riwayat sprint pengembangan OneSpirit Workf
 | **Sprint 10** | PO Control Center Commercial Follow-up & Risks | 2026-06-09 | Done |
 | **Sprint 10.1** | Documentation & Commercial Control Cleanup | 2026-06-09 | Done |
 | **Sprint 10 Finalization** | Commercial Control Stabilization & MVP Demo Readiness | 2026-06-10 | Done |
+| **Sprint 11** | Source & Vendor Performance Center | 2026-06-10 | Done |
+
+---
+
+## Sprint 11 — Source & Vendor Performance Center
+
+Tanggal: 2026-06-10  
+Status: Done  
+AI Agent: Antigravity  
+Branch: sprint-11-source-vendor-performance  
+Commit: Sprint 11: add source and vendor performance center  
+
+### Tujuan
+
+Membangun Source & Vendor Performance Center untuk membantu management/owner/PO melihat performa sumber proyek (lead source), vendor partner, conversion rate, revenue contribution, commercial risk, dan follow-up priority berdasarkan data proyek yang sudah ada.
+
+### Scope
+
+- **Backend Module**: Menambahkan endpoint `/api/v1/dashboard/source-vendor-performance` dan service layer `source_vendor_service.py` untuk mengagregasi data proyek, conversion rate, cancellation rate, outstanding payments, risk alerts, serta kualitas data lead source dan vendor.
+- **Frontend Dashboard**: Membuat halaman `/source-vendor-performance` dengan layout premium (glassmorphism), menampilkan summary cards, tabel kinerja source, tabel kinerja vendor partner (dengan fallback aman karena nama vendor belum terstruktur penuh), alokasi PO + Source, panel alert risiko komersial, dan audit kualitas data.
+- **Unit Testing**: Membuat berkas pengujian `test_source_vendor_performance.py` untuk memverifikasi fungsionalitas kalkulasi dan response contract API.
+- **Documentation**: Menyusun panduan kalkulasi bisnis di `docs/source-vendor-performance-logic.md` dan memperbarui daftar batasan di `docs/mvp-limitations.md`.
+
+### Di Luar Scope
+
+- Tidak menormalisasi tabel database vendor partner pada sprint ini (menggunakan field textual `vendor_name` di tabel `EventSource`).
+- Tidak membuat relasi entitas baru antara Project dan Vendor secara terpisah.
+
+### File/Modul Terkait
+
+- `backend/app/modules/dashboard/schemas.py`
+- `backend/app/modules/dashboard/router.py`
+- `backend/app/modules/dashboard/source_vendor_service.py`
+- `backend/app/tests/test_source_vendor_performance.py`
+- `frontend/src/views/SourceVendorPerformance.vue`
+- `frontend/src/router/index.js`
+- `frontend/src/App.vue`
+- `docs/source-vendor-performance-logic.md`
+- `docs/mvp-limitations.md`
+- `PROJECT_CONTEXT.md`
+- `SPRINT_LOG.md`
+- `CHANGELOG.md`
+
+### Hasil Implementasi
+
+1. **Endpoint Kinerja Source & Vendor Aktif**: API `/api/v1/dashboard/source-vendor-performance` mengembalikan data dengan penanganan pembagian dengan nol (division-by-zero protection) dan isolasi status proyek batal/confirmed yang tepat.
+2. **Dashboard UI Interaktif**: Pengguna dapat memfilter berdasarkan PO, rentang tanggal event, serta menyertakan proyek closed/batal secara real-time.
+3. **Peringatan Risiko & Audit Kualitas**: Sistem mendeteksi jika rasio proyek batal tinggi, outstanding tagihan bernilai besar, atau ada proyek berjalan tanpa mapping lead source/vendor.
+
+### Test Yang Dilakukan (Sprint 11 Validation)
+
+Tanggal Pengujian: 2026-06-10
+
+Backend:
+Command:
+pytest app/tests/test_source_vendor_performance.py -q
+Result:
+1 passed
+
+Frontend:
+Command:
+cmd /c npm run build
+Result:
+build success
+
+Docker:
+Command:
+docker compose up --build
+Result:
+Sistem container berjalan sehat dan sinkron.
 
 ---
 
@@ -69,19 +139,50 @@ Menstabilkan fitur komersial, melengkapi metrik PO Control Center, merapikan dok
 ### Hasil Implementasi
 
 1. **PO Control Center Stabil**: Endpoint backend dan UI frontend terintegrasi penuh untuk metrik komersial riil tanpa angka palsu/placeholder. Outstanding payment terhitung dari selisih nominal invoice terbit dikurangi payment disetujui (`status = 'approved'`).
-2. **Commercial Logic Terarsip**: Panduan formula komersial telah dibuat di [commercial-control-logic.md](file:///e:/GVsys%20Project/One%20Spirit/docs/commercial-control-logic.md).
+2. **Commercial Logic Terarsip**: Panduan formula komersial telah dibuat di [commercial-control-logic.md](docs/commercial-control-logic.md).
 3. **Test Suite 100% Pass**: Seluruh 16 unit tests backend berhasil dijalankan dengan SQLite secara lokal dan lulus 100%.
 4. **Frontend Build Sukses**: Vite production build berhasil mengompilasi aset Vue 3 secara sempurna dengan command `npm.cmd run build`.
 5. **Keamanan Konfigurasi Terjaga**: File `.env` terabaikan di git, dan default credentials demo/development terdokumentasi dengan warning yang jelas.
 
-### Test Yang Dilakukan
+### Test Yang Dilakukan (Sprint 10 Final Validation)
 
-- Menjalankan `.venv\Scripts\pytest app/tests -q` di terminal backend.
-- Menjalankan `npm.cmd run build` di terminal frontend.
-- Memverifikasi output visual nominal currency outstanding pembayaran pada card.
+Tanggal Pengujian: 2026-06-10
 
-### Risiko Tersisa
+Backend:
+Command:
+pytest app/tests -q
+Result:
+16 passed
 
-- Kredensial super admin demo (`admin@onespirit.asia`) bersifat hardcoded pada database seed awal untuk kemudahan demo local/evaluasi. Ini harus dinonaktifkan/diubah ketika sistem dirilis ke production.
-- Cetak laporan operasional dan komersial (ROS, PNL) masih mengandalkan fitur bawaan Ctrl+P dari web browser (belum export PDF native).
+Frontend:
+Command:
+npm run build
+Result:
+build success
+
+Docker:
+Command:
+docker compose up --build
+Result:
+backend, frontend, database running
+
+Manual Regression Check:
+Diverifikasi via agen browser otomatis untuk menguji demo/handover flow:
+- Login berhasil menggunakan akun `admin@onespirit.asia`.
+- Executive Dashboard memuat metrik secara normal.
+- Projects Kanban Board menampilkan data proyek dengan benar.
+- PM Control Center memuat operational readiness scoring dan checklist.
+- PO Control Center (refactored) merender visual dashboard, filter dropdown, prioritas follow-up, daftar proyek, kinerja komersial, dan risiko komersial (`CommercialRisksPanel`) tanpa error runtime/JS console.
+- Excel Migration & Sync Hub (Imports page) memuat drop-zone dengan aman.
+
+### Penanganan Risiko Teridentifikasi (Mitigated & Resolved)
+
+1. **Kredensial Super Admin Seeding**:
+   - **Risiko**: Sebelumnya data kredensial super admin demo (`admin@onespirit.asia` / `OneSpirit2026!`) di-hardcode secara statis dalam kode database seeding.
+   - **Mitigasi**: Telah dipindahkan ke konfigurasi environment variables (`ADMIN_EMAIL`, `ADMIN_PASSWORD`) yang dimuat secara dinamis.
+   - **Validasi Produksi**: Sistem akan menolak untuk start (ValueError) pada environment `production` jika password super admin masih menggunakan nilai default `OneSpirit2026!` atau `JWT_SECRET` belum diubah.
+2. **Cetak Laporan Premium**:
+   - **Risiko**: Cetak laporan operasional dan komersial (ROS, PNL) masih menggunakan browser print dan hasilnya berpotensi berantakan.
+   - **Mitigasi**: Ditambahkan print stylesheet khusus A4 landscape pada `frontend/src/assets/index.css`. Pengguna kini dapat mencetak laporan premium secara rapi dan bersih (menyembunyikan sidebar, navbar, dropdown, tombol, dan menyesuaikan layout) menggunakan pintasan bawaan `Ctrl+P` browser untuk cetak fisik atau Save as PDF.
+
 

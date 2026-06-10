@@ -265,3 +265,27 @@ Manual check:
 - workflow checked:
 - known issue:
 ```
+
+---
+
+## Sprint 10 Final Validation Results
+
+Tanggal Pengujian: 2026-06-10
+
+Backend:
+Command:
+pytest app/tests -q
+Result:
+16 passed
+
+Frontend:
+Command:
+npm run build
+Result:
+build success
+
+Docker:
+Command:
+docker compose up --build
+Result:
+backend, frontend, database running

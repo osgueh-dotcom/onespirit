@@ -22,199 +22,7 @@
     </div>
 
     <!-- Filters Bar -->
-    <div class="glass-panel p-5 border border-brand-charcoal-light/30 space-y-4 select-none">
-      <div class="flex items-center justify-between border-b border-brand-charcoal-light/15 pb-2">
-        <span class="text-[10px] font-black uppercase tracking-wider text-gray-400">Filter Komersial</span>
-        <button @click="resetFilters" class="text-[10px] font-bold text-brand-orange hover:underline">
-          Reset Filter ✕
-        </button>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <!-- Filter PO -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Owner (PO)</label>
-          <select 
-            v-model="filterPo" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="">Semua PO</option>
-            <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
-          </select>
-        </div>
-
-        <!-- Filter PM -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Manager (PM)</label>
-          <select 
-            v-model="filterPm" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="">Semua PM</option>
-            <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
-          </select>
-        </div>
-
-        <!-- Source Type -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Source Type</label>
-          <select 
-            v-model="filterSourceType" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="">Semua Source</option>
-            <option value="Hotel">Hotel</option>
-            <option value="Direct">Direct</option>
-            <option value="Repeater">Repeater</option>
-            <option value="Partner">Partner</option>
-            <option value="Instagram">Instagram</option>
-            <option value="Web">Web</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <!-- Customer Category -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Kategori Klien</label>
-          <select 
-            v-model="filterCustomerCategory" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="">Semua Kategori</option>
-            <option value="Corporate">Corporate</option>
-            <option value="Agency">Agency</option>
-            <option value="Partner">Partner</option>
-            <option value="Government">Government</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <!-- Date Range From -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Dari Tanggal</label>
-          <input 
-            v-model="filterDateFrom" 
-            type="date"
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          />
-        </div>
-
-        <!-- Date Range To -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Sampai Tanggal</label>
-          <input 
-            v-model="filterDateTo" 
-            type="date"
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          />
-        </div>
-      </div>
-
-      <!-- Second Row of Filters -->
-      <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 border-t border-brand-charcoal-light/10 pt-4">
-        <!-- Quotation Status -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Quotation</label>
-          <select 
-            v-model="filterQuotationStatus" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="">Semua Quotation</option>
-            <option value="Draft">Draft</option>
-            <option value="Sent">Sent</option>
-            <option value="Follow Up">Follow Up</option>
-            <option value="Revision">Revision</option>
-            <option value="Signed & Deal">Signed & Deal</option>
-            <option value="Cancel">Cancel</option>
-          </select>
-        </div>
-
-        <!-- Program Status -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Program</label>
-          <select 
-            v-model="filterProgramStatus" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="">Semua Program</option>
-            <option value="Inquiry">Inquiry</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Preparation">Preparation</option>
-            <option value="Ready">Ready</option>
-            <option value="Running">Running</option>
-            <option value="Completed">Completed</option>
-            <option value="Reporting">Reporting</option>
-            <option value="Closed">Closed</option>
-            <option value="Cancel">Cancel</option>
-          </select>
-        </div>
-
-        <!-- Payment Status -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Pembayaran</label>
-          <select 
-            v-model="filterPaymentStatus" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="">Semua Pembayaran</option>
-            <option value="Not Invoiced">Not Invoiced</option>
-            <option value="Invoice Sent">Invoice Sent</option>
-            <option value="Partial Paid">Partial Paid</option>
-            <option value="Paid">Paid</option>
-            <option value="Outstanding">Outstanding</option>
-            <option value="Overdue">Overdue</option>
-          </select>
-        </div>
-
-        <!-- Event Window -->
-        <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Event Window</label>
-          <select 
-            v-model="filterEventWindow" 
-            @change="fetchControlCenterData"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
-          >
-            <option value="all">Semua Jadwal</option>
-            <option value="today">Hari Ini</option>
-            <option value="next_7_days">7 Hari ke Depan</option>
-            <option value="next_14_days">14 Hari ke Depan</option>
-            <option value="this_month">Bulan Ini</option>
-            <option value="overdue">Terlambat (Overdue)</option>
-          </select>
-        </div>
-
-        <!-- Checkboxes -->
-        <div class="md:col-span-2 flex items-center gap-4 pt-4 select-none">
-          <label class="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-white cursor-pointer transition-colors">
-            <input 
-              v-model="filterIncludeClosed" 
-              type="checkbox" 
-              @change="fetchControlCenterData"
-              class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
-            />
-            Closed Project
-          </label>
-          <label class="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-white cursor-pointer transition-colors">
-            <input 
-              v-model="filterIncludeCanceled" 
-              type="checkbox" 
-              @change="fetchControlCenterData"
-              class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
-            />
-            Batal (Canceled)
-          </label>
-        </div>
-      </div>
-    </div>
+    <PoControlFilters :users="users" @change="handleFilterChange" />
 
     <!-- Error State -->
     <div v-if="error" class="glass-panel p-8 border border-red-500/20 text-center space-y-3">
@@ -239,87 +47,7 @@
     <!-- Main Content -->
     <div v-else class="space-y-6">
       <!-- KPI Cards Summary -->
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 select-none">
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Total Proyek</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-white">{{ summary.total_owned_projects }}</span>
-            <span class="text-[9px] text-gray-400 font-bold">Proyek</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Total Deal</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-brand-emerald">{{ summary.total_deal }}</span>
-            <span class="text-[9px] text-brand-emerald font-bold">Proyek</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Total Batal</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-red-400">{{ summary.total_cancel }}</span>
-            <span class="text-[9px] text-red-400 font-bold">Proyek</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Deal Rate</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-indigo-400">{{ Math.round(summary.deal_rate || 0) }}%</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20 lg:col-span-2">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Potential Revenue</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-sm font-black text-white truncate select-all">{{ formatCurrency(summary.potential_revenue) }}</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20 lg:col-span-2">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Confirmed Revenue</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-sm font-black text-brand-emerald truncate select-all">{{ formatCurrency(summary.confirmed_revenue) }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Second Row KPI Summary Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 select-none">
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Outstanding Pembayaran</p>
-          <div class="flex flex-col">
-            <span class="text-sm font-black text-amber-500 truncate select-all">{{ formatCurrency(summary.outstanding_payment) }}</span>
-            <span class="text-[9px] text-gray-400 font-semibold mt-0.5">({{ summary.outstanding_count }} Klien)</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Invoice Sent (Belum Paid)</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-indigo-400">{{ summary.invoice_sent_count }}</span>
-            <span class="text-[9px] text-indigo-400 font-bold">Tagihan</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Invoice Paid (Lunas)</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-brand-emerald">{{ summary.paid_count }}</span>
-            <span class="text-[9px] text-brand-emerald font-bold">Lunas</span>
-          </div>
-        </div>
-
-        <div class="glass-panel p-4 border border-brand-charcoal-light/25 bg-gradient-to-tr from-brand-charcoal-dark/30 to-brand-charcoal/20">
-          <p class="text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Follow-up Diperlukan</p>
-          <div class="flex items-baseline gap-2">
-            <span class="text-xl font-black text-red-400">{{ summary.follow_up_needed_count }}</span>
-            <span class="text-[9px] text-red-400 font-bold">Tindakan</span>
-          </div>
-        </div>
-      </div>
+      <PoControlSummaryCards :summary="summary" />
 
       <!-- Tab Buttons -->
       <div class="flex border-b border-brand-charcoal-light/25 select-none">
@@ -343,54 +71,7 @@
 
       <!-- TAB 1: Follow-up Priorities -->
       <div v-show="activeTab === 'priority'" class="space-y-4">
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Prioritas Tindakan Follow-up</h3>
-            <span class="text-[10px] font-bold text-gray-400 bg-brand-charcoal-light/20 px-2 py-0.5 rounded">
-              Aksi komersial mendesak berdasarkan sisa hari event, nilai budget, dan resiko pembayaran
-            </span>
-          </div>
-
-          <div v-if="followUpPriorities.length === 0" class="py-12 text-center text-xs text-gray-500 font-semibold">
-            Tidak ada prioritas follow-up terdeteksi. Semua quotation dan penagihan terpantau aman.
-          </div>
-
-          <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div 
-              v-for="(act, idx) in followUpPriorities" 
-              :key="idx"
-              class="p-4 rounded-2xl border flex flex-col justify-between gap-3 text-xs group"
-              :class="getPrioClass(act.priority_level)"
-            >
-              <div>
-                <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2 mb-2 select-none">
-                  <span class="font-bold font-mono tracking-wider">{{ act.project_code || 'UNCODED' }}</span>
-                  <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase" :class="getPrioBadgeClass(act.priority_level)">
-                    {{ act.priority_level }}
-                  </span>
-                </div>
-                <h4 class="font-bold text-white text-sm mb-1 leading-snug group-hover:text-brand-orange transition-colors">
-                  {{ act.program_name }}
-                </h4>
-                <p class="text-gray-400 font-semibold text-[10px] mb-1">Klien: {{ act.customer_name }} • Budget: {{ formatCurrency(act.budget) }}</p>
-                <p class="text-gray-300 font-semibold text-[11px] mb-2">{{ act.reason }}</p>
-                
-                <div class="bg-black/20 p-2.5 rounded-xl border border-white/5 space-y-1">
-                  <p class="text-[9px] font-black text-brand-orange uppercase tracking-wider select-none">Rekomendasi Aksi:</p>
-                  <p class="text-white font-bold leading-normal">{{ act.recommended_action }}</p>
-                </div>
-              </div>
-              <div class="pt-2 flex justify-end">
-                <router-link 
-                  :to="'/projects/' + act.project_id"
-                  class="px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold text-[10px] transition-all"
-                >
-                  Buka Proyek →
-                </router-link>
-              </div>
-            </div>
-          </div>
-        </div>
+        <FollowUpPriorityList :priorities="followUpPriorities" />
       </div>
 
       <!-- TAB 2: Owned Projects List -->
@@ -619,328 +300,19 @@
 
       <!-- TAB 4: Commercial Risks exceptions -->
       <div v-show="activeTab === 'risiko'" class="space-y-6">
-        <!-- Cancel without reason -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-3">
-          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-            <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-red-500"></span>
-              Proyek Batal Tanpa Alasan (Cancel Reason Missing)
-            </h4>
-            <span v-if="commercialRisks.cancel_without_reason?.length > 0" class="text-[9px] font-bold text-red-400 bg-red-500/10 px-2 py-0.5 rounded">
-              Urgensi Tinggi
-            </span>
-            <span v-else class="text-[9px] font-bold text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded">
-              Aman
-            </span>
-          </div>
-          
-          <div v-if="!commercialRisks.cancel_without_reason || commercialRisks.cancel_without_reason.length === 0" class="text-xs text-gray-500 py-3 font-semibold text-center select-none">
-            Aman: Tidak ada proyek batal yang kehilangan catatan alasan.
-          </div>
-          
-          <div v-else class="overflow-x-auto">
-            <table class="min-w-full text-left text-[11px]">
-              <thead class="text-gray-500 text-[9px] uppercase tracking-widest font-black">
-                <tr>
-                  <th class="py-2">Code</th>
-                  <th class="py-2">Program / Customer</th>
-                  <th class="py-2">PO / PM</th>
-                  <th class="py-2 text-right">Budget</th>
-                  <th class="py-2">Peringatan</th>
-                  <th class="py-2 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-semibold">
-                <tr v-for="rp in commercialRisks.cancel_without_reason" :key="rp.project_id" class="hover:bg-white/5">
-                  <td class="py-2 font-mono text-gray-400 select-all">{{ rp.project_code || '-' }}</td>
-                  <td class="py-2">
-                    <p class="text-white">{{ rp.program_name }}</p>
-                    <p class="text-[10px] text-gray-500">{{ rp.customer_name }}</p>
-                  </td>
-                  <td class="py-2 text-gray-400">PO: {{ rp.po_name }} • PM: {{ rp.pm_name }}</td>
-                  <td class="py-2 text-right text-white font-mono">{{ formatCurrency(rp.budget) }}</td>
-                  <td class="py-2 text-red-400 font-bold">{{ rp.reason }}</td>
-                  <td class="py-2 text-right">
-                    <router-link :to="'/projects/' + rp.project_id" class="text-[10px] text-brand-orange hover:underline font-bold">
-                      Open Project
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Signed deal without budget -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-3">
-          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-            <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-red-500"></span>
-              Proyek Deal Tanpa Nilai Budget (Signed &amp; Deal Rp 0)
-            </h4>
-            <span v-if="commercialRisks.signed_deal_without_budget?.length > 0" class="text-[9px] font-bold text-red-400 bg-red-500/10 px-2 py-0.5 rounded">
-              Urgensi Tinggi
-            </span>
-            <span v-else class="text-[9px] font-bold text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded">
-              Aman
-            </span>
-          </div>
-
-          <div v-if="!commercialRisks.signed_deal_without_budget || commercialRisks.signed_deal_without_budget.length === 0" class="text-xs text-gray-500 py-3 font-semibold text-center select-none">
-            Aman: Semua proyek Signed &amp; Deal memiliki nilai budget terisi.
-          </div>
-
-          <div v-else class="overflow-x-auto">
-            <table class="min-w-full text-left text-[11px]">
-              <thead class="text-gray-500 text-[9px] uppercase tracking-widest font-black">
-                <tr>
-                  <th class="py-2">Code</th>
-                  <th class="py-2">Program / Customer</th>
-                  <th class="py-2">PO / PM</th>
-                  <th class="py-2 text-right">Budget</th>
-                  <th class="py-2">Peringatan</th>
-                  <th class="py-2 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-semibold">
-                <tr v-for="rp in commercialRisks.signed_deal_without_budget" :key="rp.project_id" class="hover:bg-white/5">
-                  <td class="py-2 font-mono text-gray-400 select-all">{{ rp.project_code || '-' }}</td>
-                  <td class="py-2">
-                    <p class="text-white">{{ rp.program_name }}</p>
-                    <p class="text-[10px] text-gray-500">{{ rp.customer_name }}</p>
-                  </td>
-                  <td class="py-2 text-gray-400">PO: {{ rp.po_name }} • PM: {{ rp.pm_name }}</td>
-                  <td class="py-2 text-right text-red-400 font-mono">{{ formatCurrency(rp.budget) }}</td>
-                  <td class="py-2 text-red-400 font-bold">{{ rp.reason }}</td>
-                  <td class="py-2 text-right">
-                    <router-link :to="'/projects/' + rp.project_id" class="text-[10px] text-brand-orange hover:underline font-bold">
-                      Open Project
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Outstanding Payment -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-3">
-          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-            <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-              Proyek dengan Status Outstanding / Overdue Payment
-            </h4>
-            <span v-if="commercialRisks.outstanding_payment?.length > 0" class="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">
-              Peringatan Keuangan
-            </span>
-            <span v-else class="text-[9px] font-bold text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded">
-              Aman
-            </span>
-          </div>
-
-          <div v-if="!commercialRisks.outstanding_payment || commercialRisks.outstanding_payment.length === 0" class="text-xs text-gray-500 py-3 font-semibold text-center select-none">
-            Aman: Tidak ada tagihan jatuh tempo terdeteksi terlambat.
-          </div>
-
-          <div v-else class="overflow-x-auto">
-            <table class="min-w-full text-left text-[11px]">
-              <thead class="text-gray-500 text-[9px] uppercase tracking-widest font-black">
-                <tr>
-                  <th class="py-2">Code</th>
-                  <th class="py-2">Program / Customer</th>
-                  <th class="py-2">PO / PM</th>
-                  <th class="py-2 text-right">Budget</th>
-                  <th class="py-2">Peringatan</th>
-                  <th class="py-2 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-semibold">
-                <tr v-for="rp in commercialRisks.outstanding_payment" :key="rp.project_id" class="hover:bg-white/5">
-                  <td class="py-2 font-mono text-gray-400 select-all">{{ rp.project_code || '-' }}</td>
-                  <td class="py-2">
-                    <p class="text-white">{{ rp.program_name }}</p>
-                    <p class="text-[10px] text-gray-500">{{ rp.customer_name }}</p>
-                  </td>
-                  <td class="py-2 text-gray-400">PO: {{ rp.po_name }} • PM: {{ rp.pm_name }}</td>
-                  <td class="py-2 text-right text-white font-mono">{{ formatCurrency(rp.budget) }}</td>
-                  <td class="py-2 text-amber-500 font-bold">{{ rp.reason }}</td>
-                  <td class="py-2 text-right">
-                    <router-link :to="'/projects/' + rp.project_id" class="text-[10px] text-brand-orange hover:underline font-bold">
-                      Open Project
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Invoice Sent Not Paid -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-3">
-          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-            <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-              Invoice Sent (Menunggu Pelunasan Klien)
-            </h4>
-          </div>
-
-          <div v-if="!commercialRisks.invoice_sent_not_paid || commercialRisks.invoice_sent_not_paid.length === 0" class="text-xs text-gray-500 py-3 font-semibold text-center select-none">
-            Tidak ada invoice dalam masa tunggu pembayaran.
-          </div>
-
-          <div v-else class="overflow-x-auto">
-            <table class="min-w-full text-left text-[11px]">
-              <thead class="text-gray-500 text-[9px] uppercase tracking-widest font-black">
-                <tr>
-                  <th class="py-2">Code</th>
-                  <th class="py-2">Program / Customer</th>
-                  <th class="py-2">PO / PM</th>
-                  <th class="py-2 text-right">Budget</th>
-                  <th class="py-2">Peringatan</th>
-                  <th class="py-2 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-semibold">
-                <tr v-for="rp in commercialRisks.invoice_sent_not_paid" :key="rp.project_id" class="hover:bg-white/5">
-                  <td class="py-2 font-mono text-gray-400 select-all">{{ rp.project_code || '-' }}</td>
-                  <td class="py-2">
-                    <p class="text-white">{{ rp.program_name }}</p>
-                    <p class="text-[10px] text-gray-500">{{ rp.customer_name }}</p>
-                  </td>
-                  <td class="py-2 text-gray-400">PO: {{ rp.po_name }} • PM: {{ rp.pm_name }}</td>
-                  <td class="py-2 text-right text-white font-mono">{{ formatCurrency(rp.budget) }}</td>
-                  <td class="py-2 text-indigo-400 font-bold">{{ rp.reason }}</td>
-                  <td class="py-2 text-right">
-                    <router-link :to="'/projects/' + rp.project_id" class="text-[10px] text-brand-orange hover:underline font-bold">
-                      Open Project
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Missing PO Assignment -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-3">
-          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-            <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-              Proyek Tanpa Penanggung Jawab Program Owner (PO)
-            </h4>
-          </div>
-
-          <div v-if="!commercialRisks.missing_po || commercialRisks.missing_po.length === 0" class="text-xs text-gray-500 py-3 font-semibold text-center select-none">
-            Aman: Semua proyek memiliki Program Owner (PO) penanggung jawab.
-          </div>
-
-          <div v-else class="overflow-x-auto">
-            <table class="min-w-full text-left text-[11px]">
-              <thead class="text-gray-500 text-[9px] uppercase tracking-widest font-black">
-                <tr>
-                  <th class="py-2">Code</th>
-                  <th class="py-2">Program / Customer</th>
-                  <th class="py-2">PO / PM</th>
-                  <th class="py-2 text-right">Budget</th>
-                  <th class="py-2">Peringatan</th>
-                  <th class="py-2 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-semibold">
-                <tr v-for="rp in commercialRisks.missing_po" :key="rp.project_id" class="hover:bg-white/5">
-                  <td class="py-2 font-mono text-gray-400 select-all">{{ rp.project_code || '-' }}</td>
-                  <td class="py-2">
-                    <p class="text-white">{{ rp.program_name }}</p>
-                    <p class="text-[10px] text-gray-500">{{ rp.customer_name }}</p>
-                  </td>
-                  <td class="py-2 text-gray-400">PO: {{ rp.po_name }} • PM: {{ rp.pm_name }}</td>
-                  <td class="py-2 text-right text-white font-mono">{{ formatCurrency(rp.budget) }}</td>
-                  <td class="py-2 text-amber-400 font-bold">{{ rp.reason }}</td>
-                  <td class="py-2 text-right">
-                    <router-link :to="'/projects/' + rp.project_id" class="text-[10px] text-brand-orange hover:underline font-bold">
-                      Open Project
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Missing Lead Source -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-3">
-          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-            <h4 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-              Proyek Tanpa Data Event Source / Lead Partner
-            </h4>
-          </div>
-
-          <div v-if="!commercialRisks.missing_source || commercialRisks.missing_source.length === 0" class="text-xs text-gray-500 py-3 font-semibold text-center select-none">
-            Aman: Semua proyek memiliki data Event Source.
-          </div>
-
-          <div v-else class="overflow-x-auto">
-            <table class="min-w-full text-left text-[11px]">
-              <thead class="text-gray-500 text-[9px] uppercase tracking-widest font-black">
-                <tr>
-                  <th class="py-2">Code</th>
-                  <th class="py-2">Program / Customer</th>
-                  <th class="py-2">PO / PM</th>
-                  <th class="py-2 text-right">Budget</th>
-                  <th class="py-2">Peringatan</th>
-                  <th class="py-2 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5 font-semibold">
-                <tr v-for="rp in commercialRisks.missing_source" :key="rp.project_id" class="hover:bg-white/5">
-                  <td class="py-2 font-mono text-gray-400 select-all">{{ rp.project_code || '-' }}</td>
-                  <td class="py-2">
-                    <p class="text-white">{{ rp.program_name }}</p>
-                    <p class="text-[10px] text-gray-500">{{ rp.customer_name }}</p>
-                  </td>
-                  <td class="py-2 text-gray-400">PO: {{ rp.po_name }} • PM: {{ rp.pm_name }}</td>
-                  <td class="py-2 text-right text-white font-mono">{{ formatCurrency(rp.budget) }}</td>
-                  <td class="py-2 text-amber-400 font-bold">{{ rp.reason }}</td>
-                  <td class="py-2 text-right">
-                    <router-link :to="'/projects/' + rp.project_id" class="text-[10px] text-brand-orange hover:underline font-bold">
-                      Open Project
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <CommercialRisksPanel :commercial-risks="commercialRisks" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-/**
- * PO Control Center
- * =========================================================================
- * Roadmap Refactoring Backlog (Sprint 11 Candidate):
- * Untuk meningkatkan maintainability dan readability, view ini direncanakan
- * untuk dipecah menjadi komponen modular kecil:
- * 
- * 1. PoControlSummaryCards.vue       - KPI Card section (Total Project, Deal, Cancel, Average Value, etc.)
- * 2. PoControlFilters.vue            - Filter Panel komersial & fungsionalitas reset
- * 3. FollowUpPriorityList.vue        - List prioritas tindak lanjut komersial (Tab 1)
- * 4. OwnedProjectsTable.vue          - Tabel proyek di bawah tanggung jawab PO (Tab 2)
- * 5. QuotationSummary.vue            - Struktur status penawaran / quotation (Tab 3 - Kiri)
- * 6. CommercialRevenueSummary.vue    - Statistik nilai proyek & konversi (Tab 3 - Kiri Bawah)
- * 7. PoPerformanceTable.vue          - Tabel beban kerja & kinerja komersial PO (Tab 3 - Kanan)
- * 8. SourceContributionTable.vue     - Tabel kontribusi Lead Source & Vendor Partner (Tab 3 - Bawah)
- * 9. CommercialRisksPanel.vue        - Panel deteksi resiko & exceptions (Tab 4)
- * 
- * Rencana state management: Gunakan props, emit event, atau Pinia store untuk berbagi data
- * filter dan hasil pencarian di antara komponen-komponen tersebut.
- * =========================================================================
- */
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+import PoControlSummaryCards from '../components/commercial/PoControlSummaryCards.vue'
+import PoControlFilters from '../components/commercial/PoControlFilters.vue'
+import FollowUpPriorityList from '../components/commercial/FollowUpPriorityList.vue'
+import CommercialRisksPanel from '../components/commercial/CommercialRisksPanel.vue'
 
 const users = ref([])
 const summary = ref({
@@ -999,20 +371,17 @@ const loading = ref(true)
 const error = ref(null)
 const activeTab = ref('priority')
 
-// Filters variables
-const filterPo = ref('')
-const filterPm = ref('')
-const filterSourceType = ref('')
-const filterCustomerCategory = ref('')
-const filterQuotationStatus = ref('')
-const filterProgramStatus = ref('')
-const filterPaymentStatus = ref('')
-const filterProjectStatus = ref('')
-const filterDateFrom = ref('')
-const filterDateTo = ref('')
-const filterEventWindow = ref('all')
-const filterIncludeClosed = ref(false)
-const filterIncludeCanceled = ref(false)
+// Filters state
+const appliedFilters = ref({
+  event_window: 'all',
+  include_closed: false,
+  include_canceled: false
+})
+
+const handleFilterChange = (newFilters) => {
+  appliedFilters.value = newFilters
+  fetchControlCenterData()
+}
 
 const totalRisksCount = computed(() => {
   const r = commercialRisks.value
@@ -1046,20 +415,20 @@ const fetchControlCenterData = async () => {
   error.value = null
   try {
     const params = {
-      event_window: filterEventWindow.value,
-      include_closed: filterIncludeClosed.value,
-      include_canceled: filterIncludeCanceled.value
+      event_window: appliedFilters.value.event_window,
+      include_closed: appliedFilters.value.include_closed,
+      include_canceled: appliedFilters.value.include_canceled
     }
-    if (filterPo.value) params.po_id = filterPo.value
-    if (filterPm.value) params.pm_id = filterPm.value
-    if (filterSourceType.value) params.source_type = filterSourceType.value
-    if (filterCustomerCategory.value) params.customer_category = filterCustomerCategory.value
-    if (filterQuotationStatus.value) params.quotation_status = filterQuotationStatus.value
-    if (filterProgramStatus.value) params.program_status = filterProgramStatus.value
-    if (filterPaymentStatus.value) params.payment_status = filterPaymentStatus.value
-    if (filterProjectStatus.value) params.project_status = filterProjectStatus.value
-    if (filterDateFrom.value) params.date_from = filterDateFrom.value
-    if (filterDateTo.value) params.date_to = filterDateTo.value
+    if (appliedFilters.value.po_id) params.po_id = appliedFilters.value.po_id
+    if (appliedFilters.value.pm_id) params.pm_id = appliedFilters.value.pm_id
+    if (appliedFilters.value.source_type) params.source_type = appliedFilters.value.source_type
+    if (appliedFilters.value.customer_category) params.customer_category = appliedFilters.value.customer_category
+    if (appliedFilters.value.quotation_status) params.quotation_status = appliedFilters.value.quotation_status
+    if (appliedFilters.value.program_status) params.program_status = appliedFilters.value.program_status
+    if (appliedFilters.value.payment_status) params.payment_status = appliedFilters.value.payment_status
+    if (appliedFilters.value.project_status) params.project_status = appliedFilters.value.project_status
+    if (appliedFilters.value.date_from) params.date_from = appliedFilters.value.date_from
+    if (appliedFilters.value.date_to) params.date_to = appliedFilters.value.date_to
 
     const res = await axios.get('/api/v1/dashboard/po-control-center', { params })
     
@@ -1077,23 +446,6 @@ const fetchControlCenterData = async () => {
   } finally {
     loading.value = false
   }
-}
-
-const resetFilters = () => {
-  filterPo.value = ''
-  filterPm.value = ''
-  filterSourceType.value = ''
-  filterCustomerCategory.value = ''
-  filterQuotationStatus.value = ''
-  filterProgramStatus.value = ''
-  filterPaymentStatus.value = ''
-  filterProjectStatus.value = ''
-  filterDateFrom.value = ''
-  filterDateTo.value = ''
-  filterEventWindow.value = 'all'
-  filterIncludeClosed.value = false
-  filterIncludeCanceled.value = false
-  fetchControlCenterData()
 }
 
 onMounted(() => {
@@ -1114,21 +466,6 @@ const formatDate = (val) => {
 const formatCurrency = (val) => {
   if (val === null || val === undefined) return 'Rp 0'
   return 'Rp ' + Number(val).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-}
-
-// Priority Action class helpers
-const getPrioClass = (prio) => {
-  if (prio === 'Critical') return 'bg-red-500/10 border-red-500/30 text-white shadow-lg shadow-red-500/5'
-  if (prio === 'High') return 'bg-amber-500/10 border-amber-500/30 text-white'
-  if (prio === 'Medium') return 'bg-brand-blue/10 border-brand-blue/30 text-white'
-  return 'bg-brand-charcoal/40 border-brand-charcoal-light/20 text-gray-400'
-}
-
-const getPrioBadgeClass = (prio) => {
-  if (prio === 'Critical') return 'bg-red-500 text-white'
-  if (prio === 'High') return 'bg-amber-500 text-black'
-  if (prio === 'Medium') return 'bg-brand-blue text-white'
-  return 'bg-gray-600 text-white'
 }
 
 // Status Badges class helpers

@@ -12,7 +12,7 @@ from app.modules.events.models import EventSchedule
 from app.modules.tasks.models import Task
 from app.modules.finance.models import Invoice, Payment
 from app.models.activity import ActivityLog
-from app.modules.dashboard.schemas import DashboardAnalyticsResponse, PMControlCenterResponse, POControlCenterResponse
+from app.modules.dashboard.schemas import DashboardAnalyticsResponse, PMControlCenterResponse, POControlCenterResponse, SourceVendorPerformanceResponse
 from app.modules.dashboard.service import get_dashboard_analytics
 from uuid import UUID
 
@@ -721,6 +721,28 @@ def get_po_control_center(
         date_from=date_from,
         date_to=date_to,
         event_window=event_window,
+        include_closed=include_closed,
+        include_canceled=include_canceled
+    )
+
+
+@router.get("/source-vendor-performance", response_model=SourceVendorPerformanceResponse)
+def get_source_vendor_performance(
+    db: Session = Depends(deps.get_db),
+    po_id: Optional[str] = Query(None),
+    date_from: Optional[date] = Query(None),
+    date_to: Optional[date] = Query(None),
+    include_closed: bool = Query(False),
+    include_canceled: bool = Query(False),
+    current_user: User = Depends(deps.get_current_user)
+):
+    """Retrieve event source and vendor partner workload analytics, conversion rates, revenues, and alerts."""
+    from app.modules.dashboard import source_vendor_service
+    return source_vendor_service.get_source_vendor_performance_data(
+        db,
+        po_id=po_id,
+        date_from=date_from,
+        date_to=date_to,
         include_closed=include_closed,
         include_canceled=include_canceled
     )

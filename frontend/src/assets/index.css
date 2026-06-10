@@ -191,3 +191,139 @@
   content: '';
   @apply absolute inset-0 bg-white/20 -translate-x-full skew-x-12 animate-pulse;
 }
+
+/* Print Optimization Stylesheet for Premium Report Exports (Ctrl+P) */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  
+  /* Hide sidebars, navigation panels, header bars, dropdown filters, upload boxes, buttons, action lists, footers, etc. */
+  aside,
+  nav,
+  header,
+  .no-print,
+  button,
+  .btn,
+  .print-hide,
+  a[href^="javascript:"],
+  .filters-bar,
+  #sidebar,
+  .sidebar,
+  .header-actions,
+  .router-link-active,
+  .flex.items-center.gap-2 button,
+  .glass-panel select,
+  .glass-panel button,
+  .upload-zone,
+  .tabs-buttons,
+  .flex.border-b.border-brand-charcoal-light\/25,
+  .flex.border-b.border-brand-charcoal-light\/10,
+  .flex.items-center.gap-2,
+  .flex.flex-col.md\:flex-row.md\:items-center.justify-between.gap-4.select-none > div:last-child {
+    display: none !important;
+  }
+
+  /* Force white background and black text on all panels and containers */
+  .glass-panel,
+  .interactive-card,
+  .bg-black\/20,
+  .bg-brand-charcoal,
+  .bg-brand-charcoal-dark {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Text color fixes for better readability in black-and-white or standard color print */
+  h1, h2, h3, h4, h5, h6, p, span, td, th, div {
+    color: #000000 !important;
+  }
+
+  /* Keep brand highlight colors legible on white paper */
+  .text-brand-orange,
+  .text-amber-500,
+  .text-indigo-400,
+  .text-brand-blue {
+    color: #d97706 !important; /* Rich dark amber */
+  }
+
+  .text-brand-emerald {
+    color: #059669 !important; /* Rich green */
+  }
+
+  .text-red-400 {
+    color: #dc2626 !important; /* Rich red */
+  }
+
+  /* Tables formatting for print */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto !important;
+  }
+  
+  tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto !important;
+  }
+  
+  thead {
+    display: table-header-group !important;
+    background-color: #f3f4f6 !important;
+  }
+
+  th, td {
+    border: 1px solid #e5e7eb !important;
+    padding: 8px !important;
+    color: #000000 !important;
+  }
+
+  /* Formatting layout into grid/column for page print fitting */
+  .grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 16px !important;
+  }
+
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4,
+  .lg\:grid-cols-2 {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  /* Prevent elements from being cut off in the middle of page breaks */
+  .glass-panel,
+  .interactive-card,
+  table,
+  tbody,
+  tr {
+    page-break-inside: avoid !important;
+  }
+
+  /* Make sure links are readable and print the URL next to it if helpful */
+  a:after {
+    content: " (" attr(href) ")";
+    font-size: 80% !important;
+    color: #4b5563 !important;
+  }
+
+  /* Avoid showing URLs next to internal app router links */
+  a[href^="/"]:after,
+  a[href^="#"]:after,
+  a.no-url-after:after {
+    content: "" !important;
+  }
+
+  /* Size optimizations for a4/letter pages */
+  @page {
+    size: A4 landscape;
+    margin: 1.5cm;
+  }
+}

@@ -2,6 +2,7 @@ from typing import Optional, List
 from sqlalchemy.orm import Session
 from app.core.security import get_password_hash, verify_password
 from app.core.database import db_commit_safety
+from app.core.config import settings
 from app.modules.auth.models import Role, User
 from app.modules.auth.schemas import UserCreate, UserUpdate, RoleCreate
 
@@ -84,21 +85,21 @@ def seed_roles_and_admin(db: Session):
             # Update permissions if they changed
             existing_role.permissions = perms
             db_commit_safety(db)
-
+ 
     # 2. Super Admin User
-    admin_email = "admin@onespirit.asia"
+    admin_email = settings.ADMIN_EMAIL
     admin_user = get_user_by_email(db, admin_email)
     if not admin_user:
         admin_role = created_roles["Super Admin"]
         admin_create = UserCreate(
             email=admin_email,
-            password="OneSpirit2026!",
+            password=settings.ADMIN_PASSWORD,
             full_name="System Super Admin",
             is_active=True,
             role_id=admin_role.id
         )
         create_user(db, admin_create)
-        print("Successfully seeded Super Admin user: admin@onespirit.asia / OneSpirit2026!")
+        print(f"Successfully seeded Super Admin user: {admin_email} / {settings.ADMIN_PASSWORD}")
 
     # 3. Seed placeholder internal users for Excel PO/PM verification
     initials_to_seed = [

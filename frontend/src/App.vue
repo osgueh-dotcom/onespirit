@@ -117,7 +117,8 @@ import {
   FolderIcon,
   ArrowUpTrayIcon,
   ClipboardDocumentCheckIcon,
-  BanknotesIcon
+  BanknotesIcon,
+  ChartBarIcon
 } from '@heroicons/vue/24/outline'
 
 const auth = useAuthStore()
@@ -146,7 +147,8 @@ const navItems = [
   { name: 'Documents Hub', path: '/documents', icon: FolderIcon, permission: 'documents:read' },
   { name: 'Excel Importer', path: '/imports', icon: ArrowUpTrayIcon, permission: 'projects:write' },
   { name: 'PM Control Center', path: '/pm-control-center', icon: ClipboardDocumentCheckIcon, permission: 'projects:read' },
-  { name: 'PO Control Center', path: '/po-control-center', icon: BanknotesIcon, permission: 'projects:read' }
+  { name: 'PO Control Center', path: '/po-control-center', icon: BanknotesIcon, permission: 'projects:read' },
+  { name: 'Source & Vendor Center', path: '/source-vendor-performance', icon: ChartBarIcon, permission: 'projects:read' }
 ]
 
 const toggleTheme = () => {

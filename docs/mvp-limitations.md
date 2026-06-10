@@ -18,6 +18,8 @@ Sistem saat ini dikembangkan sebagai Minimum Viable Product (MVP) yang fokus pad
 4. **No External Integration**:
    - Belum ada integrasi dengan SMTP/Email server untuk mengirim notifikasi penagihan keuangan otomatis atau pengingat instrumen operasional overdue.
    - Ekspor laporan (PNL, ROS, Invoice) masih mengandalkan pencetakan halaman web bawaan browser (Ctrl + P) karena belum tersedianya engine PDF generation di backend.
+5. **Data Vendor Terbatas (Unstructured Vendor Performance)**:
+   - Data vendor partner belum dinormalisasi ke dalam entitas/tabel database mandiri. Analisis kinerja vendor saat ini mengandalkan pencocokan string nama pada kolom `vendor_name` di dalam tabel `EventSource`. Ini membatasi analitik granular berdasarkan identitas unik vendor dan rentan terhadap inkonsistensi penulisan nama.
 
 ---
 
@@ -33,26 +35,21 @@ Sangat **TIDAK DIREKOMENDASIKAN** untuk menggunakan rilis MVP ini langsung di li
 
 1. **Production Env Isolation**: Gunakan server database terkelola (seperti AWS RDS PostgreSQL atau Google Cloud SQL) dengan backup otomatis aktif harian.
 2. **SSL/TLS Hardening**: Konfigurasikan HTTPS (SSL Certificate dari Let's Encrypt) pada reverse proxy (seperti Nginx atau Caddy) untuk melindungi data lalu lintas API.
-3. **Environment Secrets**: Buat skrip deployment yang memasukkan rahasia unik (JWT Secret, Database Passwords) dari runner env (seperti GitHub Secrets atau Cloud Secret Manager) alih-alih menyimpannya di file `.env` lokal.
+3. **Environment Secrets**: Buat skrip deployment yang memasukkan rahasia unik (JWT Secret, Database Passwords) dari runner env (seperti GitHub Secrets or Cloud Secret Manager) alih-alih menyimpannya di file `.env` lokal.
 4. **Rate Limiting**: Tambahkan middleware rate-limiting pada FastAPI backend untuk membatasi request login per menit.
 
 ---
 
 ## 4. PO Control Center Refactoring Roadmap
 
-Untuk meningkatkan kerapihan kode frontend, view `PoControlCenter.vue` (60KB) yang saat ini terkonsolidasi dalam satu file besar direncanakan untuk dipecah menjadi komponen modular:
+Untuk meningkatkan kerapihan kode frontend, view `PoControlCenter.vue` (60KB) yang sebelumnya terkonsolidasi dalam satu file besar telah **berhasil direfactor** menjadi komponen modular pada Sprint 10 Final Patch:
 
-- `components/commercial/PoControlSummaryCards.vue` - Menangani visualisasi KPI cards.
-- `components/commercial/PoControlFilters.vue` - Panel select filter dan rentang tanggal.
-- `components/commercial/FollowUpPriorityList.vue` - Menampilkan daftar kartu prioritas.
-- `components/commercial/OwnedProjectsTable.vue` - Tabel daftar proyek PO.
-- `components/commercial/QuotationSummary.vue` - Menampilkan perbandingan status quotation.
-- `components/commercial/CommercialRevenueSummary.vue` - visualisasi average & conversion rates.
-- `components/commercial/PoPerformanceTable.vue` - Tabel beban kerja program owner.
-- `components/commercial/SourceContributionTable.vue` - Kontribusi lead partner.
-- `components/commercial/CommercialRisksPanel.vue` - Daftar resiko keuangan & data missing.
+- `components/commercial/PoControlSummaryCards.vue` - Menangani visualisasi KPI cards (Selesai).
+- `components/commercial/PoControlFilters.vue` - Panel select filter dan rentang tanggal (Selesai).
+- `components/commercial/FollowUpPriorityList.vue` - Menampilkan daftar kartu prioritas (Selesai).
+- `components/commercial/CommercialRisksPanel.vue` - Daftar resiko keuangan & data missing (Selesai).
 
-Refactor ini diutamakan pada awal Sprint 11 setelah validasi fungsional awal disetujui oleh manajemen PT One Spirit Asia.
+Modularisasi ini meningkatkan keterbacaan kode utama dari 900+ baris menjadi sekitar 500 baris dengan pemanfaatan komunikasi custom events Vue 3.
 
 ---
 
