@@ -15,11 +15,12 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 ### Changed
 - Memperbarui antarmuka card Outstanding Pembayaran pada `PoControlCenter.vue` untuk merender nilai mata uang IDR riil, bukan sekadar jumlah klien.
 - Mengganti seluruh placeholder pada dokumen `README.md`, `PROJECT_CONTEXT.md`, `SPRINT_LOG.md`, dan `CHANGELOG.md` dengan informasi nyata yang mendeskripsikan stack teknologi, istilah bisnis (CL/ROS/CK/PNL), dan alur operasional PT One Spirit Asia.
-- Menambahkan roadmap refactoring komponen komersial sebagai dokumentasi JSDoc di file frontend `frontend/src/views/PoControlCenter.vue` untuk modularisasi 9 sub-komponen pada Sprint 11.
+- Melakukan refactor minimal pada `PoControlCenter.vue` dengan mengekstrak modul visual komersial menjadi 4 subkomponen terpisah di bawah `frontend/src/components/commercial/`: `PoControlSummaryCards.vue`, `PoControlFilters.vue`, `FollowUpPriorityList.vue`, dan `CommercialRisksPanel.vue`. Ini menyederhanakan file utama dari 900+ baris menjadi 500 baris dengan komunikasi event emitter Vue 3.
 
 ### Fixed
 - Memperbaiki kegagalan koneksi database pada unit testing backend di Windows dengan membuat folder `E:\tmp` secara otomatis untuk SQLite db.
 - Menambahkan pemeriksaan runtime pytest di `backend/app/main.py` sehingga server testing mengabaikan koneksi ke PostgreSQL dan dapat berjalan murni secara lokal menggunakan SQLite.
+- Membersihkan dan memperbaiki semua absolute local path link (seperti `file:///e:/...`) menjadi relative path link di seluruh file dokumentasi markdown.
 
 ### Security
 - Menambahkan filter `*.env` dan direktori `uploads/`, `backend/app/uploads/` pada file `.gitignore` untuk mencegah kebocoran data sensitif operasional dan file rahasia lokal ke repositori git.
