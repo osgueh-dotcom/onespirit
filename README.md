@@ -167,10 +167,29 @@ Untuk melakukan demo sistem dalam waktu 15–25 menit, silakan gunakan alur beri
 
 ---
 
+## GitHub Pages Demo Deployment
+
+* **URL Frontend**: [https://osgueh-dotcom.github.io/onespirit/](https://osgueh-dotcom.github.io/onespirit/)
+* **Cara Deploy**:
+  1. Push perubahan terbaru ke branch `main`.
+  2. Buka GitHub repository -> tab **Actions** -> pilih workflow **Deploy OneSpirit Frontend to GitHub Pages** -> klik **Run workflow**.
+* **Cara Update Backend Tunnel**:
+  1. Dapatkan URL tunnel (VS Code / ngrok) dari port `8000`.
+  2. Buka **Settings** -> **Secrets and variables** -> **Actions** di repositori GitHub Anda.
+  3. Update secret `VITE_API_BASE_URL` dengan URL tunnel Anda yang baru.
+  4. Jalankan kembali workflow deployment.
+* **Link Dokumentasi**:
+  - [Panduan Deployment GitHub Pages](file:///e:/GVsys Project/One Spirit/docs/github-pages-demo-deployment.md)
+  - [Arsitektur Demo Publik](file:///e:/GVsys Project/One Spirit/docs/demo-architecture.md)
+  - [Checklist Keamanan Demo Publik](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md)
+
+---
+
 ## Dokumentasi Tambahan
 
 Semua panduan detail lainnya terletak di folder `docs/`:
 - [Panduan Deployment GitHub Pages](file:///e:/GVsys Project/One Spirit/docs/github-pages-demo-deployment.md) — Konfigurasi deployment demo berbasis GitHub Pages dengan backend tunnel.
+- [Arsitektur Demo Publik](file:///e:/GVsys Project/One Spirit/docs/demo-architecture.md) — Diagram dan penjelasan arsitektur hibrida untuk presentasi klien.
 - [Panduan Rehearsal Demo](file:///e:/GVsys Project/One Spirit/docs/client-demo-rehearsal.md) — Panduan skrip presentasi langkah-demi-langkah (15-25 menit).
 - [Checklist Keamanan Demo Publik](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md) — Aturan port-forwarding, database security, dan perlindungan data sensitif.
 - [Formulir Masukan Klien](file:///e:/GVsys Project/One Spirit/docs/client-feedback-form.md) — Kuesioner umpan balik klien untuk evaluasi alur bisnis, UI/UX, dan prioritas fitur.

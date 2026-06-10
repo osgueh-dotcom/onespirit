@@ -49,7 +49,7 @@ Mengonfigurasi frontend agar dapat dideploy ke GitHub Pages secara otomatis via 
 - **Axios Configuration**: Mengatur global `baseURL` Axios dengan `import.meta.env.VITE_API_BASE_URL` di `frontend/src/main.js`.
 - **Environment Example**: Membuat file `frontend/.env.production.example` sebagai referensi setup backend tunnel URL.
 - **GitHub Actions**: Membuat `.github/workflows/deploy-pages.yml` menggunakan Node 22 dan `actions/deploy-pages@v4`.
-- **Documentation**: Membuat panduan `docs/github-pages-demo-deployment.md` dan memperbarui `docs/public-demo-safety-checklist.md` dengan CORS requirement.
+- **Documentation**: Membuat panduan `docs/github-pages-demo-deployment.md`, panduan arsitektur hibrida `docs/demo-architecture.md`, dan memperbarui `docs/public-demo-safety-checklist.md` dengan CORS requirement.
 
 ### Di Luar Scope
 
@@ -64,6 +64,7 @@ Mengonfigurasi frontend agar dapat dideploy ke GitHub Pages secara otomatis via 
 - `frontend/.env.production.example`
 - `.github/workflows/deploy-pages.yml`
 - `docs/github-pages-demo-deployment.md`
+- `docs/demo-architecture.md`
 - `docs/public-demo-safety-checklist.md`
 
 ### Hasil Implementasi

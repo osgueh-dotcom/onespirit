@@ -10,6 +10,7 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 - Membuat file GitHub Actions workflow `.github/workflows/deploy-pages.yml` untuk build dan deploy frontend otomatis ke GitHub Pages.
 - Membuat file `.env.production.example` di folder `frontend` untuk template setup URL backend tunnel.
 - Membuat dokumen panduan deployment `docs/github-pages-demo-deployment.md`.
+- Membuat dokumen panduan arsitektur demo `docs/demo-architecture.md`.
 
 ### Changed
 - Mengonfigurasi `base: '/onespirit/'` pada `frontend/vite.config.js` agar resource dan file statis dimuat relatif ke path GitHub Pages.

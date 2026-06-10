@@ -17,6 +17,9 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
 | Status Project | Sprint 12.2 — GitHub Pages Demo Deployment |
 | Lokasi Folder | `<PROJECT_ROOT>` |
+| Frontend Deployment Strategy | GitHub Pages |
+| Backend Deployment Strategy | Temporary tunnel during client demo |
+| Database | Private local Docker |
 
 ---
 
