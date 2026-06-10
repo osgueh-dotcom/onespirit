@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
+    # Seed Admin Credentials
+    ADMIN_EMAIL: str = "admin@onespirit.asia"
+    ADMIN_PASSWORD: str = "OneSpirit2026!"
+
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = [
         "http://localhost:5173",
@@ -55,11 +59,16 @@ class Settings(BaseSettings):
         ]
 
     @model_validator(mode="after")
-    def validate_jwt_secret_in_production(self) -> "Settings":
-        if self.ENV == "production" and self.JWT_SECRET == "supersecret_change_me_in_production_1234567890!":
-            raise ValueError(
-                "SECURITY ERROR: JWT_SECRET must be changed from the default value in a production environment!"
-            )
+    def validate_security_in_production(self) -> "Settings":
+        if self.ENV == "production":
+            if self.JWT_SECRET == "supersecret_change_me_in_production_1234567890!":
+                raise ValueError(
+                    "SECURITY ERROR: JWT_SECRET must be changed from the default value in a production environment!"
+                )
+            if self.ADMIN_PASSWORD == "OneSpirit2026!":
+                raise ValueError(
+                    "SECURITY ERROR: ADMIN_PASSWORD must be changed from the default value in a production environment!"
+                )
         return self
 
     @property

@@ -39,6 +39,8 @@ services:
       - UPLOAD_DIR=${UPLOAD_DIR:-/app/uploads}
       - ENV=${ENV:-development}
       - AUTO_CREATE_TABLES=${AUTO_CREATE_TABLES:-true}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@onespirit.asia}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-OneSpirit2026!}
     volumes:
       - ./backend:/app
       - uploads_data:/app/uploads

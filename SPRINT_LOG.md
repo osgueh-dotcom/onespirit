@@ -88,9 +88,14 @@ Menstabilkan fitur komersial, melengkapi metrik PO Control Center, merapikan dok
   - PO Control Center (refactored) merender visual dashboard, filter dropdown, prioritas follow-up, daftar proyek, kinerja komersial, dan risiko komersial (`CommercialRisksPanel`) tanpa error runtime/JS console.
   - Excel Migration & Sync Hub (Imports page) memuat drop-zone dengan aman.
 
-### Risiko Tersisa
+### Penanganan Risiko Teridentifikasi (Mitigated & Resolved)
 
-- Kredensial super admin demo (`admin@onespirit.asia`) bersifat hardcoded pada database seed awal untuk kemudahan demo local/evaluasi. Ini harus dinonaktifkan/diubah ketika sistem dirilis ke production.
-- Cetak laporan operasional dan komersial (ROS, PNL) masih mengandalkan fitur bawaan Ctrl+P dari web browser (belum export PDF native).
+1. **Kredensial Super Admin Seeding**:
+   - **Risiko**: Sebelumnya data kredensial super admin demo (`admin@onespirit.asia` / `OneSpirit2026!`) di-hardcode secara statis dalam kode database seeding.
+   - **Mitigasi**: Telah dipindahkan ke konfigurasi environment variables (`ADMIN_EMAIL`, `ADMIN_PASSWORD`) yang dimuat secara dinamis.
+   - **Validasi Produksi**: Sistem akan menolak untuk start (ValueError) pada environment `production` jika password super admin masih menggunakan nilai default `OneSpirit2026!` atau `JWT_SECRET` belum diubah.
+2. **Cetak Laporan Premium**:
+   - **Risiko**: Cetak laporan operasional dan komersial (ROS, PNL) masih menggunakan browser print dan hasilnya berpotensi berantakan.
+   - **Mitigasi**: Ditambahkan print stylesheet khusus A4 landscape pada `frontend/src/assets/index.css`. Pengguna kini dapat mencetak laporan premium secara rapi dan bersih (menyembunyikan sidebar, navbar, dropdown, tombol, dan menyesuaikan layout) menggunakan pintasan bawaan `Ctrl+P` browser untuk cetak fisik atau Save as PDF.
 
 

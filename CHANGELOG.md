@@ -21,11 +21,13 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 - Memperbaiki kegagalan koneksi database pada unit testing backend di Windows dengan membuat folder `E:\tmp` secara otomatis untuk SQLite db.
 - Menambahkan pemeriksaan runtime pytest di `backend/app/main.py` sehingga server testing mengabaikan koneksi ke PostgreSQL dan dapat berjalan murni secara lokal menggunakan SQLite.
 - Membersihkan dan memperbaiki semua absolute local path link (seperti `file:///e:/...`) menjadi relative path link di seluruh file dokumentasi markdown.
+- Menambahkan stylesheet optimasi cetak `@media print` A4 landscape pada file css utama `frontend/src/assets/index.css` agar cetak cetak halaman/Save-as-PDF (Ctrl+P) otomatis menghasilkan layout laporan yang premium, bersih, dan bebas dari elemen navigasi sidebar/navbar/tombol.
 
 ### Security
 - Menambahkan filter `*.env` dan direktori `uploads/`, `backend/app/uploads/` pada file `.gitignore` untuk mencegah kebocoran data sensitif operasional dan file rahasia lokal ke repositori git.
-- Melakukan review pada file `.env.example` untuk menjamin tidak ada credentials / JWT secrets riil yang tersimpan di repositori.
+- Melakukan review pada file `.env.example` untuk menjamin tidak ada credentials / JWT secrets riil yang tersimpan di repositori, serta menambahkan placeholder konfigurasi `ADMIN_EMAIL` dan `ADMIN_PASSWORD`.
 - Menambahkan dokumentasi yang memperingatkan evaluator mengenai kredensial admin default (`admin@onespirit.asia` / `OneSpirit2026!`) yang hanya diperuntukkan bagi lingkungan demo/development.
+- Memindahkan kredensial Super Admin seeding dari kode database seed (`auth/service.py`) ke environment variables (`ADMIN_EMAIL` & `ADMIN_PASSWORD`) di config Settings, serta memvalidasi perubahan password tersebut pada environment `production` guna menghindari celah keamanan.
 
 ---
 
