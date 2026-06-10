@@ -159,13 +159,7 @@
     </div>
 
     <!-- Loading matrix -->
-    <div v-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
-      <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-xs text-gray-400 font-semibold">Loading project matrix pipeline...</span>
-    </div>
+    <AppLoadingState v-if="loading" message="Loading project matrix pipeline..." />
 
     <!-- KANBAN BOARD VIEW -->
     <div v-else-if="viewMode === 'board'" class="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-250px)] min-w-full select-none items-start">
@@ -279,127 +273,187 @@
     </div>
 
     <!-- ALL PROJECTS LIST VIEW -->
-    <div v-else class="glass-panel overflow-hidden border border-brand-charcoal-light/30">
-      <div class="overflow-x-auto min-w-full">
-        <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
-          <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
-            <tr>
-              <th class="px-6 py-4">Code</th>
-              <th class="px-6 py-4">Project Title</th>
-              <th class="px-6 py-4">Customer Account</th>
-              <th class="px-6 py-4">Source / Sales</th>
-              <th class="px-6 py-4">PO</th>
-              <th class="px-6 py-4">PM</th>
-              <th class="px-6 py-4">Event Date</th>
-              <th class="px-6 py-4">Quote Status</th>
-              <th class="px-6 py-4">Program Status</th>
-              <th class="px-6 py-4">Payment Status</th>
-              <th class="px-6 py-4">Project Status</th>
-              <th class="px-6 py-4">Readiness</th>
-              <th class="px-6 py-4">Budget</th>
-              <th class="px-6 py-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
-            <tr v-if="projects.length === 0">
-              <td colspan="14" class="px-6 py-12 text-center text-gray-500 font-semibold">
-                No active event projects cataloged.
-              </td>
-            </tr>
-            <tr 
-              v-for="proj in projects" 
-              :key="proj.id"
-              class="hover:bg-brand-charcoal-light/10 transition-colors"
-            >
-              <td class="px-6 py-4 font-bold text-gray-300 select-all font-mono">{{ proj.project_code || '-' }}</td>
-              <td class="px-6 py-4">
-                <div class="flex items-center gap-2">
-                  <router-link :to="'/projects/' + proj.id" class="font-bold text-white hover:text-brand-orange tracking-wide text-sm block">
-                    {{ proj.title }}
-                  </router-link>
-                  <!-- Quality Warnings Indicators -->
-                  <div class="flex gap-1 items-center select-none">
-                    <!-- Missing PO -->
-                    <span v-if="!proj.program_owner_id" class="h-2 w-2 rounded-full bg-red-500 shrink-0" title="Missing Program Owner (PO)"></span>
-                    <!-- Missing PM -->
-                    <span v-if="!proj.program_manager_id" class="h-2 w-2 rounded-full bg-yellow-500 shrink-0" title="Missing Program Manager (PM)"></span>
-                    <!-- Cancel without reason -->
-                    <span v-if="proj.quotation_status === 'Cancel' && !proj.cancel_reason" class="h-2 w-2 rounded-full bg-orange-500 shrink-0" title="Canceled without Reason"></span>
-                    <!-- Overdue payment warning -->
-                    <span v-if="proj.payment_status === 'Overdue' || (proj.project_status === 'Closed' && proj.payment_status !== 'Paid')" class="h-2 w-2 rounded-full bg-purple-500 shrink-0" title="Payment Overdue / Discrepancy"></span>
+    <div v-else class="space-y-4">
+      <!-- Desktop/Tablet Table View (Hidden on mobile) -->
+      <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
+        <div class="overflow-x-auto min-w-full">
+          <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+            <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+              <tr>
+                <th class="px-6 py-4">Code</th>
+                <th class="px-6 py-4">Project Title</th>
+                <th class="px-6 py-4">Customer Account</th>
+                <th class="px-6 py-4">Source / Sales</th>
+                <th class="px-6 py-4">PO</th>
+                <th class="px-6 py-4">PM</th>
+                <th class="px-6 py-4">Event Date</th>
+                <th class="px-6 py-4">Quote Status</th>
+                <th class="px-6 py-4">Program Status</th>
+                <th class="px-6 py-4">Payment Status</th>
+                <th class="px-6 py-4">Project Status</th>
+                <th class="px-6 py-4">Readiness</th>
+                <th class="px-6 py-4">Budget</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
+              <tr v-if="projects.length === 0">
+                <td colspan="14" class="px-6 py-12 text-center text-gray-500 font-semibold">
+                  No active event projects cataloged.
+                </td>
+              </tr>
+              <tr 
+                v-for="proj in projects" 
+                :key="proj.id"
+                class="hover:bg-brand-charcoal-light/10 transition-colors"
+              >
+                <td class="px-6 py-4 font-bold text-gray-300 select-all font-mono">{{ proj.project_code || '-' }}</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <router-link :to="'/projects/' + proj.id" class="font-bold text-white hover:text-brand-orange tracking-wide text-sm block">
+                      {{ proj.title }}
+                    </router-link>
+                    <!-- Quality Warnings Indicators -->
+                    <div class="flex gap-1 items-center select-none">
+                      <!-- Missing PO -->
+                      <span v-if="!proj.program_owner_id" class="h-2 w-2 rounded-full bg-red-500 shrink-0" title="Missing Program Owner (PO)"></span>
+                      <!-- Missing PM -->
+                      <span v-if="!proj.program_manager_id" class="h-2 w-2 rounded-full bg-yellow-500 shrink-0" title="Missing Program Manager (PM)"></span>
+                      <!-- Cancel without reason -->
+                      <span v-if="proj.quotation_status === 'Cancel' && !proj.cancel_reason" class="h-2 w-2 rounded-full bg-orange-500 shrink-0" title="Canceled without Reason"></span>
+                      <!-- Overdue payment warning -->
+                      <span v-if="proj.payment_status === 'Overdue' || (proj.project_status === 'Closed' && proj.payment_status !== 'Paid')" class="h-2 w-2 rounded-full bg-purple-500 shrink-0" title="Payment Overdue / Discrepancy"></span>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td class="px-6 py-4 font-bold text-white">{{ proj.customer?.company_name }}</td>
-              <td class="px-6 py-4 text-gray-300">
-                <div v-if="proj.event_source" class="font-semibold">
-                  <p>{{ proj.event_source.vendor_name || 'Partner' }}</p>
-                  <p class="text-[10px] text-gray-500 font-medium">{{ proj.event_source.sales_name || 'No Sales' }}</p>
-                </div>
-                <span v-else class="text-gray-500">-</span>
-              </td>
-              <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">{{ proj.program_owner?.full_name || '-' }}</td>
-              <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">{{ proj.program_manager?.full_name || '-' }}</td>
-              <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">
-                <div v-if="proj.event_date_start">
-                  <p class="text-white">{{ formatDate(proj.event_date_start) }}</p>
-                  <p class="text-[10px] text-gray-500">to {{ formatDate(proj.event_date_end) }}</p>
-                </div>
-                <span v-else-if="proj.start_date">
-                  <p class="text-white">{{ formatDate(proj.start_date) }}</p>
-                  <p class="text-[10px] text-gray-500">to {{ formatDate(proj.end_date) }}</p>
-                </span>
-                <span v-else class="text-gray-500">-</span>
-              </td>
-              <td class="px-6 py-4 select-none">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getQuotationStyles(proj.quotation_status)">
-                  {{ proj.quotation_status }}
-                </span>
-              </td>
-              <td class="px-6 py-4 select-none">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getStatusStyles(proj.program_status || proj.status)">
-                  {{ proj.program_status || proj.status }}
-                </span>
-              </td>
-              <td class="px-6 py-4 select-none">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getPaymentStyles(proj.payment_status)">
-                  {{ proj.payment_status }}
-                </span>
-              </td>
-              <td class="px-6 py-4 select-none">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getProjectStyles(proj.project_status)">
-                  {{ proj.project_status }}
-                </span>
-              </td>
-              <td class="px-6 py-4 select-none">
-                <div class="flex flex-col gap-1">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold text-center inline-block" :class="getReadinessScoreBadgeStyles(proj.project_readiness_score)">
-                    {{ Math.round((proj.project_readiness_score || 0) * 100) }}% Ready
+                </td>
+                <td class="px-6 py-4 font-bold text-white">{{ proj.customer?.company_name }}</td>
+                <td class="px-6 py-4 text-gray-300">
+                  <div v-if="proj.event_source" class="font-semibold">
+                    <p>{{ proj.event_source.vendor_name || 'Partner' }}</p>
+                    <p class="text-[10px] text-gray-500 font-medium">{{ proj.event_source.sales_name || 'No Sales' }}</p>
+                  </div>
+                  <span v-else class="text-gray-500">-</span>
+                </td>
+                <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">{{ proj.program_owner?.full_name || '-' }}</td>
+                <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">{{ proj.program_manager?.full_name || '-' }}</td>
+                <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">
+                  <div v-if="proj.event_date_start">
+                    <p class="text-white">{{ formatDate(proj.event_date_start) }}</p>
+                    <p class="text-[10px] text-gray-500">to {{ formatDate(proj.event_date_end) }}</p>
+                  </div>
+                  <span v-else-if="proj.start_date">
+                    <p class="text-white">{{ formatDate(proj.start_date) }}</p>
+                    <p class="text-[10px] text-gray-500">to {{ formatDate(proj.end_date) }}</p>
                   </span>
-                  <span class="text-[9px] text-gray-400 font-semibold text-center block">
-                    {{ Math.round((proj.instrument_completion_rate || 0) * 100) }}% Instruments
-                  </span>
-                </div>
-              </td>
-              <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(proj.budget) }}</td>
-              <td class="px-6 py-4 text-right select-none space-x-2.5 whitespace-nowrap">
-                <router-link 
-                  :to="'/projects/' + proj.id"
-                  class="px-2.5 py-1 text-[10px] font-bold text-brand-orange bg-brand-orange/10 rounded hover:bg-brand-orange/20 transition-all inline-block"
-                >
-                  Manage
-                </router-link>
-                <button 
-                  v-if="auth.hasPermission('projects:write')"
-                  @click="archiveProject(proj.id)"
-                  class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
-                >
-                  Archive
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <span v-else class="text-gray-500">-</span>
+                </td>
+                <td class="px-6 py-4 select-none">
+                  <AppStatusBadge :status="proj.quotation_status" type="quotation" />
+                </td>
+                <td class="px-6 py-4 select-none">
+                  <AppStatusBadge :status="proj.program_status || proj.status" type="project" />
+                </td>
+                <td class="px-6 py-4 select-none">
+                  <AppStatusBadge :status="proj.payment_status" type="payment" />
+                </td>
+                <td class="px-6 py-4 select-none">
+                  <AppStatusBadge :status="proj.project_status" type="project" />
+                </td>
+                <td class="px-6 py-4 select-none">
+                  <div class="flex flex-col gap-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold text-center inline-block" :class="getReadinessScoreBadgeStyles(proj.project_readiness_score)">
+                      {{ Math.round((proj.project_readiness_score || 0) * 100) }}% Ready
+                    </span>
+                    <span class="text-[9px] text-gray-400 font-semibold text-center block">
+                      {{ Math.round((proj.instrument_completion_rate || 0) * 100) }}% Instruments
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(proj.budget) }}</td>
+                <td class="px-6 py-4 text-right select-none space-x-2.5 whitespace-nowrap">
+                  <router-link 
+                    :to="'/projects/' + proj.id"
+                    class="px-2.5 py-1 text-[10px] font-bold text-brand-orange bg-brand-orange/10 rounded hover:bg-brand-orange/20 transition-all inline-block"
+                  >
+                    Manage
+                  </router-link>
+                  <button 
+                    v-if="auth.hasPermission('projects:write')"
+                    @click="archiveProject(proj.id)"
+                    class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
+                  >
+                    Archive
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mobile List View (Hidden on desktop/tablet) -->
+      <div class="block md:hidden space-y-4">
+        <div v-if="projects.length === 0" class="glass-panel p-8 text-center text-gray-500 font-semibold">
+          No active event projects cataloged.
+        </div>
+        <div 
+          v-for="proj in projects" 
+          :key="proj.id"
+          class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
+        >
+          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+            <span class="font-mono text-[10px] font-bold text-gray-400">{{ proj.project_code || '-' }}</span>
+            <div class="flex gap-1">
+              <AppStatusBadge :status="proj.quotation_status" type="quotation" />
+              <AppStatusBadge :status="proj.program_status || proj.status" type="project" />
+            </div>
+          </div>
+          <div>
+            <router-link :to="'/projects/' + proj.id" class="font-bold text-sm text-white hover:text-brand-orange transition-colors">
+              {{ proj.title }}
+            </router-link>
+            <p class="text-xs text-gray-400 mt-1 font-semibold">Client: {{ proj.customer?.company_name }}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 bg-brand-charcoal-dark/30 p-2.5 rounded-xl text-[11px] border border-brand-charcoal-light/10">
+            <div>
+              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Assigned PM</p>
+              <p class="text-gray-200 font-semibold">{{ proj.program_manager?.full_name || '-' }}</p>
+            </div>
+            <div>
+              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Assigned PO</p>
+              <p class="text-gray-200 font-semibold">{{ proj.program_owner?.full_name || '-' }}</p>
+            </div>
+            <div>
+              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Event Date</p>
+              <p class="text-gray-200 font-semibold">{{ proj.event_date_start ? formatDate(proj.event_date_start) : '-' }}</p>
+            </div>
+            <div>
+              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Budget Allocation</p>
+              <p class="text-brand-emerald font-bold">{{ formatMoney(proj.budget) }}</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <div class="flex flex-col">
+              <span class="text-xs font-bold text-white">{{ Math.round((proj.project_readiness_score || 0) * 100) }}% Ready</span>
+              <span class="text-[10px] text-gray-400">{{ Math.round((proj.instrument_completion_rate || 0) * 100) }}% Instruments</span>
+            </div>
+            <div class="flex gap-2">
+              <router-link 
+                :to="'/projects/' + proj.id"
+                class="px-3 py-1.5 text-xs font-bold text-brand-orange bg-brand-orange/10 rounded-xl hover:bg-brand-orange/20 transition-all"
+              >
+                Manage
+              </router-link>
+              <button 
+                v-if="auth.hasPermission('projects:write')"
+                @click="archiveProject(proj.id)"
+                class="px-3 py-1.5 text-xs font-bold text-red-400 bg-red-500/10 rounded-xl hover:bg-red-500/20 transition-all"
+              >
+                Archive
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -706,6 +760,8 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+import AppStatusBadge from '../components/ui/AppStatusBadge.vue'
+import AppLoadingState from '../components/ui/AppLoadingState.vue'
 
 const auth = useAuthStore()
 const projects = ref([])

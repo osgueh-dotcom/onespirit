@@ -4,6 +4,18 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 12] - 2026-06-11
+
+### Added
+- Membuat komponen-komponen UI bersama di `frontend/src/components/ui/` seperti `AppPageHeader.vue`, `AppStatCard.vue`, `AppStatusBadge.vue`, `AppEmptyState.vue`, `AppLoadingState.vue`, `AppErrorState.vue`.
+- Menyediakan layout alternatif (card list fallback) di resolusi mobile untuk seluruh tabel penting (Kanban projects, PM Control Center, PO Control Center, Source & Vendor performance, Finance, Imports, dan CRM) guna mencegah layout breakage pada lebar minimal 360px.
+- Membuat panduan presentasi klien di `docs/ui-ux-presentation-readiness.md`.
+
+### Changed
+- Memperbarui global navigasi utama di `App.vue` dengan pengelompokan menu komersial/operasional dan integrasi drawer sidebar mobile.
+- Mengganti label teknis bahasa Inggris menjadi microcopy bahasa Indonesia yang ramah pengguna operasional.
+- Menyempurnakan filter responsif di PM Control Center, PO Control Center, dan CRM.
+
 ## [Sprint 11] - 2026-06-10
 
 ### Added

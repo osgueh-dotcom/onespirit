@@ -22,6 +22,68 @@ Dokumen ini digunakan untuk mencatat riwayat sprint pengembangan OneSpirit Workf
 | **Sprint 10.1** | Documentation & Commercial Control Cleanup | 2026-06-09 | Done |
 | **Sprint 10 Finalization** | Commercial Control Stabilization & MVP Demo Readiness | 2026-06-10 | Done |
 | **Sprint 11** | Source & Vendor Performance Center | 2026-06-10 | Done |
+| **Sprint 12** | UI/UX Client Presentation & Responsive Experience | 2026-06-11 | Done |
+
+---
+
+## Sprint 12 — UI/UX Client Presentation & Responsive Experience
+
+Tanggal: 2026-06-11  
+Status: Done  
+AI Agent: Antigravity  
+Branch: main  
+Commit: Sprint 12: improve UI/UX and mobile responsive layout  
+
+### Tujuan
+
+Meningkatkan tampilan, pengalaman pengguna, navigasi, keterbacaan data, dan responsive layout agar OneSpirit Workflow siap dipresentasikan ke client dan nyaman digunakan di PC maupun mobile.
+
+### Scope
+
+- **Shared UI Components**: Menggunakan AppPageHeader, AppStatCard, AppEmptyState, AppLoadingState, dan AppErrorState secara konsisten.
+- **Global Layout & Navigation**: Menyempurnakan navigasi di `App.vue` dengan pengelompokan menu bisnis riil dan hamburger sidebar drawer yang optimal untuk perangkat mobile.
+- **Responsive Layout Fallbacks**: Membuat tampilan card list responsif (`block md:hidden`) untuk tabel-tabel kompleks pada resolusi mobile (Kanban projects, PM Control tables, PO Control tables, Source & Vendor tables, Finance ledger, Import previews, dan CRM).
+- **Indonesian Microcopy**: Mengubah label teknis bahasa Inggris menjadi microcopy operasional bahasa Indonesia yang ramah pengguna.
+- **Documentation**: Membuat dokumen kesiapan presentasi klien `docs/ui-ux-presentation-readiness.md` dan memperbarui logs perubahan.
+
+### Di Luar Scope
+
+- Tidak menambahkan fitur bisnis atau modul fungsional baru.
+- Tidak mengubah database schema backend.
+
+### File/Modul Terkait
+
+- `frontend/src/views/PmControlCenter.vue`
+- `frontend/src/views/PoControlCenter.vue`
+- `frontend/src/views/SourceVendorPerformance.vue`
+- `frontend/src/views/Finance.vue`
+- `frontend/src/views/Imports.vue`
+- `frontend/src/views/CRM.vue`
+- `frontend/src/components/commercial/PoControlSummaryCards.vue`
+- `docs/ui-ux-presentation-readiness.md`
+- `SPRINT_LOG.md`
+- `CHANGELOG.md`
+- `PROJECT_CONTEXT.md`
+
+### Hasil Implementasi
+
+1. **Responsivitas Viewport 360px**: Seluruh halaman dapat diakses dengan nyaman di perangkat ponsel cerdas tanpa ada layout breaking atau horizontal overflow.
+2. **Kesesuaian Istilah Bisnis**: Navigasi dan label-label telah diselaraskan dengan terms PNL, CL, ROS, CK.
+3. **Kombinasi Dual Tampilan**: Data tabel penuh dipertahaman untuk PC eksekutif, dan diubah menjadi card grid yang indah di layar mobile.
+
+### Test Yang Dilakukan (Sprint 12 Validation)
+
+Backend:
+Command:
+pytest app/tests -q (run in backend dir)
+Result:
+17 passed, 903 warnings
+
+Frontend:
+Command:
+npm run build (run in frontend dir)
+Result:
+build success
 
 ---
 

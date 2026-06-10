@@ -1,19 +1,15 @@
 <template>
   <div class="space-y-6 pb-12">
-    <!-- Top Header Banner -->
-    <div class="p-6 bg-gradient-to-r from-brand-charcoal to-brand-charcoal-light/45 border border-brand-charcoal-light/35 rounded-3xl relative overflow-hidden select-none">
-      <div class="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-brand-orange/5 rounded-full blur-3xl pointer-events-none"></div>
-      <h2 class="text-2xl font-black text-white tracking-wide">Excel Migration & Sync Hub</h2>
-      <p class="text-xs text-brand-orange font-bold mt-1 flex items-center gap-1.5">
-        <span class="h-1.5 w-1.5 rounded-full bg-brand-emerald animate-ping"></span>
-        Synchronize Flat Spreadsheet Databases into Normalized Ledgers
-      </p>
-    </div>
+    <!-- Header -->
+    <AppPageHeader 
+      title="Data Import Hub" 
+      subtitle="Synchronize flat Excel spreadsheets into normalized databases and transactional ledgers."
+    />
 
     <!-- Drag & Drop Uploader Console -->
     <div 
       v-if="!previewData && !importReport"
-      class="border-2 border-dashed border-charcoal-600 hover:border-brand-orange/50 bg-charcoal-800/40 p-12 rounded-3xl text-center select-none cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-4"
+      class="border-2 border-dashed border-charcoal-600 hover:border-brand-orange/50 bg-charcoal-800/40 p-6 md:p-12 rounded-3xl text-center select-none cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-4"
       :class="dragOver ? 'border-brand-orange bg-brand-orange/5' : ''"
       @dragover.prevent="dragOver = true"
       @dragleave="dragOver = false"
@@ -49,7 +45,7 @@
     </div>
 
     <!-- PREVIEW AREA PANEL -->
-    <div v-if="previewData && !importReport" class="space-y-6">
+    <div v-if="previewData && !importReport" class="space-y-6 animate-fade-in">
       <!-- Preview Statistics Cards -->
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4 select-none">
         <div class="p-4 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
@@ -75,9 +71,9 @@
       </div>
 
       <!-- Action Panel bar -->
-      <div class="flex items-center justify-between p-4 bg-charcoal-800/80 border border-charcoal-700 rounded-2xl select-none">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-charcoal-800/80 border border-charcoal-700 rounded-2xl select-none">
         <span class="text-xs text-charcoal-300 font-semibold">Review warnings and matched entries below before committing updates.</span>
-        <div class="flex gap-3">
+        <div class="flex gap-3 w-full sm:w-auto justify-end">
           <button 
             @click="cancelImport"
             class="px-4 py-2 border border-charcoal-600 rounded-xl text-xs font-bold text-charcoal-300 hover:text-white transition-colors"
@@ -116,10 +112,11 @@
       </div>
 
       <!-- Preview Data Sheet Table -->
-      <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col">
+      <div class="glass-panel p-5 md:p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col">
         <h4 class="text-xs font-bold text-white uppercase tracking-widest mb-4 shrink-0 select-none">Excel Row Preview</h4>
         
-        <div class="overflow-x-auto rounded-xl border border-charcoal-700">
+        <!-- Desktop Table View -->
+        <div class="hidden lg:block overflow-x-auto rounded-xl border border-charcoal-700">
           <table class="min-w-full text-left text-xs divide-y divide-charcoal-700 font-medium">
             <thead class="bg-charcoal-900 text-[9px] font-black uppercase tracking-widest text-charcoal-400 select-none">
               <tr>
@@ -156,6 +153,40 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Mobile Card List View -->
+        <div class="block lg:hidden space-y-4">
+          <div v-if="!previewData.preview_rows || previewData.preview_rows.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            No preview rows found.
+          </div>
+          <div 
+            v-for="row in previewData.preview_rows" 
+            :key="row.row_index"
+            class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+          >
+            <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+              <span class="font-bold text-brand-orange">Row {{ row.row_index }}</span>
+              <span class="px-2 py-0.5 rounded-[5px] text-[9px] uppercase font-black" :class="getStatusStyles(row.project_status)">
+                {{ row.project_status }}
+              </span>
+            </div>
+            <div>
+              <h4 class="font-bold text-white text-sm">{{ row.project_title }}</h4>
+              <p class="text-xs text-gray-400 mt-0.5">{{ row.company_name }} ({{ row.customer_category }})</p>
+              <p class="text-brand-emerald font-bold font-mono mt-1">{{ formatMoney(row.budget) }}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 bg-black/20 p-2 rounded-xl text-[10px] text-gray-400 font-semibold">
+              <div>
+                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Proposed Dates</p>
+                <p class="text-white">{{ row.start_date || '-' }} to {{ row.end_date || '-' }}</p>
+              </div>
+              <div>
+                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Quotation Number</p>
+                <p class="text-sky-400 font-bold">{{ row.quotation_number || '-' }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -235,6 +266,9 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+
+// Shared UI Components
+import AppPageHeader from '../components/ui/AppPageHeader.vue'
 
 const dragOver = ref(false)
 const parsing = ref(false)
@@ -364,5 +398,6 @@ String.prototype.endswith = function(suffix) {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
 }
 </style>

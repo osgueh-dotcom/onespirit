@@ -1,14 +1,11 @@
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 select-none">
-      <div>
-        <h2 class="text-xl font-bold text-white tracking-wide">PO Control Center</h2>
-        <p class="text-xs text-gray-400 mt-1">
-          Pusat kontrol komersial untuk membantu Program Owner memantau quotation, deal/cancel, revenue, source, outstanding, dan prioritas follow-up.
-        </p>
-      </div>
-      <div class="flex items-center gap-2">
+    <AppPageHeader 
+      title="PO Control Center" 
+      subtitle="Pusat kontrol komersial untuk membantu Program Owner memantau quotation, deal/cancel, revenue, source, outstanding, dan prioritas follow-up."
+    >
+      <template #actions>
         <button 
           @click="fetchControlCenterData"
           class="px-4 py-2 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/40 text-xs font-bold text-gray-300 hover:text-white transition-all flex items-center gap-2"
@@ -18,44 +15,35 @@
           </svg>
           Refresh Data
         </button>
-      </div>
-    </div>
+      </template>
+    </AppPageHeader>
 
     <!-- Filters Bar -->
     <PoControlFilters :users="users" @change="handleFilterChange" />
 
     <!-- Error State -->
-    <div v-if="error" class="glass-panel p-8 border border-red-500/20 text-center space-y-3">
-      <p class="text-sm font-bold text-red-400">{{ error }}</p>
-      <button 
-        @click="fetchControlCenterData"
-        class="px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-xl text-xs font-bold transition-all border border-red-500/20"
-      >
-        Coba Lagi
-      </button>
-    </div>
+    <AppErrorState 
+      v-if="error" 
+      title="Gagal Memuat PO Control Center" 
+      :message="error" 
+      @retry="fetchControlCenterData" 
+    />
 
     <!-- Loading State -->
-    <div v-else-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
-      <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-xs text-gray-400 font-semibold">Mengompilasi data PO Control Center...</span>
-    </div>
+    <AppLoadingState v-else-if="loading" message="Mengompilasi data PO Control Center..." />
 
     <!-- Main Content -->
-    <div v-else class="space-y-6">
+    <div v-else class="space-y-6 animate-fade-in">
       <!-- KPI Cards Summary -->
       <PoControlSummaryCards :summary="summary" />
 
       <!-- Tab Buttons -->
-      <div class="flex border-b border-brand-charcoal-light/25 select-none">
+      <div class="flex border-b border-brand-charcoal-light/25 select-none overflow-x-auto">
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
           @click="activeTab = tab.id"
-          class="px-5 py-3 text-xs font-bold transition-all border-b-2 outline-none flex items-center gap-2"
+          class="px-5 py-3 text-xs font-bold transition-all border-b-2 outline-none flex items-center gap-2 whitespace-nowrap"
           :class="activeTab === tab.id ? 'border-brand-orange text-white bg-white/5' : 'border-transparent text-gray-400 hover:text-white'"
         >
           {{ tab.name }}
@@ -78,7 +66,9 @@
       <div v-show="activeTab === 'projects'" class="space-y-6">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
           <h3 class="text-sm font-bold text-white uppercase tracking-wider">Daftar Proyek di Bawah PO</h3>
-          <div class="overflow-x-auto">
+          
+          <!-- Desktop Table View -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -149,6 +139,62 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card List -->
+          <div class="block md:hidden space-y-4">
+            <div v-if="ownedProjects.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada proyek PO untuk filter ini.
+            </div>
+            <div 
+              v-for="p in ownedProjects" 
+              :key="p.project_id"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="font-mono text-[10px] font-bold text-gray-400">{{ p.project_code || 'OSA-EVENT' }}</span>
+                <span class="text-brand-emerald font-bold font-mono">{{ formatCurrency(p.budget) }}</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-sm">{{ p.customer_name }}</h4>
+                <p class="text-xs text-gray-400 mt-0.5">Event: {{ p.event_date_start ? formatDate(p.event_date_start) : '-' }}</p>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Lead Source</p>
+                  <p class="text-white truncate">{{ p.source_type }}</p>
+                  <p class="text-[9px] text-gray-400 truncate">{{ p.vendor_name }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">PO / PM</p>
+                  <p class="text-white truncate">PO: {{ p.po_name }}</p>
+                  <p class="text-gray-400 truncate text-[10px]">PM: {{ p.pm_name }}</p>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-1.5 justify-start">
+                <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase text-center" :class="getQuotationStatusClass(p.quotation_status)">
+                  Q: {{ p.quotation_status }}
+                </span>
+                <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase text-center" :class="getProgramStatusClass(p.program_status)">
+                  P: {{ p.program_status }}
+                </span>
+                <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase text-center" :class="getPaymentStatusClass(p.payment_status)">
+                  PAY: {{ p.payment_status }}
+                </span>
+              </div>
+              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+                <p class="text-[8px] font-black text-brand-orange uppercase tracking-wider mb-1 select-none">Rekomendasi Aksi PO:</p>
+                <p class="font-bold leading-normal">{{ p.recommended_action }}</p>
+              </div>
+              <div class="flex justify-end pt-1">
+                <router-link 
+                  :to="'/projects/' + p.project_id"
+                  class="px-3 py-1.5 rounded bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-bold text-[10px] transition-all"
+                >
+                  Buka Proyek →
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -216,7 +262,9 @@
           <!-- Right: PO Performance Table -->
           <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
             <h3 class="text-sm font-bold text-white uppercase tracking-wider">Beban Kerja & Kinerja Komersial PO</h3>
-            <div class="overflow-x-auto">
+            
+            <!-- Desktop Table View -->
+            <div class="hidden md:block overflow-x-auto">
               <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
                 <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                   <tr>
@@ -254,13 +302,51 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- Mobile Card List for PO Workload & Commercial Performance -->
+            <div class="block md:hidden space-y-4">
+              <div v-if="poPerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+                Belum ada beban kerja PO komersial tercatat.
+              </div>
+              <div 
+                v-for="po in poPerformance" 
+                :key="po.po_id"
+                class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+              >
+                <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-lg bg-indigo-500/10 text-indigo-400 font-bold flex items-center justify-center text-[8px]">
+                      {{ po.initial_code }}
+                    </div>
+                    <span class="text-white font-bold">{{ po.po_name }}</span>
+                  </div>
+                  <span class="text-brand-emerald font-bold font-mono">{{ formatCurrency(po.confirmed_revenue) }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold text-center">
+                  <div>
+                    <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
+                    <p class="text-white">{{ po.total_projects }}</p>
+                  </div>
+                  <div>
+                    <p class="text-indigo-400 text-[9px] uppercase tracking-wider">Deal Rate</p>
+                    <p class="text-white">{{ Math.round(po.deal_rate) }}%</p>
+                  </div>
+                  <div>
+                    <p class="text-amber-500 text-[9px] uppercase tracking-wider">Risk / F-Up</p>
+                    <p class="text-white text-[10px]">{{ po.outstanding_count }} / {{ po.follow_up_needed_count }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Source Contribution Table -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
           <h3 class="text-sm font-bold text-white uppercase tracking-wider">Kontribusi Lead Source & Vendor Partner</h3>
-          <div class="overflow-x-auto">
+          
+          <!-- Desktop Table View -->
+          <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -295,6 +381,44 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card List for Lead Source Contribution -->
+          <div class="block md:hidden space-y-4">
+            <div v-if="sourceContribution.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Belum ada data kontribusi lead partner.
+            </div>
+            <div 
+              v-for="(sc, index) in sourceContribution" 
+              :key="index"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="text-white font-bold select-none text-xs">{{ sc.source_type }}</span>
+                <span class="text-brand-emerald font-bold font-mono text-xs">{{ formatCurrency(sc.confirmed_revenue) }}</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-200 text-xs">{{ sc.vendor_name }}</h4>
+                <p class="text-[10px] text-gray-500 mt-0.5">Sales: {{ sc.sales_name || '-' }}</p>
+              </div>
+              <div class="grid grid-cols-3 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[10px] font-semibold text-center">
+                <div>
+                  <p class="text-gray-500 text-[8px] uppercase tracking-wider">Proyek</p>
+                  <p class="text-white">{{ sc.total_projects }} ({{ sc.deal_count }} Deal)</p>
+                </div>
+                <div>
+                  <p class="text-red-400 text-[8px] uppercase tracking-wider">Batal</p>
+                  <p class="text-white">{{ sc.cancel_count }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 text-[8px] uppercase tracking-wider">Avg Value</p>
+                  <p class="text-white">{{ formatCurrency(sc.average_project_value) }}</p>
+                </div>
+              </div>
+              <div class="text-[10px] text-gray-400 text-right">
+                Potential: <span class="text-white font-mono font-bold">{{ formatCurrency(sc.potential_revenue) }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -309,6 +433,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+
+// Shared UI Components
+import AppPageHeader from '../components/ui/AppPageHeader.vue'
+import AppLoadingState from '../components/ui/AppLoadingState.vue'
+import AppErrorState from '../components/ui/AppErrorState.vue'
+
+// Local Components
 import PoControlSummaryCards from '../components/commercial/PoControlSummaryCards.vue'
 import PoControlFilters from '../components/commercial/PoControlFilters.vue'
 import FollowUpPriorityList from '../components/commercial/FollowUpPriorityList.vue'

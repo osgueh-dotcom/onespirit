@@ -163,7 +163,8 @@
                   <!-- Rundown Table -->
                   <div>
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-brand-orange mb-3 select-none">Hour-by-Hour Rundown Timesheet</p>
-                    <div class="overflow-x-auto rounded-xl border border-brand-charcoal-light/20">
+                    <!-- Desktop Rundown Table -->
+                    <div class="hidden md:block overflow-x-auto rounded-xl border border-brand-charcoal-light/20">
                       <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
                         <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
                           <tr>
@@ -187,15 +188,36 @@
                       </table>
                     </div>
 
+                    <!-- Mobile Rundown Card List (Hidden on desktop/tablet) -->
+                    <div class="block md:hidden space-y-3">
+                      <div v-if="sched.rundown?.length === 0" class="p-6 text-center bg-brand-charcoal-light/5 border border-dashed border-brand-charcoal-light/20 rounded-xl text-gray-500 font-semibold italic">
+                        No rundown items added.
+                      </div>
+                      <div 
+                        v-for="(item, idx) in sched.rundown" 
+                        :key="idx"
+                        class="bg-brand-charcoal-dark/40 border border-brand-charcoal-light/10 p-3.5 rounded-xl space-y-2 text-xs"
+                      >
+                        <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-1.5">
+                          <span class="font-bold text-brand-orange font-mono">{{ item.time }}</span>
+                          <span class="text-gray-400 font-bold">PIC: {{ item.pic }}</span>
+                        </div>
+                        <div>
+                          <p class="font-bold text-white leading-tight">{{ item.activity }}</p>
+                          <p v-if="item.notes" class="text-xs text-gray-400 mt-1 font-medium"><span class="text-gray-500 font-bold">Notes:</span> {{ item.notes }}</p>
+                        </div>
+                      </div>
+                    </div>
+
                     <!-- Quick Rundown Addition Form -->
                     <form 
                       v-if="auth.hasPermission('events:write')"
                       @submit.prevent="addRundownItem(sched)"
-                      class="mt-4 grid grid-cols-4 gap-3 bg-brand-charcoal-light/10 p-3.5 rounded-xl border border-brand-charcoal-light/10"
+                      class="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3 bg-brand-charcoal-light/10 p-3.5 rounded-xl border border-brand-charcoal-light/10"
                     >
-                      <input v-model="newRundown.time" type="text" placeholder="e.g. 08:00" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                      <input v-model="newRundown.activity" type="text" placeholder="Activity" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                      <input v-model="newRundown.pic" type="text" placeholder="Assignee (PIC)" required class="px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                      <input v-model="newRundown.time" type="text" placeholder="e.g. 08:00" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                      <input v-model="newRundown.activity" type="text" placeholder="Activity" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                      <input v-model="newRundown.pic" type="text" placeholder="Assignee (PIC)" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
                       <div class="flex gap-2">
                         <input v-model="newRundown.notes" type="text" placeholder="Notes/Remarks" class="flex-1 px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
                         <button type="submit" class="px-4 py-2 bg-brand-emerald text-white rounded-lg font-bold text-xs shrink-0 hover:bg-brand-emerald-dark transition-all">+</button>

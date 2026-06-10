@@ -1,14 +1,11 @@
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 select-none">
-      <div>
-        <h2 class="text-xl font-bold text-white tracking-wide">Source & Vendor Performance Center</h2>
-        <p class="text-xs text-gray-400 mt-1">
-          Analisis komprehensif performa lead source, kontribusi vendor partner, alokasi Program Owner, dan audit kualitas data komersial.
-        </p>
-      </div>
-      <div class="flex items-center gap-2">
+    <AppPageHeader 
+      title="Source & Vendor Performance Center" 
+      subtitle="Analisis komprehensif performa lead source, kontribusi vendor partner, alokasi Program Owner, dan audit kualitas data komersial."
+    >
+      <template #actions>
         <button 
           @click="fetchPerformanceData"
           class="px-4 py-2 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/40 text-xs font-bold text-gray-300 hover:text-white transition-all flex items-center gap-2"
@@ -18,8 +15,8 @@
           </svg>
           Refresh Analisis
         </button>
-      </div>
-    </div>
+      </template>
+    </AppPageHeader>
 
     <!-- Filters Bar -->
     <div class="glass-panel p-4 border border-brand-charcoal-light/20">
@@ -94,106 +91,77 @@
     </div>
 
     <!-- Error State -->
-    <div v-if="error" class="glass-panel p-8 border border-red-500/20 text-center space-y-3">
-      <p class="text-sm font-bold text-red-400">{{ error }}</p>
-      <button 
-        @click="fetchPerformanceData"
-        class="px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-xl text-xs font-bold transition-all border border-red-500/20"
-      >
-        Coba Lagi
-      </button>
-    </div>
+    <AppErrorState 
+      v-if="error" 
+      title="Gagal Memuat Source & Vendor Performance" 
+      :message="error" 
+      @retry="fetchPerformanceData" 
+    />
 
     <!-- Loading State -->
-    <div v-else-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
-      <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-xs text-gray-400 font-semibold">Memuat metrik analisis source & vendor...</span>
-    </div>
+    <AppLoadingState v-else-if="loading" message="Memuat metrik analisis source & vendor..." />
 
     <!-- Main Dashboard Content -->
     <div v-else class="space-y-6">
       <!-- KPI Cards Summary Grid -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 select-none">
-        <!-- Total Sources -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between">
-          <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Total Sources</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-2xl font-black text-white leading-none font-mono">{{ summary.total_sources }}</h3>
-            <span class="text-[9px] font-black text-indigo-400 px-1.5 py-0.5 rounded bg-indigo-500/10">Kategori</span>
-          </div>
-        </div>
-
-        <!-- Total Vendors -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between">
-          <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Total Vendors</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-2xl font-black text-white leading-none font-mono">{{ summary.total_vendors }}</h3>
-            <span class="text-[9px] font-black text-amber-500 px-1.5 py-0.5 rounded bg-amber-500/10">Partner</span>
-          </div>
-        </div>
-
-        <!-- Projects Analyzed -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between">
-          <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Proyek Dianalisis</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-2xl font-black text-white leading-none font-mono">{{ summary.total_projects_analyzed }}</h3>
-            <span class="text-[9px] font-black text-brand-orange px-1.5 py-0.5 rounded bg-brand-orange/10">Events</span>
-          </div>
-        </div>
-
-        <!-- Potential Revenue -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between">
-          <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Potential Revenue</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-lg font-black text-white leading-none font-mono select-all">{{ formatCurrency(summary.total_potential_revenue) }}</h3>
-          </div>
-        </div>
-
-        <!-- Confirmed Revenue -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between">
-          <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Confirmed Revenue</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-lg font-black text-brand-emerald leading-none font-mono select-all">{{ formatCurrency(summary.total_confirmed_revenue) }}</h3>
-          </div>
-        </div>
-
-        <!-- Outstanding Payment -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between border-red-500/20 bg-red-500/5">
-          <p class="text-[9px] font-black text-red-400 uppercase tracking-widest">Outstanding Payment</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-lg font-black text-red-400 leading-none font-mono select-all">{{ formatCurrency(summary.total_outstanding_payment) }}</h3>
-          </div>
-        </div>
-
-        <!-- Average Conversion Rate -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between">
-          <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Rata-rata Konversi</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-2xl font-black text-brand-emerald leading-none font-mono">{{ Math.round(summary.average_conversion_rate) }}%</h3>
-            <span class="text-[8px] text-gray-400 font-semibold">Ratio Deal / Total</span>
-          </div>
-        </div>
-
-        <!-- Commercial Risks -->
-        <div class="glass-panel p-4 border border-brand-charcoal-light/10 flex flex-col justify-between" :class="summary.commercial_risk_count > 0 ? 'border-amber-500/20 bg-amber-500/5' : ''">
-          <p class="text-[9px] font-black uppercase tracking-widest" :class="summary.commercial_risk_count > 0 ? 'text-amber-400' : 'text-gray-500'">Risiko Komersial</p>
-          <div class="flex items-baseline justify-between mt-2">
-            <h3 class="text-2xl font-black leading-none font-mono" :class="summary.commercial_risk_count > 0 ? 'text-amber-400' : 'text-white'">{{ summary.commercial_risk_count }}</h3>
-            <span class="text-[8px] font-bold text-gray-400">Peringatan Risiko</span>
-          </div>
-        </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 select-none animate-fade-in">
+        <AppStatCard 
+          title="Total Sources" 
+          :value="summary.total_sources" 
+          subtitle="Kategori Lead Source" 
+          theme="blue" 
+        />
+        <AppStatCard 
+          title="Total Vendors" 
+          :value="summary.total_vendors" 
+          subtitle="Vendor Partner" 
+          theme="amber" 
+        />
+        <AppStatCard 
+          title="Proyek Dianalisis" 
+          :value="summary.total_projects_analyzed" 
+          subtitle="Event Project Terdaftar" 
+          theme="orange" 
+        />
+        <AppStatCard 
+          title="Estimasi Revenue" 
+          :value="formatCurrency(summary.total_potential_revenue)" 
+          subtitle="Potential Revenue" 
+          theme="neutral" 
+        />
+        <AppStatCard 
+          title="Revenue Terkonfirmasi" 
+          :value="formatCurrency(summary.total_confirmed_revenue)" 
+          subtitle="Confirmed Revenue" 
+          theme="emerald" 
+        />
+        <AppStatCard 
+          title="Outstanding Pembayaran" 
+          :value="formatCurrency(summary.total_outstanding_payment)" 
+          subtitle="Belum Melunasi" 
+          theme="red" 
+        />
+        <AppStatCard 
+          title="Rata-rata Konversi" 
+          :value="`${Math.round(summary.average_conversion_rate)}%`" 
+          subtitle="Rasio Deal Opportunity" 
+          theme="emerald" 
+        />
+        <AppStatCard 
+          title="Risiko Komersial" 
+          :value="summary.commercial_risk_count" 
+          subtitle="Peringatan Audit Data" 
+          theme="purple" 
+        />
       </div>
 
       <!-- Tab Buttons -->
-      <div class="flex border-b border-brand-charcoal-light/25 select-none">
+      <div class="flex border-b border-brand-charcoal-light/25 select-none overflow-x-auto">
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
           @click="activeTab = tab.id"
-          class="px-5 py-3 text-xs font-bold transition-all border-b-2 outline-none flex items-center gap-2"
+          class="px-5 py-3 text-xs font-bold transition-all border-b-2 outline-none flex items-center gap-2 whitespace-nowrap"
           :class="activeTab === tab.id ? 'border-brand-orange text-white bg-white/5' : 'border-transparent text-gray-400 hover:text-white'"
         >
           {{ tab.name }}
@@ -210,8 +178,10 @@
       <!-- TAB 1: Source Performance -->
       <div v-show="activeTab === 'sources'" class="space-y-4">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Kinerja Analisis Lead Source</h3>
-          <div class="overflow-x-auto">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Performa Sumber Project (Lead Source Performance)</h3>
+          
+          <!-- Desktop Table View -->
+          <div class="hidden lg:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -268,6 +238,41 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card List -->
+          <div class="block lg:hidden space-y-4">
+            <div v-if="sourcePerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada data performa source untuk filter ini.
+            </div>
+            <div 
+              v-for="s in sourcePerformance" 
+              :key="s.source_type"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="text-white font-bold select-none text-xs">{{ s.source_type }}</span>
+                <span class="text-brand-emerald font-bold font-mono text-xs">{{ Math.round(s.conversion_rate) }}% Deal Rate</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-white font-bold">{{ s.total_projects }} Proyek</p>
+                  <p class="text-[9px] text-gray-400 mt-0.5">Active: {{ s.active_projects }} • Deal: {{ s.confirmed_projects }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Status Keuangan</p>
+                  <p class="text-brand-emerald font-mono font-bold">Confirmed: {{ formatCurrency(s.confirmed_revenue) }}</p>
+                  <p class="text-red-400 font-mono text-[10px]">Outstanding: {{ formatCurrency(s.outstanding_payment) }}</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-center text-[10px] text-gray-400">
+                <span>Potential: <b class="text-white font-mono">{{ formatCurrency(s.potential_revenue) }}</b></span>
+                <span v-if="s.commercial_risk > 0" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">
+                  {{ s.commercial_risk }} Risk
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -275,20 +280,21 @@
       <div v-show="activeTab === 'vendors'" class="space-y-4">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Kinerja Vendor Partner / Venues</h3>
-            <span class="text-[10px] font-black text-gray-400 uppercase bg-brand-charcoal-light/20 px-2 py-0.5 rounded select-none">Unstructured Data Fallback</span>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Performa Vendor Partner (Vendor Performance)</h3>
+            <span class="text-[10px] font-black text-gray-400 uppercase bg-brand-charcoal-light/20 px-2 py-0.5 rounded select-none">Kualitas Data</span>
           </div>
 
           <!-- Empty state description / limitation warning -->
-          <div v-if="vendorPerformance.length === 0" class="bg-amber-500/5 border border-amber-500/10 rounded-xl p-4 text-xs text-amber-400 space-y-1">
-            <p class="font-bold">Informasi Kualitas Data Vendor:</p>
+          <div class="bg-amber-500/5 border border-amber-500/10 rounded-xl p-4 text-xs text-amber-400 space-y-1">
+            <p class="font-bold">Data Vendor Masih Terbatas:</p>
             <p class="leading-relaxed">
-              Analisis performa vendor saat ini didasarkan pada pencatatan field tekstual vendor_name di dalam entitas EventSource. 
-              Sistem mendeteksi belum ada proyek yang terasosiasi dengan nama vendor terstruktur pada rentang filter yang dipilih.
+              Analisis performa vendor saat ini didasarkan pada pencatatan field tekstual vendor_name di dalam entitas EventSource.
+              Jika data vendor terstruktur belum lengkap, sistem akan menampilkan data apa adanya.
             </p>
           </div>
 
-          <div class="overflow-x-auto">
+          <!-- Desktop Table View -->
+          <div class="hidden lg:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -341,6 +347,41 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card List -->
+          <div class="block lg:hidden space-y-4">
+            <div v-if="vendorPerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada data performa vendor partner.
+            </div>
+            <div 
+              v-for="v in vendorPerformance" 
+              :key="v.vendor_name"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="text-white font-bold select-none text-xs">{{ v.vendor_name }}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/10 text-indigo-400 font-mono">Dipakai {{ v.usage_frequency }}x</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-white font-bold">{{ v.total_projects }} Proyek</p>
+                  <p class="text-[9px] text-gray-400 mt-0.5">Active: {{ v.active_projects }} • Deal: {{ v.confirmed_projects }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Pendapatan Vendor</p>
+                  <p class="text-brand-emerald font-mono font-bold">Confirmed: {{ formatCurrency(v.confirmed_revenue) }}</p>
+                  <p class="text-gray-400 font-mono text-[10px]">Avg Value: {{ formatCurrency(v.average_project_value) }}</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-center text-[10px] text-gray-400">
+                <span>Potential: <b class="text-white font-mono">{{ formatCurrency(v.potential_revenue) }}</b></span>
+                <span v-if="v.risk_count > 0" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">
+                  {{ v.risk_count }} Risk
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -348,7 +389,9 @@
       <div v-show="activeTab === 'po_sources'" class="space-y-4">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
           <h3 class="text-sm font-bold text-white uppercase tracking-wider">Distribusi Alokasi PO & Event Source</h3>
-          <div class="overflow-x-auto">
+          
+          <!-- Desktop Table View -->
+          <div class="hidden lg:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
               <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
                 <tr>
@@ -395,6 +438,40 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Mobile Card List -->
+          <div class="block lg:hidden space-y-4">
+            <div v-if="poSourcePerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              Tidak ada data alokasi PO dan lead source.
+            </div>
+            <div 
+              v-for="(p, index) in poSourcePerformance" 
+              :key="index"
+              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+            >
+              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+                <span class="text-white font-bold select-none text-xs">{{ p.po_name }}</span>
+                <span class="text-gray-400 text-[11px] font-semibold">{{ p.source_type }}</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-white font-bold">{{ p.total_projects }} Proyek</p>
+                  <p class="text-[9px] text-gray-400 mt-0.5">Confirmed: {{ p.confirmed_projects }} • Pending: {{ p.pending_projects }}</p>
+                </div>
+                <div>
+                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Estimasi Revenue</p>
+                  <p class="text-brand-emerald font-mono font-bold">Confirmed: {{ formatCurrency(p.confirmed_revenue) }}</p>
+                  <p class="text-gray-400 font-mono text-[10px]">Potential: {{ formatCurrency(p.potential_revenue) }}</p>
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <span v-if="p.follow_up_needed > 0" class="px-2 py-0.5 rounded bg-red-500/10 text-red-400 text-[9px] font-bold">
+                  {{ p.follow_up_needed }} F-Up Needed
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -402,7 +479,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Left: Risk Alerts -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Risk Alerts & Warnings</h3>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Source dengan Risiko Tinggi (Risk Alerts)</h3>
           <div v-if="riskAlerts.length === 0" class="h-32 flex flex-col items-center justify-center text-gray-500">
             <svg class="w-8 h-8 text-brand-emerald/40 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -468,6 +545,12 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+
+// Shared UI components
+import AppPageHeader from '../components/ui/AppPageHeader.vue'
+import AppStatCard from '../components/ui/AppStatCard.vue'
+import AppLoadingState from '../components/ui/AppLoadingState.vue'
+import AppErrorState from '../components/ui/AppErrorState.vue'
 
 const users = ref([])
 const loading = ref(true)

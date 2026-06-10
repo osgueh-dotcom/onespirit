@@ -1,7 +1,13 @@
 <template>
   <div class="space-y-6">
+    <!-- Header -->
+    <AppPageHeader 
+      title="Finance Tracking" 
+      subtitle="Kelola penagihan invoice klien, pencatatan receipt pembayaran, dan status outstanding keuangan proyek."
+    />
+
     <!-- Top toolbar filter and actions -->
-    <div class="flex items-center justify-between gap-4 select-none">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none">
       <div class="flex items-center gap-3">
         <span class="text-xs font-bold uppercase tracking-widest text-gray-400">View</span>
         <div class="flex rounded-xl p-0.5 bg-brand-charcoal border border-brand-charcoal-light/35">
@@ -25,7 +31,7 @@
       <button 
         v-if="auth.hasPermission('finance:write') && activeSubTab === 'invoices'"
         @click="showAddInvoiceModal = true"
-        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none"
+        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none w-full sm:w-auto"
       >
         + Generate New Invoice
       </button>
@@ -33,132 +39,215 @@
       <button 
         v-if="auth.hasPermission('finance:write') && activeSubTab === 'payments'"
         @click="showAddPaymentModal = true"
-        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none"
+        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg hover:shadow-brand-orange/20 transition-all select-none w-full sm:w-auto"
       >
         + Record Payment Receipt
       </button>
     </div>
 
-    <!-- Data tables -->
-    <div v-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
-      <svg class="animate-spin h-6 w-6 text-brand-orange" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <span class="text-xs text-gray-400 font-semibold">Loading ledger catalog...</span>
-    </div>
+    <!-- Data loading indicator -->
+    <AppLoadingState v-if="loading" message="Loading ledger catalog..." />
 
-    <div v-else class="space-y-6">
+    <div v-else class="space-y-6 animate-fade-in">
       <!-- INVOICES SUB-TAB -->
-      <div v-if="activeSubTab === 'invoices'" class="glass-panel overflow-hidden border border-brand-charcoal-light/30">
-        <div class="overflow-x-auto min-w-full">
-          <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
-            <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
-              <tr>
-                <th class="px-6 py-4">Invoice Number</th>
-                <th class="px-6 py-4">Project Name</th>
-                <th class="px-6 py-4">Issue Date</th>
-                <th class="px-6 py-4">Due Date</th>
-                <th class="px-6 py-4">Amount</th>
-                <th class="px-6 py-4">Billing Status</th>
-                <th class="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
-              <tr v-if="invoices.length === 0">
-                <td colspan="7" class="px-6 py-12 text-center text-gray-500 font-semibold select-none">
-                  No invoices generated in current ledger.
-                </td>
-              </tr>
-              <tr 
-                v-for="inv in invoices" 
-                :key="inv.id"
-                class="hover:bg-brand-charcoal-light/10 transition-colors"
+      <div v-if="activeSubTab === 'invoices'">
+        <!-- Desktop Table View -->
+        <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
+          <div class="overflow-x-auto min-w-full">
+            <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+              <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+                <tr>
+                  <th class="px-6 py-4">Invoice Number</th>
+                  <th class="px-6 py-4">Project Name</th>
+                  <th class="px-6 py-4">Issue Date</th>
+                  <th class="px-6 py-4">Due Date</th>
+                  <th class="px-6 py-4">Amount</th>
+                  <th class="px-6 py-4">Billing Status</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
+                <tr v-if="invoices.length === 0">
+                  <td colspan="7" class="px-6 py-12 text-center text-gray-500 font-semibold select-none">
+                    No invoices generated in current ledger.
+                  </td>
+                </tr>
+                <tr 
+                  v-for="inv in invoices" 
+                  :key="inv.id"
+                  class="hover:bg-brand-charcoal-light/10 transition-colors"
+                >
+                  <td class="px-6 py-4 font-bold text-white tracking-wide text-sm">{{ inv.invoice_number }}</td>
+                  <td class="px-6 py-4 text-white font-semibold">
+                    {{ getProjectTitle(inv.project_id) }}
+                  </td>
+                  <td class="px-6 py-4 text-gray-400">{{ inv.issue_date }}</td>
+                  <td class="px-6 py-4 text-gray-400">{{ inv.due_date }}</td>
+                  <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(inv.amount) }}</td>
+                  <td class="px-6 py-4 select-none">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getInvoiceStatusStyles(inv.status)">
+                      {{ inv.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-right select-none space-x-2.5">
+                    <button 
+                      v-if="auth.hasPermission('finance:write')"
+                      @click="archiveInvoice(inv.id)"
+                      class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
+                    >
+                      Void Invoice
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mobile Card List View -->
+        <div class="block md:hidden space-y-4">
+          <div v-if="invoices.length === 0" class="py-12 text-center text-gray-500 font-semibold select-none">
+            No invoices generated in current ledger.
+          </div>
+          <div 
+            v-for="inv in invoices" 
+            :key="inv.id"
+            class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
+          >
+            <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+              <span class="font-bold text-white tracking-wide text-xs select-all">{{ inv.invoice_number }}</span>
+              <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider" :class="getInvoiceStatusStyles(inv.status)">
+                {{ inv.status }}
+              </span>
+            </div>
+            <div>
+              <h4 class="text-white font-bold text-sm">{{ getProjectTitle(inv.project_id) }}</h4>
+              <p class="text-brand-emerald font-bold font-mono mt-1">{{ formatMoney(inv.amount) }}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 bg-black/20 p-2 rounded-xl text-[10px] text-gray-400 font-semibold">
+              <div>
+                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Issue Date</p>
+                <p class="text-white">{{ inv.issue_date }}</p>
+              </div>
+              <div>
+                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Due Date</p>
+                <p class="text-white">{{ inv.due_date }}</p>
+              </div>
+            </div>
+            <div class="flex justify-end pt-1" v-if="auth.hasPermission('finance:write')">
+              <button 
+                @click="archiveInvoice(inv.id)"
+                class="px-3 py-1.5 text-[10px] font-bold text-red-400 bg-red-500/10 rounded-xl hover:bg-red-500/20 transition-all"
               >
-                <td class="px-6 py-4 font-bold text-white tracking-wide text-sm">{{ inv.invoice_number }}</td>
-                <td class="px-6 py-4 text-white font-semibold">
-                  {{ getProjectTitle(inv.project_id) }}
-                </td>
-                <td class="px-6 py-4 text-gray-400">{{ inv.issue_date }}</td>
-                <td class="px-6 py-4 text-gray-400">{{ inv.due_date }}</td>
-                <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(inv.amount) }}</td>
-                <td class="px-6 py-4 select-none">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getInvoiceStatusStyles(inv.status)">
-                    {{ inv.status }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 text-right select-none space-x-2.5">
-                  <button 
-                    v-if="auth.hasPermission('finance:write')"
-                    @click="archiveInvoice(inv.id)"
-                    class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
-                  >
-                    Void Invoice
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                Void Invoice
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- PAYMENT COLLECTIONS SUB-TAB -->
-      <div v-else class="glass-panel overflow-hidden border border-brand-charcoal-light/30">
-        <div class="overflow-x-auto min-w-full">
-          <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
-            <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
-              <tr>
-                <th class="px-6 py-4">Receipt ID</th>
-                <th class="px-6 py-4">Linked Invoice</th>
-                <th class="px-6 py-4">Collection Date</th>
-                <th class="px-6 py-4">Reference / Receipt Number</th>
-                <th class="px-6 py-4">Paid Amount</th>
-                <th class="px-6 py-4">Status</th>
-                <th class="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
-              <tr v-if="payments.length === 0">
-                <td colspan="7" class="px-6 py-12 text-center text-gray-500 font-semibold select-none">
-                  No payment collections logged.
-                </td>
-              </tr>
-              <tr 
-                v-for="pay in payments" 
-                :key="pay.id"
-                class="hover:bg-brand-charcoal-light/10 transition-colors"
+      <div v-else>
+        <!-- Desktop Table View -->
+        <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
+          <div class="overflow-x-auto min-w-full">
+            <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+              <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+                <tr>
+                  <th class="px-6 py-4">Receipt ID</th>
+                  <th class="px-6 py-4">Linked Invoice</th>
+                  <th class="px-6 py-4">Collection Date</th>
+                  <th class="px-6 py-4">Reference / Receipt Number</th>
+                  <th class="px-6 py-4">Paid Amount</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
+                <tr v-if="payments.length === 0">
+                  <td colspan="7" class="px-6 py-12 text-center text-gray-500 font-semibold select-none">
+                    No payment collections logged.
+                  </td>
+                </tr>
+                <tr 
+                  v-for="pay in payments" 
+                  :key="pay.id"
+                  class="hover:bg-brand-charcoal-light/10 transition-colors"
+                >
+                  <td class="px-6 py-4 font-bold text-white tracking-wide text-xs truncate max-w-[80px]">{{ pay.id }}</td>
+                  <td class="px-6 py-4 font-bold text-brand-orange">
+                    {{ getInvoiceNumber(pay.invoice_id) }}
+                  </td>
+                  <td class="px-6 py-4 text-gray-400">{{ pay.payment_date }}</td>
+                  <td class="px-6 py-4 text-gray-400 font-bold">{{ pay.reference_number || '-' }}</td>
+                  <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(pay.amount) }}</td>
+                  <td class="px-6 py-4 select-none">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(pay.status)">
+                      {{ pay.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-right select-none space-x-2.5">
+                    <button 
+                      v-if="auth.hasPermission('finance:write')"
+                      @click="archivePayment(pay)"
+                      class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
+                    >
+                      Delete Receipt
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mobile Card List View -->
+        <div class="block md:hidden space-y-4">
+          <div v-if="payments.length === 0" class="py-12 text-center text-gray-500 font-semibold select-none">
+            No payment collections logged.
+          </div>
+          <div 
+            v-for="pay in payments" 
+            :key="pay.id"
+            class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
+          >
+            <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+              <span class="font-mono text-[9px] text-gray-400">ID: {{ pay.id.slice(0, 8) }}...</span>
+              <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(pay.status)">
+                {{ pay.status }}
+              </span>
+            </div>
+            <div>
+              <p class="text-[9px] text-gray-500 uppercase font-black">Linked Invoice</p>
+              <p class="text-brand-orange font-bold text-sm select-all">{{ getInvoiceNumber(pay.invoice_id) }}</p>
+              <p class="text-brand-emerald font-bold font-mono text-sm mt-1">{{ formatMoney(pay.amount) }}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 bg-black/20 p-2 rounded-xl text-[10px] text-gray-400 font-semibold">
+              <div>
+                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Collection Date</p>
+                <p class="text-white">{{ pay.payment_date }}</p>
+              </div>
+              <div>
+                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Ref Number</p>
+                <p class="text-white">{{ pay.reference_number || '-' }}</p>
+              </div>
+            </div>
+            <div class="flex justify-end pt-1" v-if="auth.hasPermission('finance:write')">
+              <button 
+                @click="archivePayment(pay)"
+                class="px-3 py-1.5 text-[10px] font-bold text-red-400 bg-red-500/10 rounded-xl hover:bg-red-500/20 transition-all"
               >
-                <td class="px-6 py-4 font-bold text-white tracking-wide text-xs truncate max-w-[80px]">{{ pay.id }}</td>
-                <td class="px-6 py-4 font-bold text-brand-orange">
-                  {{ getInvoiceNumber(pay.invoice_id) }}
-                </td>
-                <td class="px-6 py-4 text-gray-400">{{ pay.payment_date }}</td>
-                <td class="px-6 py-4 text-gray-400 font-bold">{{ pay.reference_number || '-' }}</td>
-                <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(pay.amount) }}</td>
-                <td class="px-6 py-4 select-none">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(pay.status)">
-                    {{ pay.status }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 text-right select-none space-x-2.5">
-                  <button 
-                    v-if="auth.hasPermission('finance:write')"
-                    @click="archivePayment(pay)"
-                    class="px-2.5 py-1 text-[10px] font-bold text-red-400 bg-red-500/10 rounded hover:bg-red-500/20 transition-all"
-                  >
-                    Delete Receipt
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                Delete Receipt
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Generate Invoice Modal -->
     <div v-if="showAddInvoiceModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
+      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
         <h3 class="text-base font-bold text-white tracking-wide mb-5">Generate Billing Invoice</h3>
         <form @submit.prevent="saveInvoice" class="space-y-4">
           <div>
@@ -204,7 +293,7 @@
 
     <!-- Record Payment Modal -->
     <div v-if="showAddPaymentModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
+      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
         <h3 class="text-base font-bold text-white tracking-wide mb-5">Record Payment Receipt</h3>
         <form @submit.prevent="savePayment" class="space-y-4">
           <div>
@@ -249,6 +338,10 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+
+// Shared UI Components
+import AppPageHeader from '../components/ui/AppPageHeader.vue'
+import AppLoadingState from '../components/ui/AppLoadingState.vue'
 
 const auth = useAuthStore()
 
@@ -401,3 +494,11 @@ const archivePayment = async (pay) => {
   }
 }
 </script>
+
+<style scoped>
+.glass-panel {
+  background: rgba(26, 32, 44, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 1.25rem;
+}
+</style>
