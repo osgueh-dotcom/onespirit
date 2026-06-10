@@ -35,6 +35,46 @@
 .light .bg-brand-charcoal-light {
   background-color: #E5E7EB !important;
 }
+
+/* Hardcoded Charcoal Fallback Overrides for Light Mode */
+.light .bg-charcoal-800,
+.light .bg-brand-charcoal-light\/30 {
+  background-color: #FFFFFF !important;
+}
+.light .bg-charcoal-900,
+.light .bg-brand-charcoal-dark\/40 {
+  background-color: #F9FAFB !important;
+}
+.light .bg-charcoal-800\/80 {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+.light .border-charcoal-700,
+.light .border-brand-charcoal-light\/30,
+.light .border-brand-charcoal-light\/20,
+.light .border-brand-charcoal-light\/10 {
+  border-color: rgba(229, 231, 235, 0.9) !important;
+}
+.light .border-charcoal-700\/80 {
+  border-color: rgba(229, 231, 235, 0.6) !important;
+}
+
+/* Hardcoded Charcoal Text Color Overrides for Light Mode */
+.light .text-charcoal-200,
+.light .text-charcoal-300 {
+  color: #111827 !important;
+}
+.light .text-charcoal-400,
+.light .text-charcoal-500 {
+  color: #4B5563 !important;
+}
+.light .text-gray-300,
+.light .text-gray-400 {
+  color: #4B5563 !important;
+}
+.light .text-gray-500 {
+  color: #6B7280 !important;
+}
+
 .light .bg-brand-charcoal\/50 {
   background-color: rgba(255, 255, 255, 0.7) !important;
 }

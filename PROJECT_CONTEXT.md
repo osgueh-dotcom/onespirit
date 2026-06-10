@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 12.2 — GitHub Pages Demo Deployment |
+| Status Project | Sprint 12.3 — Light Mode Consistency & Dashboard Analytics Visualization |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | GitHub Pages |
 | Backend Deployment Strategy | Temporary tunnel during client demo |

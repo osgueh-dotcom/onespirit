@@ -189,6 +189,7 @@ Untuk melakukan demo sistem dalam waktu 15–25 menit, silakan gunakan alur beri
 
 Semua panduan detail lainnya terletak di folder `docs/`:
 - [Panduan Deployment GitHub Pages](file:///e:/GVsys Project/One Spirit/docs/github-pages-demo-deployment.md) — Konfigurasi deployment demo berbasis GitHub Pages dengan backend tunnel.
+- [Visualisasi Analytics Dashboard](file:///e:/GVsys Project/One Spirit/docs/dashboard-analytics-visualization.md) — Penjelasan detail formula data, charts SVG, dan empty state dashboard.
 - [Arsitektur Demo Publik](file:///e:/GVsys Project/One Spirit/docs/demo-architecture.md) — Diagram dan penjelasan arsitektur hibrida untuk presentasi klien.
 - [Panduan Rehearsal Demo](file:///e:/GVsys Project/One Spirit/docs/client-demo-rehearsal.md) — Panduan skrip presentasi langkah-demi-langkah (15-25 menit).
 - [Checklist Keamanan Demo Publik](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md) — Aturan port-forwarding, database security, dan perlindungan data sensitif.

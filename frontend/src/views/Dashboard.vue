@@ -50,6 +50,31 @@
         :executive="analyticsData.executive" 
         :target="analyticsData.target" 
       />
+
+      <!-- Visual Analytics Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 print:grid-cols-2">
+        <DashboardFunnelChart 
+          :totalInquiry="analyticsData.executive.total_inquiry"
+          :totalDeal="analyticsData.executive.total_deal"
+          :totalCancel="analyticsData.executive.total_cancel"
+        />
+        <DashboardRateComparison 
+          :dealRate="analyticsData.executive.deal_rate"
+          :cancelRate="analyticsData.executive.cancel_rate"
+        />
+        <DashboardRevenueChart 
+          :potentialRevenue="analyticsData.executive.potential_revenue"
+          :confirmedRevenue="analyticsData.executive.confirmed_revenue"
+          :targetRevenue="analyticsData.target.revenue_target"
+        />
+        <DashboardStatusDistribution 
+          :statusCounts="analyticsData.project.count_by_status"
+        />
+        <DashboardSourceContribution 
+          class="lg:col-span-2"
+          :sourceAnalytics="analyticsData.source_analytics"
+        />
+      </div>
       
       <!-- Sprint 8. Event Readiness Summary -->
       <ReadinessSummary 
@@ -168,6 +193,13 @@ import SourceAnalytics from '../components/dashboard/SourceAnalytics.vue'
 import DataQualityPanel from '../components/dashboard/DataQualityPanel.vue'
 import ManagementEvaluationNotes from '../components/dashboard/ManagementEvaluationNotes.vue'
 import DashboardLegacy from '../components/dashboard/DashboardLegacy.vue'
+
+// Import Chart Components
+import DashboardFunnelChart from '../components/charts/DashboardFunnelChart.vue'
+import DashboardRateComparison from '../components/charts/DashboardRateComparison.vue'
+import DashboardRevenueChart from '../components/charts/DashboardRevenueChart.vue'
+import DashboardStatusDistribution from '../components/charts/DashboardStatusDistribution.vue'
+import DashboardSourceContribution from '../components/charts/DashboardSourceContribution.vue'
 
 const stats = ref({})
 const legacyLoading = ref(false)

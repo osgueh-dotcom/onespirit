@@ -22,11 +22,65 @@ Dokumen ini digunakan untuk mencatat riwayat sprint pengembangan OneSpirit Workf
 | **Sprint 10.1** | Documentation & Commercial Control Cleanup | 2026-06-09 | Done |
 | **Sprint 10 Finalization** | Commercial Control Stabilization & MVP Demo Readiness | 2026-06-10 | Done |
 | **Sprint 11** | Source & Vendor Performance Center | 2026-06-10 | Done |
+| **Sprint 12.3** | Light Mode Consistency & Dashboard Analytics Visualization | 2026-06-11 | Done |
 | **Sprint 12.2** | GitHub Pages Demo Deployment | 2026-06-11 | Done |
 | **Sprint 12.1** | Client Demo Polish & Presentation Rehearsal | 2026-06-11 | Done |
 | **Sprint 12** | UI/UX Client Presentation & Responsive Experience | 2026-06-11 | Done |
 
 ---
+
+---
+
+## Sprint 12.3 — Light Mode Consistency & Dashboard Analytics Visualization
+
+Tanggal: 2026-06-11  
+Status: Done  
+AI Agent: Antigravity  
+Branch: sprint-12-ui-ux-presentation-readiness  
+Commit: Sprint 12.3: improve light mode consistency and dashboard analytics visualization  
+
+### Tujuan
+
+Meningkatkan konsistensi visual light mode di seluruh aplikasi (khususnya dashboard) dan mengimplementasikan visualisasi charts interaktif berbasis SVG murni pada Executive Dashboard.
+
+### Scope
+
+- **Light Mode overrides**: Menambahkan class overrides global di `index.css` untuk menangani container dark (`bg-charcoal-800`, `bg-charcoal-900`) dan teks kontras rendah.
+- **Custom Charts**: Membuat komponen `DashboardFunnelChart.vue`, `DashboardRateComparison.vue`, `DashboardRevenueChart.vue`, `DashboardStatusDistribution.vue`, dan `DashboardSourceContribution.vue` menggunakan SVG/CSS murni yang responsif dan interaktif.
+- **Dashboard Integration**: Menata ulang tata letak halaman `Dashboard.vue` untuk mengintegrasikan kelima komponen chart tersebut dan menghubungkannya ke props data reactive dari API.
+- **Documentation**: Membuat panduan logika bisnis dan visualisasi di `docs/dashboard-analytics-visualization.md`.
+
+### Di Luar Scope
+
+- Tidak menambahkan library grafik eksternal yang berat.
+- Tidak mengubah skema kontrak data API dari backend.
+
+### File/Modul Terkait
+
+- `frontend/src/assets/index.css`
+- `frontend/src/views/Dashboard.vue`
+- `frontend/src/components/charts/DashboardFunnelChart.vue`
+- `frontend/src/components/charts/DashboardRateComparison.vue`
+- `frontend/src/components/charts/DashboardRevenueChart.vue`
+- `frontend/src/components/charts/DashboardStatusDistribution.vue`
+- `frontend/src/components/charts/DashboardSourceContribution.vue`
+- `docs/dashboard-analytics-visualization.md`
+
+### Hasil Implementasi
+
+1. **Visual Clarity**: Panel Executive Summary Narrative dan BI Query Filters kini secara konsisten menjadi panel terang yang bersih dan kontras tinggi di light mode.
+2. **SVG-based Charts**: Kelima chart terintegrasi dengan mulus pada Executive Dashboard, memberikan gambaran visual instan tentang alur inquiry, deal rates, status proyek, dan perbandingan pendapatan.
+3. **Empty State & Zero Guard**: Chart memiliki penanganan data kosong yang aman secara dinamis jika parameter filter tidak menghasilkan data apapun.
+
+### Test Yang Dilakukan (Sprint 12.3 Validation)
+
+Backend:
+- Command: `pytest app/tests -q`
+- Result: 17 passed
+
+Frontend:
+- Command: `npm run build`
+- Result: Build sukses tanpa warning
 
 ---
 
