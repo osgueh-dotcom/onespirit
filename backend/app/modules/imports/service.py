@@ -1,7 +1,7 @@
 import io
 import uuid
 import openpyxl
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import List, Dict, Any, Tuple, Optional
 from sqlalchemy.orm import Session
 
@@ -907,7 +907,7 @@ def commit_excel_import(db: Session, file_bytes: bytes, user_id: str) -> Dict[st
                     
                     if updated:
                         inst.updated_by_user_id = pm_id or (uuid.UUID(executor_id) if executor_id else None)
-                        inst.updated_at = datetime.utcnow()
+                        inst.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
                         db.commit()
 
             # 8. Document Asset links syncing (improved standard types mapping)

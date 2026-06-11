@@ -4,6 +4,45 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 14] - 2026-06-11
+
+### Added
+- Production readiness audit and checklist.
+- Frontend ESLint, Vitest, and safety scan baseline.
+- Role-aware UI helper, audit matrix, and access tests.
+- Backup/restore plan and secret rotation plan.
+- Deployment runbook.
+- Backend deprecation cleanup notes.
+- PDF export flow plan for CL, ROS, CK, PNL, final report, and management report.
+- Authentication regression tests for dashboard modular endpoints.
+
+### Changed
+- Restricted control center/import UI visibility by role.
+- Disabled project transition controls for read-only users.
+- Restricted dashboard developer tools to admin users.
+- Removed the demo password from the frontend bundle.
+- Migrated backend startup to FastAPI lifespan.
+- Migrated Project schemas/router to Pydantic v2 `ConfigDict` and `model_validate`.
+- Added frontend lint/test/safety checks to GitHub Pages deployment.
+- Updated README and project context with production readiness status.
+
+### Security
+- Added authentication to seven dashboard modular endpoints.
+- Kept backend permissions as the primary security authority.
+
+### Validation
+- Backend: `29 passed, 39 warnings`.
+- Frontend: lint `0 errors, 26 warnings`; tests `3 passed`; safety scan and build passed.
+- Production dependency audit: `0 vulnerabilities`.
+
+### Known Limitations
+- Production deployment is not declared.
+- Role PO/PM/Admin and project ownership authorization are not formalized.
+- Backup automation, monitoring, rate limiting, and server-side PDF remain pending.
+- Two moderate Vite/esbuild advisories remain in development dependencies.
+
+---
+
 ## [Sprint 13.1] - 2026-06-11
 
 ### Changed
@@ -65,7 +104,7 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 - Membuat dokumen `docs/client-feedback-form.md` berisi form kuesioner masukan klien.
 
 ### Changed
-- Mengintegrasikan akun demo klien `demo@onespirit.asia` / `OneSpiritDemo2026!` dengan role Management.
+- Mengintegrasikan akun demo klien `demo@onespirit.asia` dengan role Management.
 - Menambahkan izin `documents:write` pada Management role agar akun demo klien dapat menguji alur upload dokumen.
 - Menerjemahkan metrik penjualan, filter, loading indicators, table headers, dan button keluar (Sign Out -> Keluar) ke bahasa Indonesia profesional di seluruh views.
 - Memperbarui `README.md` dan `PROJECT_CONTEXT.md` dengan detail akun demo klien dan dokumentasi baru.
@@ -120,7 +159,7 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 ### Security
 - Menambahkan filter `*.env` dan direktori `uploads/`, `backend/app/uploads/` pada file `.gitignore` untuk mencegah kebocoran data sensitif operasional dan file rahasia lokal ke repositori git.
 - Melakukan review pada file `.env.example` untuk menjamin tidak ada credentials / JWT secrets riil yang tersimpan di repositori, serta menambahkan placeholder konfigurasi `ADMIN_EMAIL` dan `ADMIN_PASSWORD`.
-- Menambahkan dokumentasi yang memperingatkan evaluator mengenai kredensial admin default (`admin@onespirit.asia` / `OneSpirit2026!`) yang hanya diperuntukkan bagi lingkungan demo/development.
+- Menambahkan dokumentasi yang memperingatkan evaluator mengenai kredensial admin default untuk lingkungan demo/development.
 - Memindahkan kredensial Super Admin seeding dari kode database seed (`auth/service.py`) ke environment variables (`ADMIN_EMAIL` & `ADMIN_PASSWORD`) di config Settings, serta memvalidasi perubahan password tersebut pada environment `production` guna menghindari celah keamanan.
 
 ---

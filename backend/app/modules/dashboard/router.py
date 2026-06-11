@@ -1,4 +1,4 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, timezone
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -59,7 +59,7 @@ def get_dashboard_summary(
     current_user: User = Depends(deps.get_current_user)
 ):
     """Retrieve operational summaries, alerts, progress metrics, and revenues with advanced filtering"""
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     today = date.today()
 
     # Apply base queries
@@ -256,7 +256,8 @@ def get_overview_analytics(
     sales: Optional[str] = Query(None),
     pm: Optional[str] = Query(None),
     event_category: Optional[str] = Query(None),
-    partner: Optional[str] = Query(None)
+    partner: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
 ):
     project_query = db.query(Project).filter(Project.deleted_at == None)
     project_query = apply_project_filters(project_query, start_date, end_date, status, sales, pm, event_category, partner)
@@ -313,7 +314,8 @@ def get_revenue_analytics(
     sales: Optional[str] = Query(None),
     pm: Optional[str] = Query(None),
     event_category: Optional[str] = Query(None),
-    partner: Optional[str] = Query(None)
+    partner: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
 ):
     project_query = db.query(Project).filter(Project.deleted_at == None)
     project_query = apply_project_filters(project_query, start_date, end_date, status, sales, pm, event_category, partner)
@@ -400,7 +402,8 @@ def get_workflow_analytics(
     sales: Optional[str] = Query(None),
     pm: Optional[str] = Query(None),
     event_category: Optional[str] = Query(None),
-    partner: Optional[str] = Query(None)
+    partner: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
 ):
     project_query = db.query(Project).filter(Project.deleted_at == None)
     project_query = apply_project_filters(project_query, start_date, end_date, status, sales, pm, event_category, partner)
@@ -447,7 +450,8 @@ def get_event_analytics(
     sales: Optional[str] = Query(None),
     pm: Optional[str] = Query(None),
     event_category: Optional[str] = Query(None),
-    partner: Optional[str] = Query(None)
+    partner: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
 ):
     now = datetime.now()
     
@@ -491,7 +495,8 @@ def get_finance_analytics(
     sales: Optional[str] = Query(None),
     pm: Optional[str] = Query(None),
     event_category: Optional[str] = Query(None),
-    partner: Optional[str] = Query(None)
+    partner: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
 ):
     invoices_query = db.query(Invoice).join(Project).filter(Invoice.deleted_at == None)
     invoices_query = apply_project_filters(invoices_query, start_date, end_date, status, sales, pm, event_category, partner)
@@ -547,7 +552,8 @@ def get_team_analytics(
     sales: Optional[str] = Query(None),
     pm: Optional[str] = Query(None),
     event_category: Optional[str] = Query(None),
-    partner: Optional[str] = Query(None)
+    partner: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
 ):
     users = db.query(User).filter(User.deleted_at == None).all()
     pm_workloads = []
@@ -594,7 +600,8 @@ def get_activity_timeline(
     db: Session = Depends(deps.get_db),
     limit: int = Query(20, ge=1, le=100),
     action: Optional[str] = Query(None),
-    entity_type: Optional[str] = Query(None)
+    entity_type: Optional[str] = Query(None),
+    current_user: User = Depends(deps.get_current_user)
 ):
     query = db.query(ActivityLog)
     if action:

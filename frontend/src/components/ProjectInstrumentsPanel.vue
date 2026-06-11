@@ -395,8 +395,7 @@ const formatDateTime = (val) => {
 
 // Sprint 7: Computed Summary indicators
 const isAuthorizedForPnl = computed(() => {
-  const role = auth.user?.role?.name
-  return ['Super Admin', 'Management', 'Finance'].includes(role)
+  return auth.canViewPnl()
 })
 
 const totalRequired = computed(() => {

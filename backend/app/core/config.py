@@ -1,13 +1,18 @@
 import os
 from typing import Any, List
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator, model_validator
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(case_sensitive=True, env_file=".env")
+
     PROJECT_NAME: str = "One Spirit Asia Operations System"
     API_V1_STR: str = "/api/v1"
     ENV: str = "development"  # development, staging, production
+    DEBUG: bool = False
     AUTO_CREATE_TABLES: bool = True
+    SEED_DEMO_USER: bool = True
+    SEED_PLACEHOLDER_USERS: bool = True
     
     # Environment configs loaded by docker-compose or .env
     DB_HOST: str = "localhost"
@@ -42,6 +47,19 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "uploads"
     MAX_UPLOAD_SIZE_MB: int = 10
 
+    @field_validator("DEBUG", mode="before")
+    @classmethod
+    def parse_debug_flag(cls, value: Any) -> Any:
+        if not isinstance(value, str):
+            return value
+
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on", "debug", "development"}:
+            return True
+        if normalized in {"0", "false", "no", "off", "release", "production"}:
+            return False
+        return value
+
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Any) -> List[str]:
@@ -67,6 +85,22 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def validate_security_in_production(self) -> "Settings":
         if self.ENV == "production":
+            if self.DEBUG:
+                raise ValueError(
+                    "SECURITY ERROR: DEBUG must be disabled in a production environment!"
+                )
+            if self.DB_PASSWORD == "onespirit_pass":
+                raise ValueError(
+                    "SECURITY ERROR: DB_PASSWORD must be changed from the default value in a production environment!"
+                )
+            if self.SEED_DEMO_USER:
+                raise ValueError(
+                    "SECURITY ERROR: SEED_DEMO_USER must be disabled in a production environment!"
+                )
+            if self.SEED_PLACEHOLDER_USERS:
+                raise ValueError(
+                    "SECURITY ERROR: SEED_PLACEHOLDER_USERS must be disabled in a production environment!"
+                )
             if self.JWT_SECRET == "supersecret_change_me_in_production_1234567890!":
                 raise ValueError(
                     "SECURITY ERROR: JWT_SECRET must be changed from the default value in a production environment!"
@@ -84,10 +118,6 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-
-    class Config:
-        case_sensitive = True
-        env_file = ".env"
 
 settings = Settings()
 

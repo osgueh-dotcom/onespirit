@@ -4,7 +4,7 @@ from app.modules.projects.models import Project, ProjectStatusLog, ProjectActivi
 from app.modules.projects.schemas import ProjectCreate, ProjectUpdate, ProjectInstrumentCreate, ProjectInstrumentUpdate
 from app.core.activity import log_activity
 from app.core.database import db_commit_safety
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 import uuid
 
@@ -295,7 +295,7 @@ def create_project(db: Session, project_in: ProjectCreate, created_by_id: str) -
     return db_project
 
 def update_project(db: Session, db_project: Project, project_in: ProjectUpdate, changed_by_id: str) -> Project:
-    project_data = project_in.dict(exclude_unset=True)
+    project_data = project_in.model_dump(exclude_unset=True)
     
     parsed_changer_id = None
     if changed_by_id:
@@ -723,7 +723,7 @@ def update_project_instrument(db: Session, instrument_id: str, instrument_in: Pr
     old_due_date = db_instrument.due_date
     old_completed_date = db_instrument.completed_date
 
-    update_data = instrument_in.dict(exclude_unset=True)
+    update_data = instrument_in.model_dump(exclude_unset=True)
 
     if "status" in update_data:
         db_instrument.status = update_data["status"]
@@ -742,7 +742,7 @@ def update_project_instrument(db: Session, instrument_id: str, instrument_in: Pr
         db_instrument.completed_date = update_data["completed_date"]
 
     db_instrument.updated_by_user_id = parsed_user_id
-    db_instrument.updated_at = datetime.utcnow()
+    db_instrument.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
     # Log specific updates to ProjectActivityLog
     if "status" in update_data and old_status != db_instrument.status:

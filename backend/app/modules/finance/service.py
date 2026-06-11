@@ -81,7 +81,7 @@ def create_invoice(db: Session, invoice_in: InvoiceCreate) -> Invoice:
     return db_invoice
 
 def update_invoice(db: Session, db_invoice: Invoice, invoice_in: InvoiceUpdate) -> Invoice:
-    invoice_data = invoice_in.dict(exclude_unset=True)
+    invoice_data = invoice_in.model_dump(exclude_unset=True)
     for field, value in invoice_data.items():
         setattr(db_invoice, field, value)
     db_commit_safety(db)
@@ -134,7 +134,7 @@ def create_payment(db: Session, payment_in: PaymentCreate) -> Payment:
     return db_payment
 
 def update_payment(db: Session, db_payment: Payment, payment_in: PaymentUpdate) -> Payment:
-    payment_data = payment_in.dict(exclude_unset=True)
+    payment_data = payment_in.model_dump(exclude_unset=True)
     for field, value in payment_data.items():
         setattr(db_payment, field, value)
     db_commit_safety(db)

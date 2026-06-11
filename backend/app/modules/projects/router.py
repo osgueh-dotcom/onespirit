@@ -42,7 +42,7 @@ def get_all_projects(
     
     response_list = []
     for p in projects:
-        p_res = schemas.ProjectResponse.from_orm(p)
+        p_res = schemas.ProjectResponse.model_validate(p)
         readiness = service.calculate_project_readiness(p)
         p_res.project_readiness_score = readiness["project_readiness_score"]
         p_res.instrument_completion_rate = readiness["instrument_completion_rate"]
@@ -67,7 +67,7 @@ def get_project_by_id(
     project.instruments = [inst for inst in project.instruments if not inst.deleted_at]
     
     # Manually serialize to Pydantic to avoid dynamic attribute session commit side effects
-    response_data = schemas.ProjectDetailResponse.from_orm(project)
+    response_data = schemas.ProjectDetailResponse.model_validate(project)
     
     # Calculate readiness score and counts
     readiness = service.calculate_project_readiness(project)
@@ -375,7 +375,7 @@ def get_instruments_for_project(
             detail="Project not found"
         )
     instruments = service.get_project_instruments(db, project_id=project_id)
-    response_list = [schemas.ProjectInstrumentRead.from_orm(inst) for inst in instruments]
+    response_list = [schemas.ProjectInstrumentRead.model_validate(inst) for inst in instruments]
     
     # Mask PNL document link if unauthorized
     user_role = current_user.role.name if current_user and current_user.role else None
@@ -423,7 +423,7 @@ def create_instrument_for_project(
             instrument_in=payload,
             user_id=str(current_user.id)
         )
-        response_data = schemas.ProjectInstrumentRead.from_orm(inst)
+        response_data = schemas.ProjectInstrumentRead.model_validate(inst)
         
         # Mask PNL document link if unauthorized
         user_role = current_user.role.name if current_user and current_user.role else None
@@ -469,7 +469,7 @@ def update_instrument_in_project(
             instrument_in=payload,
             user_id=str(current_user.id)
         )
-        response_data = schemas.ProjectInstrumentRead.from_orm(inst)
+        response_data = schemas.ProjectInstrumentRead.model_validate(inst)
         
         # Mask PNL document link if unauthorized
         user_role = current_user.role.name if current_user and current_user.role else None
@@ -523,7 +523,7 @@ def generate_default_instruments_for_project(
         
     service.ensure_default_project_instruments(db, project_id=project.id)
     instruments = service.get_project_instruments(db, project_id=project_id)
-    response_list = [schemas.ProjectInstrumentRead.from_orm(inst) for inst in instruments]
+    response_list = [schemas.ProjectInstrumentRead.model_validate(inst) for inst in instruments]
     
     # Mask PNL document link if unauthorized
     user_role = current_user.role.name if current_user and current_user.role else None

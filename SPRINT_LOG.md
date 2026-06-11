@@ -29,6 +29,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 12.3** | Light Mode Consistency & Dashboard Analytics Visualization | 2026-06-11 | Done |
 | **Sprint 13** | Full Sprint Audit & Documentation/Security Hardening | 2026-06-11 | Done |
 | **Sprint 13.1** | Minor Cleanup & Deployment Consistency Patch | 2026-06-11 | Done |
+| **Sprint 14** | Production Readiness Foundation | 2026-06-11 | Done |
 
 ---
 
@@ -168,3 +169,16 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Status**: Done.
 - **Validation result**: `python -m pytest app/tests -q` menghasilkan `17 passed, 919 warnings`; `npm run build` success.
 - **Known limitations**: Production deployment belum final, frontend belum punya dedicated lint/test baseline, backend masih punya deprecation warnings, dan vendor analytics masih bergantung pada data tekstual.
+
+## Sprint 14 - Production Readiness Foundation
+
+- **Tujuan**: Memindahkan project dari demo readiness menuju production candidate planning tanpa melakukan permanent production deployment.
+- **Hasil**:
+  - Menambahkan ESLint, Vitest, safety scan, dan GitHub Pages quality gates.
+  - Menambahkan helper role-aware untuk menu, route, project actions, PNL, dan developer tools.
+  - Menutup endpoint dashboard modular yang sebelumnya belum membutuhkan token.
+  - Menyelesaikan backend deprecation cleanup phase 1 untuk settings, payload serialization, UTC timestamp, Project schemas/router, dan FastAPI lifespan.
+  - Menambahkan production checklist, backup/restore plan, secret rotation plan, deployment runbook, PDF export plan, dan audit documents.
+- **Status**: Done.
+- **Validation**: Backend `29 passed, 39 warnings`; frontend lint `0 errors, 26 warnings`; frontend test `3 passed`; safety scan dan build success.
+- **Known limitations**: Production runtime belum disiapkan, role PO/PM/Admin belum formal, backup belum otomatis, server-side PDF belum tersedia, dan Vite/esbuild memiliki dua advisory moderate development-only.

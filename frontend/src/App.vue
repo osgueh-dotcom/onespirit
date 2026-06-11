@@ -49,7 +49,7 @@
             v-for="item in group.items" 
             :key="item.name"
             :to="item.path"
-            v-show="item.permission ? auth.hasPermission(item.permission) : true"
+            v-show="auth.canAccessItem(item)"
             class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group text-muted-theme hover:text-main-theme hover:bg-brand-charcoal-light/10"
             active-class="bg-brand-orange/10 !text-brand-orange border-l-2 border-brand-orange"
           >
@@ -179,16 +179,40 @@ const navGroups = [
   {
     name: 'Pusat Kontrol',
     items: [
-      { name: 'PM Control', path: '/pm-control-center', icon: ClipboardDocumentCheckIcon, permission: 'projects:read' },
-      { name: 'PO Control', path: '/po-control-center', icon: BanknotesIcon, permission: 'projects:read' },
-      { name: 'Pusat Source & Vendor', path: '/source-vendor-performance', icon: ChartBarIcon, permission: 'projects:read' }
+      {
+        name: 'PM Control',
+        path: '/pm-control-center',
+        icon: ClipboardDocumentCheckIcon,
+        permission: 'projects:read',
+        roles: ['Super Admin', 'Admin', 'Management', 'PM', 'Staff']
+      },
+      {
+        name: 'PO Control',
+        path: '/po-control-center',
+        icon: BanknotesIcon,
+        permission: 'projects:read',
+        roles: ['Super Admin', 'Admin', 'Management', 'PO', 'Staff']
+      },
+      {
+        name: 'Pusat Source & Vendor',
+        path: '/source-vendor-performance',
+        icon: ChartBarIcon,
+        permission: 'projects:read',
+        roles: ['Super Admin', 'Admin', 'Management', 'PO', 'Staff']
+      }
     ]
   },
   {
     name: 'Operasional',
     items: [
       { name: 'Finance', path: '/finance', icon: CurrencyDollarIcon, permission: 'finance:read' },
-      { name: 'Import Data', path: '/imports', icon: ArrowUpTrayIcon, permission: 'projects:write' },
+      {
+        name: 'Import Data',
+        path: '/imports',
+        icon: ArrowUpTrayIcon,
+        permission: 'projects:write',
+        roles: ['Super Admin', 'Admin', 'Management']
+      },
       { name: 'CRM', path: '/crm', icon: UserGroupIcon, permission: 'crm:read' },
       { name: 'Documents', path: '/documents', icon: FolderIcon, permission: 'documents:read' }
     ]

@@ -40,3 +40,17 @@ Gunakan dokumen-dokumen berikut saat mempersiapkan dan melakukan demonstrasi sis
 - **[Cakupan Sistem MVP](mvp-scope.md)**: Penjelasan batasan fitur yang masuk MVP awal dan fitur yang didelegasikan ke Fase Lanjutan (Fase 2).
 - **[Daftar Kuesioner Validasi Bisnis](client-validation-questions.md)**: Lembar pertanyaan interaktif untuk menyelaraskan alur status dan penagihan dengan klien.
 - **[Daftar Batasan Teknis MVP](known-limitations-before-client-demo.md)**: Ringkasan batasan sistem yang dikemas dalam bahasa bisnis yang aman untuk klien.
+
+---
+
+## 3. Production Readiness Foundation
+
+- **[Production Readiness Audit](production-readiness-audit.md)**
+- **[Production Readiness Checklist](production-readiness-checklist.md)**
+- **[Frontend Quality Baseline](frontend-quality-baseline.md)**
+- **[Role-aware UI Audit](role-aware-ui-audit.md)**
+- **[Backend Deprecation Cleanup](backend-deprecation-cleanup.md)**
+- **[Backup & Restore Plan](backup-restore-plan.md)**
+- **[Secret Rotation Plan](secret-rotation-plan.md)**
+- **[Deployment Runbook](deployment-runbook.md)**
+- **[PDF Export Flow Plan](pdf-export-flow-plan.md)**

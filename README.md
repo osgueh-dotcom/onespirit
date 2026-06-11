@@ -14,15 +14,17 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 13.1 - Minor Cleanup & Deployment Consistency Patch |
+| Status | Sprint 14 - Production Readiness Foundation |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
 | Database | PostgreSQL untuk Docker/production-like, SQLite untuk test lokal |
 
 Current readiness summary:
-- Backend test: `17 passed`
+- Backend test: `29 passed, 39 warnings`
 - Frontend build: success
+- Frontend lint: `0 errors`, `26 warnings`
+- Frontend test: `3 passed`
 - GitHub Pages demo deployment: configured
 - Backend tunnel: temporary demo access
 - Database: private local Docker
@@ -124,7 +126,41 @@ cd frontend
 npm.cmd run build
 ```
 
-Script frontend yang tersedia saat ini hanya `dev`, `build`, dan `preview`. Belum ada script lint/typecheck frontend terpisah.
+Script frontend quality yang tersedia:
+
+```bash
+cd frontend
+npm.cmd run lint
+npm.cmd run test
+npm.cmd run quality:scan
+npm.cmd run build
+```
+
+Sprint 14 menambahkan ESLint dan Vitest baseline. Component test, coverage threshold, dan typecheck belum tersedia.
+
+---
+
+## Production Readiness Status
+
+OneSpirit Workflow saat ini **demo-ready**, tetapi **belum production-ready penuh**.
+
+Status saat ini:
+- MVP demo ready.
+- GitHub Pages frontend demo ready.
+- Backend dapat dijalankan lokal/tunnel untuk demo.
+- Database masih private/local Docker.
+- Production deployment permanen belum dilakukan.
+
+Dokumen Sprint 14 production readiness:
+- [Production Readiness Audit](docs/production-readiness-audit.md)
+- [Frontend Quality Baseline](docs/frontend-quality-baseline.md)
+- [Role-aware UI Audit](docs/role-aware-ui-audit.md)
+- [Backend Deprecation Cleanup](docs/backend-deprecation-cleanup.md)
+- [Production Readiness Checklist](docs/production-readiness-checklist.md)
+- [Backup & Restore Plan](docs/backup-restore-plan.md)
+- [Secret Rotation Plan](docs/secret-rotation-plan.md)
+- [Deployment Runbook](docs/deployment-runbook.md)
+- [PDF Export Flow Plan](docs/pdf-export-flow-plan.md)
 
 ---
 
@@ -148,10 +184,11 @@ Alur demo 15 sampai 25 menit:
 ## Known Limitations
 
 1. **Security**: JWT secret dan default password demo/admin hanya boleh dipakai untuk development/demo. Environment `production` wajib memakai secret dan password berbeda.
-2. **Permission UI**: API permission gate sudah ada, namun penyempurnaan visibility UI per role masih perlu diperdalam.
+2. **Permission UI**: role-aware visibility baseline sudah ada, tetapi role PO/PM/Admin dan project ownership backend belum formal.
 3. **Backup**: belum ada automated cloud backup database.
 4. **External Integration**: belum ada e-mail automation dan direct PDF export service.
 5. **Vendor Model**: vendor partner masih bergantung pada field tekstual dan belum menjadi entity relasional penuh.
+6. **Deployment**: Docker Compose dan Dockerfile saat ini masih development/demo oriented, bukan production runtime.
 
 ---
 
@@ -172,6 +209,10 @@ Backend demo tetap berjalan di mesin lokal atau tunnel sementara. Jangan expose 
 ## Dokumentasi Tambahan
 
 - [Dashboard Analytics Visualization](docs/dashboard-analytics-visualization.md)
+- [Production Readiness Checklist](docs/production-readiness-checklist.md)
+- [Deployment Runbook](docs/deployment-runbook.md)
+- [Backup & Restore Plan](docs/backup-restore-plan.md)
+- [Secret Rotation Plan](docs/secret-rotation-plan.md)
 - [Client Demo Rehearsal](docs/client-demo-rehearsal.md)
 - [Client Feedback Form](docs/client-feedback-form.md)
 - [Commercial Control Logic](docs/commercial-control-logic.md)

@@ -37,7 +37,9 @@
         <select 
           :value="project.quotation_status" 
           @change="$emit('transition', 'quotation_status', $event.target.value)"
+          :disabled="!canEdit"
           class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
+          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
         >
           <option v-for="st in ['Draft', 'Sent', 'Follow Up', 'Revision', 'Signed & Deal', 'Cancel']" :key="st" :value="st">{{ st }}</option>
         </select>
@@ -47,7 +49,9 @@
         <select 
           :value="project.program_status" 
           @change="$emit('transition', 'program_status', $event.target.value)"
+          :disabled="!canEdit"
           class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
+          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
         >
           <option v-for="st in ['Inquiry', 'Confirmed', 'Preparation', 'Ready', 'Running', 'Completed', 'Reporting', 'Closed', 'Cancel']" :key="st" :value="st">{{ st }}</option>
         </select>
@@ -57,7 +61,9 @@
         <select 
           :value="project.payment_status" 
           @change="$emit('transition', 'payment_status', $event.target.value)"
+          :disabled="!canEdit"
           class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
+          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
         >
           <option v-for="st in ['Not Invoiced', 'Invoice Sent', 'Partial Paid', 'Paid', 'Outstanding', 'Overdue']" :key="st" :value="st">{{ st }}</option>
         </select>
@@ -67,7 +73,9 @@
         <select 
           :value="project.project_status" 
           @change="$emit('transition', 'project_status', $event.target.value)"
+          :disabled="!canEdit"
           class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
+          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
         >
           <option v-for="st in ['Open', 'Active', 'Reporting', 'Closed', 'Canceled']" :key="st" :value="st">{{ st }}</option>
         </select>
@@ -81,6 +89,10 @@ defineProps({
   project: {
     type: Object,
     required: true
+  },
+  canEdit: {
+    type: Boolean,
+    default: false
   }
 })
 

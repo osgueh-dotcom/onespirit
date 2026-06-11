@@ -38,9 +38,14 @@ services:
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-1440}
       - UPLOAD_DIR=${UPLOAD_DIR:-/app/uploads}
       - ENV=${ENV:-development}
+      - DEBUG=${DEBUG:-false}
       - AUTO_CREATE_TABLES=${AUTO_CREATE_TABLES:-true}
+      - SEED_DEMO_USER=${SEED_DEMO_USER:-true}
+      - SEED_PLACEHOLDER_USERS=${SEED_PLACEHOLDER_USERS:-true}
       - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@onespirit.asia}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-OneSpirit2026!}
+      - DEMO_EMAIL=${DEMO_EMAIL:-demo@onespirit.asia}
+      - DEMO_PASSWORD=${DEMO_PASSWORD:-OneSpiritDemo2026!}
     volumes:
       - ./backend:/app
       - uploads_data:/app/uploads

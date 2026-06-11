@@ -2,21 +2,22 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import List, Optional
 from uuid import UUID
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from app.modules.crm.schemas import CustomerResponse
 from app.modules.event_sources.schemas import EventSourceResponse
 
 # Simple user response to avoid circular references
 class UserBriefResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     full_name: str
     email: str
 
-    class Config:
-        from_attributes = True
-
 # Status Log Schemas
 class ProjectStatusLogResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     project_id: UUID
     from_status: Optional[str] = None
@@ -29,9 +30,6 @@ class ProjectStatusLogResponse(BaseModel):
     changed_by_user_id: Optional[UUID] = None
     changed_by_user: Optional[UserBriefResponse] = None
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 # Project Schemas
 class ProjectBase(BaseModel):
@@ -134,6 +132,8 @@ class ProjectReadinessCheckResponse(BaseModel):
 
 
 class ProjectDocumentResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     project_id: UUID
     title: str
@@ -145,10 +145,9 @@ class ProjectDocumentResponse(BaseModel):
     url: Optional[str] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
-
 class ProjectActivityLogResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     project_id: UUID
     user_id: Optional[UUID] = None
@@ -160,10 +159,9 @@ class ProjectActivityLogResponse(BaseModel):
     notes: Optional[str] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
-
 class ProjectResponse(ProjectBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     customer_id: UUID
     customer: CustomerResponse
@@ -186,9 +184,6 @@ class ProjectResponse(ProjectBase):
     project_readiness_score: Optional[float] = 0.0
     instrument_completion_rate: Optional[float] = 0.0
 
-    class Config:
-        from_attributes = True
-
 class ProjectInstrumentCreate(BaseModel):
     project_id: UUID
     instrument_type: str
@@ -208,6 +203,8 @@ class ProjectInstrumentUpdate(BaseModel):
     completed_date: Optional[date] = None
 
 class ProjectInstrumentRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     project_id: UUID
     instrument_type: str
@@ -221,9 +218,6 @@ class ProjectInstrumentRead(BaseModel):
     updated_by_user: Optional[UserBriefResponse] = None
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True
 
 class ProjectDetailResponse(ProjectResponse):
     documents: List[ProjectDocumentResponse] = []

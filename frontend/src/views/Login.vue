@@ -58,16 +58,16 @@
       </button>
     </form>
 
-    <!-- Seeding Helper Details -->
+    <!-- Demo account helper -->
     <div class="mt-8 pt-6 border-t border-brand-charcoal-light/25 text-center">
       <div class="inline-block px-4 py-3 bg-brand-charcoal-light/15 border border-brand-charcoal-light/20 rounded-xl text-left max-w-xs">
         <p class="text-[10px] font-extrabold text-brand-orange uppercase tracking-wider mb-1 flex items-center gap-1.5">
           <span class="h-1.5 w-1.5 rounded-full bg-brand-orange animate-ping"></span>
-          Kredensial Akun Demo
+          Akses Akun Demo
         </p>
         <p class="text-[11px] text-gray-400 leading-relaxed">
           Email: <span class="text-white font-mono font-medium">demo@onespirit.asia</span><br/>
-          Password: <span class="text-white font-mono font-medium">OneSpiritDemo2026!</span>
+          Kata sandi diberikan oleh presenter dan tidak ditampilkan di aplikasi.
         </p>
       </div>
     </div>

@@ -83,6 +83,23 @@ def test_dashboard_endpoint(client):
     assert "team_workload" in data
     assert "recent_activities" in data
 
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/api/v1/dashboard/overview",
+        "/api/v1/dashboard/revenue",
+        "/api/v1/dashboard/workflow",
+        "/api/v1/dashboard/events",
+        "/api/v1/dashboard/finance",
+        "/api/v1/dashboard/team",
+        "/api/v1/dashboard/activity",
+    ],
+)
+def test_dashboard_modular_endpoints_require_authentication(client, path):
+    response = client.get(path)
+    assert response.status_code == 401
+
 def test_password_complexity_validator(client):
     # 1. Login to retrieve bearer token
     login_response = client.post(

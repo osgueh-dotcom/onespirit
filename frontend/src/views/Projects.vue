@@ -251,7 +251,7 @@
             <!-- Quick workflow Shift Arrows -->
             <div class="flex items-center justify-between border-t border-brand-charcoal-light/10 pt-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <button 
-                v-if="col.prev"
+                v-if="auth.hasPermission('projects:write') && col.prev"
                 @click="transitionStatus(proj, col.prev)"
                 class="p-1 rounded bg-brand-charcoal-light/30 hover:bg-brand-orange/20 text-gray-400 hover:text-brand-orange transition-all font-bold text-[10px]"
               >
@@ -260,7 +260,7 @@
               <div v-else></div>
               
               <button 
-                v-if="col.next"
+                v-if="auth.hasPermission('projects:write') && col.next"
                 @click="transitionStatus(proj, col.next)"
                 class="p-1 rounded bg-brand-charcoal-light/30 hover:bg-brand-orange/20 text-gray-400 hover:text-brand-orange transition-all font-bold text-[10px]"
               >
@@ -375,7 +375,7 @@
                     :to="'/projects/' + proj.id"
                     class="px-2.5 py-1 text-[10px] font-bold text-brand-orange bg-brand-orange/10 rounded hover:bg-brand-orange/20 transition-all inline-block"
                   >
-                    Manage
+                    {{ auth.hasPermission('projects:write') ? 'Manage' : 'View' }}
                   </router-link>
                   <button 
                     v-if="auth.hasPermission('projects:write')"
@@ -442,7 +442,7 @@
                 :to="'/projects/' + proj.id"
                 class="px-3 py-1.5 text-xs font-bold text-brand-orange bg-brand-orange/10 rounded-xl hover:bg-brand-orange/20 transition-all"
               >
-                Manage
+                {{ auth.hasPermission('projects:write') ? 'Manage' : 'View' }}
               </router-link>
               <button 
                 v-if="auth.hasPermission('projects:write')"
@@ -823,11 +823,12 @@ const columns = [
 
 const fetchData = async () => {
   try {
-    const [projRes, custRes, usersRes, sourceRes] = await Promise.all([
+    const canLoadCrmReferenceData = auth.hasPermission('crm:read')
+    const [projRes, sourceRes, custRes, usersRes] = await Promise.all([
       axios.get('/api/v1/projects'),
-      axios.get('/api/v1/customers'),
-      axios.get('/api/v1/auth/users'),
-      axios.get('/api/v1/event-sources')
+      axios.get('/api/v1/event-sources'),
+      canLoadCrmReferenceData ? axios.get('/api/v1/customers') : Promise.resolve({ data: [] }),
+      canLoadCrmReferenceData ? axios.get('/api/v1/auth/users') : Promise.resolve({ data: [] })
     ])
     projects.value = projRes.data
     customers.value = custRes.data

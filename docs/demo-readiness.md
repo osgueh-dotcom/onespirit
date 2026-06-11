@@ -15,13 +15,12 @@ Dokumen ini disusun untuk membantu Program Owner, Developer, dan Evaluator Klien
 
 ## 2. Pengguna & Kredensial untuk Demo
 
-Untuk keperluan demo lokal/evaluasi, gunakan akun Super Admin yang mencakup semua kemampuan lintas-peran:
+Untuk keperluan demo lokal/evaluasi, gunakan akun Super Admin yang disiapkan dari environment lokal atau launcher internal.
 
 - **E-mail**: `admin@onespirit.asia`
-- **Password**: `OneSpirit2026!`
 - **Akses**: Super Admin (dapat mengakses PM Control Center, PO Control Center, CRM, Projects, Finance, dan Imports).
 
-*Catatan Keamanan: Kredensial ini hanya untuk lingkungan demo/development lokal.*
+*Catatan Keamanan: kredensial demo hanya untuk lingkungan demo/development lokal dan tidak boleh disalin ke production.*
 
 ---
 

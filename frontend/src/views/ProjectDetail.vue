@@ -1,6 +1,11 @@
 <template>
   <div class="space-y-6">
-    <ProjectDetailHeader v-if="project" :project="project" @transition="transitionStatus" />
+    <ProjectDetailHeader
+      v-if="project"
+      :project="project"
+      :can-edit="auth.hasPermission('projects:write')"
+      @transition="transitionStatus"
+    />
 
     <!-- Loading Indicators -->
     <div v-if="loading" class="h-64 flex flex-col items-center justify-center gap-3">
@@ -896,6 +901,8 @@ const getPaymentStatusStyles = (status) => {
 
 // Transition Status Action
 const transitionStatus = async (statusType, newStatus) => {
+  if (!auth.hasPermission('projects:write')) return
+
   pendingTransition.value = { statusType, newStatus }
   transitionNotes.value = ''
   forceTransition.value = false

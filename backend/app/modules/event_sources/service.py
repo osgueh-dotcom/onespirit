@@ -32,7 +32,7 @@ def create_event_source(db: Session, source_in: EventSourceCreate) -> EventSourc
     return db_source
 
 def update_event_source(db: Session, db_source: EventSource, source_in: EventSourceUpdate) -> EventSource:
-    source_data = source_in.dict(exclude_unset=True)
+    source_data = source_in.model_dump(exclude_unset=True)
     for field, value in source_data.items():
         setattr(db_source, field, value)
     db_commit_safety(db)

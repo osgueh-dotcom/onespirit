@@ -43,7 +43,7 @@ def create_task(db: Session, task_in: TaskCreate, created_by_id: str) -> Task:
 
 def update_task(db: Session, db_task: Task, task_in: TaskUpdate) -> Task:
     old_status = db_task.status
-    task_data = task_in.dict(exclude_unset=True)
+    task_data = task_in.model_dump(exclude_unset=True)
     for field, value in task_data.items():
         setattr(db_task, field, value)
     db_commit_safety(db)

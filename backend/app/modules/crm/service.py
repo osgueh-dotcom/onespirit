@@ -60,7 +60,7 @@ def create_customer(db: Session, customer_in: CustomerCreate, user_id: Optional[
     return db_customer
 
 def update_customer(db: Session, db_customer: Customer, customer_in: CustomerUpdate) -> Customer:
-    customer_data = customer_in.dict(exclude_unset=True)
+    customer_data = customer_in.model_dump(exclude_unset=True)
     for field, value in customer_data.items():
         setattr(db_customer, field, value)
     if "company_name" in customer_data:
@@ -109,7 +109,7 @@ def create_contact(db: Session, contact_in: ContactCreate, user_id: Optional[str
     return db_contact
 
 def update_contact(db: Session, db_contact: Contact, contact_in: ContactUpdate) -> Contact:
-    contact_data = contact_in.dict(exclude_unset=True)
+    contact_data = contact_in.model_dump(exclude_unset=True)
     for field, value in contact_data.items():
         setattr(db_contact, field, value)
     db_commit_safety(db)

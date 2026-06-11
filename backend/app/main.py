@@ -1,3 +1,6 @@
+from contextlib import asynccontextmanager
+import sys
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
@@ -25,9 +28,29 @@ from app.modules.finance.models import Invoice, Payment
 from app.modules.event_sources.models import EventSource
 from app.models.activity import ActivityLog
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    if "pytest" not in sys.modules:
+        if settings.AUTO_CREATE_TABLES:
+            Base.metadata.create_all(bind=engine)
+
+        db = SessionLocal()
+        try:
+            seed_roles_and_admin(db)
+        finally:
+            db.close()
+
+    yield
+
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    debug=settings.DEBUG,
+    docs_url=None if settings.ENV == "production" else "/docs",
+    redoc_url=None if settings.ENV == "production" else "/redoc",
+    openapi_url=None if settings.ENV == "production" else f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
 # CORS configuration
@@ -38,23 +61,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.on_event("startup")
-def on_startup():
-    import sys
-    if "pytest" in sys.modules:
-        return
-        
-    # 1. Create tables automatically (highly robust for immediate startup)
-    if settings.AUTO_CREATE_TABLES:
-        Base.metadata.create_all(bind=engine)
-    
-    # 2. Seed database roles and default admin user
-    db = SessionLocal()
-    try:
-        seed_roles_and_admin(db)
-    finally:
-        db.close()
 
 # Include routers
 app.include_router(auth_router, prefix=settings.API_V1_STR)
@@ -77,7 +83,8 @@ def health_check():
 
 @app.get("/")
 def read_root():
+    docs_message = "" if settings.ENV == "production" else " Access documentation at /docs"
     return {
         "status": "online",
-        "message": f"Welcome to {settings.PROJECT_NAME} API. Access documentation at /docs"
+        "message": f"Welcome to {settings.PROJECT_NAME} API.{docs_message}"
     }

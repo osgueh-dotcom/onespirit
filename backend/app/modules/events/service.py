@@ -12,7 +12,7 @@ def get_event_schedules_by_project(db: Session, project_id: str) -> List[EventSc
 
 def create_event_schedule(db: Session, event_in: EventScheduleCreate) -> EventSchedule:
     # Convert rundown objects to dicts for JSON column saving
-    rundown_data = [item.dict() for item in event_in.rundown]
+    rundown_data = [item.model_dump() for item in event_in.rundown]
     
     db_event = EventSchedule(
         project_id=event_in.project_id,
@@ -30,9 +30,9 @@ def create_event_schedule(db: Session, event_in: EventScheduleCreate) -> EventSc
     return db_event
 
 def update_event_schedule(db: Session, db_event: EventSchedule, event_in: EventScheduleUpdate) -> EventSchedule:
-    event_data = event_in.dict(exclude_unset=True)
+    event_data = event_in.model_dump(exclude_unset=True)
     if "rundown" in event_data and event_data["rundown"] is not None:
-        event_data["rundown"] = [item.dict() for item in event_data["rundown"]]
+        event_data["rundown"] = [item.model_dump() if hasattr(item, "model_dump") else item for item in event_data["rundown"]]
         
     for field, value in event_data.items():
         setattr(db_event, field, value)

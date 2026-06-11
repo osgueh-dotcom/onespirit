@@ -1,5 +1,13 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import {
+  canAccessItem,
+  canUseDeveloperTools,
+  canViewPnl,
+  hasAnyRole,
+  hasPermission,
+  isAdminUser
+} from '../utils/access'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -10,7 +18,8 @@ export const useAuthStore = defineStore('auth', {
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
-    isAdmin: (state) => state.user?.role?.permissions.includes('admin') || false,
+    isAdmin: (state) => isAdminUser(state.user),
+    roleName: (state) => state.user?.role?.name || '',
     permissions: (state) => state.user?.role?.permissions || []
   },
   actions: {
@@ -57,8 +66,19 @@ export const useAuthStore = defineStore('auth', {
       delete axios.defaults.headers.common['Authorization']
     },
     hasPermission(perm) {
-      if (this.isAdmin) return true
-      return this.permissions.includes(perm)
+      return hasPermission(this.user, perm)
+    },
+    hasAnyRole(roleNames) {
+      return hasAnyRole(this.user, roleNames)
+    },
+    canAccessItem(item) {
+      return canAccessItem(this.user, item)
+    },
+    canViewPnl() {
+      return canViewPnl(this.user)
+    },
+    canUseDeveloperTools() {
+      return canUseDeveloperTools(this.user)
     }
   }
 })

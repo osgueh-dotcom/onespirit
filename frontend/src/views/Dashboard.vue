@@ -125,7 +125,10 @@
       </div>
       
       <!-- Developer Utilities (Client Demo Mode) -->
-      <div class="border-t border-charcoal-800/80 pt-6 mt-6 flex items-center justify-between print:hidden">
+      <div
+        v-if="auth.canUseDeveloperTools()"
+        class="border-t border-charcoal-800/80 pt-6 mt-6 flex items-center justify-between print:hidden"
+      >
         <div class="flex items-center gap-2 select-none">
           <input 
             id="toggle-dev-tools" 
@@ -140,7 +143,7 @@
       </div>
 
       <!-- Collapsible Legacy BI section -->
-      <div v-if="showDeveloperTools" class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:hidden">
+      <div v-if="auth.canUseDeveloperTools() && showDeveloperTools" class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:hidden">
         <div class="flex items-center justify-between cursor-pointer select-none" @click="showLegacyBI = !showLegacyBI">
           <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
             <svg class="w-4.5 h-4.5 text-charcoal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -172,6 +175,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import axios from 'axios'
+import { useAuthStore } from '../store/auth'
 
 // Import Shared UI Components
 import AppErrorState from '../components/ui/AppErrorState.vue'
@@ -201,6 +205,7 @@ import DashboardRevenueChart from '../components/charts/DashboardRevenueChart.vu
 import DashboardStatusDistribution from '../components/charts/DashboardStatusDistribution.vue'
 import DashboardSourceContribution from '../components/charts/DashboardSourceContribution.vue'
 
+const auth = useAuthStore()
 const stats = ref({})
 const legacyLoading = ref(false)
 const showLegacyBI = ref(false)
@@ -249,6 +254,11 @@ const updateSyncTime = () => {
 
 // Load users list for filters
 const loadUsers = async () => {
+  if (!auth.hasPermission('crm:read')) {
+    usersList.value = []
+    return
+  }
+
   try {
     const response = await axios.get('/api/v1/auth/users')
     usersList.value = response.data

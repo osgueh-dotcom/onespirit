@@ -54,7 +54,8 @@ echo  SISTEM BERHASIL DILUNCURKAN!
 echo.
 echo  - Portal Operasional (Frontend) : http://localhost:5173
 echo  - Dokumentasi API (FastAPI)     : http://localhost:8001/docs
-echo  - Akun Default                  : admin@onespirit.asia / OneSpirit2026!
+echo  - Akun Default                  : admin@onespirit.asia
+echo  - Password                      : lihat environment lokal atau launcher internal
 echo.
 echo  PENTING: Jika Anda tidak melihat perubahan visual terbaru pada UI:
 echo  Lakukan HARD REFRESH di browser Anda dengan menekan Ctrl + F5!

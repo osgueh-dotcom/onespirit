@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 13.1 - Minor Cleanup & Deployment Consistency Patch |
+| Status Project | Sprint 14 - Production Readiness Foundation |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | GitHub Pages |
 | Backend Deployment Strategy | Temporary tunnel during client demo |
@@ -35,6 +35,34 @@ Deployment model saat ini:
 - Not production deployment.
 
 Project sudah cukup kuat untuk demo client, tetapi belum masuk kategori production-ready cloud deployment.
+
+---
+
+## 1.2 Status Sprint 14 & Production Readiness Direction
+
+Sprint 14 moves the project from demo readiness toward production planning. Sprint ini membangun fondasi production readiness tanpa mendeklarasikan production deployment final.
+
+Sprint 14 mencakup:
+
+- Frontend ESLint, Vitest, dan safety scan baseline.
+- Role-aware UI audit.
+- Backend deprecation cleanup phase 1.
+- Production readiness checklist.
+- Backup and restore planning.
+- Secret rotation planning.
+- Deployment runbook.
+- PDF export flow planning untuk CL, ROS, CK, PNL, final report, dan management report.
+
+Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
+
+Validation Sprint 14:
+
+- Backend: `29 passed, 39 warnings`.
+- Frontend lint: `0 errors`, `26 warnings`.
+- Frontend test: `3 passed`.
+- Frontend build: success.
+
+Role visibility frontend sudah membatasi control center, imports, project actions, PNL link, dan developer tools. Backend tetap menjadi security authority; role PO/PM/Admin dan ownership per project belum formal.
 
 ---
 

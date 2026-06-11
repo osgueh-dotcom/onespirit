@@ -50,25 +50,41 @@ const router = createRouter({
       path: '/imports',
       name: 'Imports',
       component: () => import('../views/Imports.vue'),
-      meta: { requiresAuth: true, permission: 'projects:write' }
+      meta: {
+        requiresAuth: true,
+        permission: 'projects:write',
+        roles: ['Super Admin', 'Admin', 'Management']
+      }
     },
     {
       path: '/pm-control-center',
       name: 'PMControlCenter',
       component: () => import('../views/PmControlCenter.vue'),
-      meta: { requiresAuth: true, permission: 'projects:read' }
+      meta: {
+        requiresAuth: true,
+        permission: 'projects:read',
+        roles: ['Super Admin', 'Admin', 'Management', 'PM', 'Staff']
+      }
     },
     {
       path: '/po-control-center',
       name: 'POControlCenter',
       component: () => import('../views/PoControlCenter.vue'),
-      meta: { requiresAuth: true, permission: 'projects:read' }
+      meta: {
+        requiresAuth: true,
+        permission: 'projects:read',
+        roles: ['Super Admin', 'Admin', 'Management', 'PO', 'Staff']
+      }
     },
     {
       path: '/source-vendor-performance',
       name: 'SourceVendorPerformance',
       component: () => import('../views/SourceVendorPerformance.vue'),
-      meta: { requiresAuth: true, permission: 'projects:read' }
+      meta: {
+        requiresAuth: true,
+        permission: 'projects:read',
+        roles: ['Super Admin', 'Admin', 'Management', 'PO', 'Staff']
+      }
     }
   ]
 })
@@ -90,7 +106,10 @@ router.beforeEach(async (to, from, next) => {
     return next({ name: 'Dashboard' })
   }
 
-  if (to.meta.permission && !authStore.hasPermission(to.meta.permission)) {
+  if (!authStore.canAccessItem({
+    permission: to.meta.permission,
+    roles: to.meta.roles
+  })) {
     return next({ name: 'Dashboard' }) // Redirect back if unauthorized
   }
 

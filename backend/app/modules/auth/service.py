@@ -1,4 +1,5 @@
 import logging
+import secrets
 from typing import Optional, List
 from sqlalchemy.orm import Session
 from app.core.security import get_password_hash, verify_password
@@ -34,7 +35,7 @@ def create_user(db: Session, user_in: UserCreate) -> User:
     return db_user
 
 def update_user(db: Session, db_user: User, user_in: UserUpdate) -> User:
-    user_data = user_in.dict(exclude_unset=True)
+    user_data = user_in.model_dump(exclude_unset=True)
     if "password" in user_data and user_data["password"]:
         db_user.hashed_password = get_password_hash(user_data["password"])
         del user_data["password"]
@@ -105,34 +106,35 @@ def seed_roles_and_admin(db: Session):
         logger.info("Seeded Super Admin user: %s", admin_email)
 
     # 2b. Demo User
-    demo_email = settings.DEMO_EMAIL
-    demo_user = get_user_by_email(db, demo_email)
-    if not demo_user:
-        demo_role = created_roles["Management"]
-        demo_create = UserCreate(
-            email=demo_email,
-            password=settings.DEMO_PASSWORD,
-            full_name="Client Demo User",
-            is_active=True,
-            role_id=demo_role.id
-        )
-        create_user(db, demo_create)
-        logger.info("Seeded Demo user: %s", demo_email)
+    if settings.SEED_DEMO_USER:
+        demo_email = settings.DEMO_EMAIL
+        demo_user = get_user_by_email(db, demo_email)
+        if not demo_user:
+            demo_role = created_roles["Management"]
+            demo_create = UserCreate(
+                email=demo_email,
+                password=settings.DEMO_PASSWORD,
+                full_name="Client Demo User",
+                is_active=True,
+                role_id=demo_role.id
+            )
+            create_user(db, demo_create)
+            logger.info("Seeded Demo user: %s", demo_email)
 
     # 3. Seed placeholder internal users for Excel PO/PM verification
     initials_to_seed = [
         "JIP", "AR", "BR", "SBK", "SR", "TF", "JC", "SYS", "MWB", "RA", "OME", "SB", "UT", "MDL"
     ]
     staff_role = created_roles.get("Staff")
-    if staff_role:
+    if staff_role and settings.SEED_PLACEHOLDER_USERS:
         for initials in initials_to_seed:
             existing_user = db.query(User).filter(User.initial_code == initials, User.deleted_at == None).first()
             if not existing_user:
                 user_create = UserCreate(
                     email=f"{initials.lower()}@onespirit.asia",
-                    password="OneSpirit2026!Placeholder",
+                    password=f"{secrets.token_urlsafe(32)}Aa1!#",
                     full_name=initials,
-                    is_active=True,
+                    is_active=False,
                     role_id=staff_role.id,
                     initial_code=initials
                 )
