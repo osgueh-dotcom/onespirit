@@ -1,3 +1,4 @@
+import logging
 from typing import Optional, List
 from sqlalchemy.orm import Session
 from app.core.security import get_password_hash, verify_password
@@ -5,6 +6,8 @@ from app.core.database import db_commit_safety
 from app.core.config import settings
 from app.modules.auth.models import Role, User
 from app.modules.auth.schemas import UserCreate, UserUpdate, RoleCreate
+
+logger = logging.getLogger(__name__)
 
 def get_user(db: Session, user_id: str):
     return db.query(User).filter(User.id == user_id, User.deleted_at == None).first()
@@ -99,7 +102,7 @@ def seed_roles_and_admin(db: Session):
             role_id=admin_role.id
         )
         create_user(db, admin_create)
-        print(f"Successfully seeded Super Admin user: {admin_email} / {settings.ADMIN_PASSWORD}")
+        logger.info("Seeded Super Admin user: %s", admin_email)
 
     # 2b. Demo User
     demo_email = settings.DEMO_EMAIL
@@ -114,7 +117,7 @@ def seed_roles_and_admin(db: Session):
             role_id=demo_role.id
         )
         create_user(db, demo_create)
-        print(f"Successfully seeded Demo user: {demo_email} / {settings.DEMO_PASSWORD}")
+        logger.info("Seeded Demo user: %s", demo_email)
 
     # 3. Seed placeholder internal users for Excel PO/PM verification
     initials_to_seed = [
@@ -134,4 +137,4 @@ def seed_roles_and_admin(db: Session):
                     initial_code=initials
                 )
                 create_user(db, user_create)
-                print(f"Successfully seeded placeholder user: {initials}")
+                logger.info("Seeded placeholder staff user: %s", initials)

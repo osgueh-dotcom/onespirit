@@ -2,9 +2,9 @@
 
 ## Ringkasan Project
 
-`OneSpirit Workflow` adalah sistem workflow operasional dan komersial yang dirancang khusus untuk PT One Spirit Asia. Sistem ini membantu mengelola siklus hidup proyek dan event secara end-to-end, mulai dari inquiry awal pelanggan hingga pelaporan laba/rugi akhir (Profit and Loss / PNL).
+`OneSpirit Workflow` adalah sistem workflow operasional dan komersial untuk PT One Spirit Asia. Sistem ini membantu mengelola siklus hidup proyek dan event dari inquiry awal sampai final report dan PNL.
 
-Sistem ini dikembangkan secara bertahap untuk mendigitalkan koordinasi operasional, melacak kesiapan proyek (readiness), meminimalkan kesalahan manusia, dan meningkatkan visibilitas finansial proyek bagi manajemen.
+Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak readiness proyek, mengurangi kesalahan manual, dan memberi visibilitas finansial kepada manajemen.
 
 ---
 
@@ -14,23 +14,24 @@ Sistem ini dikembangkan secara bertahap untuk mendigitalkan koordinasi operasion
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | GitHub Pages Demo Deployment (Sprint 12.2) |
+| Status | Sprint 12.3 - Light Mode Consistency & Dashboard Analytics Visualization |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
-| Tech Stack | FastAPI (Backend) & Vue 3 + Tailwind CSS (Frontend) |
-| Database | PostgreSQL (Production/Docker) & SQLite (Testing/Lokal) |
+| Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
+| Database | PostgreSQL untuk Docker/production-like, SQLite untuk test lokal |
 
 ---
 
 ## Fitur Utama
 
-1. **CRM & Customer Management**: Manajemen klien, kategori klien (Corporate, Agency, dll.), dan kontak terasosiasi.
-2. **Project & Event Management**: Pelacakan siklus hidup proyek (Inquiry -> Confirmed -> Prep -> Ready -> Running -> Completed -> Reporting -> Closed).
-3. **Readiness Control Center & Instruments**: Manajemen dokumen Contract Letter (CL), Rundown of Show (ROS), Checklist (CK), dan Profit & Loss (PNL).
-4. **PM Control Center**: Dashboard Program Manager untuk melihat upcoming events, readiness scores, overdue instruments, dan workload staff.
-5. **PO Control Center**: Dashboard Program Owner (Commercial) untuk memantau status quotation, potensi & konversi revenue, kontribusi lead source, dan resiko komersial.
-6. **Excel Imports**: Modul untuk melakukan import data proyek dari format Excel standar One Spirit secara massal dengan validasi kualitas data.
-7. **Finance Tracking**: Pembuatan dan pelacakan invoice serta status pembayaran (Invoice Sent, Paid, Outstanding, Overdue).
+1. **CRM & Customer Management**: manajemen klien, kategori klien, dan kontak terkait.
+2. **Project & Event Management**: pelacakan siklus proyek dari Inquiry sampai Closed.
+3. **Readiness Control Center & Instruments**: kontrol CL, ROS, CK, dan PNL.
+4. **PM Control Center**: dashboard Program Manager untuk readiness score, overdue instruments, dan workload.
+5. **PO Control Center**: dashboard Program Owner untuk quotation, revenue, follow-up, dan risiko komersial.
+6. **Source & Vendor Performance Center**: evaluasi lead source, vendor partner, conversion, dan risiko data.
+7. **Excel Imports**: import massal data proyek historis dengan validasi kualitas data.
+8. **Finance Tracking**: pelacakan invoice, payment, outstanding, dan status pembayaran.
 
 ---
 
@@ -38,164 +39,133 @@ Sistem ini dikembangkan secara bertahap untuk mendigitalkan koordinasi operasion
 
 ```text
 One Spirit/
-├── backend/                  # Kode Backend (FastAPI)
-│   ├── alembic/              # File migrasi database Alembic
-│   └── app/                  # Sumber kode utama backend
-│       ├── core/             # Konfigurasi, db connection, security, deps
-│       ├── models/           # Model data global
-│       ├── modules/          # Modul fungsional (auth, crm, projects, dll.)
-│       └── tests/            # Suite unit testing backend (pytest)
-├── frontend/                 # Kode Frontend (Vue 3, Vite, Tailwind)
-│   ├── dist/                 # Hasil build produksi frontend
-│   └── src/                  # Sumber kode utama Vue 3
-│       ├── components/       # Komponen UI modular
-│       ├── views/            # Halaman utama (Dashboard, Control Centers)
-│       └── router/           # Konfigurasi vue-router
-├── docs/                     # Dokumentasi sprint, terminologi, dan demo
-├── docker-compose.yml        # Konfigurasi multi-container Docker
-└── run.cmd                   # Script launcher otomatis untuk Windows
+|-- backend/                  # Backend FastAPI
+|   |-- alembic/              # Migrasi database Alembic
+|   `-- app/                  # Source backend utama
+|       |-- core/             # Config, database, security, deps
+|       |-- models/           # Model data global
+|       |-- modules/          # Modul auth, CRM, projects, dashboard, dll.
+|       `-- tests/            # Test backend pytest
+|-- frontend/                 # Frontend Vue 3 + Vite + Tailwind
+|   `-- src/
+|       |-- components/       # Komponen UI modular
+|       |-- views/            # Halaman utama dan control centers
+|       `-- router/           # Konfigurasi vue-router
+|-- docs/                     # Dokumentasi sprint, demo, logic, dan terminologi
+|-- docker-compose.yml        # Konfigurasi multi-container Docker
+`-- run.cmd                   # Launcher demo Windows
 ```
 
 ---
 
 ## Cara Menjalankan Project
 
-### 1. Menjalankan dengan Docker (Rekomendasi untuk Demo)
+### 1. Docker Demo Mode
 
-Pastikan Docker Desktop sudah aktif di komputer Anda. Cukup jalankan script launcher di root folder:
+Pastikan Docker Desktop aktif, lalu jalankan dari root project:
 
 ```bash
 run.cmd
 ```
 
-Atau jalankan perintah docker compose secara manual:
+Atau gunakan Docker Compose manual:
 
 ```bash
 docker-compose up -d --build
 ```
 
-Setelah berhasil, aplikasi akan dapat diakses di:
-- **Frontend / Web Portal**: [http://localhost:5173](http://localhost:5173)
-- **Backend Swagger API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs) (atau port 8001 tergantung pemetaan host)
+Alamat lokal:
+- Frontend: [http://localhost:5173](http://localhost:5173)
+- Backend Swagger API Docs: [http://localhost:8000/docs](http://localhost:8000/docs) atau port `8001`, sesuai mapping host.
 
----
-
-### 2. Menjalankan Secara Lokal (Langkah Developer)
-
-#### A. Backend (FastAPI)
-
-1. Masuk ke folder backend:
-   ```bash
-   cd backend
-   ```
-2. Buat python virtual environment dan aktifkan:
-   ```bash
-   python -m venv .venv
-   .venv\Scripts\activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Buat file `.env` berdasarkan `.env.example`.
-5. Jalankan backend:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-
-#### B. Frontend (Vue 3 / Vite)
-
-1. Masuk ke folder frontend:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm.cmd install
-   ```
-3. Jalankan server development:
-   ```bash
-   npm.cmd run dev
-   ```
-4. Buka browser pada alamat [http://localhost:5173](http://localhost:5173).
-
----
-
-## Cara Menjalankan Test Backend
-
-Pastikan Anda berada di virtual environment backend, lalu jalankan:
+### 2. Backend Lokal
 
 ```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+### 3. Frontend Lokal
+
+```bash
+cd frontend
+npm.cmd install
+npm.cmd run dev
+```
+
+Buka [http://localhost:5173](http://localhost:5173).
+
+---
+
+## Validasi
+
+Backend:
+
+```bash
+cd backend
 pytest app/tests -q
 ```
 
-*Catatan: Tes menggunakan database SQLite in-memory / lokal di `<PROJECT_ROOT>/backend/tmp` sehingga tidak memerlukan database PostgreSQL Docker berjalan.*
-
----
-
-## Cara Build Frontend
-
-Untuk mengompilasi frontend ke dalam bentuk production bundle (dist folder):
+Frontend:
 
 ```bash
 cd frontend
 npm.cmd run build
 ```
 
----
-
-## Alur Demo Bawaan (Default Demo Flow)
-
-Untuk melakukan demo sistem dalam waktu 15–25 menit, silakan gunakan alur berikut:
-1. **Login**: Gunakan akun demo klien `demo@onespirit.asia` / password `OneSpiritDemo2026!`.
-2. **Dashboard**: Tinjau statistik keseluruhan, pipeline proyek, tren pendapatan bulanan, dan aktivitas terbaru.
-3. **CRM**: Lihat daftar klien dan kontak.
-4. **Projects**: Buka daftar proyek komprehensif, buat proyek baru dengan status `inquiry`.
-5. **Project Detail**: Buka detail proyek dan periksa status readiness gates (CL, ROS, CK, PNL). Cobalah melakukan transisi status.
-6. **PM Control Center**: Masuk ke dashboard PM untuk memantau status operasional dan readiness score.
-7. **PO Control Center**: Masuk ke dashboard PO untuk melihat performa komersial, quotation, dan resiko pembayaran.
-8. **Excel Import**: Coba upload template Excel proyek One Spirit untuk menguji kecocokan import masal.
+Script frontend yang tersedia saat ini hanya `dev`, `build`, dan `preview`. Belum ada script lint/typecheck frontend terpisah.
 
 ---
 
-## Batasan Sistem (Known Limitations)
+## Alur Demo Bawaan
 
-1. **Keamanan**: Saat ini masih menggunakan JWT rahasia bawaan untuk development. Belum ada HTTPS hardening secara cloud-native.
-2. **Permission**: Hak akses role (Admin, PO, PM, Finance, Management) sudah divalidasi pada level API gate, namun penyesuaian UI secara granular berdasarkan role masih dalam tahap MVP awal.
-3. **Data Backup**: Belum mendukung database backup otomatis ke penyimpanan cloud.
-4. **Integrasi Eksternal**: Belum terhubung dengan sistem e-mail otomatis untuk follow-up klien atau export PDF langsung.
+Gunakan akun demo klien `demo@onespirit.asia` dengan password development/demo yang diatur lewat environment `DEMO_PASSWORD`.
+
+Alur demo 15 sampai 25 menit:
+1. **Login**: masuk sebagai akun demo klien.
+2. **Dashboard**: tinjau KPI, pipeline proyek, revenue trend, dan analytics charts.
+3. **CRM**: lihat daftar klien dan kontak.
+4. **Projects**: buka daftar proyek, mode Kanban/List, dan filter PO/PM/source.
+5. **Project Detail**: cek CL, ROS, CK, PNL, activity log, dan status transition guard.
+6. **PM Control Center**: pantau readiness score, overdue instruments, dan workload PM.
+7. **PO Control Center**: lihat quotation follow-up, commercial risk, dan outstanding payment.
+8. **Source & Vendor Performance**: evaluasi lead source dan vendor partner.
+9. **Excel Import**: uji import data historis dan data quality validation.
+
+---
+
+## Known Limitations
+
+1. **Security**: JWT secret dan default password demo/admin hanya boleh dipakai untuk development/demo. Environment `production` wajib memakai secret dan password berbeda.
+2. **Permission UI**: API permission gate sudah ada, namun penyempurnaan visibility UI per role masih perlu diperdalam.
+3. **Backup**: belum ada automated cloud backup database.
+4. **External Integration**: belum ada e-mail automation dan direct PDF export service.
+5. **Vendor Model**: vendor partner masih bergantung pada field tekstual dan belum menjadi entity relasional penuh.
 
 ---
 
 ## GitHub Pages Demo Deployment
 
-* **URL Frontend**: [https://osgueh-dotcom.github.io/onespirit/](https://osgueh-dotcom.github.io/onespirit/)
-* **Cara Deploy**:
-  1. Push perubahan terbaru ke branch `main`.
-  2. Buka GitHub repository -> tab **Actions** -> pilih workflow **Deploy OneSpirit Frontend to GitHub Pages** -> klik **Run workflow**.
-* **Cara Update Backend Tunnel**:
-  1. Dapatkan URL tunnel (VS Code / ngrok) dari port `8000`.
-  2. Buka **Settings** -> **Secrets and variables** -> **Actions** di repositori GitHub Anda.
-  3. Update secret `VITE_API_BASE_URL` dengan URL tunnel Anda yang baru.
-  4. Jalankan kembali workflow deployment.
-* **Link Dokumentasi**:
-  - [Panduan Deployment GitHub Pages](file:///e:/GVsys Project/One Spirit/docs/github-pages-demo-deployment.md)
-  - [Arsitektur Demo Publik](file:///e:/GVsys Project/One Spirit/docs/demo-architecture.md)
-  - [Checklist Keamanan Demo Publik](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md)
+- Frontend demo: [https://osgueh-dotcom.github.io/onespirit/](https://osgueh-dotcom.github.io/onespirit/)
+- Deployment guide: [docs/github-pages-demo-deployment.md](docs/github-pages-demo-deployment.md)
+- Demo architecture: [docs/demo-architecture.md](docs/demo-architecture.md)
+- Public demo safety checklist: [docs/public-demo-safety-checklist.md](docs/public-demo-safety-checklist.md)
+
+Backend demo tetap berjalan di mesin lokal atau tunnel sementara. Jangan expose database PostgreSQL ke publik.
 
 ---
 
 ## Dokumentasi Tambahan
 
-Semua panduan detail lainnya terletak di folder `docs/`:
-- [Panduan Deployment GitHub Pages](file:///e:/GVsys Project/One Spirit/docs/github-pages-demo-deployment.md) — Konfigurasi deployment demo berbasis GitHub Pages dengan backend tunnel.
-- [Visualisasi Analytics Dashboard](file:///e:/GVsys Project/One Spirit/docs/dashboard-analytics-visualization.md) — Penjelasan detail formula data, charts SVG, dan empty state dashboard.
-- [Arsitektur Demo Publik](file:///e:/GVsys Project/One Spirit/docs/demo-architecture.md) — Diagram dan penjelasan arsitektur hibrida untuk presentasi klien.
-- [Panduan Rehearsal Demo](file:///e:/GVsys Project/One Spirit/docs/client-demo-rehearsal.md) — Panduan skrip presentasi langkah-demi-langkah (15-25 menit).
-- [Checklist Keamanan Demo Publik](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md) — Aturan port-forwarding, database security, dan perlindungan data sensitif.
-- [Formulir Masukan Klien](file:///e:/GVsys Project/One Spirit/docs/client-feedback-form.md) — Kuesioner umpan balik klien untuk evaluasi alur bisnis, UI/UX, dan prioritas fitur.
-- `docs/demo-readiness.md` — Panduan alur demo dan checklist pertanyaan validasi klien.
-- `docs/mvp-limitations.md` — Batasan teknis sistem secara mendalam dan backlog Sprint 11.
-- `PROJECT_CONTEXT.md` — Detail bisnis dan istilah operasional (CL, ROS, CK, PNL).
-- `CHANGELOG.md` — Log perubahan versi aplikasi.
-- `SPRINT_LOG.md` — Log riwayat pengerjaan sprint pengembangan.
+- [Dashboard Analytics Visualization](docs/dashboard-analytics-visualization.md)
+- [Client Demo Rehearsal](docs/client-demo-rehearsal.md)
+- [Client Feedback Form](docs/client-feedback-form.md)
+- [Commercial Control Logic](docs/commercial-control-logic.md)
+- [Source & Vendor Performance Logic](docs/source-vendor-performance-logic.md)
+- [MVP Limitations](docs/mvp-limitations.md)
+- [Project Context](PROJECT_CONTEXT.md)
+- [Sprint Log](SPRINT_LOG.md)
+- [Changelog](CHANGELOG.md)

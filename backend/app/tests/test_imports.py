@@ -14,9 +14,10 @@ from app.modules.auth.models import User
 from app.modules.crm.models import Customer, Contact
 from app.modules.projects.models import Project
 from app.modules.tasks.models import Task
+from app.tests.db_utils import sqlite_test_url
 
 # Local fixtures for self-contained testing execution
-SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/test_imports.db"
+SQLALCHEMY_DATABASE_URL = sqlite_test_url("test_imports.db")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

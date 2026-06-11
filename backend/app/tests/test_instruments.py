@@ -10,8 +10,9 @@ from app.core.deps import get_db
 from app.modules.auth.service import seed_roles_and_admin
 from app.modules.crm.models import Customer
 from app.modules.projects.models import Project
+from app.tests.db_utils import sqlite_test_url
 
-SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/test_instruments.db"
+SQLALCHEMY_DATABASE_URL = sqlite_test_url("test_instruments.db")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

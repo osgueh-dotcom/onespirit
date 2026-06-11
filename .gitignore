@@ -20,9 +20,11 @@ coverage.xml
 
 # Databases
 *.db
+*.db-journal
 *.sqlite3
 onespirit_sqlite.db
 test.db
+backend/tmp/
 
 # Environments
 .env

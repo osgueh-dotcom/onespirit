@@ -7,9 +7,10 @@ from app.main import app
 from app.core.database import Base
 from app.core.deps import get_db
 from app.modules.auth.service import seed_roles_and_admin
+from app.tests.db_utils import sqlite_test_url
 
 # Use in-memory SQLite for extremely fast unit tests
-SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/test.db"
+SQLALCHEMY_DATABASE_URL = sqlite_test_url("test_api.db")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

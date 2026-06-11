@@ -1,35 +1,37 @@
 # Public Demo Safety Checklist
 
-Dokumen ini berisi panduan kepatuhan keamanan operasional ketika mempublikasikan aplikasi OneSpirit Workflow System menggunakan public tunnel untuk sesi demo/presentasi klien sementara.
+Dokumen ini berisi panduan keamanan operasional ketika aplikasi OneSpirit Workflow System dipublikasikan melalui public tunnel untuk sesi demo sementara.
 
 ---
 
-## ⚠️ Peringatan Penting (Jangan Expose!)
+## Peringatan Penting
 
 > [!WARNING]
-> **DILARANG KERAS mengekspos informasi berikut ke publik:**
-> - **PostgreSQL**: Jangan pernah mempublikasikan port database (`5432` / `5433`). Database harus tetap privat di jaringan internal.
-> - **DB Password**: Jangan menyimpan password database (`DB_PASSWORD`) dalam konfigurasi frontend atau log publik.
-> - **JWT Secret**: `JWT_SECRET` harus dijaga kerahasiaannya di backend saja dan tidak boleh dimasukkan ke dalam kode frontend.
+> Jangan mengekspos informasi berikut ke publik:
+> - **PostgreSQL**: jangan mempublikasikan port database `5432` atau `5433`.
+> - **DB Password**: jangan menyimpan `DB_PASSWORD` di frontend, GitHub Actions log, atau dokumen publik.
+> - **JWT Secret**: `JWT_SECRET` hanya boleh berada di backend environment.
+> - **Data asli klien**: gunakan data dummy untuk presentasi publik.
 
 ---
 
-## 📋 Checklist Kesiapan Demo
+## Checklist Sebelum Demo
 
-### Sebelum Demo Mulai
+- [ ] Backend FastAPI berjalan normal di port `8000`.
+- [ ] Database lokal aktif dan hanya dapat diakses oleh backend.
+- [ ] Temporary tunnel hanya membuka backend port `8000`, bukan database.
+- [ ] Frontend GitHub Pages aktif di [https://osgueh-dotcom.github.io/onespirit/](https://osgueh-dotcom.github.io/onespirit/).
+- [ ] Login demo berhasil menggunakan akun demo yang sudah disiapkan.
+- [ ] Data dummy sudah bersih dari informasi sensitif PT One Spirit Asia atau klien asli.
+- [ ] `BACKEND_CORS_ORIGINS` menyertakan `https://osgueh-dotcom.github.io`.
+- [ ] `JWT_SECRET`, `ADMIN_PASSWORD`, dan `DEMO_PASSWORD` berbeda dari default jika environment bukan development/demo lokal.
 
-- [ ] **Backend running**: Pastikan FastAPI backend berjalan normal di port `8000`.
-- [ ] **Database running**: Pastikan database PostgreSQL (atau SQLite) lokal aktif dan dapat diakses backend.
-- [ ] **Tunnel aktif**: Jalankan temporary tunnel (ngrok / VS Code Port Forwarding) untuk mempublikasikan backend port `8000`.
-- [ ] **Frontend GitHub Pages aktif**: Pastikan halaman [https://osgueh-dotcom.github.io/onespirit/](https://osgueh-dotcom.github.io/onespirit/) dapat diakses.
-- [ ] **Login demo berhasil**: Uji login menggunakan akun demo `demo@onespirit.asia` di browser mode Incognito.
-- [ ] **Data dummy siap**: Verifikasi database terisi data dummy operasional yang bersih tanpa informasi sensitif.
-- [ ] **Database tidak public**: Pastikan port database PostgreSQL tidak diekspos melalui tunnel luar.
-- [ ] **Verifikasi CORS**: Pastikan origin `https://osgueh-dotcom.github.io` sudah terdaftar di setting `CORS_ORIGINS` backend.
+---
 
-### Sesudah Demo Selesai
+## Checklist Sesudah Demo
 
-- [ ] **Tunnel dimatikan**: Hentikan proses tunnel (tekan `Ctrl + C` pada ngrok / ubah port VS Code visibility menjadi private).
-- [ ] **Backend dihentikan jika perlu**: Hentikan service backend uvicorn / Docker compose jika tidak diperlukan lagi.
-- [ ] **Feedback client dicatat**: Gunakan [client-feedback-form.md](file:///e:/GVsys Project/One Spirit/docs/client-feedback-form.md) untuk mencatat masukan dari klien.
-- [ ] **Password demo diganti jika perlu**: Ganti `DEMO_PASSWORD` di file `.env` jika link tunnel sempat terekspos secara tidak terkontrol.
+- [ ] Matikan tunnel atau ubah visibility VS Code port menjadi private.
+- [ ] Hentikan backend/Docker Compose jika tidak diperlukan.
+- [ ] Catat feedback klien menggunakan [client-feedback-form.md](client-feedback-form.md).
+- [ ] Ganti `DEMO_PASSWORD` jika link tunnel atau credential demo sempat tersebar terlalu luas.
+- [ ] Jangan commit file `.env`, database lokal, file upload, atau data demo sensitif.

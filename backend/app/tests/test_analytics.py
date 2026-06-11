@@ -15,9 +15,10 @@ from app.modules.event_sources.models import EventSource
 from app.modules.projects.models import Project
 from app.modules.documents.models import Document
 from app.modules.finance.models import Invoice, Payment
+from app.tests.db_utils import sqlite_test_url
 
 # Use in-memory SQLite for extremely fast unit tests
-SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/test_analytics.db"
+SQLALCHEMY_DATABASE_URL = sqlite_test_url("test_analytics.db")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

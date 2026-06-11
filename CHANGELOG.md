@@ -4,6 +4,23 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 13] - 2026-06-11
+
+### Added
+- Membuat dokumen evaluasi menyeluruh Sprint 0 sampai Sprint 12.3 di `docs/sprint-13-full-sprint-audit-hardening.md`.
+
+### Changed
+- Memperbarui `README.md` agar portable, bebas karakter encoding rusak, bebas link lokal absolut, dan sesuai status Sprint 12.3.
+- Membersihkan `docs/client-demo-rehearsal.md` dan `docs/public-demo-safety-checklist.md` agar siap dipakai untuk handover demo klien.
+- Memperbaiki panduan GitHub Pages agar memakai env backend yang benar, yaitu `BACKEND_CORS_ORIGINS`.
+- Menambahkan origin GitHub Pages ke default backend CORS untuk mendukung demo frontend publik.
+- Mengganti hardcoded SQLite test path `/tmp/*.db` menjadi named in-memory database via helper `backend/app/tests/db_utils.py`.
+
+### Security
+- Mengganti output seeding admin/demo/staff dari `print()` yang menampilkan password menjadi `logger.info()` tanpa password.
+
+---
+
 ## [Sprint 12.2] - 2026-06-11
 
 ### Added
@@ -76,7 +93,7 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 ### Fixed
 - Memperbaiki kegagalan koneksi database pada unit testing backend di Windows dengan membuat folder `E:\tmp` secara otomatis untuk SQLite db.
 - Menambahkan pemeriksaan runtime pytest di `backend/app/main.py` sehingga server testing mengabaikan koneksi ke PostgreSQL dan dapat berjalan murni secara lokal menggunakan SQLite.
-- Membersihkan dan memperbaiki semua absolute local path link (seperti `file:///e:/...`) menjadi relative path link di seluruh file dokumentasi markdown.
+- Membersihkan dan memperbaiki semua absolute local path link Windows menjadi relative path link di seluruh file dokumentasi markdown.
 - Menambahkan stylesheet optimasi cetak `@media print` A4 landscape pada file css utama `frontend/src/assets/index.css` agar cetak cetak halaman/Save-as-PDF (Ctrl+P) otomatis menghasilkan layout laporan yang premium, bersih, dan bebas dari elemen navigasi sidebar/navbar/tombol.
 
 ### Security

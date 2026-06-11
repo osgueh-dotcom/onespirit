@@ -43,7 +43,7 @@ Instrumen-instrumen ini diposisikan di dalam MVP sebagai **"Partially represente
 ---
 
 ## 4. Perbaikan Tautan Dokumen (Link Fixes)
-Seluruh tautan yang menggunakan path absolut Windows (`file:///E:/GVsys%20Project/...`) di dalam seluruh dokumen panduan folder `docs/` dan root `README.md` telah dibersihkan dan diganti menggunakan **tautan relatif markdown** agar dapat dibuka dengan aman di perangkat mana pun tanpa patah tautan.
+Seluruh tautan yang menggunakan path absolut Windows di dalam seluruh dokumen panduan folder `docs/` dan root `README.md` telah dibersihkan dan diganti menggunakan **tautan relatif markdown** agar dapat dibuka dengan aman di perangkat mana pun tanpa patah tautan.
 
 ---
 

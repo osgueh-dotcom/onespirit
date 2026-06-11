@@ -60,7 +60,7 @@ Sebelum memulai demo, pastikan backend lokal Anda aktif:
    ```bash
    uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```
-4. Verifikasi backend dapat diakses lokal di `http://localhost:8000/api/v1/health`.
+4. Verifikasi backend dapat diakses lokal di `http://localhost:8000/health`.
 
 ---
 
@@ -104,7 +104,7 @@ Karena kita menggunakan hash routing, URL navigasi akan berformat:
 ---
 
 ## 10. Checklist Keamanan Demo
-Pastikan Anda selalu mematuhi pedoman keamanan di [public-demo-safety-checklist.md](file:///e:/GVsys Project/One Spirit/docs/public-demo-safety-checklist.md):
+Pastikan Anda selalu mematuhi pedoman keamanan di [public-demo-safety-checklist.md](public-demo-safety-checklist.md):
 - **Database Tidak Public**: Jangan pernah mengekspos port database `5432` ke tunnel luar.
 - **Backend Tunnel Hanya Saat Demo**: Segera matikan tunnel/port forwarding setelah sesi demo berakhir.
 - **Gunakan Data Dummy**: Jangan menampilkan data komersial atau kontrak asli PT One Spirit Asia.
@@ -116,18 +116,18 @@ Pastikan Anda selalu mematuhi pedoman keamanan di [public-demo-safety-checklist.
 
 ### A. Halaman Kosong (Blank Page)
 * **Penyebab**: Base path Vite salah atau aset tidak dapat dimuat karena URL relatif.
-* **Solusi**: Pastikan `base: '/onespirit/'` terkonfigurasi di [vite.config.js](file:///e:/GVsys Project/One Spirit/frontend/vite.config.js).
+* **Solusi**: Pastikan `base: '/onespirit/'` terkonfigurasi di [`frontend/vite.config.js`](../frontend/vite.config.js).
 
 ### B. Halaman 404 Saat Refresh Route
 * **Penyebab**: Menggunakan HTML5 History mode (`createWebHistory()`) di static hosting GitHub Pages tanpa fallback `/404.html`.
-* **Solusi**: Pastikan router menggunakan `createWebHashHistory()` di [router/index.js](file:///e:/GVsys Project/One Spirit/frontend/src/router/index.js).
+* **Solusi**: Pastikan router menggunakan `createWebHashHistory()` di [`frontend/src/router/index.js`](../frontend/src/router/index.js).
 
 ### C. Error CORS (Cross-Origin Resource Sharing)
 * **Penyebab**: Backend FastAPI memblokir request karena domain frontend `https://osgueh-dotcom.github.io` belum diizinkan di backend CORS.
-* **Solusi**: Di backend, perbarui setting `CORS_ORIGINS` di file `.env` untuk menyertakan `https://osgueh-dotcom.github.io` (tanpa path `/onespirit/`).
+* **Solusi**: Di backend, perbarui setting `BACKEND_CORS_ORIGINS` di file `.env` untuk menyertakan `https://osgueh-dotcom.github.io` (tanpa path `/onespirit/`).
   Contoh:
   ```env
-  CORS_ORIGINS=http://localhost:5173,https://osgueh-dotcom.github.io
+  BACKEND_CORS_ORIGINS=http://localhost:5173,https://osgueh-dotcom.github.io
   ```
 
 ### D. API URL Masih Mengarah ke Localhost

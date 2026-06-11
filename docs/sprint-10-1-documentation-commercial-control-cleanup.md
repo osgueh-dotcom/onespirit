@@ -6,7 +6,7 @@ This document outlines the tasks completed in **Sprint 10.1 — Documentation & 
 
 ## Objective
 The primary goals of this sprint patch are:
-1. Ensure all system documentation is portable by removing absolute Windows path (`file:///`) links and converting them to relative markdown links.
+1. Ensure all system documentation is portable by removing absolute Windows path links and converting them to relative markdown links.
 2. Clarify PO Control Center financial metric definitions (potential vs confirmed revenue, conversion rates, potential vs deal average project values).
 3. Standardize follow-up priority as a decision-support tool, not final business judgment.
 4. Establish the maintainability backlog (component splitting) and recommendations for the next sprint.
@@ -28,8 +28,8 @@ The primary goals of this sprint patch are:
 
 ---
 
-## file:/// Link Cleanup
-All absolute local Windows paths containing `file:///E:/GVsys%20Project/` have been removed and replaced with relative markdown links, ensuring the documentation compiles and opens properly on any system or web viewer (such as GitHub or Gitlab previewers) without broken links.
+## Local Path Link Cleanup
+All absolute local Windows path links have been removed and replaced with relative markdown links, ensuring the documentation compiles and opens properly on any system or web viewer (such as GitHub or Gitlab previewers) without broken links.
 
 ---
 

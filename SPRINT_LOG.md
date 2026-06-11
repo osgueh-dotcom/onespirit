@@ -22,12 +22,53 @@ Dokumen ini digunakan untuk mencatat riwayat sprint pengembangan OneSpirit Workf
 | **Sprint 10.1** | Documentation & Commercial Control Cleanup | 2026-06-09 | Done |
 | **Sprint 10 Finalization** | Commercial Control Stabilization & MVP Demo Readiness | 2026-06-10 | Done |
 | **Sprint 11** | Source & Vendor Performance Center | 2026-06-10 | Done |
+| **Sprint 13** | Full Sprint Audit & Documentation/Security Hardening | 2026-06-11 | Done |
 | **Sprint 12.3** | Light Mode Consistency & Dashboard Analytics Visualization | 2026-06-11 | Done |
 | **Sprint 12.2** | GitHub Pages Demo Deployment | 2026-06-11 | Done |
 | **Sprint 12.1** | Client Demo Polish & Presentation Rehearsal | 2026-06-11 | Done |
 | **Sprint 12** | UI/UX Client Presentation & Responsive Experience | 2026-06-11 | Done |
 
 ---
+
+---
+
+## Sprint 13 - Full Sprint Audit & Documentation/Security Hardening
+
+Tanggal: 2026-06-11  
+Status: Done  
+AI Agent: Codex  
+Branch: main  
+Commit: Sprint 13: audit sprint history and harden demo readiness
+
+### Tujuan
+
+Mengevaluasi seluruh hasil sprint dari Sprint 0 sampai Sprint 12.3, memperbaiki gap yang aman ditangani langsung, dan mendokumentasikan gap lanjutan untuk sprint berikutnya.
+
+### Scope
+
+- Audit riwayat commit, sprint log, changelog, README, dokumen demo, konfigurasi backend, test suite, dan script validasi yang tersedia.
+- Membersihkan dokumentasi yang masih memiliki artefak encoding dan link lokal absolut.
+- Memperkuat keamanan logging seed credentials.
+- Menyelaraskan konfigurasi dan dokumentasi CORS GitHub Pages demo.
+- Mengganti hardcoded SQLite test path `/tmp/*.db` menjadi named in-memory database per test module.
+- Membuat dokumen evaluasi sprint menyeluruh di `docs/sprint-13-full-sprint-audit-hardening.md`.
+
+### Hasil Implementasi
+
+1. **Backend hardening**: Default `BACKEND_CORS_ORIGINS` kini menyertakan `https://osgueh-dotcom.github.io`, validator config memakai `typing.Any`, dan seed user tidak lagi menampilkan password ke output runtime.
+2. **Dokumentasi portable**: `README.md`, demo rehearsal, safety checklist, dan GitHub Pages guide dibersihkan dari link lokal absolut dan karakter rusak.
+3. **Backend test stability**: Test backend tidak lagi bergantung pada path SQLite filesystem `/tmp/*.db`, sehingga stabil di Windows/sandbox.
+4. **Audit sprint terdokumentasi**: Gap lint/typecheck frontend, role-aware UI, vendor normalization, deployment cloud, backup, dan PDF export resmi dicatat sebagai rekomendasi Sprint 14.
+
+### Test Yang Dilakukan
+
+Backend:
+- Command: `pytest app/tests -q`
+- Result: 17 passed, 919 warnings.
+
+Frontend:
+- Command: `npm run build`
+- Result: build success.
 
 ---
 
