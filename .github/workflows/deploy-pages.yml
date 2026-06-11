@@ -26,10 +26,6 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/actions-clean@v1
-        continue-on-error: true
-
-      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js

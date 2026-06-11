@@ -4,6 +4,27 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 13.1] - 2026-06-11
+
+### Changed
+- Cleaned sprint log chronology.
+- Updated current project status in README.
+- Added `BACKEND_CORS_ORIGINS` example.
+- Clarified frontend demo environment variables.
+- Simplified GitHub Pages deployment workflow.
+
+### Fixed
+- Minor deployment documentation inconsistencies.
+- Potential confusion between backend CORS env and frontend `VITE_API_BASE_URL`.
+
+### Known Limitations
+- Production deployment is not finalized.
+- Frontend still has no dedicated lint/test baseline.
+- Backend still has deprecation warnings.
+- Vendor analytics still relies on textual fallback data.
+
+---
+
 ## [Sprint 13] - 2026-06-11
 
 ### Added

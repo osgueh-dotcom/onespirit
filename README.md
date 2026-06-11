@@ -14,11 +14,19 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 12.3 - Light Mode Consistency & Dashboard Analytics Visualization |
+| Status | Sprint 13.1 - Minor Cleanup & Deployment Consistency Patch |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
 | Database | PostgreSQL untuk Docker/production-like, SQLite untuk test lokal |
+
+Current readiness summary:
+- Backend test: `17 passed`
+- Frontend build: success
+- GitHub Pages demo deployment: configured
+- Backend tunnel: temporary demo access
+- Database: private local Docker
+- Production readiness: not yet
 
 ---
 
@@ -153,6 +161,9 @@ Alur demo 15 sampai 25 menit:
 - Deployment guide: [docs/github-pages-demo-deployment.md](docs/github-pages-demo-deployment.md)
 - Demo architecture: [docs/demo-architecture.md](docs/demo-architecture.md)
 - Public demo safety checklist: [docs/public-demo-safety-checklist.md](docs/public-demo-safety-checklist.md)
+- Client demo rehearsal: [docs/client-demo-rehearsal.md](docs/client-demo-rehearsal.md)
+- Client feedback form: [docs/client-feedback-form.md](docs/client-feedback-form.md)
+- Dashboard analytics visualization: [docs/dashboard-analytics-visualization.md](docs/dashboard-analytics-visualization.md)
 
 Backend demo tetap berjalan di mesin lokal atau tunnel sementara. Jangan expose database PostgreSQL ke publik.
 

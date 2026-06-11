@@ -15,11 +15,26 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 12.3 — Light Mode Consistency & Dashboard Analytics Visualization |
+| Status Project | Sprint 13.1 - Minor Cleanup & Deployment Consistency Patch |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | GitHub Pages |
 | Backend Deployment Strategy | Temporary tunnel during client demo |
 | Database | Private local Docker |
+
+---
+
+## 1.1 Status Sprint 13.1 & Deployment Model
+
+Sprint 13.1 focuses on minor cleanup before production readiness work. Sprint ini tidak menambah fitur baru, tidak mengubah API contract, dan tidak mengubah business logic.
+
+Deployment model saat ini:
+
+- GitHub Pages for frontend demo.
+- Temporary backend tunnel during client demo.
+- Local/private database.
+- Not production deployment.
+
+Project sudah cukup kuat untuk demo client, tetapi belum masuk kategori production-ready cloud deployment.
 
 ---
 
@@ -67,7 +82,7 @@ Untuk memastikan keselarasan istilah, sistem menggunakan terminologi bisnis asli
 Siklus hidup setiap proyek/event di One Spirit berjalan melalui tahap berikut:
 
 ```text
-Inquiry (Klien Request) ➔ Client Confirmation (Deal) ➔ CL (Kontrak Terbit) ➔ Project Setup (Operasional Dimulai) ➔ Planning (Rencana Lapangan) ➔ ROS (Rundown Dibuat) ➔ CK (Checklist Disiapkan) ➔ Execution (Event Berjalan) ➔ PNL (Pemberesan Keuangan) ➔ Final Report / Archive (Laporan Akhir)
+Inquiry (Klien Request) -> Client Confirmation (Deal) -> CL (Kontrak Terbit) -> Project Setup (Operasional Dimulai) -> Planning (Rencana Lapangan) -> ROS (Rundown Dibuat) -> CK (Checklist Disiapkan) -> Execution (Event Berjalan) -> PNL (Pemberesan Keuangan) -> Final Report / Archive (Laporan Akhir)
 ```
 
 1. **Inquiry**: Program Owner menerima inquiry klien dan menginput data awal proyek ke sistem dengan estimasi nilai budget.
