@@ -75,6 +75,19 @@ When testing the Vite UI through VS Code's built-in port forwarding:
 
 In local dev mode, frontend API calls use relative `/api/v1/...` requests so Vite can proxy them to the backend from inside the workspace. This avoids browser-side `localhost:8000` failures when the browser is outside the workspace machine.
 
+Run the automated smoke test after both forwarded URLs are active:
+
+```powershell
+$env:SMOKE_FRONTEND_URL = "https://example-5173.asse.devtunnels.ms"
+$env:SMOKE_BACKEND_URL = "https://example-8000.asse.devtunnels.ms"
+$env:SMOKE_LOGIN_EMAIL = "demo@onespirit.asia"
+$env:SMOKE_LOGIN_PASSWORD = "<demo-password-from-secure-channel>"
+powershell -ExecutionPolicy Bypass -File scripts/dev-tunnel-smoke.ps1
+Remove-Item Env:SMOKE_LOGIN_PASSWORD
+```
+
+The smoke test checks frontend HTML/assets, unauthenticated API proxy protection, login through the proxy, `/auth/me`, and direct backend `/health`. It never prints passwords or bearer tokens.
+
 ---
 
 ## 5. Pre-demo Checklist
@@ -84,6 +97,7 @@ In local dev mode, frontend API calls use relative `/api/v1/...` requests so Vit
 - [ ] Frontend build passes.
 - [ ] Demo data is clean.
 - [ ] Tunnel URL is current.
+- [ ] Dev tunnel smoke test passes if port forwarding is used.
 - [ ] GitHub Pages frontend points to current backend URL.
 - [ ] Database port is private.
 - [ ] Demo credentials are prepared.

@@ -166,6 +166,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
   - Menambahkan guard agar admin tidak menonaktifkan dirinya sendiri dan Super Admin terakhir tetap aktif.
   - Menambahkan env `DEMO_USER_EMAIL` dan `DEMO_USER_PASSWORD` untuk akun demo.
   - Menambahkan Zoom Demo Safety Checklist dan memperbarui public demo/rehearsal.
+  - Menambahkan smoke test otomatis untuk VS Code dev tunnel: frontend load, API proxy, login, current user, dan backend health.
 - **Cleanup deployment sebelumnya**:
   - Menyusun ulang `SPRINT_LOG.md` secara kronologis dari Sprint 0 sampai Sprint 13.1.
   - Memperbarui status project dan ringkasan readiness di `README.md`.

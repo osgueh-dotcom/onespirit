@@ -111,6 +111,19 @@ Buka [http://localhost:5173](http://localhost:5173).
 
 Untuk test lewat VS Code port forwarding, jalankan backend di workspace pada port `8000`, lalu forward/open frontend port `5173`. Jangan set `VITE_API_BASE_URL` untuk test lokal ini; frontend akan memakai request relatif `/api/v1/...` dan Vite akan memproxy ke backend.
 
+Smoke test otomatis untuk dev tunnel:
+
+```powershell
+$env:SMOKE_FRONTEND_URL = "https://example-5173.asse.devtunnels.ms"
+$env:SMOKE_BACKEND_URL = "https://example-8000.asse.devtunnels.ms"
+$env:SMOKE_LOGIN_EMAIL = "demo@onespirit.asia"
+$env:SMOKE_LOGIN_PASSWORD = "<demo-password-from-secure-channel>"
+powershell -ExecutionPolicy Bypass -File scripts/dev-tunnel-smoke.ps1
+Remove-Item Env:SMOKE_LOGIN_PASSWORD
+```
+
+Script ini memeriksa frontend load, Vite API proxy, login, current user, dan backend `/health`. Jangan commit password demo atau token smoke test.
+
 ### 4. Local Zoom Demo Mode
 
 Mode demo utama adalah aplikasi berjalan di PC presenter dan client melihat melalui Zoom screen share.
@@ -152,6 +165,12 @@ npm.cmd run build
 ```
 
 Sprint 14 menambahkan ESLint dan Vitest baseline. Component test, coverage threshold, dan typecheck belum tersedia.
+
+Dev tunnel smoke test:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/dev-tunnel-smoke.ps1
+```
 
 ---
 

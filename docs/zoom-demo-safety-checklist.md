@@ -35,6 +35,7 @@ Gunakan hanya jika client perlu mencoba aplikasi secara langsung.
 - [ ] Zoom screen share sudah diuji.
 - [ ] Desktop notification dan password manager popup dimatikan.
 - [ ] User Management hanya terlihat untuk Super Admin/Admin.
+- [ ] Dev tunnel smoke test dijalankan jika VS Code Port Forwarding dipakai.
 
 ## Jika Memakai Port Forwarding
 
@@ -44,6 +45,7 @@ Gunakan hanya jika client perlu mencoba aplikasi secara langsung.
 - [ ] Swagger `/docs` tidak dibuka ke client.
 - [ ] Link hanya aktif selama sesi demo.
 - [ ] Password demo tidak dikirim melalui dokumen publik atau chat yang dapat diteruskan.
+- [ ] `scripts/dev-tunnel-smoke.ps1` lulus untuk frontend load, API proxy, login, dan backend health.
 
 ## Setelah Demo
 

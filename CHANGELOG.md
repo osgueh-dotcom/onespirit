@@ -52,6 +52,7 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 - Backend password and user-status endpoints with regression tests.
 - Zoom demo safety checklist.
 - `DEMO_USER_EMAIL` and `DEMO_USER_PASSWORD` environment aliases.
+- Automated dev tunnel smoke test for frontend load, API proxy, login, current user, and backend health.
 
 ### Changed
 - Cleaned sprint log chronology.
