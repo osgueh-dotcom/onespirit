@@ -1,14 +1,14 @@
 <template>
-  <div class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:hidden select-none">
+  <div class="app-section-card space-y-4 print:hidden select-none">
     <div class="flex items-center justify-between cursor-pointer select-none" @click="showFilters = !showFilters">
-      <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
+      <h3 class="text-xs font-extrabold text-main-theme tracking-widest uppercase flex items-center gap-2">
         <svg class="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09 1.917.746 1.917 2.322v1.844c0 .536-.213 1.05-.592 1.43l-4.708 4.708c-.38.38-.592.895-.592 1.43v5.275c0 .324-.162.627-.433.808l-2.625 1.75c-.563.375-1.313-.028-1.313-.708v-7.125c0-.536-.213-1.05-.592-1.43L4.592 9.274C4.213 8.895 4 8.38 4 7.844V5c0-1.576 1.384-2.233 1.917-2.322C8.545 3.232 11.245 3 12 3z" />
         </svg>
-        Advanced BI Query Filters
+        Filter Analytics
       </h3>
       <span class="text-xs text-brand-orange font-bold hover:underline">
-        {{ showFilters ? 'Hide Panel' : 'Show Panel' }}
+        {{ showFilters ? 'Sembunyikan' : 'Tampilkan filter' }}
       </span>
     </div>
 
@@ -233,7 +233,7 @@
           @click="resetFilters"
           class="w-full py-2.5 border border-charcoal-600 hover:border-brand-orange text-xs text-charcoal-300 hover:text-white rounded-xl transition-all duration-200"
         >
-          Reset All Query Filters
+          Reset semua filter
         </button>
       </div>
     </div>
@@ -297,10 +297,3 @@ const resetFilters = () => {
   emit('reset')
 }
 </script>
-
-<style scoped>
-.glass-panel {
-  background: rgba(26, 32, 44, 0.7);
-  backdrop-filter: blur(12px);
-}
-</style>

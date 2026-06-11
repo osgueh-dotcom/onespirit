@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6 pb-12 print:bg-white print:text-charcoal-900 print:p-0">
+  <div class="app-page print:bg-white print:text-charcoal-900 print:p-0">
     
     <!-- A. Dashboard Header -->
     <DashboardHeader 
@@ -52,29 +52,40 @@
       />
 
       <!-- Visual Analytics Charts -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 print:grid-cols-2">
+      <section>
+        <div class="mb-4">
+          <p class="app-kicker">Visual Analytics</p>
+          <h3 class="mt-1 text-lg font-black tracking-tight text-main-theme">Flow, conversion, dan revenue</h3>
+          <p class="mt-1 text-xs font-medium text-muted-theme">Visual utama untuk membaca kesehatan pipeline dan distribusi project.</p>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 print:grid-cols-2">
         <DashboardFunnelChart 
+          class="xl:col-span-7"
           :totalInquiry="analyticsData.executive.total_inquiry"
           :totalDeal="analyticsData.executive.total_deal"
           :totalCancel="analyticsData.executive.total_cancel"
         />
         <DashboardRateComparison 
+          class="xl:col-span-5"
           :dealRate="analyticsData.executive.deal_rate"
           :cancelRate="analyticsData.executive.cancel_rate"
         />
         <DashboardRevenueChart 
+          class="xl:col-span-7"
           :potentialRevenue="analyticsData.executive.potential_revenue"
           :confirmedRevenue="analyticsData.executive.confirmed_revenue"
           :targetRevenue="analyticsData.target.revenue_target"
         />
         <DashboardStatusDistribution 
+          class="xl:col-span-5"
           :statusCounts="analyticsData.project.count_by_status"
         />
         <DashboardSourceContribution 
-          class="lg:col-span-2"
+          class="xl:col-span-12"
           :sourceAnalytics="analyticsData.source_analytics"
         />
-      </div>
+        </div>
+      </section>
       
       <!-- Sprint 8. Event Readiness Summary -->
       <ReadinessSummary 
@@ -127,7 +138,7 @@
       <!-- Developer Utilities (Client Demo Mode) -->
       <div
         v-if="auth.canUseDeveloperTools()"
-        class="border-t border-charcoal-800/80 pt-6 mt-6 flex items-center justify-between print:hidden"
+        class="border-t border-panel-theme pt-6 mt-6 flex items-center justify-between print:hidden"
       >
         <div class="flex items-center gap-2 select-none">
           <input 
@@ -143,7 +154,7 @@
       </div>
 
       <!-- Collapsible Legacy BI section -->
-      <div v-if="auth.canUseDeveloperTools() && showDeveloperTools" class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:hidden">
+      <div v-if="auth.canUseDeveloperTools() && showDeveloperTools" class="app-section-card space-y-4 print:hidden">
         <div class="flex items-center justify-between cursor-pointer select-none" @click="showLegacyBI = !showLegacyBI">
           <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
             <svg class="w-4.5 h-4.5 text-charcoal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -363,13 +374,6 @@ onMounted(() => {
   fetchAnalytics()
 })
 </script>
-
-<style scoped>
-.glass-panel {
-  background: rgba(26, 32, 44, 0.7);
-  backdrop-filter: blur(12px);
-}
-</style>
 
 <!-- Global print style definitions -->
 <style>

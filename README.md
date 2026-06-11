@@ -23,7 +23,7 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 Current readiness summary:
 - Backend test: `36 passed, 37 warnings`
 - Frontend build: success
-- Frontend lint: `0 errors`, `26 warnings`
+- Frontend lint: `0 errors`, `23 warnings`
 - Frontend test: `3 passed`
 - GitHub Pages demo deployment: configured but deferred
 - Backend tunnel: temporary demo access
@@ -184,6 +184,7 @@ Status saat ini:
 - Backend dapat dijalankan lokal/tunnel untuk demo.
 - Database masih private/local Docker.
 - Production deployment permanen belum dilakukan.
+- Sprint 14.1 brand UI polish selesai untuk memperkuat identitas visual, light mode, dan dashboard analytics.
 
 Dokumen Sprint 14 production readiness:
 - [Production Readiness Audit](docs/production-readiness-audit.md)
@@ -195,6 +196,7 @@ Dokumen Sprint 14 production readiness:
 - [Secret Rotation Plan](docs/secret-rotation-plan.md)
 - [Deployment Runbook](docs/deployment-runbook.md)
 - [PDF Export Flow Plan](docs/pdf-export-flow-plan.md)
+- [Brand UI Guidelines](docs/brand-ui-guidelines.md)
 
 ---
 

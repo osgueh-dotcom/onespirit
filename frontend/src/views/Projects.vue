@@ -1,9 +1,14 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
+    <AppPageHeader
+      title="Projects"
+      subtitle="Kelola pipeline project dari inquiry, CL, planning, execution, PNL, hingga final report."
+    />
+
     <!-- Top actions toolbar -->
-    <div class="flex items-center justify-between gap-4 select-none">
-      <div class="flex items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-widest text-gray-400">View Pipeline</span>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-muted-theme">Tampilan Pipeline</span>
         <div class="flex rounded-xl p-0.5 bg-brand-charcoal border border-brand-charcoal-light/35">
           <button 
             @click="viewMode = 'board'" 
@@ -760,6 +765,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+import AppPageHeader from '../components/ui/AppPageHeader.vue'
 import AppStatusBadge from '../components/ui/AppStatusBadge.vue'
 import AppLoadingState from '../components/ui/AppLoadingState.vue'
 

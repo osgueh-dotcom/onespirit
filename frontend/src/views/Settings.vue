@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6 max-w-7xl mx-auto">
+  <div class="app-page max-w-7xl mx-auto">
     <section class="rounded-3xl border border-sidebar-theme bg-sidebar-theme p-6 shadow-sm">
       <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
         <div>

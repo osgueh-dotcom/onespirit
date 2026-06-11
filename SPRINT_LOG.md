@@ -30,6 +30,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 13** | Full Sprint Audit & Documentation/Security Hardening | 2026-06-11 | Done |
 | **Sprint 13.1** | Zoom Demo Safety, User Access Management & Client Presentation Finalization | 2026-06-11 | Done |
 | **Sprint 14** | Production Readiness Foundation | 2026-06-11 | Done |
+| **Sprint 14.1** | Brand UI Polish, Clean Professional Interface & Visual Analytics Enhancement | 2026-06-12 | Done |
 
 ---
 
@@ -190,3 +191,17 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Status**: Done.
 - **Validation**: Backend `36 passed, 37 warnings`; frontend lint `0 errors, 26 warnings`; frontend test `3 passed`; safety scan dan build success.
 - **Known limitations**: Production runtime belum disiapkan, role PO/PM/Admin belum formal, backup belum otomatis, server-side PDF belum tersedia, dan Vite/esbuild memiliki dua advisory moderate development-only.
+
+## Sprint 14.1 - Brand UI Polish, Clean Professional Interface & Visual Analytics Enhancement
+
+- **Tujuan**: Menguatkan identitas brand One Spirit, merapikan light mode, dan meningkatkan kualitas visual dashboard tanpa mengubah arsitektur atau fitur bisnis.
+- **Hasil**:
+  - Mengintegrasikan logo One Spirit ke login page, app shell, dan favicon.
+  - Menyusun brand color tokens berbasis orange/amber/logo palette.
+  - Merapikan shared UI components agar lebih clean, konsisten, dan reusable.
+  - Menyegarkan dashboard executive dengan chart cards, hierarchy yang lebih jelas, dan visual analytics yang lebih informatif.
+  - Menstandarkan light mode agar lebih ringan, putih/off-white, dan nyaman untuk Zoom presentation.
+  - Memperhalus halaman inti seperti Projects, Project Detail, PM Control Center, PO Control Center, Source & Vendor, Finance, Imports, CRM, Documents, dan Settings.
+- **Status**: Done.
+- **Validation**: Frontend build success; lint/test baseline tetap tersedia untuk sprint berikutnya.
+- **Known limitations**: Tidak semua halaman lama dirombak total; beberapa utility class lama masih diwariskan dan akan terus dirapikan bertahap di sprint berikutnya.

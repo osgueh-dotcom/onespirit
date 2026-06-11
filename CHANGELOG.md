@@ -44,6 +44,24 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 14.1] - 2026-06-12
+
+### Added
+- Brand UI guideline for One Spirit color direction, logo usage, component styling, and chart rules.
+- Dashboard visual analytics refinement with cleaner chart cards and clearer hierarchy.
+
+### Changed
+- Refined global light mode consistency across core pages.
+- Integrated One Spirit logo and brand palette into the login page, app shell, and favicon.
+- Polished shared UI components, dashboard header, project detail header, and executive dashboard layout.
+- Improved the presentation quality of Projects, PM Control Center, PO Control Center, Source & Vendor Performance, Finance, Imports, CRM, Documents, and Settings.
+
+### Validation
+- Frontend build remains successful after visual changes.
+- Brand UI changes are scoped to presentation and do not alter backend contracts.
+
+---
+
 ## [Sprint 13.1] - 2026-06-11
 
 ### Added

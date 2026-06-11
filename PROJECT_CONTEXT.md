@@ -74,6 +74,19 @@ Validation Sprint 14:
 
 Role visibility frontend sudah membatasi control center, imports, project actions, PNL link, dan developer tools. Backend tetap menjadi security authority; role PO/PM/Admin dan ownership per project belum formal.
 
+## 1.3 Status Sprint 14.1 & Brand UI Direction
+
+Sprint 14.1 focuses on improving visual identity, dashboard clarity, and client-facing presentation quality. Sprint ini menambahkan brand polish dan visual analytics enhancement tanpa mengubah arsitektur atau workflow bisnis inti.
+
+Fokus sprint:
+
+- Brand integration One Spirit pada login, app shell, dan favicon.
+- Light mode consistency yang lebih clean dan professional.
+- Shared UI components yang lebih seragam.
+- Dashboard analytics yang lebih mudah dibaca untuk demo dan review operasional.
+
+Sprint 14.1 tidak mendeklarasikan perubahan backend business logic. Perubahan utama berada pada presentasi, token visual, dan hierarchy UI.
+
 ---
 
 ## 2. Latar Belakang Bisnis

@@ -1,41 +1,38 @@
 <template>
-  <div class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col justify-between select-none min-h-[320px]">
-    <div>
-      <h3 class="text-xs font-extrabold uppercase tracking-widest text-brand-orange">
-        Komposisi Status Project
-      </h3>
-      <p class="text-[10px] font-bold text-charcoal-400 mt-1 select-none">
-        Menampilkan persebaran status project saat ini.
-      </p>
+  <AppChartCard
+    title="Distribusi Status Project"
+    subtitle="Memperlihatkan konsentrasi project pada setiap tahap operasional."
+  >
+    <template #metric>
+      <span class="rounded-full border border-brand-orange/20 bg-brand-orange/10 px-3 py-1 text-xs font-extrabold text-brand-orange">
+        {{ totalProjects }} project
+      </span>
+    </template>
+
+    <div v-if="totalProjects === 0" class="flex flex-1 items-center justify-center text-center">
+      <p class="max-w-xs text-sm font-medium text-muted-theme">Belum ada data status project untuk periode ini.</p>
     </div>
 
-    <div v-if="totalProjects === 0" class="flex-1 flex flex-col items-center justify-center py-6 text-center">
-      <svg class="w-12 h-12 text-charcoal-500 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>
-      <span class="text-xs font-bold text-charcoal-400">Belum ada data status project.</span>
-    </div>
-
-    <div v-else class="flex-1 space-y-2.5 mt-4 overflow-y-auto max-h-[200px] pr-1">
-      <div v-for="item in statusItems" :key="item.statusKey" class="space-y-1">
-        <div class="flex items-center justify-between text-[11px] font-extrabold">
-          <span class="text-white">{{ item.label }}</span>
-          <span class="text-charcoal-400 font-mono">{{ item.count }} ({{ formatPercent(item.percent) }})</span>
+    <div v-else class="flex flex-1 flex-col justify-center space-y-3 overflow-y-auto pr-1">
+      <div v-for="item in statusItems" :key="item.statusKey" class="space-y-1.5">
+        <div class="flex items-center justify-between gap-3 text-xs">
+          <div class="flex min-w-0 items-center gap-2">
+            <span class="h-2 w-2 shrink-0 rounded-full" :class="item.colorClass"></span>
+            <span class="truncate font-extrabold text-main-theme">{{ item.label }}</span>
+          </div>
+          <span class="shrink-0 font-bold text-muted-theme">{{ item.count }} | {{ formatPercent(item.percent) }}</span>
         </div>
-        <div class="h-2 w-full bg-brand-charcoal-light/20 rounded-md overflow-hidden relative border border-brand-charcoal-light/5">
-          <div 
-            class="h-full bg-brand-orange rounded-md transition-all duration-700" 
-            :style="{ width: item.percent + '%' }"
-            :class="item.colorClass"
-          ></div>
+        <div class="h-2 overflow-hidden rounded-full bg-slate-100">
+          <div class="h-full rounded-full transition-all duration-700" :class="item.colorClass" :style="{ width: `${item.percent}%` }"></div>
         </div>
       </div>
     </div>
-  </div>
+  </AppChartCard>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import AppChartCard from '../ui/AppChartCard.vue'
 
 const props = defineProps({
   statusCounts: {
@@ -45,44 +42,39 @@ const props = defineProps({
 })
 
 const statusLabels = {
-  inquiry: { label: 'Inquiry', colorClass: 'bg-brand-blue' },
-  quotation: { label: 'Penawaran', colorClass: 'bg-brand-blue-light' },
-  negotiation: { label: 'Negosiasi', colorClass: 'bg-amber-500' },
-  confirmed: { label: 'Terkonfirmasi (Confirmed)', colorClass: 'bg-brand-emerald-dark' },
-  preparation: { label: 'Persiapan', colorClass: 'bg-brand-emerald' },
-  ongoing: { label: 'Berjalan (Running)', colorClass: 'bg-brand-orange-light' },
-  completed: { label: 'Selesai (Completed)', colorClass: 'bg-brand-emerald-light' },
-  canceled: { label: 'Dibatalkan (Canceled)', colorClass: 'bg-red-500' },
-  closed: { label: 'Ditutup (Closed)', colorClass: 'bg-charcoal-500' }
+  inquiry: { label: 'Inquiry', colorClass: 'bg-brand-amber' },
+  quotation: { label: 'Penawaran', colorClass: 'bg-brand-orange' },
+  negotiation: { label: 'Negosiasi', colorClass: 'bg-yellow-500' },
+  confirmed: { label: 'Terkonfirmasi', colorClass: 'bg-brand-emerald-dark' },
+  preparation: { label: 'Persiapan', colorClass: 'bg-brand-blue' },
+  ongoing: { label: 'Berjalan', colorClass: 'bg-sky-500' },
+  running: { label: 'Berjalan', colorClass: 'bg-sky-500' },
+  completed: { label: 'Selesai', colorClass: 'bg-brand-emerald' },
+  canceled: { label: 'Dibatalkan', colorClass: 'bg-red-500' },
+  cancel: { label: 'Dibatalkan', colorClass: 'bg-red-500' },
+  closed: { label: 'Ditutup', colorClass: 'bg-slate-500' },
+  reporting: { label: 'Pelaporan', colorClass: 'bg-violet-500' },
+  active: { label: 'Aktif', colorClass: 'bg-brand-blue' },
+  open: { label: 'Open', colorClass: 'bg-brand-amber' }
 }
 
-const totalProjects = computed(() => {
-  return Object.values(props.statusCounts).reduce((a, b) => a + b, 0)
-})
+const normalizedCounts = computed(() => props.statusCounts || {})
+const totalProjects = computed(() => Object.values(normalizedCounts.value).reduce((sum, value) => sum + (Number(value) || 0), 0))
 
-const statusItems = computed(() => {
-  const list = []
-  const max = totalProjects.value > 0 ? totalProjects.value : 1
-  
-  for (const [key, config] of Object.entries(statusLabels)) {
-    const count = props.statusCounts[key] || 0
-    if (count > 0) {
-      list.push({
-        statusKey: key,
-        label: config.label,
-        colorClass: config.colorClass,
-        count: count,
-        percent: (count / max) * 100
-      })
+const statusItems = computed(() => Object.entries(normalizedCounts.value)
+  .map(([key, value]) => {
+    const count = Math.max(0, Number(value) || 0)
+    const config = statusLabels[key.toLowerCase()] || { label: key, colorClass: 'bg-slate-400' }
+    return {
+      statusKey: key,
+      label: config.label,
+      colorClass: config.colorClass,
+      count,
+      percent: totalProjects.value > 0 ? (count / totalProjects.value) * 100 : 0
     }
-  }
-  
-  // Sort by count descending
-  return list.sort((a, b) => b.count - a.count)
-})
+  })
+  .filter((item) => item.count > 0)
+  .sort((a, b) => b.count - a.count))
 
-const formatPercent = (val) => {
-  if (val === undefined || val === null || isNaN(val)) return '0,0%'
-  return val.toFixed(1).replace('.', ',') + '%'
-}
+const formatPercent = (value) => `${Number(value || 0).toFixed(1).replace('.', ',')}%`
 </script>

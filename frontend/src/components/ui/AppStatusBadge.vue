@@ -1,6 +1,6 @@
 <template>
   <span 
-    class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider inline-block text-center select-none"
+    class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider inline-block text-center select-none"
     :class="styles"
   >
     <slot>{{ status }}</slot>

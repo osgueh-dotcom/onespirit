@@ -1,100 +1,80 @@
 <template>
-  <div class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col justify-between select-none min-h-[320px]">
-    <div>
-      <h3 class="text-xs font-extrabold uppercase tracking-widest text-brand-orange">
-        Perbandingan Deal dan Cancel
-      </h3>
-      <p class="text-[10px] font-bold text-charcoal-400 mt-1 select-none">
-        Membandingkan tingkat keberhasilan deal dan pembatalan proyek.
-      </p>
-    </div>
+  <AppChartCard
+    title="Deal vs Cancel"
+    subtitle="Perbandingan cepat antara rasio konversi dan pembatalan."
+  >
+    <template #metric>
+      <span class="rounded-full border border-brand-blue/20 bg-brand-blue/10 px-3 py-1 text-xs font-extrabold text-brand-blue">
+        {{ rateGapLabel }}
+      </span>
+    </template>
 
-    <div class="flex-1 grid grid-cols-2 gap-4 mt-6 items-center">
-      <!-- 1. Deal Rate Circular Gauge -->
-      <div class="flex flex-col items-center text-center space-y-2">
-        <div class="relative w-28 h-28 flex items-center justify-center">
-          <svg class="w-full h-full transform -rotate-95" viewBox="0 0 100 100">
-            <!-- Background track circle -->
-            <circle 
-              cx="50" cy="50" r="40" 
-              fill="transparent" 
-              class="stroke-brand-charcoal-light/30" 
-              stroke-width="8"
-            />
-            <!-- Animated deal fill circle -->
-            <circle 
-              cx="50" cy="50" r="40" 
-              fill="transparent" 
-              class="stroke-brand-emerald" 
-              stroke-width="8" 
+    <div class="grid flex-1 grid-cols-2 items-center gap-4">
+      <div v-for="gauge in gauges" :key="gauge.label" class="flex flex-col items-center text-center">
+        <div class="relative flex h-28 w-28 items-center justify-center sm:h-32 sm:w-32">
+          <svg class="h-full w-full -rotate-90" viewBox="0 0 100 100" role="img" :aria-label="`${gauge.label} ${formatPercent(gauge.value)}`">
+            <circle cx="50" cy="50" r="40" fill="transparent" class="stroke-slate-100" stroke-width="9" />
+            <circle
+              cx="50"
+              cy="50"
+              r="40"
+              fill="transparent"
+              :class="gauge.strokeClass"
+              stroke-width="9"
               stroke-dasharray="251.2"
-              :stroke-dashoffset="calculateOffset(dealRate)"
+              :stroke-dashoffset="calculateOffset(gauge.value)"
               stroke-linecap="round"
-              style="transition: stroke-dashoffset 1.5s ease-in-out;"
+              class="transition-all duration-700"
             />
           </svg>
-          <div class="absolute flex flex-col items-center justify-center">
-            <span class="text-xl font-black text-brand-emerald">{{ formatPercent(dealRate) }}</span>
-            <span class="text-[8px] uppercase tracking-wider font-extrabold text-charcoal-400">Deal Rate</span>
+          <div class="absolute flex flex-col items-center">
+            <span class="text-xl font-black tracking-tight" :class="gauge.textClass">{{ formatPercent(gauge.value) }}</span>
+            <span class="mt-0.5 text-[9px] font-extrabold uppercase tracking-wider text-muted-theme">{{ gauge.shortLabel }}</span>
           </div>
         </div>
-        <span class="text-[10px] font-bold text-white select-none">Tingkat Deal</span>
-      </div>
-
-      <!-- 2. Cancel Rate Circular Gauge -->
-      <div class="flex flex-col items-center text-center space-y-2">
-        <div class="relative w-28 h-28 flex items-center justify-center">
-          <svg class="w-full h-full transform -rotate-95" viewBox="0 0 100 100">
-            <!-- Background track circle -->
-            <circle 
-              cx="50" cy="50" r="40" 
-              fill="transparent" 
-              class="stroke-brand-charcoal-light/30" 
-              stroke-width="8"
-            />
-            <!-- Animated cancel fill circle -->
-            <circle 
-              cx="50" cy="50" r="40" 
-              fill="transparent" 
-              class="stroke-red-500" 
-              stroke-width="8" 
-              stroke-dasharray="251.2"
-              :stroke-dashoffset="calculateOffset(cancelRate)"
-              stroke-linecap="round"
-              style="transition: stroke-dashoffset 1.5s ease-in-out;"
-            />
-          </svg>
-          <div class="absolute flex flex-col items-center justify-center">
-            <span class="text-xl font-black text-red-400">{{ formatPercent(cancelRate) }}</span>
-            <span class="text-[8px] uppercase tracking-wider font-extrabold text-charcoal-400">Cancel Rate</span>
-          </div>
-        </div>
-        <span class="text-[10px] font-bold text-white select-none">Tingkat Cancel</span>
+        <p class="mt-3 text-xs font-extrabold text-main-theme">{{ gauge.label }}</p>
+        <p class="mt-1 text-[10px] font-medium text-muted-theme">{{ gauge.caption }}</p>
       </div>
     </div>
-  </div>
+  </AppChartCard>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import AppChartCard from '../ui/AppChartCard.vue'
+
 const props = defineProps({
-  dealRate: {
-    type: Number,
-    default: 0.0
-  },
-  cancelRate: {
-    type: Number,
-    default: 0.0
-  }
+  dealRate: { type: Number, default: 0 },
+  cancelRate: { type: Number, default: 0 }
 })
 
-// Circular circumference is 2 * pi * r = 2 * 3.14159 * 40 = 251.2
-const calculateOffset = (rate) => {
-  const boundedRate = Math.max(0, Math.min(100, rate))
-  return 251.2 - (251.2 * boundedRate) / 100
-}
+const safeDealRate = computed(() => Math.max(0, Math.min(100, Number(props.dealRate) || 0)))
+const safeCancelRate = computed(() => Math.max(0, Math.min(100, Number(props.cancelRate) || 0)))
 
-const formatPercent = (val) => {
-  if (val === undefined || val === null || isNaN(val)) return '0,0%'
-  return Number(val).toFixed(1).replace('.', ',') + '%'
-}
+const gauges = computed(() => [
+  {
+    label: 'Tingkat Deal',
+    shortLabel: 'Deal',
+    caption: 'Inquiry berhasil dikonversi',
+    value: safeDealRate.value,
+    strokeClass: 'stroke-brand-emerald',
+    textClass: 'text-brand-emerald'
+  },
+  {
+    label: 'Tingkat Cancel',
+    shortLabel: 'Cancel',
+    caption: 'Peluang berhenti atau batal',
+    value: safeCancelRate.value,
+    strokeClass: 'stroke-red-500',
+    textClass: 'text-red-500'
+  }
+])
+
+const rateGapLabel = computed(() => {
+  const gap = safeDealRate.value - safeCancelRate.value
+  return `${Math.abs(gap).toFixed(1).replace('.', ',')} pt ${gap >= 0 ? 'positif' : 'negatif'}`
+})
+
+const calculateOffset = (rate) => 251.2 - (251.2 * rate) / 100
+const formatPercent = (value) => `${Number(value || 0).toFixed(1).replace('.', ',')}%`
 </script>

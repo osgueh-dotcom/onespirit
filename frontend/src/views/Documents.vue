@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- Top toolbar selection -->
     <div class="flex items-center justify-between gap-4 select-none">
       <div class="flex items-center gap-3">

@@ -1,36 +1,44 @@
 <template>
-  <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-3 print:bg-white print:border-none print:p-0 print:rounded-none">
-    <h3 class="text-xs font-bold text-brand-orange uppercase tracking-widest print:text-charcoal-800 print:text-sm">
-      Executive Summary Narrative
-    </h3>
-    
-    <div v-if="!hasData" class="text-xs font-semibold text-charcoal-400 leading-relaxed print:text-charcoal-600">
-      Belum ada data proyek atau inquiry yang tercatat untuk filter periode yang dipilih. Silakan sesuaikan filter pencarian Anda.
-    </div>
-    
-    <div v-else class="space-y-4">
-      <p class="text-sm font-semibold text-white leading-relaxed print:text-charcoal-800">
-        Pada periode ini, PT. One Spirit Asia mencatat sebanyak <span class="text-brand-orange print:text-charcoal-900 font-extrabold">{{ totalInquiry }}</span> record inquiry masuk dengan total <span class="text-brand-emerald print:text-charcoal-900 font-extrabold">{{ totalDeal }}</span> project deal yang berhasil ditandatangani. Tingkat pencapaian deal (Deal Rate) tercatat di angka <span class="text-white print:text-charcoal-900 font-extrabold">{{ formatPercent(dealRate) }}</span>, sedangkan tingkat pembatalan (Cancel Rate) berada pada angka <span class="text-white print:text-charcoal-900 font-extrabold">{{ formatPercent(cancelRate) }}</span>. Confirmed revenue (nilai proyek yang disepakati) saat ini mencapai <span class="text-brand-emerald print:text-charcoal-900 font-extrabold">{{ formatMoney(confirmedRevenue) }}</span>, yang menyumbang sekitar <span class="text-brand-orange print:text-charcoal-900 font-extrabold">{{ formatPercent(targetAchievement) }}</span> dari target tahunan <span class="text-white print:text-charcoal-900 font-extrabold">{{ formatMoney(target.revenue_target) }}</span> yang dicanangkan oleh direksi untuk tahun {{ targetYear }}. 
-      </p>
+  <section class="app-section-card print:bg-white print:border-none print:p-0 print:shadow-none">
+    <div class="grid gap-5 lg:grid-cols-[1.5fr_0.5fr]">
+      <div>
+        <p class="app-kicker">Executive Summary</p>
+        <h3 class="mt-1.5 text-xl font-black tracking-tight text-main-theme">Sorotan periode berjalan</h3>
 
-      <!-- Warnings/Issues Alert blocks -->
-      <div v-if="warnings.length > 0" class="space-y-2.5 print:hidden">
-        <div 
-          v-for="warning in warnings" 
-          :key="warning.message"
-          class="flex items-start gap-2.5 p-3 bg-brand-orange/5 border border-brand-orange/20 rounded-2xl text-xs"
-        >
-          <svg class="w-4 h-4 text-brand-orange mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <div class="space-y-0.5">
-            <span class="text-[9px] uppercase font-black text-brand-orange tracking-wider">{{ warning.title }}</span>
-            <p class="text-charcoal-200 font-semibold leading-normal">{{ warning.message }}</p>
-          </div>
+        <p v-if="!hasData" class="mt-4 text-sm font-medium leading-relaxed text-muted-theme">
+          Belum ada data project atau inquiry untuk filter yang dipilih.
+        </p>
+
+        <p v-else class="mt-4 text-sm font-medium leading-7 text-muted-theme print:text-charcoal-800">
+          One Spirit mencatat <strong class="text-brand-orange">{{ totalInquiry }} inquiry</strong> dengan
+          <strong class="text-brand-emerald">{{ totalDeal }} project deal</strong>. Deal rate berada di
+          <strong class="text-main-theme">{{ formatPercent(dealRate) }}</strong>, sementara cancel rate
+          <strong class="text-red-500">{{ formatPercent(cancelRate) }}</strong>. Confirmed revenue mencapai
+          <strong class="text-brand-emerald">{{ formatMoney(confirmedRevenue) }}</strong> atau
+          <strong class="text-brand-orange">{{ formatPercent(targetAchievement) }}</strong> dari target
+          {{ targetYear }}.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 lg:grid-cols-1">
+        <div class="app-subtle-panel p-4">
+          <p class="text-[10px] font-extrabold uppercase tracking-wider text-muted-theme">Deal Rate</p>
+          <p class="mt-1 text-2xl font-black text-brand-emerald">{{ formatPercent(dealRate) }}</p>
+        </div>
+        <div class="app-subtle-panel p-4">
+          <p class="text-[10px] font-extrabold uppercase tracking-wider text-muted-theme">Target Achievement</p>
+          <p class="mt-1 text-2xl font-black text-brand-orange">{{ formatPercent(targetAchievement) }}</p>
         </div>
       </div>
     </div>
-  </div>
+
+    <div v-if="warnings.length > 0" class="mt-5 grid gap-3 md:grid-cols-2 print:hidden">
+      <div v-for="warning in warnings" :key="warning.title" class="rounded-xl border border-brand-amber/25 bg-brand-amber/10 p-4">
+        <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-orange">{{ warning.title }}</p>
+        <p class="mt-1.5 text-xs font-medium leading-relaxed text-slate-700">{{ warning.message }}</p>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
@@ -49,50 +57,33 @@ const props = defineProps({
   }
 })
 
-const hasData = computed(() => {
-  return props.executive && props.executive.total_projects > 0
-})
-
-const totalInquiry = computed(() => props.executive.total_inquiry || 0)
-const totalDeal = computed(() => props.executive.total_deal || 0)
-const dealRate = computed(() => props.executive.deal_rate || 0.0)
-const cancelRate = computed(() => props.executive.cancel_rate || 0.0)
-const confirmedRevenue = computed(() => props.executive.confirmed_revenue || 0.0)
-const targetAchievement = computed(() => props.target.achievement_rate || 0.0)
-const targetYear = computed(() => props.target.year || 2025)
-const dataIssues = computed(() => props.executive.total_data_quality_issues || 0)
-
-const formatPercent = (val) => {
-  if (val === undefined || val === null || isNaN(val)) return '0,0%'
-  return Number(val).toFixed(2).replace('.', ',') + '%'
-}
+const hasData = computed(() => Number(props.executive?.total_projects) > 0)
+const totalInquiry = computed(() => Number(props.executive?.total_inquiry) || 0)
+const totalDeal = computed(() => Number(props.executive?.total_deal) || 0)
+const dealRate = computed(() => Number(props.executive?.deal_rate) || 0)
+const cancelRate = computed(() => Number(props.executive?.cancel_rate) || 0)
+const confirmedRevenue = computed(() => Number(props.executive?.confirmed_revenue) || 0)
+const targetAchievement = computed(() => Number(props.target?.achievement_rate) || 0)
+const targetYear = computed(() => props.target?.year || new Date().getFullYear())
+const dataIssues = computed(() => Number(props.executive?.total_data_quality_issues) || 0)
 
 const warnings = computed(() => {
-  const list = []
+  const items = []
   if (cancelRate.value > 30) {
-    list.push({
-      title: 'Tingkat Pembatalan Tinggi',
-      message: `Persentase pembatalan proyek (Cancel Rate: ${formatPercent(cancelRate.value)}) terpantau cukup tinggi pada periode ini. Disarankan melakukan tinjauan mendalam atas alasan pembatalan (cancel reason) proyek.`
+    items.push({
+      title: 'Cancellation perlu perhatian',
+      message: `Cancel rate ${formatPercent(cancelRate.value)}. Tinjau alasan pembatalan dan kualitas follow-up.`
     })
   }
   if (dataIssues.value > 0) {
-    list.push({
-      title: 'Kualitas Data Operasional',
-      message: `Terdapat ${dataIssues.value} isu ketidaklengkapan data yang terdeteksi di database. Disarankan untuk segera melengkapi data penugasan PO/PM, Customer, anggaran (budget), maupun dokumen drive pendukung sebelum rapat evaluasi.`
+    items.push({
+      title: 'Kualitas data operasional',
+      message: `${dataIssues.value} isu kelengkapan data perlu diselesaikan sebelum evaluasi management.`
     })
   }
-  return list
+  return items
 })
 
-const formatMoney = (val) => {
-  if (val === undefined || val === null || isNaN(val)) return 'Rp0'
-  return 'Rp' + Math.round(val).toLocaleString('id-ID')
-}
+const formatMoney = (value) => `Rp${Math.round(Number(value) || 0).toLocaleString('id-ID')}`
+const formatPercent = (value) => `${Number(value || 0).toFixed(1).replace('.', ',')}%`
 </script>
-
-<style scoped>
-.glass-panel {
-  background: rgba(26, 32, 44, 0.7);
-  backdrop-filter: blur(12px);
-}
-</style>

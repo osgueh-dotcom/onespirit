@@ -1,90 +1,64 @@
 <template>
-  <div class="space-y-6">
-    <!-- Project Header Panel -->
-    <div v-if="project" class="p-6 bg-gradient-to-r from-brand-charcoal to-brand-charcoal-light/45 border border-brand-charcoal-light/35 rounded-3xl relative overflow-hidden select-none flex items-center justify-between flex-wrap gap-4">
-      <div class="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-brand-orange/5 rounded-full blur-3xl pointer-events-none"></div>
-      
-      <div>
-        <div class="flex items-center flex-wrap gap-2">
-          <span class="px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded bg-brand-orange/15 text-brand-orange border border-brand-orange/20">
-            {{ project.project_status }}
-          </span>
-          <span v-if="project.project_code" class="text-xs text-brand-orange font-bold font-mono">
-            {{ project.project_code }}
-          </span>
+  <div v-if="project" class="space-y-4">
+    <section class="app-section-card relative overflow-hidden">
+      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-orange via-brand-amber to-brand-yellow"></div>
+      <div class="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <AppStatusBadge :status="project.project_status" />
+            <span v-if="project.project_code" class="text-xs font-extrabold font-mono text-brand-orange">
+              {{ project.project_code }}
+            </span>
+          </div>
+          <p class="mt-4 text-xs font-bold uppercase tracking-wider text-muted-theme">
+            {{ project.customer?.company_name || 'Client belum ditentukan' }}
+          </p>
+          <h2 class="mt-1 text-2xl md:text-3xl font-black tracking-tight text-main-theme">{{ project.title }}</h2>
+          <p class="mt-2 text-sm font-medium text-muted-theme">
+            {{ project.event_date_start || '-' }} sampai {{ project.event_date_end || '-' }}
+          </p>
         </div>
-        <span class="text-xs text-gray-400 font-bold mt-1.5 block">Client: {{ project.customer?.company_name }}</span>
-        <h2 class="text-2xl font-black text-white mt-1 tracking-wide">{{ project.title }}</h2>
-        <p class="text-xs text-gray-500 font-bold mt-1">Duration: {{ project.event_date_start || '-' }} to {{ project.event_date_end || '-' }}</p>
+
+        <div class="grid grid-cols-2 gap-3 sm:min-w-[360px]">
+          <div class="app-subtle-panel p-4">
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-muted-theme">Budget Allocated</p>
+            <p class="mt-1 text-lg font-black text-brand-emerald">{{ formatMoney(project.budget) }}</p>
+          </div>
+          <div class="app-subtle-panel p-4">
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-muted-theme">Lead PM</p>
+            <p class="mt-1 text-sm font-black text-main-theme">{{ project.program_manager?.full_name || 'Unassigned' }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-section-card">
+      <div class="mb-4">
+        <p class="app-kicker">Workflow Gates</p>
+        <h3 class="mt-1 text-base font-black tracking-tight text-main-theme">Status project dan tindakan berikutnya</h3>
       </div>
 
-      <div class="flex items-center gap-5 text-right font-sans">
-        <div>
-          <p class="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-0.5">Budget Allocated</p>
-          <p class="text-lg font-black text-brand-emerald">{{ formatMoney(project.budget) }}</p>
-        </div>
-        <div>
-          <p class="text-[10px] uppercase font-bold tracking-widest text-gray-500 mb-0.5">Lead PM</p>
-          <p class="text-sm font-extrabold text-white">{{ project.program_manager?.full_name || 'Unassigned' }}</p>
-        </div>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <label v-for="gate in gates" :key="gate.field" class="block">
+          <span class="mb-1.5 block text-[10px] font-extrabold uppercase tracking-wider text-muted-theme">{{ gate.label }}</span>
+          <select
+            :value="project[gate.field]"
+            :disabled="!canEdit"
+            class="app-form-control text-xs font-bold"
+            :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
+            @change="$emit('transition', gate.field, $event.target.value)"
+          >
+            <option v-for="status in gate.options" :key="status" :value="status">{{ status }}</option>
+          </select>
+        </label>
       </div>
-    </div>
-
-    <!-- Quick Workflow Status Gates -->
-    <div v-if="project" class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-brand-charcoal-light/10 p-4 rounded-3xl border border-brand-charcoal-light/15">
-      <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Quotation Status</label>
-        <select 
-          :value="project.quotation_status" 
-          @change="$emit('transition', 'quotation_status', $event.target.value)"
-          :disabled="!canEdit"
-          class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
-        >
-          <option v-for="st in ['Draft', 'Sent', 'Follow Up', 'Revision', 'Signed & Deal', 'Cancel']" :key="st" :value="st">{{ st }}</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Program Status</label>
-        <select 
-          :value="project.program_status" 
-          @change="$emit('transition', 'program_status', $event.target.value)"
-          :disabled="!canEdit"
-          class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
-        >
-          <option v-for="st in ['Inquiry', 'Confirmed', 'Preparation', 'Ready', 'Running', 'Completed', 'Reporting', 'Closed', 'Cancel']" :key="st" :value="st">{{ st }}</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Payment Status</label>
-        <select 
-          :value="project.payment_status" 
-          @change="$emit('transition', 'payment_status', $event.target.value)"
-          :disabled="!canEdit"
-          class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
-        >
-          <option v-for="st in ['Not Invoiced', 'Invoice Sent', 'Partial Paid', 'Paid', 'Outstanding', 'Overdue']" :key="st" :value="st">{{ st }}</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-1">Project Status</label>
-        <select 
-          :value="project.project_status" 
-          @change="$emit('transition', 'project_status', $event.target.value)"
-          :disabled="!canEdit"
-          class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/45 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-brand-orange"
-          :class="{ 'cursor-not-allowed opacity-70': !canEdit }"
-        >
-          <option v-for="st in ['Open', 'Active', 'Reporting', 'Closed', 'Canceled']" :key="st" :value="st">{{ st }}</option>
-        </select>
-      </div>
-    </div>
+    </section>
   </div>
 </template>
 
 <script setup>
+import AppStatusBadge from './ui/AppStatusBadge.vue'
+
 defineProps({
   project: {
     type: Object,
@@ -98,10 +72,31 @@ defineProps({
 
 defineEmits(['transition'])
 
-const formatMoney = (val) => {
-  return 'Rp ' + Number(val || 0).toLocaleString('id-ID', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  })
-}
+const gates = [
+  {
+    field: 'quotation_status',
+    label: 'Quotation Status',
+    options: ['Draft', 'Sent', 'Follow Up', 'Revision', 'Signed & Deal', 'Cancel']
+  },
+  {
+    field: 'program_status',
+    label: 'Program Status',
+    options: ['Inquiry', 'Confirmed', 'Preparation', 'Ready', 'Running', 'Completed', 'Reporting', 'Closed', 'Cancel']
+  },
+  {
+    field: 'payment_status',
+    label: 'Payment Status',
+    options: ['Not Invoiced', 'Invoice Sent', 'Partial Paid', 'Paid', 'Outstanding', 'Overdue']
+  },
+  {
+    field: 'project_status',
+    label: 'Project Status',
+    options: ['Open', 'Active', 'Reporting', 'Closed', 'Canceled']
+  }
+]
+
+const formatMoney = (value) => `Rp ${Number(value || 0).toLocaleString('id-ID', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+})}`
 </script>

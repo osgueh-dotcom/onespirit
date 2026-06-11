@@ -1,12 +1,13 @@
 <template>
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 select-none">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 select-none">
     <div>
-      <h2 class="text-xl font-bold text-white tracking-wide light:text-gray-900">{{ title }}</h2>
-      <p v-if="subtitle" class="text-xs text-gray-400 mt-1 light:text-gray-600">
+      <p class="app-kicker">{{ eyebrow }}</p>
+      <h2 class="mt-1.5 text-2xl font-black text-main-theme tracking-tight">{{ title }}</h2>
+      <p v-if="subtitle" class="text-sm text-muted-theme mt-1.5 max-w-3xl leading-relaxed">
         {{ subtitle }}
       </p>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex flex-wrap items-center gap-2">
       <slot name="actions"></slot>
     </div>
   </div>
@@ -21,6 +22,10 @@ defineProps({
   subtitle: {
     type: String,
     default: ''
+  },
+  eyebrow: {
+    type: String,
+    default: 'OneSpirit Workflow'
   }
 })
 </script>

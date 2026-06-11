@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6 pb-12">
+  <div class="app-page">
     <!-- Header -->
     <AppPageHeader 
       title="Pusat Import Data" 
@@ -9,7 +9,7 @@
     <!-- Drag & Drop Uploader Console -->
     <div 
       v-if="!previewData && !importReport"
-      class="border-2 border-dashed border-charcoal-600 hover:border-brand-orange/50 bg-charcoal-800/40 p-6 md:p-12 rounded-3xl text-center select-none cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-4"
+      class="app-section-card border-2 border-dashed hover:border-brand-orange/50 p-6 md:p-12 text-center select-none cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-4"
       :class="dragOver ? 'border-brand-orange bg-brand-orange/5' : ''"
       @dragover.prevent="dragOver = true"
       @dragleave="dragOver = false"

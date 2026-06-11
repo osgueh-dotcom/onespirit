@@ -1,6 +1,6 @@
 <template>
   <!-- Guest Layout (Login Screen) -->
-  <div v-if="isGuest" class="h-full bg-app-theme text-main-theme flex items-center justify-center p-4">
+  <div v-if="isGuest" class="guest-shell h-full bg-app-theme text-main-theme flex items-center justify-center p-4 md:p-8">
     <router-view />
   </div>
 
@@ -23,13 +23,15 @@
       ]"
     >
       <!-- Brand Logo Header -->
-      <div class="h-16 flex items-center gap-3 px-5 border-b border-sidebar-theme overflow-hidden select-none shrink-0">
-        <div class="h-9 w-9 bg-gradient-to-tr from-brand-orange to-brand-orange-light rounded-xl flex items-center justify-center shadow-lg shadow-brand-orange/20 shrink-0">
-          <span class="text-white font-extrabold text-lg font-sans">1</span>
+      <div class="h-[72px] flex items-center px-4 border-b border-sidebar-theme overflow-hidden select-none shrink-0">
+        <div class="h-11 w-full rounded-xl bg-white border border-slate-100 flex items-center justify-center overflow-hidden shadow-sm">
+          <img
+            :src="brandLogoUrl"
+            alt="One Spirit Asia"
+            class="h-10 object-contain transition-all duration-300"
+            :class="sidebarCollapsed && !mobileSidebarOpen ? 'w-12' : 'w-44'"
+          />
         </div>
-        <span v-if="!sidebarCollapsed || mobileSidebarOpen" class="text-main-theme font-extrabold text-lg tracking-wider font-sans whitespace-nowrap">
-          ONE<span class="text-brand-orange">SPIRIT</span>
-        </span>
       </div>
 
       <!-- Grouped Navigation Links -->
@@ -50,8 +52,8 @@
             :key="item.name"
             :to="item.path"
             v-show="auth.canAccessItem(item)"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group text-muted-theme hover:text-main-theme hover:bg-brand-charcoal-light/10"
-            active-class="bg-brand-orange/10 !text-brand-orange border-l-2 border-brand-orange"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all duration-200 group text-muted-theme hover:text-main-theme hover:bg-brand-orange/5 hover:border-brand-orange/10"
+            active-class="bg-brand-orange/10 !text-brand-orange !border-brand-orange/15 shadow-sm"
           >
             <component :is="item.icon" class="h-5 w-5 shrink-0 group-hover:scale-105 transition-transform" />
             <span v-if="!sidebarCollapsed || mobileSidebarOpen" class="font-bold text-sm whitespace-nowrap">{{ item.name }}</span>
@@ -61,8 +63,8 @@
 
       <!-- Sidebar Footer User Profile -->
       <div class="p-3 border-t border-sidebar-theme overflow-hidden shrink-0">
-        <div class="flex items-center gap-3 p-2 rounded-xl bg-brand-charcoal-light/5">
-          <div class="h-9 w-9 bg-brand-orange-soft/10 text-brand-orange rounded-lg font-bold flex items-center justify-center shrink-0">
+        <div class="flex items-center gap-3 p-2.5 rounded-xl border border-sidebar-theme bg-brand-orange/5">
+          <div class="h-9 w-9 bg-brand-orange text-white rounded-lg font-bold flex items-center justify-center shrink-0 shadow-sm">
             {{ userInitial }}
           </div>
           <div v-if="!sidebarCollapsed || mobileSidebarOpen" class="min-w-0 flex-1">
@@ -76,12 +78,12 @@
     <!-- Main Content Workspace -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
       <!-- Top header panel -->
-      <header class="h-16 bg-header-theme border-b border-sidebar-theme backdrop-blur-md px-6 flex items-center justify-between shrink-0 z-20">
+      <header class="h-16 bg-header-theme border-b border-sidebar-theme backdrop-blur-md px-4 md:px-6 flex items-center justify-between shrink-0 z-20">
         <div class="flex items-center gap-4">
           <!-- Sidebar Toggle Button -->
           <button 
             @click="toggleSidebar"
-            class="p-1.5 rounded-lg bg-brand-charcoal-light/10 border border-sidebar-theme hover:border-brand-orange/40 text-muted-theme hover:text-main-theme transition-all shrink-0"
+            class="p-2 rounded-xl bg-sidebar-theme border border-sidebar-theme hover:border-brand-orange/40 text-muted-theme hover:text-brand-orange transition-all shrink-0 shadow-sm"
           >
             <span class="sr-only">Toggle Sidebar</span>
             <!-- Hamburger Icon -->
@@ -89,7 +91,10 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <h1 class="text-lg font-bold text-main-theme tracking-wide font-sans shrink-0">{{ currentPageName }}</h1>
+          <div class="min-w-0">
+            <p class="hidden sm:block text-[9px] font-black uppercase tracking-[0.2em] text-brand-orange">OneSpirit Workflow</p>
+            <h1 class="text-base md:text-lg font-extrabold text-main-theme tracking-tight font-sans truncate">{{ currentPageName }}</h1>
+          </div>
         </div>
 
         <div class="flex items-center gap-4 shrink-0">
@@ -100,8 +105,8 @@
           <!-- Light / Dark Mode Toggle Button -->
           <button 
             @click="toggleTheme"
-            class="p-2 rounded-xl bg-brand-charcoal-light/10 border border-sidebar-theme hover:border-brand-orange/40 text-muted-theme hover:text-main-theme transition-all shrink-0 flex items-center justify-center"
-            title="Toggle Light/Dark Theme"
+            class="p-2 rounded-xl bg-sidebar-theme border border-sidebar-theme hover:border-brand-orange/40 text-muted-theme hover:text-brand-orange transition-all shrink-0 flex items-center justify-center shadow-sm"
+            title="Ubah tema tampilan"
           >
             <!-- Sun Icon (Show in dark mode to switch to light) -->
             <svg v-if="darkMode" class="w-4.5 h-4.5 text-brand-orange" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -115,7 +120,7 @@
 
           <button 
             @click="logout"
-            class="px-3.5 py-1.5 rounded-lg border border-sidebar-theme hover:border-red-500/40 text-xs font-bold text-muted-theme hover:text-red-400 hover:bg-red-500/5 transition-all select-none"
+            class="hidden sm:inline-flex px-3.5 py-2 rounded-xl border border-sidebar-theme hover:border-red-500/30 text-xs font-bold text-muted-theme hover:text-red-500 hover:bg-red-500/5 transition-all select-none"
           >
             Keluar
           </button>
@@ -123,7 +128,7 @@
       </header>
 
       <!-- Router Content -->
-      <main class="flex-1 overflow-y-auto p-6 min-w-0 relative">
+      <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-7 min-w-0 relative">
         <router-view />
       </main>
     </div>
@@ -153,7 +158,8 @@ const router = useRouter()
 
 const sidebarCollapsed = ref(false)
 const mobileSidebarOpen = ref(false)
-const darkMode = ref(true)
+const darkMode = ref(false)
+const brandLogoUrl = `${import.meta.env.BASE_URL}brand/one-spirit-logo.png`
 
 const isGuest = computed(() => route.meta.guest)
 
@@ -256,9 +262,13 @@ onMounted(() => {
   if (savedTheme === 'light') {
     darkMode.value = false
     document.documentElement.classList.add('light')
-  } else {
+  } else if (savedTheme === 'dark') {
     darkMode.value = true
     document.documentElement.classList.remove('light')
+  } else {
+    darkMode.value = false
+    document.documentElement.classList.add('light')
+    localStorage.setItem('theme', 'light')
   }
 })
 
@@ -278,5 +288,12 @@ const logout = () => {
 }
 .border-sidebar-theme {
   transition: border-color 0.3s ease;
+}
+
+.guest-shell {
+  background-image:
+    radial-gradient(circle at 12% 12%, rgba(245, 238, 49, 0.18), transparent 22rem),
+    radial-gradient(circle at 88% 82%, rgba(241, 89, 42, 0.14), transparent 28rem),
+    linear-gradient(145deg, #fffdf9 0%, #f7f8fa 55%, #fff7f3 100%);
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <ProjectDetailHeader
       v-if="project"
       :project="project"
