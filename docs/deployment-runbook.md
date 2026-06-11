@@ -64,6 +64,17 @@ Health checks:
 curl http://localhost:8000/health
 ```
 
+### VS Code Port Forward UI Test
+
+When testing the Vite UI through VS Code's built-in port forwarding:
+
+1. Start the backend in the same workspace environment on port `8000`.
+2. Start the frontend with `npm run dev` or Docker Compose on port `5173`.
+3. Forward/open the frontend port `5173` from VS Code.
+4. Do not set `VITE_API_BASE_URL` for this local forwarded UI test unless the backend is also exposed through a stable public URL.
+
+In local dev mode, frontend API calls use relative `/api/v1/...` requests so Vite can proxy them to the backend from inside the workspace. This avoids browser-side `localhost:8000` failures when the browser is outside the workspace machine.
+
 ---
 
 ## 5. Pre-demo Checklist

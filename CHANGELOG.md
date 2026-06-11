@@ -21,6 +21,7 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 - Disabled project transition controls for read-only users.
 - Restricted dashboard developer tools to admin users.
 - Removed the demo password from the frontend bundle.
+- Let local/VS Code forwarded UI tests use Vite's relative `/api/v1` proxy instead of browser-side `localhost:8000`.
 - Migrated backend startup to FastAPI lifespan.
 - Migrated Project schemas/router to Pydantic v2 `ConfigDict` and `model_validate`.
 - Added frontend lint/test/safety checks to GitHub Pages deployment.

@@ -5,7 +5,11 @@ import App from './App.vue'
 import router from './router'
 import './assets/index.css'
 
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+
+if (apiBaseUrl) {
+  axios.defaults.baseURL = apiBaseUrl
+}
 
 const app = createApp(App)
 

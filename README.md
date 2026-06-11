@@ -108,6 +108,8 @@ npm.cmd run dev
 
 Buka [http://localhost:5173](http://localhost:5173).
 
+Untuk test lewat VS Code port forwarding, jalankan backend di workspace pada port `8000`, lalu forward/open frontend port `5173`. Jangan set `VITE_API_BASE_URL` untuk test lokal ini; frontend akan memakai request relatif `/api/v1/...` dan Vite akan memproxy ke backend.
+
 ---
 
 ## Validasi
