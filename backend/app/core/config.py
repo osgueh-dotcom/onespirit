@@ -32,7 +32,9 @@ class Settings(BaseSettings):
 
     # Seed Demo Credentials
     DEMO_EMAIL: str = "demo@onespirit.asia"
-    DEMO_PASSWORD: str = "OneSpiritDemo2026!"
+    DEMO_PASSWORD: str = ""
+    DEMO_USER_EMAIL: str = ""
+    DEMO_USER_PASSWORD: str = ""
 
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = [
@@ -108,10 +110,6 @@ class Settings(BaseSettings):
             if self.ADMIN_PASSWORD == "OneSpirit2026!":
                 raise ValueError(
                     "SECURITY ERROR: ADMIN_PASSWORD must be changed from the default value in a production environment!"
-                )
-            if self.DEMO_PASSWORD == "OneSpiritDemo2026!":
-                raise ValueError(
-                    "SECURITY ERROR: DEMO_PASSWORD must be changed from the default value in a production environment!"
                 )
         return self
 

@@ -34,7 +34,7 @@ Untuk mengaktifkan deployment otomatis via GitHub Actions:
 1. Buka repositori GitHub Anda: `https://github.com/osgueh-dotcom/onespirit`.
 2. Masuk ke tab **Settings** -> **Pages**.
 3. Di bawah bagian **Build and deployment**, ubah **Source** menjadi **GitHub Actions**.
-4. GitHub sekarang akan mendengarkan workflow `.github/workflows/deploy-pages.yml` yang terpicu setiap ada push ke branch `main`.
+4. Workflow `.github/workflows/deploy-pages.yml` tersedia, tetapi deployment dijalankan manual dari tab Actions selama mode demo utama masih menggunakan Zoom/local PC.
 
 ---
 
@@ -85,7 +85,7 @@ Setiap kali URL tunnel berubah (ngrok/VS Code diperbarui):
 ---
 
 ## 8. Cara Menjalankan Workflow Deploy
-Secara default, workflow akan berjalan otomatis saat push ke branch `main`. Untuk memicu deployment manual:
+Workflow saat ini tidak berjalan otomatis saat push. Untuk memicu deployment manual:
 1. Masuk ke repositori GitHub -> tab **Actions**.
 2. Pilih workflow **Deploy OneSpirit Frontend to GitHub Pages** di panel kiri.
 3. Klik dropdown **Run workflow** di sebelah kanan.

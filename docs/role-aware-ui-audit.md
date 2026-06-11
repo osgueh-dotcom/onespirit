@@ -32,6 +32,7 @@
 | Imports | `admin` atau `projects:write` | UI dibatasi Super Admin/Admin/Management. |
 | CRM | `crm:read` | Berdasarkan permission. |
 | Documents | `documents:read` | Berdasarkan permission. |
+| Settings | Authenticated | Semua user; User Management hanya Admin/Super Admin. |
 
 Finance tidak lagi melihat control center operasional hanya karena memiliki `projects:read`.
 
@@ -48,6 +49,8 @@ Finance tidak lagi melihat control center operasional hanya karena memiliki `pro
 | Instruments | Generate/create/update/delete | `projects:write` | `projects:write` |
 | PNL link | View | Super Admin/Management/Finance | Backend response masking |
 | Finance | Add/delete invoice/payment | `finance:write` | `finance:write` |
+| Settings | Change own password | Authenticated | Current authenticated user |
+| User Management | List/create/reset/status | Admin only | Permission `admin` |
 | Developer tools | View | Admin only | Legacy dashboard endpoint authenticated |
 
 ## Backend Audit
@@ -55,6 +58,7 @@ Finance tidak lagi melihat control center operasional hanya karena memiliki `pro
 - CRUD router utama memakai `PermissionChecker`.
 - Tujuh endpoint dashboard modular yang sebelumnya tidak memiliki auth telah diberi `get_current_user`.
 - Test memastikan endpoint tersebut mengembalikan 401 tanpa token.
+- `/auth/users` dilindungi permission `admin`; `/auth/users/options` hanya menyediakan safe user reference data untuk workflow.
 - `PermissionChecker` memakai semantics "salah satu permission", bukan seluruh permission.
 
 ## Limitations

@@ -35,6 +35,9 @@ Gunakan dokumen-dokumen berikut saat mempersiapkan dan melakukan demonstrasi sis
 - **[Alur Demo Langkah Demi Langkah](client-demo-flow.md)**: Panduan alur navigasi menu aplikasi selama demo berlangsung.
 - **[Naskah Demonstrasi (Indonesian Script)](demo-script.md)**: Naskah bicara bahasa Indonesia terstruktur untuk presenter GVSys.
 - **[Daftar Periksa Demo (Checklist)](demo-checklist.md)**: Checklist wajib sebelum, selama, dan setelah demo untuk meminimalkan gangguan teknis.
+- **[Zoom Demo Safety Checklist](zoom-demo-safety-checklist.md)**: Checklist screen share lokal, VS Code Port Forwarding fallback, akun demo, dan shutdown pasca-demo.
+- **[Client Demo Rehearsal](client-demo-rehearsal.md)**: Urutan demo client dari login sampai Settings dan Q&A.
+- **[Public Demo Safety Checklist](public-demo-safety-checklist.md)**: Guardrail untuk tunnel sementara, credential demo, dan database private.
 - **[Rekomendasi Pilihan Data Demo](demo-data-recommendation.md)**: Panduan memilih record database (Good Data vs Data Issues) untuk disajikan kepada klien.
 - **[Penyelarasan Proposal Fitur](proposal-alignment.md)**: Tabel pemetaan modul proposal teknis terhadap status implementasi sistem (tahap MVP).
 - **[Cakupan Sistem MVP](mvp-scope.md)**: Penjelasan batasan fitur yang masuk MVP awal dan fitur yang didelegasikan ke Fase Lanjutan (Fase 2).

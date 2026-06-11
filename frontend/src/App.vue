@@ -143,7 +143,8 @@ import {
   ArrowUpTrayIcon,
   ClipboardDocumentCheckIcon,
   BanknotesIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  Cog6ToothIcon
 } from '@heroicons/vue/24/outline'
 
 const auth = useAuthStore()
@@ -215,6 +216,12 @@ const navGroups = [
       },
       { name: 'CRM', path: '/crm', icon: UserGroupIcon, permission: 'crm:read' },
       { name: 'Documents', path: '/documents', icon: FolderIcon, permission: 'documents:read' }
+    ]
+  },
+  {
+    name: 'Akun',
+    items: [
+      { name: 'Pengaturan', path: '/settings', icon: Cog6ToothIcon }
     ]
   }
 ]

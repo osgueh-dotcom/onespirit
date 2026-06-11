@@ -45,7 +45,9 @@ services:
       - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@onespirit.asia}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-OneSpirit2026!}
       - DEMO_EMAIL=${DEMO_EMAIL:-demo@onespirit.asia}
-      - DEMO_PASSWORD=${DEMO_PASSWORD:-OneSpiritDemo2026!}
+      - DEMO_PASSWORD=${DEMO_PASSWORD:-}
+      - DEMO_USER_EMAIL=${DEMO_USER_EMAIL:-}
+      - DEMO_USER_PASSWORD=${DEMO_USER_PASSWORD:-}
     volumes:
       - ./backend:/app
       - uploads_data:/app/uploads

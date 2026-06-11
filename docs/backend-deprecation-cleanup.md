@@ -20,7 +20,7 @@ Phase 1 hanya mengubah API internal yang mekanis dan mempertahankan response con
 - Project response schemas memakai `ConfigDict(from_attributes=True)`.
 - Project router memakai `model_validate()`.
 - FastAPI startup memakai lifespan.
-- Warning total turun dari baseline Sprint 13 `919` menjadi `39`.
+- Warning total turun dari baseline Sprint 13 `919` menjadi `37`.
 
 ## Ditunda
 
@@ -41,7 +41,7 @@ cd backend
 python -m pytest app/tests -q
 ```
 
-Hasil Sprint 14: `29 passed, 39 warnings`.
+Hasil terkini: `36 passed, 37 warnings`.
 
 ## Phase 2
 

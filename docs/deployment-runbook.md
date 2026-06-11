@@ -23,7 +23,7 @@ Current Compose is for local/demo use. It uses source bind mounts, Vite dev serv
 ## 2. GitHub Pages Frontend Deployment
 
 1. Update GitHub Actions secret `VITE_API_BASE_URL` with the current backend tunnel URL.
-2. Push to `main` or run workflow manually.
+2. Run the GitHub Pages workflow manually with `workflow_dispatch`.
 3. Workflow should run:
    - checkout
    - setup node

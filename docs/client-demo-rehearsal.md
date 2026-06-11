@@ -17,7 +17,8 @@ Dokumen ini memandu presenter/demo lead dalam melakukan gladi bersih dan menyaji
 | **7** | Pusat Source & Vendor | 2 Menit | Evaluasi source dan vendor partner |
 | **8** | Keuangan (Finance) | 2 Menit | Invoice dan pembayaran |
 | **9** | Pusat Import Data | 2 Menit | Migrasi data historis dan validasi format |
-| **10** | Q&A dan Validasi | 5 Menit | Feedback klien dan prioritas sprint berikutnya |
+| **10** | Settings / User Management | 1 Menit | Ubah password dan penambahan user dasar |
+| **11** | Q&A dan Validasi | 5 Menit | Feedback klien dan prioritas sprint berikutnya |
 
 ---
 
@@ -26,7 +27,7 @@ Dokumen ini memandu presenter/demo lead dalam melakukan gladi bersih dan menyaji
 ### Langkah 1: Halaman Login dan Autentikasi
 
 - **Tujuan Halaman**: Membuka portal web dan menjelaskan role PO, PM, Finance, Staff, dan Management.
-- **Tindakan**: Buka `/login`, masukkan email `demo@onespirit.asia` dan password demo yang disiapkan di environment `DEMO_PASSWORD`.
+- **Tindakan**: Buka `/login`, masukkan email `demo@onespirit.asia` dan password demo yang disiapkan di environment `DEMO_USER_PASSWORD` atau fallback `DEMO_PASSWORD`.
 - **Narasi**: OneSpirit Workflow System dirancang untuk mendigitalkan koordinasi proyek dari inquiry awal sampai final report dan PNL. Login menggunakan JWT token, dan akses fitur dikendalikan oleh role.
 - **Pertanyaan Validasi**: Apakah model login berbasis e-mail dan role ini sesuai dengan standar internal One Spirit Asia?
 
@@ -86,7 +87,14 @@ Dokumen ini memandu presenter/demo lead dalam melakukan gladi bersih dan menyaji
 - **Narasi**: Sistem melakukan validasi sebelum data disimpan agar inisial PO/PM, company, dan program name tidak masuk dalam kondisi rusak.
 - **Pertanyaan Validasi**: Apakah format import ini sesuai dengan template Excel yang digunakan saat ini?
 
-### Langkah 10: Q&A dan Validasi
+### Langkah 10: Settings dan User Management
+
+- **Tujuan Halaman**: Menunjukkan bahwa user dapat mengubah password sendiri dan admin dapat mengelola akses dasar.
+- **Tindakan**: Buka `/settings`, tunjukkan profil akun dan form ubah password. Tunjukkan User Management hanya jika login sebagai Super Admin/Admin dan client menanyakan penambahan user.
+- **Narasi**: Password tidak disimpan di browser atau ditampilkan kembali. Admin dapat membuat user, reset password, serta mengaktifkan atau menonaktifkan akun tanpa menghapus histori proyek.
+- **Batas Presentasi**: Jangan terlalu lama di pengaturan user. Fokus demo tetap pada workflow Inquiry, CL, ROS, CK, Execution, PNL, dan Final Report.
+
+### Langkah 11: Q&A dan Validasi
 
 - **Tujuan**: Mengumpulkan feedback klien dan menentukan prioritas sprint berikutnya.
 - **Tindakan**: Gunakan [client-feedback-form.md](client-feedback-form.md) untuk mencatat masukan.

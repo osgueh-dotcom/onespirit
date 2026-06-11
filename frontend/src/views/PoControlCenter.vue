@@ -534,7 +534,7 @@ const tabs = computed(() => [
 
 const fetchUsers = async () => {
   try {
-    const res = await axios.get('/api/v1/auth/users')
+    const res = await axios.get('/api/v1/auth/users/options')
     users.value = res.data
   } catch (err) {
     console.error('Failed to load users for PO filters', err)

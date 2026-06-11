@@ -10,7 +10,7 @@ const checks = [
   { name: 'console.log statement', pattern: /console\.log\s*\(/ },
   { name: 'local file URL', pattern: /file:\/\// },
   { name: 'default admin password', pattern: /OneSpirit2026!/ },
-  { name: 'default demo password', pattern: /OneSpiritDemo2026!/ },
+  { name: 'demo password token name in frontend source', pattern: /DEMO_(?:USER_)?PASSWORD/ },
   { name: 'JWT secret token name in frontend source', pattern: /JWT_SECRET/ },
   { name: 'database password token name in frontend source', pattern: /DB_PASSWORD/ }
 ]

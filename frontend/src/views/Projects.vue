@@ -828,7 +828,7 @@ const fetchData = async () => {
       axios.get('/api/v1/projects'),
       axios.get('/api/v1/event-sources'),
       canLoadCrmReferenceData ? axios.get('/api/v1/customers') : Promise.resolve({ data: [] }),
-      canLoadCrmReferenceData ? axios.get('/api/v1/auth/users') : Promise.resolve({ data: [] })
+      canLoadCrmReferenceData ? axios.get('/api/v1/auth/users/options') : Promise.resolve({ data: [] })
     ])
     projects.value = projRes.data
     customers.value = custRes.data

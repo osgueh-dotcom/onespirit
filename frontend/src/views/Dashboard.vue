@@ -260,7 +260,7 @@ const loadUsers = async () => {
   }
 
   try {
-    const response = await axios.get('/api/v1/auth/users')
+    const response = await axios.get('/api/v1/auth/users/options')
     usersList.value = response.data
   } catch (err) {
     console.error('Failed to load user credentials list', err)

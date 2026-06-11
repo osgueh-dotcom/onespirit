@@ -5,7 +5,7 @@ Status: foundation complete, production belum dideklarasikan
 
 ## Area yang Sudah Aman
 
-- Backend validation lulus dengan `29 passed`.
+- Backend validation lulus dengan `36 passed`.
 - Frontend memiliki ESLint, Vitest baseline, safety scan, dan production build.
 - GitHub Pages demo memakai hash routing dan configurable `VITE_API_BASE_URL`.
 - CORS backend mendukung origin lokal dan origin GitHub Pages yang spesifik.

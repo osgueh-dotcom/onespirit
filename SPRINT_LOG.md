@@ -28,7 +28,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 12.2** | GitHub Pages Demo Deployment | 2026-06-11 | Done |
 | **Sprint 12.3** | Light Mode Consistency & Dashboard Analytics Visualization | 2026-06-11 | Done |
 | **Sprint 13** | Full Sprint Audit & Documentation/Security Hardening | 2026-06-11 | Done |
-| **Sprint 13.1** | Minor Cleanup & Deployment Consistency Patch | 2026-06-11 | Done |
+| **Sprint 13.1** | Zoom Demo Safety, User Access Management & Client Presentation Finalization | 2026-06-11 | Done |
 | **Sprint 14** | Production Readiness Foundation | 2026-06-11 | Done |
 
 ---
@@ -156,10 +156,17 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Validation**: `python -m pytest app/tests -q` menghasilkan `17 passed, 919 warnings`; `npm run build` success.
 - **Known limitations**: Frontend belum punya lint/test baseline, backend masih punya deprecation warnings, vendor analytics masih memakai textual fallback.
 
-## Sprint 13.1 - Minor Cleanup & Deployment Consistency Patch
+## Sprint 13.1 - Zoom Demo Safety, User Access Management & Client Presentation Finalization
 
-- **Tujuan**: Merapikan inkonsistensi kecil pada dokumentasi, env example, sprint log, dan GitHub Actions workflow sebelum Production Readiness Foundation.
-- **Perubahan kecil yang dilakukan**:
+- **Tujuan**: Menyiapkan Zoom screen-share demo yang aman dan menambahkan pengelolaan akses user dasar tanpa mengubah workflow bisnis utama.
+- **Hasil**:
+  - Menambahkan Settings/Pengaturan untuk profil akun dan change own password.
+  - Menambahkan admin-only user list, create user, reset password, activate/deactivate user.
+  - Memisahkan endpoint user management dari user reference options untuk workflow.
+  - Menambahkan guard agar admin tidak menonaktifkan dirinya sendiri dan Super Admin terakhir tetap aktif.
+  - Menambahkan env `DEMO_USER_EMAIL` dan `DEMO_USER_PASSWORD` untuk akun demo.
+  - Menambahkan Zoom Demo Safety Checklist dan memperbarui public demo/rehearsal.
+- **Cleanup deployment sebelumnya**:
   - Menyusun ulang `SPRINT_LOG.md` secara kronologis dari Sprint 0 sampai Sprint 13.1.
   - Memperbarui status project dan ringkasan readiness di `README.md`.
   - Menambahkan contoh `BACKEND_CORS_ORIGINS` dan memperjelas pemisahan backend/frontend env.
@@ -167,8 +174,8 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
   - Menyederhanakan workflow GitHub Pages deployment dengan menghapus step tidak perlu.
   - Memperbarui `CHANGELOG.md` dan `PROJECT_CONTEXT.md` untuk deployment model Sprint 13.1.
 - **Status**: Done.
-- **Validation result**: `python -m pytest app/tests -q` menghasilkan `17 passed, 919 warnings`; `npm run build` success.
-- **Known limitations**: Production deployment belum final, frontend belum punya dedicated lint/test baseline, backend masih punya deprecation warnings, dan vendor analytics masih bergantung pada data tekstual.
+- **Validation result**: `python -m pytest app/tests -q` menghasilkan `36 passed, 37 warnings`; frontend lint `0 errors, 26 warnings`; frontend tests `3 passed`; safety scan dan build success.
+- **Known limitations**: Role PO/PM/Admin masih memakai mapping role existing; token lama tetap valid sampai expiry setelah password reset; production deployment belum final.
 
 ## Sprint 14 - Production Readiness Foundation
 
@@ -180,5 +187,5 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
   - Menyelesaikan backend deprecation cleanup phase 1 untuk settings, payload serialization, UTC timestamp, Project schemas/router, dan FastAPI lifespan.
   - Menambahkan production checklist, backup/restore plan, secret rotation plan, deployment runbook, PDF export plan, dan audit documents.
 - **Status**: Done.
-- **Validation**: Backend `29 passed, 39 warnings`; frontend lint `0 errors, 26 warnings`; frontend test `3 passed`; safety scan dan build success.
+- **Validation**: Backend `36 passed, 37 warnings`; frontend lint `0 errors, 26 warnings`; frontend test `3 passed`; safety scan dan build success.
 - **Known limitations**: Production runtime belum disiapkan, role PO/PM/Admin belum formal, backup belum otomatis, server-side PDF belum tersedia, dan Vite/esbuild memiliki dua advisory moderate development-only.

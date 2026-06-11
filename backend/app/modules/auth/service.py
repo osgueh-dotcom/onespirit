@@ -1,6 +1,7 @@
 import logging
 import secrets
 from typing import Optional, List
+from uuid import UUID
 from sqlalchemy.orm import Session
 from app.core.security import get_password_hash, verify_password
 from app.core.database import db_commit_safety
@@ -11,7 +12,11 @@ from app.modules.auth.schemas import UserCreate, UserUpdate, RoleCreate
 logger = logging.getLogger(__name__)
 
 def get_user(db: Session, user_id: str):
-    return db.query(User).filter(User.id == user_id, User.deleted_at == None).first()
+    try:
+        user_uuid = user_id if isinstance(user_id, UUID) else UUID(str(user_id))
+    except ValueError:
+        return None
+    return db.query(User).filter(User.id == user_uuid, User.deleted_at == None).first()
 
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email, User.deleted_at == None).first()
@@ -107,13 +112,16 @@ def seed_roles_and_admin(db: Session):
 
     # 2b. Demo User
     if settings.SEED_DEMO_USER:
-        demo_email = settings.DEMO_EMAIL
+        demo_email = settings.DEMO_USER_EMAIL or settings.DEMO_EMAIL
+        demo_password = settings.DEMO_USER_PASSWORD or settings.DEMO_PASSWORD
         demo_user = get_user_by_email(db, demo_email)
-        if not demo_user:
+        if not demo_password:
+            logger.warning("Demo user seed skipped because no demo password is configured.")
+        elif not demo_user:
             demo_role = created_roles["Management"]
             demo_create = UserCreate(
                 email=demo_email,
-                password=settings.DEMO_PASSWORD,
+                password=demo_password,
                 full_name="Client Demo User",
                 is_active=True,
                 role_id=demo_role.id

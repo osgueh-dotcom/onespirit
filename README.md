@@ -21,11 +21,11 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 | Database | PostgreSQL untuk Docker/production-like, SQLite untuk test lokal |
 
 Current readiness summary:
-- Backend test: `29 passed, 39 warnings`
+- Backend test: `36 passed, 37 warnings`
 - Frontend build: success
 - Frontend lint: `0 errors`, `26 warnings`
 - Frontend test: `3 passed`
-- GitHub Pages demo deployment: configured
+- GitHub Pages demo deployment: configured but deferred
 - Backend tunnel: temporary demo access
 - Database: private local Docker
 - Production readiness: not yet
@@ -42,6 +42,7 @@ Current readiness summary:
 6. **Source & Vendor Performance Center**: evaluasi lead source, vendor partner, conversion, dan risiko data.
 7. **Excel Imports**: import massal data proyek historis dengan validasi kualitas data.
 8. **Finance Tracking**: pelacakan invoice, payment, outstanding, dan status pembayaran.
+9. **Basic Access Management**: Settings, change own password, admin create/reset user, dan activate/deactivate user.
 
 ---
 
@@ -110,6 +111,18 @@ Buka [http://localhost:5173](http://localhost:5173).
 
 Untuk test lewat VS Code port forwarding, jalankan backend di workspace pada port `8000`, lalu forward/open frontend port `5173`. Jangan set `VITE_API_BASE_URL` untuk test lokal ini; frontend akan memakai request relatif `/api/v1/...` dan Vite akan memproxy ke backend.
 
+### 4. Local Zoom Demo Mode
+
+Mode demo utama adalah aplikasi berjalan di PC presenter dan client melihat melalui Zoom screen share.
+
+- Gunakan akun demo dengan password dari environment.
+- Gunakan data dummy.
+- Jangan tampilkan `.env`, database tool, terminal credential, atau password manager.
+- VS Code Port Forwarding hanya digunakan jika client perlu mencoba langsung.
+- Jangan pernah forward port PostgreSQL.
+
+Checklist lengkap: [Zoom Demo Safety Checklist](docs/zoom-demo-safety-checklist.md).
+
 ---
 
 ## Validasi
@@ -168,7 +181,7 @@ Dokumen Sprint 14 production readiness:
 
 ## Alur Demo Bawaan
 
-Gunakan akun demo klien `demo@onespirit.asia` dengan password development/demo yang diatur lewat environment `DEMO_PASSWORD`.
+Gunakan akun demo klien `demo@onespirit.asia` dengan password development/demo yang diatur lewat environment `DEMO_USER_PASSWORD` (fallback kompatibel: `DEMO_PASSWORD`).
 
 Alur demo 15 sampai 25 menit:
 1. **Login**: masuk sebagai akun demo klien.

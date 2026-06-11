@@ -85,6 +85,12 @@ const router = createRouter({
         permission: 'projects:read',
         roles: ['Super Admin', 'Admin', 'Management', 'PO', 'Staff']
       }
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: () => import('../views/Settings.vue'),
+      meta: { requiresAuth: true }
     }
   ]
 })

@@ -788,7 +788,7 @@ const fetchData = async () => {
       axios.get(`/api/v1/projects/${projectId}/tasks`),
       axios.get(`/api/v1/projects/${projectId}/documents`),
       axios.get(`/api/v1/projects/${projectId}/logs`),
-      axios.get('/api/v1/auth/users'),
+      axios.get('/api/v1/auth/users/options'),
       axios.get(`/api/v1/projects/${projectId}/instruments`)
     ])
     

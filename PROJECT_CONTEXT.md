@@ -17,24 +17,34 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
 | Status Project | Sprint 14 - Production Readiness Foundation |
 | Lokasi Folder | `<PROJECT_ROOT>` |
-| Frontend Deployment Strategy | GitHub Pages |
-| Backend Deployment Strategy | Temporary tunnel during client demo |
+| Frontend Deployment Strategy | Local Zoom demo; VS Code Port Forwarding as temporary fallback |
+| Backend Deployment Strategy | Local backend; temporary port forwarding only when required |
 | Database | Private local Docker |
 
 ---
 
-## 1.1 Status Sprint 13.1 & Deployment Model
+## 1.1 Status Sprint 13.1 & Zoom Demo Access Model
 
-Sprint 13.1 focuses on minor cleanup before production readiness work. Sprint ini tidak menambah fitur baru, tidak mengubah API contract, dan tidak mengubah business logic.
+Sprint 13.1 focuses on safe Zoom demo and basic access management. Sprint ini menambahkan Settings, change own password, admin user creation, password reset, activate/deactivate user, dan dokumentasi keamanan demo.
 
 Deployment model saat ini:
 
-- GitHub Pages for frontend demo.
-- Temporary backend tunnel during client demo.
+- Local PC dan Zoom screen share sebagai mode demo utama.
+- VS Code Port Forwarding hanya sebagai fallback jika client perlu mencoba langsung.
+- GitHub Pages deployment ditunda untuk alur demo ini.
+- GitHub Pages workflow hanya dapat dijalankan manual (`workflow_dispatch`).
 - Local/private database.
 - Not production deployment.
 
 Project sudah cukup kuat untuk demo client, tetapi belum masuk kategori production-ready cloud deployment.
+
+Role mapping sementara:
+
+- `super_admin` dan `admin` menggunakan role `Super Admin`/permission `admin`.
+- `management` menggunakan `Management`.
+- `finance` menggunakan `Finance`.
+- `po` dan `pm` masih menggunakan `Staff` sampai permission matrix granular disepakati.
+- Akun demo menggunakan akses `Management` untuk kebutuhan presentasi workflow.
 
 ---
 
@@ -57,7 +67,7 @@ Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisika
 
 Validation Sprint 14:
 
-- Backend: `29 passed, 39 warnings`.
+- Backend: `36 passed, 37 warnings`.
 - Frontend lint: `0 errors`, `26 warnings`.
 - Frontend test: `3 passed`.
 - Frontend build: success.

@@ -32,7 +32,7 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 - Kept backend permissions as the primary security authority.
 
 ### Validation
-- Backend: `29 passed, 39 warnings`.
+- Backend: `36 passed, 37 warnings`.
 - Frontend: lint `0 errors, 26 warnings`; tests `3 passed`; safety scan and build passed.
 - Production dependency audit: `0 vulnerabilities`.
 
@@ -46,21 +46,41 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ## [Sprint 13.1] - 2026-06-11
 
+### Added
+- Settings/Pengaturan page with account profile and change own password.
+- Admin-only user list, create user, password reset, and activate/deactivate controls.
+- Backend password and user-status endpoints with regression tests.
+- Zoom demo safety checklist.
+- `DEMO_USER_EMAIL` and `DEMO_USER_PASSWORD` environment aliases.
+
 ### Changed
 - Cleaned sprint log chronology.
 - Updated current project status in README.
 - Added `BACKEND_CORS_ORIGINS` example.
 - Clarified frontend demo environment variables.
 - Simplified GitHub Pages deployment workflow.
+- Paused automatic GitHub Pages deployment; the workflow is manual-only while Zoom/local demo is the primary mode.
+- Set local Zoom screen share as the primary demo mode and VS Code Port Forwarding as fallback.
+- Updated client rehearsal and public demo safety guidance.
+- Reserved `/auth/users` for admin user management and added `/auth/users/options` for workflow references.
 
 ### Fixed
 - Minor deployment documentation inconsistencies.
 - Potential confusion between backend CORS env and frontend `VITE_API_BASE_URL`.
 
+### Security
+- Passwords are hashed with the existing Passlib password context and never returned by user APIs.
+- Non-admin users cannot create, reset, activate, or deactivate users.
+- Admin cannot deactivate their own account or the last active Super Admin.
+
+### Validation
+- Backend: `36 passed, 37 warnings`.
+- Frontend: lint `0 errors, 26 warnings`; tests `3 passed`; safety scan and build passed.
+
 ### Known Limitations
 - Production deployment is not finalized.
-- Frontend still has no dedicated lint/test baseline.
-- Backend still has deprecation warnings.
+- PO/PM/Admin roles still use the existing role mapping.
+- Existing JWT access tokens are not revoked automatically after a password reset.
 - Vendor analytics still relies on textual fallback data.
 
 ---
