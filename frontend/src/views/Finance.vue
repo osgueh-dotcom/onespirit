@@ -338,12 +338,21 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+import { useUiStore } from '../store/ui'
 
 // Shared UI Components
 import AppPageHeader from '../components/ui/AppPageHeader.vue'
 import AppLoadingState from '../components/ui/AppLoadingState.vue'
 
 const auth = useAuthStore()
+const ui = useUiStore()
+
+const getApiErrorMessage = (err, fallback) => {
+  const detail = err.response?.data?.detail
+  if (typeof detail === 'string') return detail
+  if (detail?.message && typeof detail.message === 'string') return detail.message
+  return fallback
+}
 
 const invoices = ref([])
 const payments = ref([])
@@ -443,7 +452,7 @@ const saveInvoice = async () => {
     showAddInvoiceModal.value = false
     newInvoice.value = { project_id: '', invoice_number: '', amount: 0, issue_date: '', due_date: '', status: 'unpaid', notes: '' }
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to issue invoice')
+    ui.error(getApiErrorMessage(err, 'Gagal menerbitkan invoice.'))
   }
 }
 
@@ -466,31 +475,45 @@ const savePayment = async () => {
     showAddPaymentModal.value = false
     newPayment.value = { invoice_id: '', amount: 0, payment_date: '', reference_number: '', proof_url: '', status: 'approved' }
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to save payment collection')
+    ui.error(getApiErrorMessage(err, 'Gagal menyimpan penerimaan pembayaran.'))
   }
 }
 
 const archiveInvoice = async (id) => {
-  if (!confirm('Are you sure you want to void this invoice? This action soft deletes payments associated.')) return
+  const confirmed = await ui.confirm ({
+    title: 'Batalkan Invoice Ini?',
+    message: 'Invoice akan dibatalkan dan receipt pembayaran terkait akan di-soft delete.',
+    confirmText: 'Batalkan Invoice',
+    cancelText: 'Batal',
+    tone: 'danger'
+  })
+  if (!confirmed) return
   try {
     await axios.delete(`/api/v1/invoices/${id}`)
     invoices.value = invoices.value.filter(i => i.id !== id)
     payments.value = payments.value.filter(p => p.invoice_id !== id)
-  } catch (err) {
-    alert('Failed to void invoice')
+  } catch {
+    ui.error('Gagal membatalkan invoice.')
   }
 }
 
 const archivePayment = async (pay) => {
-  if (!confirm('Are you sure you want to delete this payment collection receipt?')) return
+  const confirmed = await ui.confirm ({
+    title: 'Hapus Receipt Pembayaran Ini?',
+    message: 'Receipt penerimaan pembayaran akan dihapus dari ledger finance project.',
+    confirmText: 'Hapus Receipt',
+    cancelText: 'Batal',
+    tone: 'danger'
+  })
+  if (!confirmed) return
   try {
     await axios.delete(`/api/v1/payments/${pay.id}`)
     payments.value = payments.value.filter(p => p.id !== pay.id)
     // Refresh local invoices status from server
     const refreshRes = await axios.get('/api/v1/invoices')
     invoices.value = refreshRes.data
-  } catch (err) {
-    alert('Failed to delete payment receipt')
+  } catch {
+    ui.error('Gagal menghapus receipt pembayaran.')
   }
 }
 </script>

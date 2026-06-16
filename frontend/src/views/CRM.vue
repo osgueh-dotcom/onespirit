@@ -309,12 +309,22 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+import { useUiStore } from '../store/ui'
 
 // Shared UI Components
 import AppPageHeader from '../components/ui/AppPageHeader.vue'
 import AppLoadingState from '../components/ui/AppLoadingState.vue'
 
 const auth = useAuthStore()
+const ui = useUiStore()
+
+const getApiErrorMessage = (err, fallback) => {
+  const detail = err.response?.data?.detail
+  if (typeof detail === 'string') return detail
+  if (detail?.message && typeof detail.message === 'string') return detail.message
+  return fallback
+}
+
 const customers = ref([])
 const loading = ref(true)
 
@@ -372,17 +382,24 @@ const saveCustomer = async () => {
     showAddModal.value = false
     newCust.value = { company_name: '', category: 'Corporate', address: '', notes: '' }
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to register client account')
+    ui.error(getApiErrorMessage(err, 'Gagal mendaftarkan akun klien.'))
   }
 }
 
 const deleteCustomer = async (id) => {
-  if (!confirm('Are you sure you want to deactivate this client and all their contacts?')) return
+  const confirmed = await ui.confirm ({
+    title: 'Nonaktifkan Akun Klien?',
+    message: 'Akun klien dan seluruh narahubung terkait akan dinonaktifkan dari CRM operasional.',
+    confirmText: 'Nonaktifkan',
+    cancelText: 'Batal',
+    tone: 'danger'
+  })
+  if (!confirmed) return
   try {
     await axios.delete(`/api/v1/customers/${id}`)
     customers.value = customers.value.filter(c => c.id !== id)
-  } catch (err) {
-    alert('Failed to delete customer')
+  } catch {
+    ui.error('Gagal menghapus akun klien.')
   }
 }
 
@@ -408,17 +425,24 @@ const saveContact = async () => {
     activeCust.value.contacts.push(response.data)
     newContact.value = { name: '', email: '', phone: '', position: '' }
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to link contact point')
+    ui.error(getApiErrorMessage(err, 'Gagal menautkan narahubung klien.'))
   }
 }
 
 const deleteContact = async (id) => {
-  if (!confirm('Are you sure you want to delete this contact?')) return
+  const confirmed = await ui.confirm ({
+    title: 'Hapus Kontak Ini?',
+    message: 'Narahubung akan dihapus dari akun klien dan tidak tampil lagi di CRM.',
+    confirmText: 'Hapus',
+    cancelText: 'Batal',
+    tone: 'danger'
+  })
+  if (!confirmed) return
   try {
     await axios.delete(`/api/v1/contacts/${id}`)
     activeCust.value.contacts = activeCust.value.contacts.filter(c => c.id !== id)
-  } catch (err) {
-    alert('Failed to delete contact')
+  } catch {
+    ui.error('Gagal menghapus kontak.')
   }
 }
 </script>

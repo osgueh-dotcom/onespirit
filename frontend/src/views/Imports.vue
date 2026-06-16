@@ -266,9 +266,19 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+import { useUiStore } from '../store/ui'
 
 // Shared UI Components
 import AppPageHeader from '../components/ui/AppPageHeader.vue'
+
+const ui = useUiStore()
+
+const getApiErrorMessage = (err, fallback) => {
+  const detail = err.response?.data?.detail
+  if (typeof detail === 'string') return detail
+  if (detail?.message && typeof detail.message === 'string') return detail.message
+  return fallback
+}
 
 const dragOver = ref(false)
 const parsing = ref(false)
@@ -299,8 +309,9 @@ const handleFileDrop = (event) => {
 }
 
 const processFile = async (file) => {
-  if (!file.name.endswith('.xlsx') && !file.name.endswith('.xls')) {
-    alert('Please upload a valid Excel spreadsheet (.xlsx, .xls)')
+  const fileName = file.name.toLowerCase()
+  if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
+    ui.warning('Unggah file Excel yang valid (.xlsx atau .xls).')
     return
   }
   selectedFile.value = file
@@ -317,7 +328,7 @@ const processFile = async (file) => {
     })
     previewData.value = response.data
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to parse spreadsheet workflow')
+    ui.error(getApiErrorMessage(err, 'Gagal membaca workflow dari spreadsheet.'))
     selectedFile.value = null
   } finally {
     parsing.value = false
@@ -339,7 +350,7 @@ const commitImport = async () => {
     })
     importReport.value = response.data
   } catch (err) {
-    alert(err.response?.data?.detail || 'Import transaction commit failed')
+    ui.error(getApiErrorMessage(err, 'Gagal menjalankan commit transaksi import.'))
   } finally {
     committing.value = false
   }

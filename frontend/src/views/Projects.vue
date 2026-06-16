@@ -765,11 +765,20 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+import { useUiStore } from '../store/ui'
 import AppPageHeader from '../components/ui/AppPageHeader.vue'
 import AppStatusBadge from '../components/ui/AppStatusBadge.vue'
 import AppLoadingState from '../components/ui/AppLoadingState.vue'
 
 const auth = useAuthStore()
+const ui = useUiStore()
+
+const getApiErrorMessage = (err, fallback) => {
+  const detail = err.response?.data?.detail
+  if (typeof detail === 'string') return detail
+  if (detail?.message && typeof detail.message === 'string') return detail.message
+  return fallback
+}
 const projects = ref([])
 const customers = ref([])
 const users = ref([])
@@ -957,7 +966,7 @@ const getReadinessScoreBadgeStyles = (score) => {
 
 const openAddModal = () => {
   if (customers.value.length === 0) {
-    alert('Please register at least one client account in CRM before starting a project!')
+    ui.warning('Daftarkan minimal satu akun klien di CRM sebelum memulai project.')
     return
   }
   showAddModal.value = true
@@ -1023,7 +1032,7 @@ const saveProject = async () => {
       general_notes: ''
     }
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to create project')
+    ui.error(getApiErrorMessage(err, 'Gagal membuat project.'))
   }
 }
 
@@ -1033,17 +1042,24 @@ const transitionStatus = async (proj, newStatus) => {
     proj.status = response.data.status
     proj.program_status = response.data.program_status
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to transition status')
+    ui.error(getApiErrorMessage(err, 'Gagal mengubah status project.'))
   }
 }
 
 const archiveProject = async (id) => {
-  if (!confirm('Are you sure you want to archive this project?')) return
+  const confirmed = await ui.confirm ({
+    title: 'Arsipkan Project?',
+    message: 'Project akan diarsipkan dari workflow aktif dan dipindahkan ke proses arsip.',
+    confirmText: 'Arsipkan',
+    cancelText: 'Batal',
+    tone: 'warning'
+  })
+  if (!confirmed) return
   try {
     await axios.delete(`/api/v1/projects/${id}`)
     projects.value = projects.value.filter(p => p.id !== id)
-  } catch (err) {
-    alert('Failed to archive project')
+  } catch {
+    ui.error('Gagal mengarsipkan project.')
   }
 }
 </script>

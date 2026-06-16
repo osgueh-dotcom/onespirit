@@ -688,6 +688,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
+import { useUiStore } from '../store/ui'
 import ProjectDetailHeader from '../components/ProjectDetailHeader.vue'
 import ProjectValidationWarnings from '../components/ProjectValidationWarnings.vue'
 import ProjectStatusTimeline from '../components/ProjectStatusTimeline.vue'
@@ -697,8 +698,16 @@ import ProjectInstrumentsPanel from '../components/ProjectInstrumentsPanel.vue'
 import ProjectExecutionControlPanel from '../components/projects/ProjectExecutionControlPanel.vue'
 
 const auth = useAuthStore()
+const ui = useUiStore()
 const route = useRoute()
 const projectId = route.params.id
+
+const getApiErrorMessage = (err, fallback) => {
+  const detail = err.response?.data?.detail
+  if (typeof detail === 'string') return detail
+  if (detail?.message && typeof detail.message === 'string') return detail.message
+  return fallback
+}
 
 const project = ref(null)
 const schedules = ref([])
@@ -817,7 +826,7 @@ const generateDefaultInstruments = async () => {
       fetchProjectDetail()
     ])
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to generate default instruments')
+    ui.error(getApiErrorMessage(err, 'Gagal membuat default instrumen operasional.'))
   }
 }
 
@@ -829,7 +838,7 @@ const createInstrument = async (payload) => {
       fetchProjectDetail()
     ])
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to create operational instrument')
+    ui.error(getApiErrorMessage(err, 'Gagal membuat instrumen operasional.'))
   }
 }
 
@@ -841,7 +850,7 @@ const updateInstrument = async ({ id, data }) => {
       fetchProjectDetail()
     ])
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to update operational instrument')
+    ui.error(getApiErrorMessage(err, 'Gagal memperbarui instrumen operasional.'))
   }
 }
 
@@ -853,7 +862,7 @@ const deleteInstrument = async (id) => {
       fetchProjectDetail()
     ])
   } catch (err) {
-    alert(err.response?.data?.detail || 'Failed to delete operational instrument')
+    ui.error(getApiErrorMessage(err, 'Gagal menghapus instrumen operasional.'))
   }
 }
 
@@ -918,7 +927,7 @@ const transitionStatus = async (statusType, newStatus) => {
     readinessGateData.value = res.data
   } catch (err) {
     console.error('Failed to run readiness gate check', err)
-    alert(err.response?.data?.detail || 'Gagal menjalankan analisis readiness check.')
+    ui.error(getApiErrorMessage(err, 'Gagal menjalankan analisis readiness check.'))
     showReadinessModal.value = false
   } finally {
     readinessCheckLoading.value = false
@@ -929,7 +938,7 @@ const confirmTransition = async () => {
   const { statusType, newStatus } = pendingTransition.value
   
   if (!transitionNotes.value.trim()) {
-    alert('Catatan perubahan status wajib diisi.')
+    ui.warning('Catatan perubahan status wajib diisi.')
     return
   }
   
@@ -947,11 +956,9 @@ const confirmTransition = async () => {
     // Refresh logs
     const logsRes = await axios.get(`/api/v1/projects/${projectId}/logs`)
     logs.value = logsRes.data
-    alert('Workflow status transitioned successfully')
+    ui.success('Status workflow project berhasil diubah.')
   } catch (err) {
-    const detail = err.response?.data?.detail
-    const errMsg = typeof detail === 'object' && detail.message ? detail.message : (detail || 'Gagal mengubah status project.')
-    alert(errMsg)
+    ui.error(getApiErrorMessage(err, 'Gagal mengubah status project.'))
   }
 }
 
@@ -972,8 +979,8 @@ const saveSchedule = async () => {
     showAddScheduleModal.value = false
     newSched.value = { venue_name: '', address: '', map_link: '', start_time: '', end_time: '', pic_id: null, rundown: [] }
     await fetchProjectDetail()
-  } catch (err) {
-    alert('Failed to save venue schedule')
+  } catch {
+    ui.error('Gagal menyimpan jadwal venue.')
   }
 }
 
@@ -984,8 +991,8 @@ const addRundownItem = async (sched) => {
     sched.rundown = response.data.rundown
     newRundown.value = { time: '', activity: '', pic: '', notes: '' }
     await fetchProjectDetail()
-  } catch (err) {
-    alert('Failed to save rundown timesheet item')
+  } catch {
+    ui.error('Gagal menyimpan item ROS.')
   }
 }
 
@@ -1007,8 +1014,8 @@ const saveTask = async () => {
     showAddTaskModal.value = false
     newTask.value = { title: '', description: '', priority: 'medium', due_date: '', assigned_to_id: null, status: 'todo' }
     await fetchProjectDetail()
-  } catch (err) {
-    alert('Failed to allocate task')
+  } catch {
+    ui.error('Gagal menyimpan CK operasional.')
   }
 }
 
@@ -1018,19 +1025,26 @@ const toggleTaskDone = async (task) => {
     const response = await axios.put(`/api/v1/tasks/${task.id}`, { status: newStatus })
     task.status = response.data.status
     await fetchProjectDetail()
-  } catch (err) {
-    alert('Failed to update task status')
+  } catch {
+    ui.error('Gagal memperbarui status CK.')
   }
 }
 
 const deleteTask = async (id) => {
-  if (!confirm('Are you sure you want to delete this task?')) return
+  const confirmed = await ui.confirm ({
+    title: 'Hapus CK Ini?',
+    message: 'Item CK operasional akan dihapus dari project.',
+    confirmText: 'Hapus',
+    cancelText: 'Batal',
+    tone: 'danger'
+  })
+  if (!confirmed) return
   try {
     await axios.delete(`/api/v1/tasks/${id}`)
     tasks.value = tasks.value.filter(t => t.id !== id)
     await fetchProjectDetail()
-  } catch (err) {
-    alert('Failed to delete task')
+  } catch {
+    ui.error('Gagal menghapus CK.')
   }
 }
 
@@ -1045,19 +1059,26 @@ const saveDocLink = async (docData) => {
     
     documents.value.push(response.data)
     await fetchProjectDetail()
-  } catch (err) {
-    alert('Failed to link cloud document reference')
+  } catch {
+    ui.error('Gagal menautkan referensi dokumen cloud.')
   }
 }
 
 const deleteDoc = async (id) => {
-  if (!confirm('Are you sure you want to delete this linked asset reference?')) return
+  const confirmed = await ui.confirm ({
+    title: 'Hapus Referensi Dokumen Ini?',
+    message: 'Link dokumen cloud akan dihapus dari ledger project.',
+    confirmText: 'Hapus',
+    cancelText: 'Batal',
+    tone: 'danger'
+  })
+  if (!confirmed) return
   try {
     await axios.delete(`/api/v1/documents/${id}`)
     documents.value = documents.value.filter(d => d.id !== id)
     await fetchProjectDetail()
-  } catch (err) {
-    alert('Failed to delete document reference')
+  } catch {
+    ui.error('Gagal menghapus referensi dokumen.')
   }
 }
 

@@ -72,6 +72,13 @@
             <p class="text-[10px] text-brand-orange font-semibold truncate">{{ auth.user?.role?.name }}</p>
           </div>
         </div>
+        <button
+          v-if="!sidebarCollapsed || mobileSidebarOpen"
+          @click="logout"
+          class="mt-3 flex w-full items-center justify-center rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2.5 text-xs font-extrabold text-red-400 transition-all hover:border-red-500/40 hover:bg-red-500/15 lg:hidden"
+        >
+          Keluar
+        </button>
       </div>
     </aside>
 
@@ -133,12 +140,17 @@
       </main>
     </div>
   </div>
+
+  <AppToast />
+  <AppConfirmDialog />
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from './store/auth'
+import AppConfirmDialog from './components/ui/AppConfirmDialog.vue'
+import AppToast from './components/ui/AppToast.vue'
 import { 
   Squares2X2Icon, 
   UserGroupIcon, 
@@ -273,6 +285,7 @@ onMounted(() => {
 })
 
 const logout = () => {
+  mobileSidebarOpen.value = false
   auth.logout()
   router.push('/login')
 }

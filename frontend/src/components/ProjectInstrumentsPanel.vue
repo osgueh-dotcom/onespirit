@@ -315,8 +315,10 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '../store/auth'
+import { useUiStore } from '../store/ui'
 
 const auth = useAuthStore()
+const ui = useUiStore()
 
 const props = defineProps({
   instruments: {
@@ -501,10 +503,17 @@ const handleQuickStatusChange = (inst, newStatus) => {
   })
 }
 
-const handleDelete = (inst) => {
-  if (confirm(`Are you sure you want to delete the "${inst.instrument_type}" instrument?`)) {
-    emit('delete-instrument', inst.id)
-  }
+const handleDelete = async (inst) => {
+  const confirmed = await ui.confirm ({
+    title: `Hapus Instrumen ${inst.instrument_type}?`,
+    message: `Instrumen ${inst.instrument_type} akan dihapus dari ledger project.`,
+    confirmText: 'Hapus',
+    cancelText: 'Batal',
+    tone: 'danger'
+  })
+  if (!confirmed) return
+
+  emit('delete-instrument', inst.id)
 }
 </script>
 
