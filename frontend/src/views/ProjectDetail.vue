@@ -19,6 +19,63 @@
     <div v-else class="space-y-6">
       <ProjectValidationWarnings :warnings="validationWarnings" />
 
+      <!-- Project Action Summary -->
+      <div v-if="project" class="glass-panel p-5 border border-panel-theme bg-surface-theme select-none relative overflow-hidden">
+        <!-- Accent line -->
+        <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-brand-orange to-brand-orange-light"></div>
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pl-2">
+          <!-- Left side: Recommended action details -->
+          <div class="flex-1 space-y-1.5">
+            <p class="app-kicker">Recommended Next Action</p>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-3 py-1 text-sm font-black rounded-xl border transition-all duration-300" :class="nextActionInfo.color">
+                {{ nextActionInfo.text }}
+              </span>
+            </div>
+            <p class="text-xs text-muted-theme font-medium leading-relaxed max-w-2xl">
+              {{ nextActionInfo.description }}
+            </p>
+          </div>
+
+          <!-- Right side: Mini-grid of KPIs -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0 min-w-0 md:min-w-[420px] lg:min-w-[480px]">
+            <!-- Event Days Remaining -->
+            <div class="app-subtle-panel p-3 text-center md:text-left">
+              <p class="text-[9px] font-extrabold uppercase tracking-widest text-muted-theme">Days to Event</p>
+              <p v-if="daysRemaining !== null" class="mt-1.5 text-base font-black tracking-tight" :class="daysRemaining < 0 ? 'text-red-400' : daysRemaining <= 7 ? 'text-brand-orange' : 'text-main-theme'">
+                {{ daysRemaining }} <span class="text-xs font-semibold text-muted-theme">Days</span>
+              </p>
+              <p v-else class="mt-1.5 text-xs font-bold text-soft-theme italic">Not Scheduled</p>
+            </div>
+
+            <!-- Program Status -->
+            <div class="app-subtle-panel p-3 text-center md:text-left">
+              <p class="text-[9px] font-extrabold uppercase tracking-widest text-muted-theme">Program Status</p>
+              <p class="mt-1.5 text-xs font-black text-main-theme truncate" :title="project.program_status">
+                {{ project.program_status || 'Inquiry' }}
+              </p>
+            </div>
+
+            <!-- Readiness Score -->
+            <div class="app-subtle-panel p-3 text-center md:text-left">
+              <p class="text-[9px] font-extrabold uppercase tracking-widest text-muted-theme">Readiness</p>
+              <p class="mt-1.5 text-base font-black tracking-tight" :class="project.project_readiness_score >= 1.0 ? 'text-brand-emerald' : project.project_readiness_score >= 0.7 ? 'text-brand-blue' : 'text-brand-orange'">
+                {{ (project.project_readiness_score !== null && !isNaN(project.project_readiness_score)) ? Math.round(project.project_readiness_score * 100) + '%' : '0%' }}
+              </p>
+            </div>
+
+            <!-- Payment Status -->
+            <div class="app-subtle-panel p-3 text-center md:text-left">
+              <p class="text-[9px] font-extrabold uppercase tracking-widest text-muted-theme">Payment Status</p>
+              <p class="mt-1.5 text-xs font-black truncate" :class="project.payment_status === 'Paid' ? 'text-brand-emerald' : project.payment_status === 'Partial Paid' ? 'text-brand-blue' : 'text-brand-orange'" :title="project.payment_status">
+                {{ project.payment_status || 'Not Invoiced' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Main Operational Dashboard Layout Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
@@ -684,7 +741,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
@@ -740,6 +797,102 @@ const tabs = [
   { id: 'timeline', name: 'Status Timeline' },
   { id: 'activity', name: 'Activity Log' }
 ]
+
+const daysRemaining = computed(() => {
+  if (!project.value?.event_date_start) return null
+  const start = new Date(project.value.event_date_start)
+  if (isNaN(start.getTime())) return null
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  start.setHours(0, 0, 0, 0)
+  const diff = start.getTime() - today.getTime()
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
+})
+
+const nextActionInfo = computed(() => {
+  if (!project.value) return { text: 'Loading...', color: 'text-muted-theme', tone: 'neutral' }
+
+  // 1. Check PO/PM assignment
+  if (!project.value.program_manager?.id || !project.value.program_owner?.id) {
+    return {
+      text: 'Lengkapi PO/PM assignment',
+      description: 'Program Owner (PO) dan Program Manager (PM) harus ditunjuk untuk memimpin koordinasi operasional.',
+      color: 'text-brand-orange border-brand-orange/25 bg-brand-orange/5',
+      tone: 'warning'
+    }
+  }
+
+  // 2. Check document/instrument completion
+  const completionRate = project.value.instrument_completion_rate || 0
+  const reqCount = project.value.required_instruments_count || 0
+  const compCount = project.value.completed_required_instruments_count || 0
+  if (compCount < reqCount || completionRate < 1) {
+    return {
+      text: 'Lengkapi dokumen/instrument project',
+      description: 'Masih ada instrumen project atau dokumen operasional yang wajib dilengkapi.',
+      color: 'text-brand-orange border-brand-orange/25 bg-brand-orange/5',
+      tone: 'warning'
+    }
+  }
+
+  // 3. Check outstanding payments
+  const payStatus = project.value.payment_status
+  if (payStatus === 'Outstanding' || payStatus === 'Overdue' || payStatus === 'Not Invoiced') {
+    return {
+      text: 'Follow-up outstanding payment',
+      description: 'Periksa tagihan invoice outstanding atau status overdue untuk menjaga kelancaran cashflow proyek.',
+      color: 'text-red-400 border-red-500/25 bg-red-500/5',
+      tone: 'danger'
+    }
+  }
+
+  // 4. Check readiness before event
+  const readiness = project.value.project_readiness_score || 0
+  if (readiness < 1) {
+    return {
+      text: 'Review readiness sebelum event',
+      description: 'Lakukan review checklist operasional dan pastikan semua warning diselesaikan sebelum hari pelaksanaan.',
+      color: 'text-brand-blue border-brand-blue/25 bg-brand-blue/5',
+      tone: 'info'
+    }
+  }
+
+  // 5. Check running or completed program status
+  const progStatus = project.value.program_status
+  if (progStatus === 'Confirmed' || progStatus === 'Preparation' || progStatus === 'Ready') {
+    return {
+      text: 'Project siap dieksekusi',
+      description: 'Seluruh gate operasional, penunjukan PIC, dan checklist kesiapan telah lengkap. Project siap dijalankan.',
+      color: 'text-brand-emerald border-brand-emerald/25 bg-brand-emerald/5',
+      tone: 'success'
+    }
+  }
+
+  if (progStatus === 'Running' || progStatus === 'Completed') {
+    return {
+      text: 'Review execution dan lengkapi rundown',
+      description: 'Event sedang berlangsung atau telah selesai dilaksanakan. Selesaikan laporan penutupan.',
+      color: 'text-brand-emerald border-brand-emerald/25 bg-brand-emerald/5',
+      tone: 'success'
+    }
+  }
+
+  if (progStatus === 'Reporting' || progStatus === 'Closed') {
+    return {
+      text: 'Project sudah reporting/closing',
+      description: 'Proyek ini berada dalam tahap pelaporan akhir atau telah diarsipkan secara formal.',
+      color: 'text-muted-theme border-panel-theme bg-surface-theme',
+      tone: 'neutral'
+    }
+  }
+
+  return {
+    text: 'Review status operasional',
+    description: 'Silakan periksa detail timeline dan instrumen project untuk langkah kerja selanjutnya.',
+    color: 'text-muted-theme border-panel-theme bg-surface-theme',
+    tone: 'neutral'
+  }
+})
 
 const newRundown = ref({ time: '', activity: '', pic: '', notes: '' })
 
