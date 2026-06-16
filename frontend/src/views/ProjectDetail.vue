@@ -36,6 +36,21 @@
             <p class="text-xs text-muted-theme font-medium leading-relaxed max-w-2xl">
               {{ nextActionInfo.description }}
             </p>
+            <!-- CTA Action Links/Buttons -->
+            <div v-if="nextActionInfo.ctas && nextActionInfo.ctas.length > 0" class="flex items-center gap-2 mt-3 flex-wrap">
+              <button
+                v-for="cta in nextActionInfo.ctas"
+                :key="cta.label"
+                @click="handleCtaClick(cta)"
+                class="px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all duration-200 border flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+                :class="getCtaButtonClasses(nextActionInfo.tone)"
+              >
+                <span>{{ cta.label }}</span>
+                <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <!-- Right side: Mini-grid of KPIs -->
@@ -174,7 +189,7 @@
           <!-- Dynamic ledger action tabs -->
           <div class="space-y-6">
             <!-- Tabs Navigation -->
-            <div class="flex border-b border-panel-theme pb-0.5 select-none gap-4 shrink-0 overflow-x-auto">
+            <div id="tabs-navigation" class="flex border-b border-panel-theme pb-0.5 select-none gap-4 shrink-0 overflow-x-auto scroll-mt-24">
               <button 
                 v-for="tab in tabs" 
                 :key="tab.id"
@@ -388,7 +403,7 @@
         <div class="space-y-6">
           
           <!-- Assignments panel -->
-          <div class="glass-panel p-5 space-y-4 select-none">
+          <div id="assignments-panel" class="glass-panel p-5 space-y-4 select-none transition-all duration-300 scroll-mt-24">
             <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Operational Assignments</h4>
             <div class="space-y-3 text-xs">
               <div class="flex justify-between items-center bg-surface-theme p-2.5 rounded-xl border border-panel-theme">
@@ -413,7 +428,7 @@
           </div>
 
           <!-- Project Readiness Scorecard (Sprint 7) -->
-          <div v-if="project" class="glass-panel p-5 space-y-4 select-none">
+          <div v-if="project" id="readiness-panel" class="glass-panel p-5 space-y-4 select-none transition-all duration-300 scroll-mt-24">
             <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Project Readiness Indicator</h4>
             <div class="space-y-3 text-xs">
               <div class="flex justify-between items-center bg-surface-theme p-2.5 rounded-xl border border-panel-theme">
@@ -492,7 +507,7 @@
           </div>
 
           <!-- Collections Progress Card -->
-          <div class="glass-panel p-5 space-y-3 select-none">
+          <div id="collections-panel" class="glass-panel p-5 space-y-3 select-none transition-all duration-300 scroll-mt-24">
             <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Collections Progress</h4>
             <div class="space-y-3 text-xs">
               <div class="flex justify-between items-center">
@@ -810,7 +825,7 @@ const daysRemaining = computed(() => {
 })
 
 const nextActionInfo = computed(() => {
-  if (!project.value) return { text: 'Loading...', color: 'text-muted-theme', tone: 'neutral' }
+  if (!project.value) return { text: 'Loading...', color: 'text-muted-theme', tone: 'neutral', ctas: [] }
 
   // 1. Check PO/PM assignment
   if (!project.value.program_manager?.id || !project.value.program_owner?.id) {
@@ -818,7 +833,10 @@ const nextActionInfo = computed(() => {
       text: 'Lengkapi PO/PM assignment',
       description: 'Program Owner (PO) dan Program Manager (PM) harus ditunjuk untuk memimpin koordinasi operasional.',
       color: 'text-brand-orange border-brand-orange/25 bg-brand-orange/5',
-      tone: 'warning'
+      tone: 'warning',
+      ctas: [
+        { label: 'Lengkapi Assignment', actionType: 'scroll', target: 'assignments-panel' }
+      ]
     }
   }
 
@@ -831,7 +849,11 @@ const nextActionInfo = computed(() => {
       text: 'Lengkapi dokumen/instrument project',
       description: 'Masih ada instrumen project atau dokumen operasional yang wajib dilengkapi.',
       color: 'text-brand-orange border-brand-orange/25 bg-brand-orange/5',
-      tone: 'warning'
+      tone: 'warning',
+      ctas: [
+        { label: 'Cek Instrument', actionType: 'tab', target: 'instruments' },
+        { label: 'Cek Dokumen', actionType: 'tab', target: 'documents' }
+      ]
     }
   }
 
@@ -842,7 +864,10 @@ const nextActionInfo = computed(() => {
       text: 'Follow-up outstanding payment',
       description: 'Periksa tagihan invoice outstanding atau status overdue untuk menjaga kelancaran cashflow proyek.',
       color: 'text-red-400 border-red-500/25 bg-red-500/5',
-      tone: 'danger'
+      tone: 'danger',
+      ctas: [
+        { label: 'Cek Pembayaran', actionType: 'scroll', target: 'collections-panel' }
+      ]
     }
   }
 
@@ -853,7 +878,10 @@ const nextActionInfo = computed(() => {
       text: 'Review readiness sebelum event',
       description: 'Lakukan review checklist operasional dan pastikan semua warning diselesaikan sebelum hari pelaksanaan.',
       color: 'text-brand-blue border-brand-blue/25 bg-brand-blue/5',
-      tone: 'info'
+      tone: 'info',
+      ctas: [
+        { label: 'Review Readiness', actionType: 'scroll', target: 'readiness-panel' }
+      ]
     }
   }
 
@@ -864,7 +892,10 @@ const nextActionInfo = computed(() => {
       text: 'Project siap dieksekusi',
       description: 'Seluruh gate operasional, penunjukan PIC, dan checklist kesiapan telah lengkap. Project siap dijalankan.',
       color: 'text-brand-emerald border-brand-emerald/25 bg-brand-emerald/5',
-      tone: 'success'
+      tone: 'success',
+      ctas: [
+        { label: 'Buka Rundown', actionType: 'tab', target: 'schedules' }
+      ]
     }
   }
 
@@ -873,7 +904,10 @@ const nextActionInfo = computed(() => {
       text: 'Review execution dan lengkapi rundown',
       description: 'Event sedang berlangsung atau telah selesai dilaksanakan. Selesaikan laporan penutupan.',
       color: 'text-brand-emerald border-brand-emerald/25 bg-brand-emerald/5',
-      tone: 'success'
+      tone: 'success',
+      ctas: [
+        { label: 'Buka Rundown', actionType: 'tab', target: 'schedules' }
+      ]
     }
   }
 
@@ -882,7 +916,10 @@ const nextActionInfo = computed(() => {
       text: 'Project sudah reporting/closing',
       description: 'Proyek ini berada dalam tahap pelaporan akhir atau telah diarsipkan secara formal.',
       color: 'text-muted-theme border-panel-theme bg-surface-theme',
-      tone: 'neutral'
+      tone: 'neutral',
+      ctas: [
+        { label: 'Buka Rundown', actionType: 'tab', target: 'schedules' }
+      ]
     }
   }
 
@@ -890,9 +927,39 @@ const nextActionInfo = computed(() => {
     text: 'Review status operasional',
     description: 'Silakan periksa detail timeline dan instrumen project untuk langkah kerja selanjutnya.',
     color: 'text-muted-theme border-panel-theme bg-surface-theme',
-    tone: 'neutral'
+    tone: 'neutral',
+    ctas: [
+      { label: 'Buka Rundown', actionType: 'tab', target: 'schedules' }
+    ]
   }
 })
+
+const getCtaButtonClasses = (tone) => {
+  if (tone === 'warning') return 'bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange border-brand-orange/30'
+  if (tone === 'danger') return 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30'
+  if (tone === 'info') return 'bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue border-brand-blue/30 font-semibold'
+  if (tone === 'success') return 'bg-brand-emerald/10 hover:bg-brand-emerald/20 text-brand-emerald border-brand-emerald/30'
+  return 'bg-surface-theme hover:bg-panel-theme text-soft-theme border-panel-theme'
+}
+
+const handleCtaClick = (cta) => {
+  if (cta.actionType === 'tab') {
+    activeTab.value = cta.target
+    const tabEl = document.getElementById('tabs-navigation')
+    if (tabEl) {
+      tabEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  } else if (cta.actionType === 'scroll') {
+    const el = document.getElementById(cta.target)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      el.classList.add('ring-2', 'ring-brand-orange', 'ring-offset-2', 'ring-offset-background')
+      setTimeout(() => {
+        el.classList.remove('ring-2', 'ring-brand-orange', 'ring-offset-2', 'ring-offset-background')
+      }, 2000)
+    }
+  }
+}
 
 const newRundown = ref({ time: '', activity: '', pic: '', notes: '' })
 
