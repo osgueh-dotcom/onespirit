@@ -21,7 +21,7 @@
     <!-- Filters Bar -->
     <div class="glass-panel p-5 border border-brand-charcoal-light/30 space-y-4 select-none">
       <div class="flex items-center justify-between border-b border-brand-charcoal-light/15 pb-2">
-        <span class="text-[10px] font-black uppercase tracking-wider text-gray-400">Filter Operasional</span>
+        <span class="text-[10px] font-black uppercase tracking-wider text-muted-theme">Filter Operasional</span>
         <button @click="resetFilters" class="text-[10px] font-bold text-brand-orange hover:underline">
           Reset Filter ✕
         </button>
@@ -33,8 +33,8 @@
           :key="filter.key"
           type="button"
           @click="applyPmQuickFilter(filter.key)"
-          class="rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-all"
-          :class="activePmQuickFilter === filter.key ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-brand-charcoal-light/35 text-gray-400 hover:border-brand-orange/35 hover:text-white'"
+          class="app-quick-chip"
+          :class="activePmQuickFilter === filter.key ? 'app-quick-chip-active' : ''"
         >
           {{ filter.label }}
         </button>
@@ -43,11 +43,11 @@
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <!-- Filter PM -->
         <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Manager (PM)</label>
+          <label class="app-label mb-1.5">Program Manager (PM)</label>
           <select 
             v-model="filterPm" 
             @change="handleManualFilterChange"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact"
           >
             <option value="">Semua PM</option>
             <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
@@ -56,11 +56,11 @@
 
         <!-- Filter PO -->
         <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Owner (PO)</label>
+          <label class="app-label mb-1.5">Program Owner (PO)</label>
           <select 
             v-model="filterPo" 
             @change="handleManualFilterChange"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact"
           >
             <option value="">Semua PO</option>
             <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
@@ -69,11 +69,11 @@
 
         <!-- Event Window -->
         <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Periode Event (Window)</label>
+          <label class="app-label mb-1.5">Periode Event (Window)</label>
           <select 
             v-model="filterEventWindow" 
             @change="handleManualFilterChange"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact"
           >
             <option value="all">Semua Jadwal</option>
             <option value="today">Hari Ini</option>
@@ -87,42 +87,42 @@
         <!-- Date Range -->
         <div class="md:col-span-2 grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Dari Tanggal</label>
+            <label class="app-label mb-1.5">Dari Tanggal</label>
             <input 
               v-model="filterDateFrom" 
               type="date"
               @change="handleManualFilterChange"
-              class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+              class="app-form-control-compact"
             />
           </div>
           <div>
-            <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Sampai Tanggal</label>
+            <label class="app-label mb-1.5">Sampai Tanggal</label>
             <input 
               v-model="filterDateTo" 
               type="date"
               @change="handleManualFilterChange"
-              class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+              class="app-form-control-compact"
             />
           </div>
         </div>
 
         <!-- Checkboxes Closed & Canceled -->
         <div class="flex items-center gap-4 pt-4">
-          <label class="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-white cursor-pointer transition-colors">
+          <label class="flex items-center gap-2 text-[10px] font-bold text-muted-theme hover:text-main-theme cursor-pointer transition-colors">
             <input 
               v-model="filterIncludeClosed" 
               type="checkbox" 
               @change="handleManualFilterChange"
-              class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
+              class="rounded border-panel-theme bg-surface-theme text-brand-orange focus:ring-0"
             />
             Closed Project
           </label>
-          <label class="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-white cursor-pointer transition-colors">
+          <label class="flex items-center gap-2 text-[10px] font-bold text-muted-theme hover:text-main-theme cursor-pointer transition-colors">
             <input 
               v-model="filterIncludeCanceled" 
               type="checkbox" 
               @change="handleManualFilterChange"
-              class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
+              class="rounded border-panel-theme bg-surface-theme text-brand-orange focus:ring-0"
             />
             Batal (Canceled)
           </label>
@@ -133,7 +133,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 border-t border-brand-charcoal-light/10 pt-4">
         <!-- Filter Readiness Min -->
         <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Readiness Min (%)</label>
+          <label class="app-label mb-1.5">Readiness Min (%)</label>
           <input 
             v-model.number="filterReadinessMin" 
             type="number"
@@ -141,13 +141,13 @@
             max="100"
             placeholder="0"
             @change="handleManualFilterChange"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact"
           />
         </div>
 
         <!-- Filter Readiness Max -->
         <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Readiness Max (%)</label>
+          <label class="app-label mb-1.5">Readiness Max (%)</label>
           <input 
             v-model.number="filterReadinessMax" 
             type="number"
@@ -155,17 +155,17 @@
             max="100"
             placeholder="100"
             @change="handleManualFilterChange"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact"
           />
         </div>
 
         <!-- Filter Instrument Status -->
         <div>
-          <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Instrumen</label>
+          <label class="app-label mb-1.5">Status Instrumen</label>
           <select 
             v-model="filterInstrumentStatus" 
             @change="handleManualFilterChange"
-            class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact"
           >
             <option value="">Semua Status</option>
             <option value="Not Started">Not Started</option>
@@ -238,7 +238,7 @@
           :key="tab.id"
           @click="activeTab = tab.id"
           class="px-5 py-3 text-xs font-bold tracking-wide transition-all border-b-2 whitespace-nowrap"
-          :class="activeTab === tab.id ? 'border-brand-orange text-brand-orange bg-brand-orange/5' : 'border-transparent text-gray-400 hover:text-white'"
+          :class="activeTab === tab.id ? 'border-brand-orange text-brand-orange bg-brand-orange/5' : 'border-transparent text-muted-theme hover:text-main-theme'"
         >
           {{ tab.name }} ({{ tab.count }})
         </button>
@@ -248,8 +248,8 @@
       <div v-show="activeTab === 'priority'" class="space-y-4">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Daftar Prioritas Tindakan (Priority Actions)</h3>
-            <span class="hidden md:inline text-[10px] font-bold text-gray-400 bg-brand-charcoal-light/20 px-2 py-0.5 rounded">
+            <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Daftar Prioritas Tindakan (Priority Actions)</h3>
+            <span class="hidden md:inline text-[10px] font-bold text-muted-theme bg-surface-theme border border-panel-theme px-2 py-0.5 rounded">
               Daftar aksi operasional yang diurutkan berdasarkan tingkat urgensi
             </span>
           </div>
@@ -274,19 +274,19 @@
                     {{ act.priority_level }}
                   </span>
                 </div>
-                <h4 class="font-bold text-white text-sm mb-1 leading-snug group-hover:text-brand-orange transition-colors">
+                <h4 class="font-bold text-main-theme text-sm mb-1 leading-snug group-hover:text-brand-orange transition-colors">
                   {{ act.title }}
                 </h4>
-                <p class="text-gray-300 font-semibold text-[11px] mb-2">{{ act.description }}</p>
-                <div class="bg-black/20 p-2.5 rounded-xl border border-white/5 space-y-1">
+                <p class="text-soft-theme font-semibold text-[11px] mb-2">{{ act.description }}</p>
+                <div class="bg-surface-theme p-2.5 rounded-xl border border-panel-theme space-y-1">
                   <p class="text-[9px] font-black text-brand-orange uppercase tracking-wider select-none">Rekomendasi Aksi:</p>
-                  <p class="text-white font-bold leading-normal">{{ act.recommended_action }}</p>
+                  <p class="text-main-theme font-bold leading-normal">{{ act.recommended_action }}</p>
                 </div>
               </div>
               <div class="pt-2 flex justify-end">
                 <router-link 
                   :to="'/projects/' + act.project_id"
-                  class="px-3 py-1.5 rounded bg-white/10 hover:bg-white/20 text-white font-bold text-[10px] transition-all"
+                  class="px-3 py-1.5 rounded bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-bold text-[10px] transition-all"
                 >
                   Buka Proyek →
                 </router-link>
@@ -300,12 +300,12 @@
       <div v-show="activeTab === 'events'" class="space-y-6">
         <!-- Upcoming Events -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Event yang Perlu Disiapkan (Upcoming 14 Hari)</h3>
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Event yang Perlu Disiapkan (Upcoming 14 Hari)</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Tanggal Event</th>
                   <th class="px-4 py-3">Code</th>
@@ -319,25 +319,25 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                 <tr v-if="upcomingEvents.length === 0">
-                  <td colspan="8" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="8" class="px-4 py-8 text-center app-empty-copy">
                     Tidak ada event mendatang untuk filter ini.
                   </td>
                 </tr>
                 <tr 
                   v-for="ev in upcomingEvents" 
                   :key="ev.project_id"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 whitespace-nowrap text-white font-bold font-mono">
+                  <td class="px-4 py-3 whitespace-nowrap app-table-cell-strong font-mono">
                     {{ formatDate(ev.event_date_start) }}
-                    <span v-if="ev.event_date_end" class="text-[10px] text-gray-500 block">
+                    <span v-if="ev.event_date_end" class="text-[10px] text-muted-theme block">
                       s/d {{ formatDate(ev.event_date_end) }}
                     </span>
                   </td>
-                  <td class="px-4 py-3 font-mono font-bold text-gray-400 select-all">{{ ev.project_code || '-' }}</td>
+                  <td class="px-4 py-3 font-mono font-bold app-table-cell-muted select-all">{{ ev.project_code || '-' }}</td>
                   <td class="px-4 py-3">
-                    <p class="text-white font-bold leading-tight">{{ ev.program_name }}</p>
-                    <p class="text-[10px] text-gray-500 font-semibold">{{ ev.customer_name }}</p>
+                    <p class="app-table-cell-strong leading-tight">{{ ev.program_name }}</p>
+                    <p class="text-[10px] text-muted-theme font-semibold">{{ ev.customer_name }}</p>
                   </td>
                   <td class="px-4 py-3 text-center whitespace-nowrap">
                     <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase" :class="getDaysUrgencyClass(ev.days_until_event)">
@@ -346,12 +346,12 @@
                   </td>
                   <td class="px-4 py-3 text-center whitespace-nowrap">
                     <div class="flex flex-col items-center">
-                      <span class="font-bold text-white">{{ Math.round(ev.readiness_score || 0) }}% Ready</span>
-                      <span class="text-[9px] text-gray-500">({{ Math.round(ev.instrument_completion_rate || 0) }}% Inst)</span>
+                      <span class="font-bold text-main-theme">{{ Math.round(ev.readiness_score || 0) }}% Ready</span>
+                      <span class="text-[9px] text-muted-theme">({{ Math.round(ev.instrument_completion_rate || 0) }}% Inst)</span>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-center whitespace-nowrap text-gray-400 font-semibold">{{ ev.pm_name }}</td>
-                  <td class="px-4 py-3 text-gray-200 font-bold leading-relaxed">{{ ev.recommended_action }}</td>
+                  <td class="px-4 py-3 text-center whitespace-nowrap app-table-cell-muted font-semibold">{{ ev.pm_name }}</td>
+                  <td class="px-4 py-3 app-table-cell-strong leading-relaxed">{{ ev.recommended_action }}</td>
                   <td class="px-4 py-3 text-right">
                     <router-link 
                       :to="'/projects/' + ev.project_id"
@@ -367,43 +367,43 @@
 
           <!-- Mobile Card View -->
           <div class="block md:hidden space-y-4">
-            <div v-if="upcomingEvents.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="upcomingEvents.length === 0" class="py-6 text-center app-empty-copy">
               Tidak ada event mendatang untuk filter ini.
             </div>
             <div 
               v-for="ev in upcomingEvents" 
               :key="ev.project_id"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3"
             >
               <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="font-mono text-[10px] font-bold text-gray-400">{{ ev.project_code || 'OSA-EVENT' }}</span>
+                <span class="font-mono text-[10px] font-bold text-muted-theme">{{ ev.project_code || 'OSA-EVENT' }}</span>
                 <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase" :class="getDaysUrgencyClass(ev.days_until_event)">
                   {{ ev.days_until_event === 0 ? 'Hari Ini!' : `${ev.days_until_event} Hari` }}
                 </span>
               </div>
               <div>
-                <h4 class="font-bold text-white text-sm">{{ ev.program_name }}</h4>
-                <p class="text-xs text-gray-400 mt-0.5 font-semibold">{{ ev.customer_name }}</p>
+                <h4 class="font-bold text-main-theme text-sm">{{ ev.program_name }}</h4>
+                <p class="text-xs text-muted-theme mt-0.5 font-semibold">{{ ev.customer_name }}</p>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Tanggal Event</p>
-                  <p class="text-white">{{ formatDate(ev.event_date_start) }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Tanggal Event</p>
+                  <p class="text-main-theme">{{ formatDate(ev.event_date_start) }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">PM In Charge</p>
-                  <p class="text-white">{{ ev.pm_name }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">PM In Charge</p>
+                  <p class="text-main-theme">{{ ev.pm_name }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Kesiapan (Readiness)</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Kesiapan (Readiness)</p>
                   <p class="text-brand-orange font-bold">{{ Math.round(ev.readiness_score || 0) }}% Ready</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Instrumen Done</p>
-                  <p class="text-gray-300">{{ Math.round(ev.instrument_completion_rate || 0) }}% Done</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Instrumen Done</p>
+                  <p class="text-soft-theme">{{ Math.round(ev.instrument_completion_rate || 0) }}% Done</p>
                 </div>
               </div>
-              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-main-theme">
                 <p class="text-[8px] font-black text-brand-orange uppercase tracking-wider mb-1 select-none">Rekomendasi Tindakan:</p>
                 <p class="font-bold leading-normal">{{ ev.recommended_action }}</p>
               </div>
@@ -421,12 +421,12 @@
 
         <!-- Not Ready Projects -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Penghambat Kesiapan (Readiness &lt; 80%)</h3>
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Penghambat Kesiapan (Readiness &lt; 80%)</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Code</th>
                   <th class="px-4 py-3">Nama Program / Klien</th>
@@ -440,20 +440,20 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                 <tr v-if="notReadyProjects.length === 0">
-                  <td colspan="8" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="8" class="px-4 py-8 text-center app-empty-copy">
                     Tidak ada project yang terdeteksi belum siap.
                   </td>
                 </tr>
                 <tr 
                   v-for="p in notReadyProjects" 
                   :key="p.project_id"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 font-mono font-bold text-gray-400 select-all">{{ p.project_code || '-' }}</td>
+                  <td class="px-4 py-3 font-mono font-bold app-table-cell-muted select-all">{{ p.project_code || '-' }}</td>
                   <td class="px-4 py-3">
-                    <p class="text-white font-bold leading-tight">{{ p.customer_name }}</p>
+                    <p class="app-table-cell-strong leading-tight">{{ p.customer_name }}</p>
                   </td>
-                  <td class="px-4 py-3 font-semibold text-gray-400 font-mono">{{ formatDate(p.event_date_start) }}</td>
+                  <td class="px-4 py-3 font-semibold app-table-cell-muted font-mono">{{ formatDate(p.event_date_start) }}</td>
                   <td class="px-4 py-3 text-center whitespace-nowrap font-bold text-red-400">
                     {{ Math.round(p.readiness_score || 0) }}%
                   </td>
@@ -468,8 +468,8 @@
                       </span>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-center text-gray-400 font-semibold">{{ p.pm_name }}</td>
-                  <td class="px-4 py-3 text-gray-200 font-bold leading-relaxed">{{ p.recommended_action }}</td>
+                  <td class="px-4 py-3 text-center app-table-cell-muted font-semibold">{{ p.pm_name }}</td>
+                  <td class="px-4 py-3 app-table-cell-strong leading-relaxed">{{ p.recommended_action }}</td>
                   <td class="px-4 py-3 text-right">
                     <router-link 
                       :to="'/projects/' + p.project_id"
@@ -485,31 +485,31 @@
 
           <!-- Mobile Card View -->
           <div class="block md:hidden space-y-4">
-            <div v-if="notReadyProjects.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="notReadyProjects.length === 0" class="py-6 text-center app-empty-copy">
               Tidak ada project yang terdeteksi belum siap.
             </div>
             <div 
               v-for="p in notReadyProjects" 
               :key="p.project_id"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3"
             >
               <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="font-mono text-[10px] font-bold text-gray-400">{{ p.project_code || 'OSA-EVENT' }}</span>
+                <span class="font-mono text-[10px] font-bold text-muted-theme">{{ p.project_code || 'OSA-EVENT' }}</span>
                 <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-red-500/10 text-red-400 border border-red-500/20">
                   {{ Math.round(p.readiness_score || 0) }}% Ready
                 </span>
               </div>
               <div>
-                <h4 class="font-bold text-white text-sm">{{ p.customer_name }}</h4>
-                <p class="text-xs text-gray-400 mt-0.5">Event: {{ formatDate(p.event_date_start) }}</p>
+                <h4 class="font-bold text-main-theme text-sm">{{ p.customer_name }}</h4>
+                <p class="text-xs text-muted-theme mt-0.5">Event: {{ formatDate(p.event_date_start) }}</p>
               </div>
-              <div class="space-y-1.5 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px]">
+              <div class="space-y-1.5 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px]">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider font-bold">PM In Charge</p>
-                  <p class="text-white font-semibold">{{ p.pm_name }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider font-bold">PM In Charge</p>
+                  <p class="text-main-theme font-semibold">{{ p.pm_name }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider font-bold mb-1">Instrumen Belum Siap</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider font-bold mb-1">Instrumen Belum Siap</p>
                   <div class="flex flex-wrap gap-1">
                     <span 
                       v-for="item in p.missing_items" 
@@ -521,7 +521,7 @@
                   </div>
                 </div>
               </div>
-              <div class="bg-red-500/5 border border-red-500/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+              <div class="bg-red-500/5 border border-red-500/10 p-2.5 rounded-xl text-[11px] text-main-theme">
                 <p class="text-[8px] font-black text-red-400 uppercase tracking-wider mb-1 select-none">Aksi Pemulihan:</p>
                 <p class="font-bold leading-normal">{{ p.recommended_action }}</p>
               </div>
@@ -542,12 +542,12 @@
       <div v-show="activeTab === 'instruments'" class="space-y-6">
         <!-- Overdue Instruments -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Dokumen Terlambat (Overdue Instruments)</h3>
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Dokumen Terlambat (Overdue Instruments)</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Project Code</th>
                   <th class="px-4 py-3">Nama Klien</th>
@@ -562,19 +562,19 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                 <tr v-if="overdueInstruments.length === 0">
-                  <td colspan="9" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="9" class="px-4 py-8 text-center app-empty-copy">
                     Tidak ada instrumen overdue.
                   </td>
                 </tr>
                 <tr 
                   v-for="(inst, idx) in overdueInstruments" 
                   :key="idx"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 font-mono font-bold text-gray-400 select-all">{{ inst.project_code || '-' }}</td>
-                  <td class="px-4 py-3 text-white font-bold">{{ inst.customer_name }}</td>
+                  <td class="px-4 py-3 font-mono font-bold app-table-cell-muted select-all">{{ inst.project_code || '-' }}</td>
+                  <td class="px-4 py-3 app-table-cell-strong">{{ inst.customer_name }}</td>
                   <td class="px-4 py-3 font-bold text-brand-orange uppercase font-mono">{{ inst.instrument_label }}</td>
-                  <td class="px-4 py-3 font-semibold text-gray-400 font-mono">{{ formatDate(inst.due_date) }}</td>
+                  <td class="px-4 py-3 font-semibold app-table-cell-muted font-mono">{{ formatDate(inst.due_date) }}</td>
                   <td class="px-4 py-3 text-center text-red-400 font-bold whitespace-nowrap">
                     Lewat {{ inst.days_overdue }} Hari
                   </td>
@@ -583,8 +583,8 @@
                       {{ inst.status }}
                     </span>
                   </td>
-                  <td class="px-4 py-3 text-center text-gray-400 font-semibold">{{ inst.pm_name }}</td>
-                  <td class="px-4 py-3 text-gray-200 font-bold leading-relaxed">{{ inst.recommended_action }}</td>
+                  <td class="px-4 py-3 text-center app-table-cell-muted font-semibold">{{ inst.pm_name }}</td>
+                  <td class="px-4 py-3 app-table-cell-strong leading-relaxed">{{ inst.recommended_action }}</td>
                   <td class="px-4 py-3 text-right">
                     <router-link 
                       :to="'/projects/' + inst.project_id"
@@ -600,41 +600,41 @@
 
           <!-- Mobile Card View -->
           <div class="block md:hidden space-y-4">
-            <div v-if="overdueInstruments.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="overdueInstruments.length === 0" class="py-6 text-center app-empty-copy">
               Tidak ada instrumen overdue.
             </div>
             <div 
               v-for="(inst, idx) in overdueInstruments" 
               :key="idx"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3"
             >
               <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="font-mono text-[10px] font-bold text-gray-400">{{ inst.project_code || 'OSA-EVENT' }}</span>
+                <span class="font-mono text-[10px] font-bold text-muted-theme">{{ inst.project_code || 'OSA-EVENT' }}</span>
                 <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-red-500/10 text-red-400 border border-red-500/20 font-bold">
                   Lewat {{ inst.days_overdue }} Hari
                 </span>
               </div>
               <div>
                 <h4 class="font-bold text-brand-orange uppercase text-sm font-mono">{{ inst.instrument_label }}</h4>
-                <p class="text-xs text-gray-300 font-semibold mt-1">Klien: {{ inst.customer_name }}</p>
+                <p class="text-xs text-soft-theme font-semibold mt-1">Klien: {{ inst.customer_name }}</p>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Jatuh Tempo</p>
-                  <p class="text-white">{{ formatDate(inst.due_date) }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Jatuh Tempo</p>
+                  <p class="text-main-theme">{{ formatDate(inst.due_date) }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">PM In Charge</p>
-                  <p class="text-white">{{ inst.pm_name }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">PM In Charge</p>
+                  <p class="text-main-theme">{{ inst.pm_name }}</p>
                 </div>
                 <div class="col-span-2">
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Status Dokumen</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Status Dokumen</p>
                   <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20">
                     {{ inst.status }}
                   </span>
                 </div>
               </div>
-              <div class="bg-amber-500/5 border border-amber-500/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+              <div class="bg-amber-500/5 border border-amber-500/10 p-2.5 rounded-xl text-[11px] text-main-theme">
                 <p class="text-[8px] font-black text-amber-400 uppercase tracking-wider mb-1 select-none">Rekomendasi Tindakan:</p>
                 <p class="font-bold leading-normal">{{ inst.recommended_action }}</p>
               </div>
@@ -652,12 +652,12 @@
 
         <!-- Need Revision Instruments -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Instrumen Perlu Tindakan (Need Revision)</h3>
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Instrumen Perlu Tindakan (Need Revision)</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Project Code</th>
                   <th class="px-4 py-3">Nama Klien</th>
@@ -670,21 +670,21 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                 <tr v-if="needRevisionInstruments.length === 0">
-                  <td colspan="7" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="7" class="px-4 py-8 text-center app-empty-copy">
                     Tidak ada instrumen yang perlu revisi.
                   </td>
                 </tr>
                 <tr 
                   v-for="(inst, idx) in needRevisionInstruments" 
                   :key="idx"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 font-mono font-bold text-gray-400 select-all">{{ inst.project_code || '-' }}</td>
-                  <td class="px-4 py-3 text-white font-bold">{{ inst.customer_name }}</td>
+                  <td class="px-4 py-3 font-mono font-bold app-table-cell-muted select-all">{{ inst.project_code || '-' }}</td>
+                  <td class="px-4 py-3 app-table-cell-strong">{{ inst.customer_name }}</td>
                   <td class="px-4 py-3 font-bold text-purple-400 uppercase font-mono">{{ inst.instrument_type }}</td>
-                  <td class="px-4 py-3 text-gray-300 font-medium leading-relaxed">{{ inst.notes }}</td>
-                  <td class="px-4 py-3 text-center text-gray-400 font-semibold whitespace-nowrap">{{ inst.pm_name }}</td>
-                  <td class="px-4 py-3 text-gray-200 font-bold leading-relaxed">{{ inst.recommended_action }}</td>
+                  <td class="px-4 py-3 text-soft-theme font-medium leading-relaxed">{{ inst.notes }}</td>
+                  <td class="px-4 py-3 text-center app-table-cell-muted font-semibold whitespace-nowrap">{{ inst.pm_name }}</td>
+                  <td class="px-4 py-3 app-table-cell-strong leading-relaxed">{{ inst.recommended_action }}</td>
                   <td class="px-4 py-3 text-right">
                     <router-link 
                       :to="'/projects/' + inst.project_id"
@@ -700,35 +700,35 @@
 
           <!-- Mobile Card View -->
           <div class="block md:hidden space-y-4">
-            <div v-if="needRevisionInstruments.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="needRevisionInstruments.length === 0" class="py-6 text-center app-empty-copy">
               Tidak ada instrumen yang perlu revisi.
             </div>
             <div 
               v-for="(inst, idx) in needRevisionInstruments" 
               :key="idx"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3"
             >
               <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="font-mono text-[10px] font-bold text-gray-400">{{ inst.project_code || 'OSA-EVENT' }}</span>
+                <span class="font-mono text-[10px] font-bold text-muted-theme">{{ inst.project_code || 'OSA-EVENT' }}</span>
                 <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase bg-purple-500/10 text-purple-400 border border-purple-500/20 font-bold">
                   Need Revision
                 </span>
               </div>
               <div>
                 <h4 class="font-bold text-purple-400 uppercase text-sm font-mono">{{ inst.instrument_type }}</h4>
-                <p class="text-xs text-gray-300 font-semibold mt-1">Klien: {{ inst.customer_name }}</p>
-                <p class="text-[11px] text-gray-400 bg-black/20 p-2.5 rounded-xl border border-white/5 mt-2 leading-relaxed">
+                <p class="text-xs text-soft-theme font-semibold mt-1">Klien: {{ inst.customer_name }}</p>
+                <p class="text-[11px] text-muted-theme bg-surface-theme p-2.5 rounded-xl border border-panel-theme mt-2 leading-relaxed">
                   <span class="text-[9px] font-bold text-purple-400 uppercase block mb-1">Catatan Revisi:</span>
                   {{ inst.notes }}
                 </p>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider font-bold">PM In Charge</p>
-                  <p class="text-white">{{ inst.pm_name }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider font-bold">PM In Charge</p>
+                  <p class="text-main-theme">{{ inst.pm_name }}</p>
                 </div>
               </div>
-              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-main-theme">
                 <p class="text-[8px] font-black text-brand-orange uppercase tracking-wider mb-1 select-none">Rekomendasi Tindakan:</p>
                 <p class="font-bold leading-normal">{{ inst.recommended_action }}</p>
               </div>
@@ -748,12 +748,12 @@
       <!-- TAB 4: Beban Kerja PM -->
       <div v-show="activeTab === 'pm_workload'" class="space-y-4">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Beban Kerja PM (PM Workload)</h3>
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Beban Kerja PM (PM Workload)</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Nama Program Manager (PM)</th>
                   <th class="px-4 py-3 text-center">Total Proyek Dipimpin</th>
@@ -765,24 +765,24 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                 <tr v-if="pmWorkload.length === 0">
-                  <td colspan="6" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="6" class="px-4 py-8 text-center app-empty-copy">
                     Belum ada data beban kerja penugasan PM.
                   </td>
                 </tr>
                 <tr 
                   v-for="pm in pmWorkload" 
                   :key="pm.pm_id"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-2 select-none">
                       <div class="w-8 h-8 rounded-lg bg-brand-orange-soft/10 text-brand-orange font-bold flex items-center justify-center text-[10px]">
                         {{ pm.initial_code }}
                       </div>
-                      <span class="text-white font-bold text-sm">{{ pm.pm_name }}</span>
+                      <span class="text-main-theme font-bold text-sm">{{ pm.pm_name }}</span>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-center text-white font-extrabold text-sm">{{ pm.total_projects }}</td>
+                  <td class="px-4 py-3 text-center text-main-theme font-extrabold text-sm">{{ pm.total_projects }}</td>
                   <td class="px-4 py-3 text-center text-indigo-400 font-bold">{{ pm.upcoming_events_7_days }}</td>
                   <td class="px-4 py-3 text-center text-red-400 font-bold">{{ pm.not_ready_projects }}</td>
                   <td class="px-4 py-3 text-center text-amber-500 font-bold">{{ pm.overdue_instruments }}</td>
@@ -798,41 +798,41 @@
 
           <!-- Mobile Card View -->
           <div class="block md:hidden space-y-4">
-            <div v-if="pmWorkload.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="pmWorkload.length === 0" class="py-6 text-center app-empty-copy">
               Belum ada data beban kerja penugasan PM.
             </div>
             <div 
               v-for="pm in pmWorkload" 
               :key="pm.pm_id"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3 animate-fade-in"
             >
               <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
                 <div class="flex items-center gap-2">
                   <div class="w-7 h-7 rounded-lg bg-brand-orange-soft/10 text-brand-orange font-bold flex items-center justify-center text-[10px]">
                     {{ pm.initial_code }}
                   </div>
-                  <span class="text-white font-bold text-sm">{{ pm.pm_name }}</span>
+                  <span class="text-main-theme font-bold text-sm">{{ pm.pm_name }}</span>
                 </div>
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getReadinessScoreBadgeStyles(pm.average_readiness_score)">
                   {{ Math.round(pm.average_readiness_score || 0) }}% Ready
                 </span>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
-                  <p class="text-white text-sm font-extrabold">{{ pm.total_projects }} Proyek</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-main-theme text-sm font-extrabold">{{ pm.total_projects }} Proyek</p>
                 </div>
                 <div>
                   <p class="text-indigo-400 text-[9px] uppercase tracking-wider">Upcoming (7 Hari)</p>
-                  <p class="text-white text-sm font-extrabold">{{ pm.upcoming_events_7_days }} Event</p>
+                  <p class="text-main-theme text-sm font-extrabold">{{ pm.upcoming_events_7_days }} Event</p>
                 </div>
                 <div>
                   <p class="text-red-400 text-[9px] uppercase tracking-wider">Belum Siap</p>
-                  <p class="text-white text-sm font-extrabold">{{ pm.not_ready_projects }} Proyek</p>
+                  <p class="text-main-theme text-sm font-extrabold">{{ pm.not_ready_projects }} Proyek</p>
                 </div>
                 <div>
                   <p class="text-amber-500 text-[9px] uppercase tracking-wider">Instrumen Overdue</p>
-                  <p class="text-white text-sm font-extrabold">{{ pm.overdue_instruments }} Dokumen</p>
+                  <p class="text-main-theme text-sm font-extrabold">{{ pm.overdue_instruments }} Dokumen</p>
                 </div>
               </div>
             </div>

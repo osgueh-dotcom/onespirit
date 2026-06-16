@@ -9,19 +9,19 @@
     <!-- Top toolbar filter and actions -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none">
       <div class="flex items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-widest text-gray-400">View</span>
-        <div class="flex rounded-xl p-0.5 bg-brand-charcoal border border-brand-charcoal-light/35">
+        <span class="text-xs font-bold uppercase tracking-widest text-muted-theme">View</span>
+        <div class="flex rounded-xl p-0.5 bg-surface-theme border border-panel-theme">
           <button 
             @click="activeSubTab = 'invoices'" 
             class="px-4 py-2 rounded-lg text-xs font-bold transition-all"
-            :class="activeSubTab === 'invoices' ? 'bg-brand-orange text-white' : 'text-gray-400 hover:text-white'"
+            :class="activeSubTab === 'invoices' ? 'bg-brand-orange text-white' : 'text-muted-theme hover:text-main-theme'"
           >
             Billing Invoices
           </button>
           <button 
             @click="activeSubTab = 'payments'" 
             class="px-4 py-2 rounded-lg text-xs font-bold transition-all"
-            :class="activeSubTab === 'payments' ? 'bg-brand-orange text-white' : 'text-gray-400 hover:text-white'"
+            :class="activeSubTab === 'payments' ? 'bg-brand-orange text-white' : 'text-muted-theme hover:text-main-theme'"
           >
             Payment Collection Receipts
           </button>
@@ -52,11 +52,11 @@
         :key="card.label"
         class="glass-panel p-4 border border-brand-charcoal-light/20"
       >
-        <p class="text-[9px] font-black uppercase tracking-widest text-gray-500">{{ card.label }}</p>
+        <p class="text-[9px] font-black uppercase tracking-widest text-muted-theme">{{ card.label }}</p>
         <p class="mt-1 text-lg font-black tracking-tight" :class="card.valueClass">
           {{ card.value }}
         </p>
-        <p v-if="card.caption" class="mt-1 text-[10px] font-semibold text-gray-500">
+        <p v-if="card.caption" class="mt-1 text-[10px] font-semibold text-muted-theme">
           {{ card.caption }}
         </p>
       </div>
@@ -72,7 +72,7 @@
         <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
           <div class="overflow-x-auto min-w-full">
             <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
-              <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-6 py-4">Invoice Number</th>
                   <th class="px-6 py-4">Project Name</th>
@@ -85,21 +85,21 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
                 <tr v-if="invoices.length === 0">
-                  <td colspan="7" class="px-6 py-12 text-center text-gray-500 font-semibold select-none">
+                  <td colspan="7" class="px-6 py-12 text-center app-empty-copy select-none">
                     No invoices generated in current ledger.
                   </td>
                 </tr>
                 <tr 
                   v-for="inv in invoices" 
                   :key="inv.id"
-                  class="hover:bg-brand-charcoal-light/10 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-6 py-4 font-bold text-white tracking-wide text-sm">{{ inv.invoice_number }}</td>
-                  <td class="px-6 py-4 text-white font-semibold">
+                  <td class="px-6 py-4 app-table-cell-strong tracking-wide text-sm">{{ inv.invoice_number }}</td>
+                  <td class="px-6 py-4 app-table-cell-strong">
                     {{ getProjectTitle(inv.project_id) }}
                   </td>
-                  <td class="px-6 py-4 text-gray-400">{{ inv.issue_date }}</td>
-                  <td class="px-6 py-4 text-gray-400">{{ inv.due_date }}</td>
+                  <td class="px-6 py-4 app-table-cell">{{ inv.issue_date }}</td>
+                  <td class="px-6 py-4 app-table-cell">{{ inv.due_date }}</td>
                   <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(inv.amount) }}</td>
                   <td class="px-6 py-4 select-none">
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getInvoiceStatusStyles(inv.status)">
@@ -123,32 +123,32 @@
 
         <!-- Mobile Card List View -->
         <div class="block md:hidden space-y-4">
-          <div v-if="invoices.length === 0" class="py-12 text-center text-gray-500 font-semibold select-none">
+          <div v-if="invoices.length === 0" class="py-12 text-center app-empty-copy select-none">
             No invoices generated in current ledger.
           </div>
           <div 
             v-for="inv in invoices" 
             :key="inv.id"
-            class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
+            class="glass-panel p-4 border border-panel-theme space-y-3 bg-surface-theme"
           >
             <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-              <span class="font-bold text-white tracking-wide text-xs select-all">{{ inv.invoice_number }}</span>
+              <span class="font-bold text-main-theme tracking-wide text-xs select-all">{{ inv.invoice_number }}</span>
               <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider" :class="getInvoiceStatusStyles(inv.status)">
                 {{ inv.status }}
               </span>
             </div>
             <div>
-              <h4 class="text-white font-bold text-sm">{{ getProjectTitle(inv.project_id) }}</h4>
+              <h4 class="text-main-theme font-bold text-sm">{{ getProjectTitle(inv.project_id) }}</h4>
               <p class="text-brand-emerald font-bold font-mono mt-1">{{ formatMoney(inv.amount) }}</p>
             </div>
-            <div class="grid grid-cols-2 gap-2 bg-black/20 p-2 rounded-xl text-[10px] text-gray-400 font-semibold">
+            <div class="grid grid-cols-2 gap-2 bg-surface-theme border border-panel-theme p-2 rounded-xl text-[10px] text-muted-theme font-semibold">
               <div>
-                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Issue Date</p>
-                <p class="text-white">{{ inv.issue_date }}</p>
+                <p class="text-muted-theme text-[8px] uppercase tracking-wider">Issue Date</p>
+                <p class="text-main-theme">{{ inv.issue_date }}</p>
               </div>
               <div>
-                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Due Date</p>
-                <p class="text-white">{{ inv.due_date }}</p>
+                <p class="text-muted-theme text-[8px] uppercase tracking-wider">Due Date</p>
+                <p class="text-main-theme">{{ inv.due_date }}</p>
               </div>
             </div>
             <div class="flex justify-end pt-1" v-if="auth.hasPermission('finance:write')">
@@ -169,7 +169,7 @@
         <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
           <div class="overflow-x-auto min-w-full">
             <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
-              <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-6 py-4">Receipt ID</th>
                   <th class="px-6 py-4">Linked Invoice</th>
@@ -182,21 +182,21 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
                 <tr v-if="payments.length === 0">
-                  <td colspan="7" class="px-6 py-12 text-center text-gray-500 font-semibold select-none">
+                  <td colspan="7" class="px-6 py-12 text-center app-empty-copy select-none">
                     No payment collections logged.
                   </td>
                 </tr>
                 <tr 
                   v-for="pay in payments" 
                   :key="pay.id"
-                  class="hover:bg-brand-charcoal-light/10 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-6 py-4 font-bold text-white tracking-wide text-xs truncate max-w-[80px]">{{ pay.id }}</td>
+                  <td class="px-6 py-4 app-table-cell-strong tracking-wide text-xs truncate max-w-[80px]">{{ pay.id }}</td>
                   <td class="px-6 py-4 font-bold text-brand-orange">
                     {{ getInvoiceNumber(pay.invoice_id) }}
                   </td>
-                  <td class="px-6 py-4 text-gray-400">{{ pay.payment_date }}</td>
-                  <td class="px-6 py-4 text-gray-400 font-bold">{{ pay.reference_number || '-' }}</td>
+                  <td class="px-6 py-4 app-table-cell">{{ pay.payment_date }}</td>
+                  <td class="px-6 py-4 app-table-cell font-bold">{{ pay.reference_number || '-' }}</td>
                   <td class="px-6 py-4 font-bold text-brand-emerald">{{ formatMoney(pay.amount) }}</td>
                   <td class="px-6 py-4 select-none">
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(pay.status)">
@@ -220,33 +220,33 @@
 
         <!-- Mobile Card List View -->
         <div class="block md:hidden space-y-4">
-          <div v-if="payments.length === 0" class="py-12 text-center text-gray-500 font-semibold select-none">
+          <div v-if="payments.length === 0" class="py-12 text-center app-empty-copy select-none">
             No payment collections logged.
           </div>
           <div 
             v-for="pay in payments" 
             :key="pay.id"
-            class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
+            class="glass-panel p-4 border border-panel-theme space-y-3 bg-surface-theme"
           >
             <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-              <span class="font-mono text-[9px] text-gray-400">ID: {{ pay.id.slice(0, 8) }}...</span>
+              <span class="font-mono text-[9px] text-muted-theme">ID: {{ pay.id.slice(0, 8) }}...</span>
               <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(pay.status)">
                 {{ pay.status }}
               </span>
             </div>
             <div>
-              <p class="text-[9px] text-gray-500 uppercase font-black">Linked Invoice</p>
+              <p class="text-[9px] text-muted-theme uppercase font-black">Linked Invoice</p>
               <p class="text-brand-orange font-bold text-sm select-all">{{ getInvoiceNumber(pay.invoice_id) }}</p>
               <p class="text-brand-emerald font-bold font-mono text-sm mt-1">{{ formatMoney(pay.amount) }}</p>
             </div>
-            <div class="grid grid-cols-2 gap-2 bg-black/20 p-2 rounded-xl text-[10px] text-gray-400 font-semibold">
+            <div class="grid grid-cols-2 gap-2 bg-surface-theme border border-panel-theme p-2 rounded-xl text-[10px] text-muted-theme font-semibold">
               <div>
-                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Collection Date</p>
-                <p class="text-white">{{ pay.payment_date }}</p>
+                <p class="text-muted-theme text-[8px] uppercase tracking-wider">Collection Date</p>
+                <p class="text-main-theme">{{ pay.payment_date }}</p>
               </div>
               <div>
-                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Ref Number</p>
-                <p class="text-white">{{ pay.reference_number || '-' }}</p>
+                <p class="text-muted-theme text-[8px] uppercase tracking-wider">Ref Number</p>
+                <p class="text-main-theme">{{ pay.reference_number || '-' }}</p>
               </div>
             </div>
             <div class="flex justify-end pt-1" v-if="auth.hasPermission('finance:write')">
@@ -487,7 +487,7 @@ const financeSummaryCards = computed(() => [
   {
     label: 'Total Invoice',
     value: formatMoney(financeSummary.value.totalInvoice),
-    valueClass: 'text-white'
+    valueClass: 'text-main-theme'
   },
   {
     label: 'Terbayar',

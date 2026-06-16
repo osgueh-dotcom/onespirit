@@ -1,7 +1,7 @@
 <template>
   <div class="glass-panel p-5 border border-brand-charcoal-light/30 space-y-4 select-none">
     <div class="flex items-center justify-between border-b border-brand-charcoal-light/15 pb-2">
-      <span class="text-[10px] font-black uppercase tracking-wider text-gray-400">Filter Komersial</span>
+      <span class="text-[10px] font-black uppercase tracking-wider text-muted-theme">Filter Komersial</span>
       <button @click="resetFilters" class="text-[10px] font-bold text-brand-orange hover:underline">
         Reset Filter ✕
       </button>
@@ -13,8 +13,8 @@
         :key="filter.key"
         type="button"
         @click="applyPoQuickFilter(filter.key)"
-        class="rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-all"
-        :class="activePoQuickFilter === filter.key ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-brand-charcoal-light/35 text-gray-400 hover:border-brand-orange/35 hover:text-white'"
+        class="app-quick-chip"
+        :class="activePoQuickFilter === filter.key ? 'app-quick-chip-active' : ''"
       >
         {{ filter.label }}
       </button>
@@ -23,11 +23,11 @@
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
       <!-- Filter PO -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Owner (PO)</label>
+        <label class="app-label mb-1.5">Program Owner (PO)</label>
         <select 
           v-model="filters.po_id" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua PO</option>
           <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
@@ -36,11 +36,11 @@
 
       <!-- Filter PM -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Manager (PM)</label>
+        <label class="app-label mb-1.5">Program Manager (PM)</label>
         <select 
           v-model="filters.pm_id" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua PM</option>
           <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
@@ -49,11 +49,11 @@
 
       <!-- Source Type -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Source Type</label>
+        <label class="app-label mb-1.5">Source Type</label>
         <select 
           v-model="filters.source_type" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua Source</option>
           <option value="Hotel">Hotel</option>
@@ -68,11 +68,11 @@
 
       <!-- Customer Category -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Kategori Klien</label>
+        <label class="app-label mb-1.5">Kategori Klien</label>
         <select 
           v-model="filters.customer_category" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua Kategori</option>
           <option value="Corporate">Corporate</option>
@@ -85,23 +85,23 @@
 
       <!-- Date Range From -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Dari Tanggal</label>
+        <label class="app-label mb-1.5">Dari Tanggal</label>
         <input 
           v-model="filters.date_from" 
           type="date"
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         />
       </div>
 
       <!-- Date Range To -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Sampai Tanggal</label>
+        <label class="app-label mb-1.5">Sampai Tanggal</label>
         <input 
           v-model="filters.date_to" 
           type="date"
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         />
       </div>
     </div>
@@ -110,11 +110,11 @@
     <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 border-t border-brand-charcoal-light/10 pt-4">
       <!-- Quotation Status -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Quotation</label>
+        <label class="app-label mb-1.5">Status Quotation</label>
         <select 
           v-model="filters.quotation_status" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua Quotation</option>
           <option value="Draft">Draft</option>
@@ -128,11 +128,11 @@
 
       <!-- Program Status -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Program</label>
+        <label class="app-label mb-1.5">Status Program</label>
         <select 
           v-model="filters.program_status" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua Program</option>
           <option value="Inquiry">Inquiry</option>
@@ -149,11 +149,11 @@
 
       <!-- Payment Status -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Pembayaran</label>
+        <label class="app-label mb-1.5">Status Pembayaran</label>
         <select 
           v-model="filters.payment_status" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua Pembayaran</option>
           <option value="Not Invoiced">Not Invoiced</option>
@@ -167,11 +167,11 @@
 
       <!-- Event Window -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Event Window</label>
+        <label class="app-label mb-1.5">Event Window</label>
         <select 
           v-model="filters.event_window" 
           @change="handleManualFilterChange"
-          class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="all">Semua Jadwal</option>
           <option value="today">Hari Ini</option>
@@ -184,21 +184,21 @@
 
       <!-- Checkboxes -->
       <div class="md:col-span-2 flex items-center gap-4 pt-4 select-none">
-        <label class="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-white cursor-pointer transition-colors">
+        <label class="flex items-center gap-2 text-[10px] font-bold text-muted-theme hover:text-main-theme cursor-pointer transition-colors">
           <input 
             v-model="filters.include_closed" 
             type="checkbox" 
             @change="handleManualFilterChange"
-            class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
+            class="rounded border-panel-theme bg-surface-theme text-brand-orange focus:ring-0"
           />
           Closed Project
         </label>
-        <label class="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-white cursor-pointer transition-colors">
+        <label class="flex items-center gap-2 text-[10px] font-bold text-muted-theme hover:text-main-theme cursor-pointer transition-colors">
           <input 
             v-model="filters.include_canceled" 
             type="checkbox" 
             @change="handleManualFilterChange"
-            class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
+            class="rounded border-panel-theme bg-surface-theme text-brand-orange focus:ring-0"
           />
           Batal (Canceled)
         </label>

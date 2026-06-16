@@ -40,7 +40,7 @@
           <!-- Group Header -->
           <p 
             v-if="!sidebarCollapsed || mobileSidebarOpen" 
-            class="px-3 text-[10px] font-black uppercase tracking-widest text-gray-500 select-none"
+            class="px-3 text-[10px] font-black uppercase tracking-widest text-muted-theme select-none"
           >
             {{ group.name }}
           </p>

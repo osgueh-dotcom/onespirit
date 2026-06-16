@@ -9,18 +9,18 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none">
       <div class="flex flex-col sm:flex-row sm:items-center gap-3">
         <span class="text-xs font-bold uppercase tracking-widest text-muted-theme">Tampilan Pipeline</span>
-        <div class="flex rounded-xl p-0.5 bg-brand-charcoal border border-brand-charcoal-light/35">
+        <div class="flex rounded-xl p-0.5 bg-surface-theme border border-panel-theme">
           <button 
             @click="viewMode = 'board'" 
             class="px-4 py-2 rounded-lg text-xs font-bold transition-all"
-            :class="viewMode === 'board' ? 'bg-brand-orange text-white' : 'text-gray-400 hover:text-white'"
+            :class="viewMode === 'board' ? 'bg-brand-orange text-white' : 'text-muted-theme hover:text-main-theme'"
           >
             Kanban Board
           </button>
           <button 
             @click="viewMode = 'list'" 
             class="px-4 py-2 rounded-lg text-xs font-bold transition-all"
-            :class="viewMode === 'list' ? 'bg-brand-orange text-white' : 'text-gray-400 hover:text-white'"
+            :class="viewMode === 'list' ? 'bg-brand-orange text-white' : 'text-muted-theme hover:text-main-theme'"
           >
             All Projects List
           </button>
@@ -40,19 +40,19 @@
     <div class="glass-panel p-4 border border-brand-charcoal-light/30 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 select-none">
       <!-- Search Filter -->
       <div class="sm:col-span-2">
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Cari Project</label>
+        <label class="app-label mb-1">Cari Project</label>
         <div class="relative">
           <input
             v-model="projectSearchQuery"
             type="search"
             placeholder="Cari project, klien, venue, PO, PM..."
-            class="w-full px-3 py-1.5 pr-8 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact pr-8"
           />
           <button
             v-if="projectSearchQuery"
             type="button"
             @click="clearProjectSearch"
-            class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md px-1.5 py-0.5 text-[10px] font-black text-gray-500 transition-colors hover:bg-brand-charcoal-light/30 hover:text-white"
+            class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md px-1.5 py-0.5 text-[10px] font-black text-muted-theme transition-colors hover:bg-brand-orange/10 hover:text-brand-orange"
             title="Bersihkan pencarian"
           >
             x
@@ -62,11 +62,11 @@
 
       <!-- PO Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Filter PO</label>
+        <label class="app-label mb-1">Filter PO</label>
         <select 
           v-model="filterPo" 
           @change="fetchProjectsOnly"
-          class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua PO</option>
           <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
@@ -75,11 +75,11 @@
 
       <!-- PM Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Filter PM</label>
+        <label class="app-label mb-1">Filter PM</label>
         <select 
           v-model="filterPm" 
           @change="fetchProjectsOnly"
-          class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua PM</option>
           <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
@@ -88,11 +88,11 @@
 
       <!-- Source Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Filter Source</label>
+        <label class="app-label mb-1">Filter Source</label>
         <select 
           v-model="filterSource" 
           @change="fetchProjectsOnly"
-          class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua Sumber</option>
           <option v-for="s in eventSources" :key="s.id" :value="s.id">
@@ -103,11 +103,11 @@
 
       <!-- Quotation Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Quote</label>
+        <label class="app-label mb-1">Status Quote</label>
         <select 
           v-model="filterQuotationStatus" 
           @change="fetchProjectsOnly"
-          class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua</option>
           <option value="Draft">Draft</option>
@@ -121,11 +121,11 @@
 
       <!-- Program Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Prog</label>
+        <label class="app-label mb-1">Status Prog</label>
         <select 
           v-model="filterProgramStatus" 
           @change="fetchProjectsOnly"
-          class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua</option>
           <option value="Inquiry">Inquiry</option>
@@ -142,11 +142,11 @@
 
       <!-- Payment Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Payment</label>
+        <label class="app-label mb-1">Status Payment</label>
         <select 
           v-model="filterPaymentStatus" 
           @change="fetchProjectsOnly"
-          class="w-full px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          class="app-form-control-compact"
         >
           <option value="">Semua</option>
           <option value="Not Invoiced">Belum Ditagih (Not Invoiced)</option>
@@ -160,12 +160,12 @@
 
       <!-- Project Status Filter -->
       <div>
-        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Status Project</label>
+        <label class="app-label mb-1">Status Project</label>
         <div class="flex gap-1.5 items-center">
           <select 
             v-model="filterProjectStatus" 
             @change="fetchProjectsOnly"
-            class="flex-1 px-2.5 py-1.5 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
+            class="app-form-control-compact flex-1"
           >
             <option value="">Semua</option>
             <option value="Open">Buka (Open)</option>
@@ -176,7 +176,7 @@
           </select>
           <button 
             @click="resetFilters" 
-            class="p-1.5 rounded-lg bg-brand-charcoal-light/40 text-gray-400 hover:text-white transition-all text-[11px]" 
+            class="p-1.5 rounded-lg border border-panel-theme bg-surface-theme text-muted-theme hover:text-brand-orange transition-all text-[11px]"
             title="Reset Filters"
           >
             ✕
@@ -189,7 +189,7 @@
     <AppLoadingState v-if="loading" message="Memuat daftar project..." />
 
     <!-- KANBAN BOARD VIEW -->
-    <div v-else-if="filteredProjects.length === 0" class="glass-panel p-8 text-center text-sm font-semibold text-gray-500">
+    <div v-else-if="filteredProjects.length === 0" class="glass-panel p-8 text-center text-sm app-empty-copy">
       {{ projectsEmptyMessage }}
     </div>
 
@@ -197,15 +197,15 @@
       <div 
         v-for="col in columns" 
         :key="col.status"
-        class="w-80 shrink-0 bg-brand-charcoal/50 border border-brand-charcoal-light/20 rounded-2xl p-4 flex flex-col max-h-full"
+        class="w-80 shrink-0 bg-panel-theme border border-panel-theme rounded-2xl p-4 flex flex-col max-h-full"
       >
         <!-- Column Header -->
         <div class="flex items-center justify-between mb-4 border-b border-brand-charcoal-light/25 pb-3">
           <div class="flex items-center gap-2">
             <span class="h-2.5 w-2.5 rounded-full" :class="col.bullet"></span>
-            <span class="font-extrabold text-xs text-white uppercase tracking-wider">{{ col.name }}</span>
+            <span class="font-extrabold text-xs text-main-theme uppercase tracking-wider">{{ col.name }}</span>
           </div>
-          <span class="px-2 py-0.5 rounded bg-brand-charcoal-light/30 text-[10px] font-bold text-gray-400">
+          <span class="px-2 py-0.5 rounded bg-surface-theme border border-panel-theme text-[10px] font-bold text-muted-theme">
             {{ getProjectsByStatus(col.status).length }}
           </span>
         </div>
@@ -214,7 +214,7 @@
         <div class="flex-1 overflow-y-auto space-y-3.5 pr-1">
           <div 
             v-if="getProjectsByStatus(col.status).length === 0"
-            class="py-8 text-center text-[10px] font-bold text-gray-600 border border-dashed border-brand-charcoal-light/20 rounded-xl"
+            class="py-8 text-center text-[10px] font-bold text-muted-theme border border-dashed border-panel-theme rounded-xl"
           >
             No projects in this stage
           </div>
@@ -227,14 +227,14 @@
             <!-- Card Details -->
             <div>
               <div class="flex items-center justify-between mb-1">
-                <span class="text-[9px] font-black text-gray-500 uppercase tracking-wider block">
+                <span class="text-[9px] font-black text-muted-theme uppercase tracking-wider block">
                   {{ proj.project_code || 'No Code' }}
                 </span>
-                <span class="text-[9px] font-semibold text-gray-400">
+                <span class="text-[9px] font-semibold text-muted-theme">
                   {{ formatDate(proj.event_date_start) }}
                 </span>
               </div>
-              <router-link :to="'/projects/' + proj.id" class="text-sm font-bold text-white hover:text-brand-orange transition-colors block leading-tight mb-1">
+              <router-link :to="'/projects/' + proj.id" class="text-sm font-bold text-main-theme hover:text-brand-orange transition-colors block leading-tight mb-1">
                 {{ proj.title }}
               </router-link>
               <!-- Quick Quality Indicators -->
@@ -245,24 +245,24 @@
                 <span v-if="proj.payment_status === 'Overdue'" class="px-1.5 py-0.5 rounded text-[8px] font-black uppercase bg-purple-500/10 text-purple-400 border border-purple-500/20">OVERDUE</span>
               </div>
               <div class="space-y-0.5">
-                <span class="text-[10px] font-extrabold text-gray-400 block truncate">
+                <span class="text-[10px] font-extrabold text-soft-theme block truncate">
                   Client: {{ proj.customer?.company_name }}
                 </span>
-                <span v-if="proj.event_source" class="text-[9px] font-bold text-gray-500 block truncate">
+                <span v-if="proj.event_source" class="text-[9px] font-bold text-muted-theme block truncate">
                   Source: {{ proj.event_source.vendor_name || 'Partner' }} {{ proj.event_source.sales_name ? `(${proj.event_source.sales_name})` : '' }}
                 </span>
               </div>
             </div>
 
             <!-- Program Manager & Owner -->
-            <div class="grid grid-cols-2 gap-1.5 text-[9px] font-bold bg-brand-charcoal-dark/40 p-2 rounded-lg border border-brand-charcoal-light/10">
+            <div class="grid grid-cols-2 gap-1.5 text-[9px] font-bold bg-surface-theme p-2 rounded-lg border border-panel-theme">
               <div>
-                <p class="text-gray-500">OWNER (PO)</p>
-                <p class="text-white truncate">{{ proj.program_owner?.full_name || '-' }}</p>
+                <p class="text-muted-theme">OWNER (PO)</p>
+                <p class="text-main-theme truncate">{{ proj.program_owner?.full_name || '-' }}</p>
               </div>
               <div>
-                <p class="text-gray-500">MGR (PM)</p>
-                <p class="text-white truncate">{{ proj.program_manager?.full_name || '-' }}</p>
+                <p class="text-muted-theme">MGR (PM)</p>
+                <p class="text-main-theme truncate">{{ proj.program_manager?.full_name || '-' }}</p>
               </div>
             </div>
 
@@ -284,7 +284,7 @@
               <button 
                 v-if="auth.hasPermission('projects:write') && col.prev"
                 @click="transitionStatus(proj, col.prev)"
-                class="p-1 rounded bg-brand-charcoal-light/30 hover:bg-brand-orange/20 text-gray-400 hover:text-brand-orange transition-all font-bold text-[10px]"
+              class="p-1 rounded bg-surface-theme border border-panel-theme hover:bg-brand-orange/10 text-muted-theme hover:text-brand-orange transition-all font-bold text-[10px]"
               >
                 ← Shift Back
               </button>
@@ -293,7 +293,7 @@
               <button 
                 v-if="auth.hasPermission('projects:write') && col.next"
                 @click="transitionStatus(proj, col.next)"
-                class="p-1 rounded bg-brand-charcoal-light/30 hover:bg-brand-orange/20 text-gray-400 hover:text-brand-orange transition-all font-bold text-[10px]"
+              class="p-1 rounded bg-surface-theme border border-panel-theme hover:bg-brand-orange/10 text-muted-theme hover:text-brand-orange transition-all font-bold text-[10px]"
               >
                 Advance →
               </button>
@@ -309,7 +309,7 @@
       <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
         <div class="overflow-x-auto min-w-full">
           <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
-            <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+            <thead class="app-table-header">
               <tr>
                 <th class="px-6 py-4">Code</th>
                 <th class="px-6 py-4">Project Title</th>
@@ -329,19 +329,19 @@
             </thead>
             <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
               <tr v-if="filteredProjects.length === 0">
-                <td colspan="14" class="px-6 py-12 text-center text-gray-500 font-semibold">
+                  <td colspan="14" class="px-6 py-12 text-center app-empty-copy">
                   {{ projectsEmptyMessage }}
                 </td>
               </tr>
               <tr
                 v-for="proj in filteredProjects"
                 :key="proj.id"
-                class="hover:bg-brand-charcoal-light/10 transition-colors"
+                class="app-table-row"
               >
-                <td class="px-6 py-4 font-bold text-gray-300 select-all font-mono">{{ proj.project_code || '-' }}</td>
+                <td class="px-6 py-4 app-table-cell-strong select-all font-mono">{{ proj.project_code || '-' }}</td>
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-2">
-                    <router-link :to="'/projects/' + proj.id" class="font-bold text-white hover:text-brand-orange tracking-wide text-sm block">
+                    <router-link :to="'/projects/' + proj.id" class="app-table-cell-strong hover:text-brand-orange tracking-wide text-sm block">
                       {{ proj.title }}
                     </router-link>
                     <!-- Quality Warnings Indicators -->
@@ -357,26 +357,26 @@
                     </div>
                   </div>
                 </td>
-                <td class="px-6 py-4 font-bold text-white">{{ proj.customer?.company_name }}</td>
-                <td class="px-6 py-4 text-gray-300">
+                <td class="px-6 py-4 app-table-cell-strong">{{ proj.customer?.company_name }}</td>
+                <td class="px-6 py-4 app-table-cell">
                   <div v-if="proj.event_source" class="font-semibold">
                     <p>{{ proj.event_source.vendor_name || 'Partner' }}</p>
-                    <p class="text-[10px] text-gray-500 font-medium">{{ proj.event_source.sales_name || 'No Sales' }}</p>
+                    <p class="text-[10px] text-muted-theme font-medium">{{ proj.event_source.sales_name || 'No Sales' }}</p>
                   </div>
-                  <span v-else class="text-gray-500">-</span>
+                  <span v-else class="text-muted-theme">-</span>
                 </td>
-                <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">{{ proj.program_owner?.full_name || '-' }}</td>
-                <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">{{ proj.program_manager?.full_name || '-' }}</td>
-                <td class="px-6 py-4 text-gray-400 font-semibold whitespace-nowrap">
+                <td class="px-6 py-4 app-table-cell font-semibold whitespace-nowrap">{{ proj.program_owner?.full_name || '-' }}</td>
+                <td class="px-6 py-4 app-table-cell font-semibold whitespace-nowrap">{{ proj.program_manager?.full_name || '-' }}</td>
+                <td class="px-6 py-4 app-table-cell font-semibold whitespace-nowrap">
                   <div v-if="proj.event_date_start">
-                    <p class="text-white">{{ formatDate(proj.event_date_start) }}</p>
-                    <p class="text-[10px] text-gray-500">to {{ formatDate(proj.event_date_end) }}</p>
+                    <p class="text-main-theme">{{ formatDate(proj.event_date_start) }}</p>
+                    <p class="text-[10px] text-muted-theme">to {{ formatDate(proj.event_date_end) }}</p>
                   </div>
                   <span v-else-if="proj.start_date">
-                    <p class="text-white">{{ formatDate(proj.start_date) }}</p>
-                    <p class="text-[10px] text-gray-500">to {{ formatDate(proj.end_date) }}</p>
+                    <p class="text-main-theme">{{ formatDate(proj.start_date) }}</p>
+                    <p class="text-[10px] text-muted-theme">to {{ formatDate(proj.end_date) }}</p>
                   </span>
-                  <span v-else class="text-gray-500">-</span>
+                  <span v-else class="text-muted-theme">-</span>
                 </td>
                 <td class="px-6 py-4 select-none">
                   <AppStatusBadge :status="proj.quotation_status" type="quotation" />
@@ -395,7 +395,7 @@
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold text-center inline-block" :class="getReadinessScoreBadgeStyles(proj.project_readiness_score)">
                       {{ Math.round((proj.project_readiness_score || 0) * 100) }}% Ready
                     </span>
-                    <span class="text-[9px] text-gray-400 font-semibold text-center block">
+                    <span class="text-[9px] text-muted-theme font-semibold text-center block">
                       {{ Math.round((proj.instrument_completion_rate || 0) * 100) }}% Instruments
                     </span>
                   </div>
@@ -424,49 +424,49 @@
 
       <!-- Mobile List View (Hidden on desktop/tablet) -->
       <div class="block md:hidden space-y-4">
-        <div v-if="filteredProjects.length === 0" class="glass-panel p-8 text-center text-gray-500 font-semibold">
+        <div v-if="filteredProjects.length === 0" class="glass-panel p-8 text-center app-empty-copy">
           {{ projectsEmptyMessage }}
         </div>
         <div
           v-for="proj in filteredProjects"
           :key="proj.id"
-          class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
+          class="glass-panel p-4 border border-panel-theme space-y-3"
         >
           <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-            <span class="font-mono text-[10px] font-bold text-gray-400">{{ proj.project_code || '-' }}</span>
+            <span class="font-mono text-[10px] font-bold text-muted-theme">{{ proj.project_code || '-' }}</span>
             <div class="flex gap-1">
               <AppStatusBadge :status="proj.quotation_status" type="quotation" />
               <AppStatusBadge :status="proj.program_status || proj.status" type="project" />
             </div>
           </div>
           <div>
-            <router-link :to="'/projects/' + proj.id" class="font-bold text-sm text-white hover:text-brand-orange transition-colors">
+            <router-link :to="'/projects/' + proj.id" class="font-bold text-sm text-main-theme hover:text-brand-orange transition-colors">
               {{ proj.title }}
             </router-link>
-            <p class="text-xs text-gray-400 mt-1 font-semibold">Client: {{ proj.customer?.company_name }}</p>
+            <p class="text-xs text-soft-theme mt-1 font-semibold">Client: {{ proj.customer?.company_name }}</p>
           </div>
-          <div class="grid grid-cols-2 gap-2 bg-brand-charcoal-dark/30 p-2.5 rounded-xl text-[11px] border border-brand-charcoal-light/10">
+          <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl text-[11px] border border-panel-theme">
             <div>
-              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Assigned PM</p>
-              <p class="text-gray-200 font-semibold">{{ proj.program_manager?.full_name || '-' }}</p>
+              <p class="text-muted-theme font-bold text-[9px] uppercase tracking-wider">Assigned PM</p>
+              <p class="text-soft-theme font-semibold">{{ proj.program_manager?.full_name || '-' }}</p>
             </div>
             <div>
-              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Assigned PO</p>
-              <p class="text-gray-200 font-semibold">{{ proj.program_owner?.full_name || '-' }}</p>
+              <p class="text-muted-theme font-bold text-[9px] uppercase tracking-wider">Assigned PO</p>
+              <p class="text-soft-theme font-semibold">{{ proj.program_owner?.full_name || '-' }}</p>
             </div>
             <div>
-              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Event Date</p>
-              <p class="text-gray-200 font-semibold">{{ proj.event_date_start ? formatDate(proj.event_date_start) : '-' }}</p>
+              <p class="text-muted-theme font-bold text-[9px] uppercase tracking-wider">Event Date</p>
+              <p class="text-soft-theme font-semibold">{{ proj.event_date_start ? formatDate(proj.event_date_start) : '-' }}</p>
             </div>
             <div>
-              <p class="text-gray-500 font-bold text-[9px] uppercase tracking-wider">Budget Allocation</p>
+              <p class="text-muted-theme font-bold text-[9px] uppercase tracking-wider">Budget Allocation</p>
               <p class="text-brand-emerald font-bold">{{ formatMoney(proj.budget) }}</p>
             </div>
           </div>
           <div class="flex items-center justify-between pt-2">
             <div class="flex flex-col">
-              <span class="text-xs font-bold text-white">{{ Math.round((proj.project_readiness_score || 0) * 100) }}% Ready</span>
-              <span class="text-[10px] text-gray-400">{{ Math.round((proj.instrument_completion_rate || 0) * 100) }}% Instruments</span>
+              <span class="text-xs font-bold text-main-theme">{{ Math.round((proj.project_readiness_score || 0) * 100) }}% Ready</span>
+              <span class="text-[10px] text-muted-theme">{{ Math.round((proj.instrument_completion_rate || 0) * 100) }}% Instruments</span>
             </div>
             <div class="flex gap-2">
               <router-link 
@@ -490,59 +490,59 @@
 
     <!-- Create Project Drawer / Modal -->
     <div v-if="showAddModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-2xl shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
-        <h3 class="text-base font-bold text-white tracking-wide mb-5">Create Project Entry</h3>
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-2xl shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-5">Create Project Entry</h3>
         
         <form @submit.prevent="saveProject" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Title -->
             <div class="md:col-span-2">
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Project/Event Title *</label>
+              <label class="app-label mb-1.5">Project/Event Title *</label>
               <input 
                 v-model="newProj.title"
                 type="text" 
                 required
                 placeholder="e.g. Annual Outing & Team Building 2026"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- Project Code & Inquiry Date -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Project Code</label>
+              <label class="app-label mb-1.5">Project Code</label>
               <input 
                 v-model="newProj.project_code"
                 type="text" 
                 placeholder="e.g. OSA-2026-001"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Inquiry Date</label>
+              <label class="app-label mb-1.5">Inquiry Date</label>
               <input 
                 v-model="newProj.inquiry_date"
                 type="date"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- Client & Event Source -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Client Account *</label>
+              <label class="app-label mb-1.5">Client Account *</label>
               <select 
                 v-model="newProj.customer_id"
                 required
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option value="" disabled>Select Client</option>
                 <option v-for="c in customers" :key="c.id" :value="c.id">{{ c.company_name }}</option>
               </select>
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Event Source</label>
+              <label class="app-label mb-1.5">Event Source</label>
               <select 
                 v-model="newProj.event_source_id"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option :value="null">Direct / None</option>
                 <option v-for="s in eventSources" :key="s.id" :value="s.id">
@@ -553,20 +553,20 @@
 
             <!-- PO & PM -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Program Owner (PO)</label>
+              <label class="app-label mb-1.5">Program Owner (PO)</label>
               <select 
                 v-model="newProj.program_owner_id"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option :value="null">Unassigned</option>
                 <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
               </select>
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Program Manager (PM)</label>
+              <label class="app-label mb-1.5">Program Manager (PM)</label>
               <select 
                 v-model="newProj.program_manager_id"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option :value="null">Unassigned</option>
                 <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
@@ -575,107 +575,107 @@
 
             <!-- Event Category & Program Type -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Event Category</label>
+              <label class="app-label mb-1.5">Event Category</label>
               <input 
                 v-model="newProj.event_category"
                 type="text" 
                 placeholder="e.g. Gathering, Outing, Training"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Program Type</label>
+              <label class="app-label mb-1.5">Program Type</label>
               <input 
                 v-model="newProj.program_type"
                 type="text" 
                 placeholder="e.g. Team Building, Webinar"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- Program Name & Quantity -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Program Name</label>
+              <label class="app-label mb-1.5">Program Name</label>
               <input 
                 v-model="newProj.program_name"
                 type="text" 
                 placeholder="e.g. Spirit of Harmony"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Quantity / Pax</label>
+              <label class="app-label mb-1.5">Quantity / Pax</label>
               <input 
                 v-model="newProj.quantity"
                 type="number" 
                 placeholder="e.g. 100"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- Venue & Duration -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Event Venue</label>
+              <label class="app-label mb-1.5">Event Venue</label>
               <input 
                 v-model="newProj.venue"
                 type="text" 
                 placeholder="e.g. Dago Highlands Resort"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Duration</label>
+              <label class="app-label mb-1.5">Duration</label>
               <input 
                 v-model="newProj.duration"
                 type="text" 
                 placeholder="e.g. 3 Days 2 Nights"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- Start Date & End Date -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Event Start Date</label>
+              <label class="app-label mb-1.5">Event Start Date</label>
               <input 
                 v-model="newProj.event_date_start"
                 type="date"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Event End Date</label>
+              <label class="app-label mb-1.5">Event End Date</label>
               <input 
                 v-model="newProj.event_date_end"
                 type="date"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- Quotation Date & Quotation Number -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Quotation Date</label>
+              <label class="app-label mb-1.5">Quotation Date</label>
               <input 
                 v-model="newProj.quotation_date"
                 type="date"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Quotation Number</label>
+              <label class="app-label mb-1.5">Quotation Number</label>
               <input 
                 v-model="newProj.quotation_number"
                 type="text" 
                 placeholder="e.g. Q-2026-99"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- Quotation Status & Program Status -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Quotation Status</label>
+              <label class="app-label mb-1.5">Quotation Status</label>
               <select 
                 v-model="newProj.quotation_status"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option value="Draft">Draft</option>
                 <option value="Sent">Sent</option>
@@ -686,10 +686,10 @@
               </select>
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Program Status</label>
+              <label class="app-label mb-1.5">Program Status</label>
               <select 
                 v-model="newProj.program_status"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option value="Inquiry">Inquiry</option>
                 <option value="Confirmed">Confirmed</option>
@@ -705,10 +705,10 @@
 
             <!-- Payment Status & Project Status -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Payment Status</label>
+              <label class="app-label mb-1.5">Payment Status</label>
               <select 
                 v-model="newProj.payment_status"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option value="Not Invoiced">Not Invoiced</option>
                 <option value="Invoice Sent">Invoice Sent</option>
@@ -719,10 +719,10 @@
               </select>
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Project Status</label>
+              <label class="app-label mb-1.5">Project Status</label>
               <select 
                 v-model="newProj.project_status"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+                class="app-form-control text-xs"
               >
                 <option value="Open">Open</option>
                 <option value="Active">Active</option>
@@ -734,34 +734,34 @@
 
             <!-- Budget & Revenue -->
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Budget Allocation (Rp)</label>
+              <label class="app-label mb-1.5">Budget Allocation (Rp)</label>
               <input 
                 v-model="newProj.budget"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">Revenue Goal (Rp)</label>
+              <label class="app-label mb-1.5">Revenue Goal (Rp)</label>
               <input 
                 v-model="newProj.revenue"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               />
             </div>
 
             <!-- General Notes -->
             <div class="md:col-span-2">
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-1.5">General Notes</label>
+              <label class="app-label mb-1.5">General Notes</label>
               <textarea 
                 v-model="newProj.general_notes"
                 placeholder="Enter general remarks..."
                 rows="3"
-                class="w-full px-4 py-2 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-white"
+                class="app-form-control text-xs"
               ></textarea>
             </div>
           </div>
@@ -770,7 +770,7 @@
             <button 
               type="button"
               @click="showAddModal = false"
-              class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white hover:bg-brand-charcoal-light/10 transition-all"
+              class="px-4 py-2.5 rounded-xl border border-panel-theme text-xs font-bold text-muted-theme hover:text-main-theme hover:bg-surface-theme transition-all"
             >
               Cancel
             </button>

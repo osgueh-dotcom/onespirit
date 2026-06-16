@@ -44,13 +44,13 @@
           :key="tab.id"
           @click="activeTab = tab.id"
           class="px-5 py-3 text-xs font-bold transition-all border-b-2 outline-none flex items-center gap-2 whitespace-nowrap"
-          :class="activeTab === tab.id ? 'border-brand-orange text-white bg-white/5' : 'border-transparent text-gray-400 hover:text-white'"
+          :class="activeTab === tab.id ? 'border-brand-orange text-brand-orange bg-brand-orange/5' : 'border-transparent text-muted-theme hover:text-main-theme'"
         >
           {{ tab.name }}
           <span 
             v-if="tab.count !== undefined" 
             class="px-1.5 py-0.5 rounded-full text-[9px] font-black"
-            :class="activeTab === tab.id ? 'bg-brand-orange text-black' : 'bg-brand-charcoal-light/30 text-gray-400'"
+            :class="activeTab === tab.id ? 'bg-brand-orange text-black' : 'bg-surface-theme text-muted-theme border border-panel-theme'"
           >
             {{ tab.count }}
           </span>
@@ -65,12 +65,12 @@
       <!-- TAB 2: Owned Projects List -->
       <div v-show="activeTab === 'projects'" class="space-y-6">
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Daftar Proyek di Bawah PO</h3>
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Daftar Proyek di Bawah PO</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Code</th>
                   <th class="px-4 py-3">Customer / Program</th>
@@ -84,29 +84,29 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                 <tr v-if="ownedProjects.length === 0">
-                  <td colspan="8" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="8" class="px-4 py-8 text-center app-empty-copy">
                     Tidak ada proyek PO untuk filter ini.
                   </td>
                 </tr>
                 <tr 
                   v-for="p in ownedProjects" 
                   :key="p.project_id"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 whitespace-nowrap font-mono font-bold text-gray-400 select-all">
+                  <td class="px-4 py-3 whitespace-nowrap font-mono app-table-cell-muted font-bold select-all">
                     {{ p.project_code || '-' }}
                   </td>
                   <td class="px-4 py-3">
-                    <p class="text-white font-bold leading-tight">{{ p.customer_name }}</p>
-                    <p class="text-[10px] text-gray-500 font-semibold mt-0.5">{{ p.event_date_start ? formatDate(p.event_date_start) : '-' }}</p>
+                    <p class="app-table-cell-strong leading-tight">{{ p.customer_name }}</p>
+                    <p class="text-[10px] text-muted-theme font-semibold mt-0.5">{{ p.event_date_start ? formatDate(p.event_date_start) : '-' }}</p>
                   </td>
                   <td class="px-4 py-3 whitespace-nowrap">
-                    <p class="text-gray-200 font-bold select-none text-[10px]">{{ p.source_type }}</p>
-                    <p class="text-[9px] text-gray-500 leading-none mt-0.5">{{ p.vendor_name }} • {{ p.sales_name }}</p>
+                    <p class="app-table-cell-strong select-none text-[10px]">{{ p.source_type }}</p>
+                    <p class="text-[9px] text-muted-theme leading-none mt-0.5">{{ p.vendor_name }} • {{ p.sales_name }}</p>
                   </td>
                   <td class="px-4 py-3 whitespace-nowrap font-semibold">
-                    <p class="text-gray-300">PO: {{ p.po_name }}</p>
-                    <p class="text-[10px] text-gray-500">PM: {{ p.pm_name }}</p>
+                    <p class="text-soft-theme">PO: {{ p.po_name }}</p>
+                    <p class="text-[10px] text-muted-theme">PM: {{ p.pm_name }}</p>
                   </td>
                   <td class="px-4 py-3 whitespace-nowrap">
                     <div class="flex flex-col gap-1 items-center">
@@ -121,10 +121,10 @@
                       </span>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-right whitespace-nowrap text-white font-bold font-mono select-all">
+                  <td class="px-4 py-3 text-right whitespace-nowrap app-table-cell-strong font-mono select-all">
                     {{ formatCurrency(p.budget) }}
                   </td>
-                  <td class="px-4 py-3 text-gray-200 font-bold leading-relaxed max-w-xs">
+                  <td class="px-4 py-3 app-table-cell-strong leading-relaxed max-w-xs">
                     {{ p.recommended_action }}
                   </td>
                   <td class="px-4 py-3 text-right">
@@ -142,32 +142,32 @@
 
           <!-- Mobile Card List -->
           <div class="block md:hidden space-y-4">
-            <div v-if="ownedProjects.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="ownedProjects.length === 0" class="py-6 text-center app-empty-copy">
               Tidak ada proyek PO untuk filter ini.
             </div>
             <div 
               v-for="p in ownedProjects" 
               :key="p.project_id"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3 animate-fade-in"
             >
               <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="font-mono text-[10px] font-bold text-gray-400">{{ p.project_code || 'OSA-EVENT' }}</span>
+                <span class="font-mono text-[10px] font-bold text-muted-theme">{{ p.project_code || 'OSA-EVENT' }}</span>
                 <span class="text-brand-emerald font-bold font-mono">{{ formatCurrency(p.budget) }}</span>
               </div>
               <div>
-                <h4 class="font-bold text-white text-sm">{{ p.customer_name }}</h4>
-                <p class="text-xs text-gray-400 mt-0.5">Event: {{ p.event_date_start ? formatDate(p.event_date_start) : '-' }}</p>
+                <h4 class="font-bold text-main-theme text-sm">{{ p.customer_name }}</h4>
+                <p class="text-xs text-muted-theme mt-0.5">Event: {{ p.event_date_start ? formatDate(p.event_date_start) : '-' }}</p>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Lead Source</p>
-                  <p class="text-white truncate">{{ p.source_type }}</p>
-                  <p class="text-[9px] text-gray-400 truncate">{{ p.vendor_name }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Lead Source</p>
+                  <p class="text-main-theme truncate">{{ p.source_type }}</p>
+                  <p class="text-[9px] text-muted-theme truncate">{{ p.vendor_name }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">PO / PM</p>
-                  <p class="text-white truncate">PO: {{ p.po_name }}</p>
-                  <p class="text-gray-400 truncate text-[10px]">PM: {{ p.pm_name }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">PO / PM</p>
+                  <p class="text-main-theme truncate">PO: {{ p.po_name }}</p>
+                  <p class="text-muted-theme truncate text-[10px]">PM: {{ p.pm_name }}</p>
                 </div>
               </div>
               <div class="flex flex-wrap gap-1.5 justify-start">
@@ -181,7 +181,7 @@
                   PAY: {{ p.payment_status }}
                 </span>
               </div>
-              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-gray-200">
+              <div class="bg-brand-orange/5 border border-brand-orange/10 p-2.5 rounded-xl text-[11px] text-main-theme">
                 <p class="text-[8px] font-black text-brand-orange uppercase tracking-wider mb-1 select-none">Rekomendasi Aksi PO:</p>
                 <p class="font-bold leading-normal">{{ p.recommended_action }}</p>
               </div>
@@ -205,29 +205,29 @@
           <div class="space-y-6">
             <!-- Quotation Summary -->
             <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Struktur Status Penawaran (Quotation)</h3>
+              <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Struktur Status Penawaran (Quotation)</h3>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5 text-center">
-                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Draft</p>
-                  <p class="text-lg font-black text-gray-300">{{ quotationSummary.draft_count }}</p>
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme text-center">
+                  <p class="text-[9px] font-black text-muted-theme uppercase tracking-widest mb-1">Draft</p>
+                  <p class="text-lg font-black text-main-theme">{{ quotationSummary.draft_count }}</p>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5 text-center">
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme text-center">
                   <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">Sent</p>
                   <p class="text-lg font-black text-indigo-300">{{ quotationSummary.sent_count }}</p>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5 text-center">
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme text-center">
                   <p class="text-[9px] font-black text-amber-500 uppercase tracking-widest mb-1">Follow Up</p>
                   <p class="text-lg font-black text-amber-400">{{ quotationSummary.follow_up_count }}</p>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5 text-center">
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme text-center">
                   <p class="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-1">Revision</p>
                   <p class="text-lg font-black text-purple-300">{{ quotationSummary.revision_count }}</p>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5 text-center bg-brand-emerald/5 border-brand-emerald/10">
+                <div class="bg-brand-emerald/5 p-3 rounded-xl border border-brand-emerald/10 text-center">
                   <p class="text-[9px] font-black text-brand-emerald uppercase tracking-widest mb-1">Signed & Deal</p>
                   <p class="text-lg font-black text-brand-emerald">{{ quotationSummary.signed_deal_count }}</p>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5 text-center bg-red-500/5 border-red-500/10">
+                <div class="bg-red-500/5 p-3 rounded-xl border border-red-500/10 text-center">
                   <p class="text-[9px] font-black text-red-400 uppercase tracking-widest mb-1">Cancel</p>
                   <p class="text-lg font-black text-red-400">{{ quotationSummary.cancel_count }}</p>
                 </div>
@@ -236,24 +236,24 @@
 
             <!-- Revenue Summary -->
             <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Statistik Nilai Proyek & Konversi</h3>
+              <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Statistik Nilai Proyek & Konversi</h3>
               <div class="grid grid-cols-2 gap-4">
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Rata-rata Nilai Proyek Potensial</p>
-                  <p class="text-sm font-black text-white">{{ formatCurrency(revenueSummary.average_project_value) }}</p>
-                  <span class="text-[8px] text-gray-400 font-semibold block mt-0.5">Average value of all owned project opportunities.</span>
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme">
+                  <p class="text-[9px] font-black text-muted-theme uppercase tracking-widest mb-0.5">Rata-rata Nilai Proyek Potensial</p>
+                  <p class="text-sm font-black text-main-theme">{{ formatCurrency(revenueSummary.average_project_value) }}</p>
+                  <span class="text-[8px] text-muted-theme font-semibold block mt-0.5">Average value of all owned project opportunities.</span>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Tingkat Konversi Pendapatan</p>
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme">
+                  <p class="text-[9px] font-black text-muted-theme uppercase tracking-widest mb-0.5">Tingkat Konversi Pendapatan</p>
                   <p class="text-sm font-black text-brand-emerald">{{ Math.round(revenueSummary.revenue_conversion_rate || 0) }}%</p>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Nilai Proyek Tertinggi</p>
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme">
+                  <p class="text-[9px] font-black text-muted-theme uppercase tracking-widest mb-0.5">Nilai Proyek Tertinggi</p>
                   <p class="text-sm font-black text-indigo-400">{{ formatCurrency(revenueSummary.highest_project_value) }}</p>
                 </div>
-                <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-0.5">Nilai Proyek Terendah</p>
-                  <p class="text-sm font-black text-gray-400">{{ formatCurrency(revenueSummary.lowest_project_value) }}</p>
+                <div class="bg-surface-theme p-3 rounded-xl border border-panel-theme">
+                  <p class="text-[9px] font-black text-muted-theme uppercase tracking-widest mb-0.5">Nilai Proyek Terendah</p>
+                  <p class="text-sm font-black text-soft-theme">{{ formatCurrency(revenueSummary.lowest_project_value) }}</p>
                 </div>
               </div>
             </div>
@@ -261,12 +261,12 @@
 
           <!-- Right: PO Performance Table -->
           <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Beban Kerja & Kinerja Komersial PO</h3>
+            <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Beban Kerja & Kinerja Komersial PO</h3>
             
             <!-- Desktop Table View -->
             <div class="hidden md:block overflow-x-auto">
               <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-                <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+                <thead class="app-table-header">
                   <tr>
                     <th class="px-3 py-2.5">PO</th>
                     <th class="px-3 py-2.5 text-center">Total Proyek</th>
@@ -277,20 +277,20 @@
                 </thead>
                 <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                   <tr v-if="poPerformance.length === 0">
-                    <td colspan="5" class="px-3 py-6 text-center text-gray-500 font-semibold">
+                    <td colspan="5" class="px-3 py-6 text-center app-empty-copy">
                       Belum ada beban kerja PO komersial tercatat.
                     </td>
                   </tr>
-                  <tr v-for="po in poPerformance" :key="po.po_id" class="hover:bg-white/5 transition-colors">
+                  <tr v-for="po in poPerformance" :key="po.po_id" class="app-table-row">
                     <td class="px-3 py-2.5">
                       <div class="flex items-center gap-2 select-none">
                         <div class="w-6 h-6 rounded-lg bg-indigo-500/10 text-indigo-400 font-bold flex items-center justify-center text-[8px]">
                           {{ po.initial_code }}
                         </div>
-                        <span class="text-white font-bold">{{ po.po_name }}</span>
+                        <span class="text-main-theme font-bold">{{ po.po_name }}</span>
                       </div>
                     </td>
-                    <td class="px-3 py-2.5 text-center text-white font-bold">{{ po.total_projects }}</td>
+                    <td class="px-3 py-2.5 text-center app-table-cell-strong">{{ po.total_projects }}</td>
                     <td class="px-3 py-2.5 text-center text-indigo-400 font-bold">{{ Math.round(po.deal_rate) }}%</td>
                     <td class="px-3 py-2.5 text-right text-brand-emerald font-mono font-bold">{{ formatCurrency(po.confirmed_revenue) }}</td>
                     <td class="px-3 py-2.5 text-center">
@@ -305,35 +305,35 @@
 
             <!-- Mobile Card List for PO Workload & Commercial Performance -->
             <div class="block md:hidden space-y-4">
-              <div v-if="poPerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+              <div v-if="poPerformance.length === 0" class="py-6 text-center app-empty-copy">
                 Belum ada beban kerja PO komersial tercatat.
               </div>
               <div 
                 v-for="po in poPerformance" 
                 :key="po.po_id"
-                class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+                class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3 animate-fade-in"
               >
                 <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
                   <div class="flex items-center gap-2">
                     <div class="w-6 h-6 rounded-lg bg-indigo-500/10 text-indigo-400 font-bold flex items-center justify-center text-[8px]">
                       {{ po.initial_code }}
                     </div>
-                    <span class="text-white font-bold">{{ po.po_name }}</span>
+                    <span class="text-main-theme font-bold">{{ po.po_name }}</span>
                   </div>
                   <span class="text-brand-emerald font-bold font-mono">{{ formatCurrency(po.confirmed_revenue) }}</span>
                 </div>
-                <div class="grid grid-cols-3 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold text-center">
+                <div class="grid grid-cols-3 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold text-center">
                   <div>
-                    <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
-                    <p class="text-white">{{ po.total_projects }}</p>
+                    <p class="text-muted-theme text-[9px] uppercase tracking-wider">Total Proyek</p>
+                    <p class="text-main-theme">{{ po.total_projects }}</p>
                   </div>
                   <div>
                     <p class="text-indigo-400 text-[9px] uppercase tracking-wider">Deal Rate</p>
-                    <p class="text-white">{{ Math.round(po.deal_rate) }}%</p>
+                    <p class="text-main-theme">{{ Math.round(po.deal_rate) }}%</p>
                   </div>
                   <div>
                     <p class="text-amber-500 text-[9px] uppercase tracking-wider">Risk / F-Up</p>
-                    <p class="text-white text-[10px]">{{ po.outstanding_count }} / {{ po.follow_up_needed_count }}</p>
+                    <p class="text-main-theme text-[10px]">{{ po.outstanding_count }} / {{ po.follow_up_needed_count }}</p>
                   </div>
                 </div>
               </div>
@@ -343,12 +343,12 @@
 
         <!-- Source Contribution Table -->
         <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Kontribusi Lead Source & Vendor Partner</h3>
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Kontribusi Lead Source & Vendor Partner</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Source Type</th>
                   <th class="px-4 py-3">Nama Vendor Partner</th>
@@ -363,20 +363,20 @@
               </thead>
               <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
                 <tr v-if="sourceContribution.length === 0">
-                  <td colspan="9" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="9" class="px-4 py-8 text-center app-empty-copy">
                     Belum ada data kontribusi lead partner.
                   </td>
                 </tr>
-                <tr v-for="(sc, index) in sourceContribution" :key="index" class="hover:bg-white/5 transition-colors">
-                  <td class="px-4 py-3 whitespace-nowrap text-white font-bold select-none">{{ sc.source_type }}</td>
-                  <td class="px-4 py-3 text-gray-300 font-bold select-all">{{ sc.vendor_name }}</td>
-                  <td class="px-4 py-3 text-gray-400 font-semibold select-all">{{ sc.sales_name }}</td>
-                  <td class="px-4 py-3 text-center text-white font-black">{{ sc.total_projects }}</td>
+                <tr v-for="(sc, index) in sourceContribution" :key="index" class="app-table-row">
+                  <td class="px-4 py-3 whitespace-nowrap app-table-cell-strong select-none">{{ sc.source_type }}</td>
+                  <td class="px-4 py-3 app-table-cell-strong select-all">{{ sc.vendor_name }}</td>
+                  <td class="px-4 py-3 app-table-cell-muted font-semibold select-all">{{ sc.sales_name }}</td>
+                  <td class="px-4 py-3 text-center app-table-cell-strong font-black">{{ sc.total_projects }}</td>
                   <td class="px-4 py-3 text-center text-brand-emerald font-bold">{{ sc.deal_count }}</td>
                   <td class="px-4 py-3 text-center text-red-400 font-bold">{{ sc.cancel_count }}</td>
-                  <td class="px-4 py-3 text-right font-mono font-bold text-gray-300">{{ formatCurrency(sc.potential_revenue) }}</td>
+                  <td class="px-4 py-3 text-right font-mono app-table-cell-strong">{{ formatCurrency(sc.potential_revenue) }}</td>
                   <td class="px-4 py-3 text-right font-mono font-bold text-brand-emerald">{{ formatCurrency(sc.confirmed_revenue) }}</td>
-                  <td class="px-4 py-3 text-right font-mono text-gray-400">{{ formatCurrency(sc.average_project_value) }}</td>
+                  <td class="px-4 py-3 text-right font-mono app-table-cell-muted">{{ formatCurrency(sc.average_project_value) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -384,38 +384,38 @@
 
           <!-- Mobile Card List for Lead Source Contribution -->
           <div class="block md:hidden space-y-4">
-            <div v-if="sourceContribution.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="sourceContribution.length === 0" class="py-6 text-center app-empty-copy">
               Belum ada data kontribusi lead partner.
             </div>
             <div 
               v-for="(sc, index) in sourceContribution" 
               :key="index"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3 animate-fade-in"
             >
               <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="text-white font-bold select-none text-xs">{{ sc.source_type }}</span>
+                <span class="text-main-theme font-bold select-none text-xs">{{ sc.source_type }}</span>
                 <span class="text-brand-emerald font-bold font-mono text-xs">{{ formatCurrency(sc.confirmed_revenue) }}</span>
               </div>
               <div>
-                <h4 class="font-bold text-gray-200 text-xs">{{ sc.vendor_name }}</h4>
-                <p class="text-[10px] text-gray-500 mt-0.5">Sales: {{ sc.sales_name || '-' }}</p>
+                <h4 class="font-bold text-main-theme text-xs">{{ sc.vendor_name }}</h4>
+                <p class="text-[10px] text-muted-theme mt-0.5">Sales: {{ sc.sales_name || '-' }}</p>
               </div>
-              <div class="grid grid-cols-3 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[10px] font-semibold text-center">
+              <div class="grid grid-cols-3 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[10px] font-semibold text-center">
                 <div>
-                  <p class="text-gray-500 text-[8px] uppercase tracking-wider">Proyek</p>
-                  <p class="text-white">{{ sc.total_projects }} ({{ sc.deal_count }} Deal)</p>
+                  <p class="text-muted-theme text-[8px] uppercase tracking-wider">Proyek</p>
+                  <p class="text-main-theme">{{ sc.total_projects }} ({{ sc.deal_count }} Deal)</p>
                 </div>
                 <div>
                   <p class="text-red-400 text-[8px] uppercase tracking-wider">Batal</p>
-                  <p class="text-white">{{ sc.cancel_count }}</p>
+                  <p class="text-main-theme">{{ sc.cancel_count }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 text-[8px] uppercase tracking-wider">Avg Value</p>
-                  <p class="text-white">{{ formatCurrency(sc.average_project_value) }}</p>
+                  <p class="text-muted-theme text-[8px] uppercase tracking-wider">Avg Value</p>
+                  <p class="text-main-theme">{{ formatCurrency(sc.average_project_value) }}</p>
                 </div>
               </div>
-              <div class="text-[10px] text-gray-400 text-right">
-                Estimasi: <span class="text-white font-mono font-bold">{{ formatCurrency(sc.potential_revenue) }}</span>
+              <div class="text-[10px] text-muted-theme text-right">
+                Estimasi: <span class="text-main-theme font-mono font-bold">{{ formatCurrency(sc.potential_revenue) }}</span>
               </div>
             </div>
           </div>

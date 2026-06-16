@@ -14,8 +14,12 @@
   --border-sidebar: rgba(148, 163, 184, 0.16);
   --border-strong: rgba(148, 163, 184, 0.28);
   --text-main: #F8FAFC;
+  --text-soft: #CBD5E1;
   --text-muted: #94A3B8;
   --bg-panel: rgba(23, 32, 51, 0.92);
+  --bg-surface: rgba(30, 41, 59, 0.72);
+  --bg-table-header: rgba(15, 23, 42, 0.54);
+  --bg-row-hover: rgba(51, 65, 85, 0.34);
   --border-panel: rgba(148, 163, 184, 0.16);
   --bg-header: rgba(15, 23, 42, 0.88);
   --shadow-card: 0 18px 48px -32px rgba(0, 0, 0, 0.65);
@@ -31,8 +35,12 @@
   --border-sidebar: #E5E7EB;
   --border-strong: #D7DCE3;
   --text-main: #172033;
+  --text-soft: #334155;
   --text-muted: #64748B;
   --bg-panel: #FFFFFF;
+  --bg-surface: #F8FAFC;
+  --bg-table-header: #F8FAFC;
+  --bg-row-hover: #FFF7F3;
   --border-panel: #E5E7EB;
   --bg-header: rgba(255, 255, 255, 0.94);
   --shadow-card: 0 14px 36px -28px rgba(15, 23, 42, 0.38);
@@ -243,8 +251,17 @@
 .text-muted-theme {
   color: var(--text-muted);
 }
+.text-soft-theme {
+  color: var(--text-soft);
+}
 .bg-panel-theme {
   background-color: var(--bg-panel);
+}
+.bg-page-theme {
+  background-color: var(--bg-app);
+}
+.bg-surface-theme {
+  background-color: var(--bg-surface);
 }
 .border-panel-theme {
   border-color: var(--border-panel);
@@ -309,6 +326,66 @@
   background-color: var(--bg-elevated);
   border-color: var(--border-strong);
   @apply w-full rounded-xl border px-3.5 py-2.5 text-sm font-medium transition-colors placeholder:text-slate-400 hover:border-brand-orange/30 focus:border-brand-orange;
+}
+
+.app-form-control-compact {
+  color: var(--text-main);
+  background-color: var(--bg-elevated);
+  border-color: var(--border-strong);
+  @apply w-full rounded-lg border px-3 py-1.5 text-[11px] font-semibold outline-none transition-all placeholder:text-slate-400 hover:border-brand-orange/30 focus:border-brand-orange;
+}
+
+.app-label {
+  color: var(--text-muted);
+  @apply block text-[9px] font-extrabold uppercase tracking-widest;
+}
+
+.app-table-header {
+  background-color: var(--bg-table-header);
+  color: var(--text-muted);
+  @apply text-[10px] font-extrabold uppercase tracking-widest select-none;
+}
+
+.app-table-row {
+  @apply transition-colors;
+}
+
+.app-table-row:hover {
+  background-color: var(--bg-row-hover);
+}
+
+.app-table-cell {
+  color: var(--text-soft);
+}
+
+.app-table-cell-strong {
+  color: var(--text-main);
+  @apply font-bold;
+}
+
+.app-table-cell-muted {
+  color: var(--text-muted);
+}
+
+.app-empty-copy {
+  color: var(--text-muted);
+  @apply font-semibold;
+}
+
+.app-quick-chip {
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+  background-color: transparent;
+  @apply rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-all;
+}
+
+.app-quick-chip:hover {
+  color: var(--text-main);
+  border-color: rgba(241, 89, 42, 0.38);
+}
+
+.app-quick-chip-active {
+  @apply border-brand-orange bg-brand-orange/10 text-brand-orange;
 }
 
 /* Custom Sleek Scrollbar */
