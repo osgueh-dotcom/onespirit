@@ -7,13 +7,26 @@
       </button>
     </div>
     
+    <div class="flex flex-wrap gap-2">
+      <button
+        v-for="filter in poQuickFilters"
+        :key="filter.key"
+        type="button"
+        @click="applyPoQuickFilter(filter.key)"
+        class="rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-all"
+        :class="activePoQuickFilter === filter.key ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-brand-charcoal-light/35 text-gray-400 hover:border-brand-orange/35 hover:text-white'"
+      >
+        {{ filter.label }}
+      </button>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
       <!-- Filter PO -->
       <div>
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Owner (PO)</label>
         <select 
           v-model="filters.po_id" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">Semua PO</option>
@@ -26,7 +39,7 @@
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Manager (PM)</label>
         <select 
           v-model="filters.pm_id" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">Semua PM</option>
@@ -39,7 +52,7 @@
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Source Type</label>
         <select 
           v-model="filters.source_type" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">Semua Source</option>
@@ -58,7 +71,7 @@
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Kategori Klien</label>
         <select 
           v-model="filters.customer_category" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">Semua Kategori</option>
@@ -76,7 +89,7 @@
         <input 
           v-model="filters.date_from" 
           type="date"
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         />
       </div>
@@ -87,7 +100,7 @@
         <input 
           v-model="filters.date_to" 
           type="date"
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         />
       </div>
@@ -100,7 +113,7 @@
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Quotation</label>
         <select 
           v-model="filters.quotation_status" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">Semua Quotation</option>
@@ -118,7 +131,7 @@
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Program</label>
         <select 
           v-model="filters.program_status" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">Semua Program</option>
@@ -139,7 +152,7 @@
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Pembayaran</label>
         <select 
           v-model="filters.payment_status" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="">Semua Pembayaran</option>
@@ -157,7 +170,7 @@
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Event Window</label>
         <select 
           v-model="filters.event_window" 
-          @change="emitChange"
+          @change="handleManualFilterChange"
           class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
         >
           <option value="all">Semua Jadwal</option>
@@ -175,7 +188,7 @@
           <input 
             v-model="filters.include_closed" 
             type="checkbox" 
-            @change="emitChange"
+            @change="handleManualFilterChange"
             class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
           />
           Closed Project
@@ -184,7 +197,7 @@
           <input 
             v-model="filters.include_canceled" 
             type="checkbox" 
-            @change="emitChange"
+            @change="handleManualFilterChange"
             class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
           />
           Batal (Canceled)
@@ -206,7 +219,7 @@ defineProps({
 
 const emit = defineEmits(['change'])
 
-const filters = ref({
+const createDefaultFilters = () => ({
   po_id: '',
   pm_id: '',
   source_type: '',
@@ -222,26 +235,50 @@ const filters = ref({
   include_canceled: false
 })
 
+const filters = ref(createDefaultFilters())
+const activePoQuickFilter = ref('all')
+
+const poQuickFilters = [
+  { key: 'all', label: 'Semua' },
+  { key: 'follow_up', label: 'Perlu Follow-up' },
+  { key: 'active_quote', label: 'Quotation Aktif' },
+  { key: 'deal', label: 'Deal' },
+  { key: 'cancel', label: 'Cancel' },
+  { key: 'outstanding', label: 'Outstanding' }
+]
+
 const emitChange = () => {
   emit('change', { ...filters.value })
 }
 
-const resetFilters = () => {
-  filters.value = {
-    po_id: '',
-    pm_id: '',
-    source_type: '',
-    customer_category: '',
-    quotation_status: '',
-    program_status: '',
-    payment_status: '',
-    project_status: '',
-    date_from: '',
-    date_to: '',
-    event_window: 'all',
-    include_closed: false,
-    include_canceled: false
+const handleManualFilterChange = () => {
+  activePoQuickFilter.value = 'custom'
+  emitChange()
+}
+
+const applyPoQuickFilter = (key) => {
+  activePoQuickFilter.value = key
+  filters.value = createDefaultFilters()
+
+  if (key === 'follow_up') {
+    filters.value.quotation_status = 'Follow Up'
+  } else if (key === 'active_quote') {
+    filters.value.quotation_status = 'Sent'
+  } else if (key === 'deal') {
+    filters.value.quotation_status = 'Signed & Deal'
+  } else if (key === 'cancel') {
+    filters.value.quotation_status = 'Cancel'
+    filters.value.include_canceled = true
+  } else if (key === 'outstanding') {
+    filters.value.payment_status = 'Outstanding'
   }
+
+  emitChange()
+}
+
+const resetFilters = () => {
+  activePoQuickFilter.value = 'all'
+  filters.value = createDefaultFilters()
   emitChange()
 }
 </script>

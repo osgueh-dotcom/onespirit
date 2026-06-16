@@ -45,6 +45,23 @@
       </button>
     </div>
 
+    <!-- Finance Summary Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 select-none">
+      <div
+        v-for="card in financeSummaryCards"
+        :key="card.label"
+        class="glass-panel p-4 border border-brand-charcoal-light/20"
+      >
+        <p class="text-[9px] font-black uppercase tracking-widest text-gray-500">{{ card.label }}</p>
+        <p class="mt-1 text-lg font-black tracking-tight" :class="card.valueClass">
+          {{ card.value }}
+        </p>
+        <p v-if="card.caption" class="mt-1 text-[10px] font-semibold text-gray-500">
+          {{ card.caption }}
+        </p>
+      </div>
+    </div>
+
     <!-- Data loading indicator -->
     <AppLoadingState v-if="loading" message="Memuat katalog keuangan..." />
 
@@ -335,7 +352,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
 import { useUiStore } from '../store/ui'
@@ -385,9 +402,8 @@ const newPayment = ref({
 
 const fetchData = async () => {
   try {
-    const [invRes, custPayRes, projRes] = await Promise.all([
+    const [invRes, projRes] = await Promise.all([
       axios.get('/api/v1/invoices'),
-      axios.get('/api/v1/invoices'), // Need payment details. In FastAPI, Payment is separate, let's load all approved payments or invoices which aggregates payments
       axios.get('/api/v1/projects')
     ])
     invoices.value = invRes.data
@@ -396,7 +412,7 @@ const fetchData = async () => {
     // Flat map payments from invoices for collection list
     const mappedPayments = []
     invRes.data.forEach(inv => {
-      inv.payments.forEach(p => {
+      (inv.payments || []).forEach(p => {
         mappedPayments.push({
           ...p,
           invoice_number: inv.invoice_number
@@ -421,6 +437,80 @@ const formatMoney = (val) => {
     maximumFractionDigits: 0
   })
 }
+
+const normalizeStatus = (status) => String(status || '').toLowerCase()
+
+const isInvoicePaid = (invoice) => normalizeStatus(invoice.status) === 'paid'
+
+const getInvoicePaidAmount = (invoice) => {
+  const approvedPayments = (invoice.payments || []).filter(payment => normalizeStatus(payment.status) !== 'rejected')
+  const paymentTotal = approvedPayments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0)
+  if (paymentTotal > 0) return paymentTotal
+  return isInvoicePaid(invoice) ? Number(invoice.amount || 0) : 0
+}
+
+const isInvoiceOverdue = (invoice) => {
+  if (normalizeStatus(invoice.status) === 'overdue') return true
+  if (!invoice.due_date || isInvoicePaid(invoice)) return false
+
+  const dueDate = new Date(invoice.due_date)
+  if (Number.isNaN(dueDate.getTime())) return false
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  dueDate.setHours(0, 0, 0, 0)
+  return dueDate < today
+}
+
+const financeSummary = computed(() => {
+  const totalInvoice = invoices.value.reduce((sum, invoice) => sum + Number(invoice.amount || 0), 0)
+  const totalPaid = invoices.value.reduce((sum, invoice) => sum + getInvoicePaidAmount(invoice), 0)
+  const outstanding = Math.max(totalInvoice - totalPaid, 0)
+  const overdueInvoices = invoices.value.filter(isInvoiceOverdue)
+  const overdue = overdueInvoices.reduce((sum, invoice) => {
+    const remaining = Math.max(Number(invoice.amount || 0) - getInvoicePaidAmount(invoice), 0)
+    return sum + remaining
+  }, 0)
+  const collectionRate = totalInvoice > 0 ? Math.min(Math.round((totalPaid / totalInvoice) * 100), 100) : 0
+
+  return {
+    totalInvoice,
+    totalPaid,
+    outstanding,
+    overdue,
+    overdueCount: overdueInvoices.length,
+    collectionRate
+  }
+})
+
+const financeSummaryCards = computed(() => [
+  {
+    label: 'Total Invoice',
+    value: formatMoney(financeSummary.value.totalInvoice),
+    valueClass: 'text-white'
+  },
+  {
+    label: 'Terbayar',
+    value: formatMoney(financeSummary.value.totalPaid),
+    valueClass: 'text-brand-emerald'
+  },
+  {
+    label: 'Outstanding',
+    value: formatMoney(financeSummary.value.outstanding),
+    valueClass: 'text-brand-orange'
+  },
+  {
+    label: 'Overdue',
+    value: formatMoney(financeSummary.value.overdue),
+    valueClass: financeSummary.value.overdue > 0 ? 'text-red-400' : 'text-gray-300',
+    caption: `${financeSummary.value.overdueCount} invoice`
+  },
+  {
+    label: 'Collection Rate',
+    value: `${financeSummary.value.collectionRate}%`,
+    valueClass: financeSummary.value.collectionRate >= 80 ? 'text-brand-emerald' : 'text-brand-blue'
+  }
+])
 
 const getProjectTitle = (id) => {
   const p = projects.value.find(proj => proj.id === id)

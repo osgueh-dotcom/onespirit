@@ -37,7 +37,29 @@
     </div>
 
     <!-- Filters Toolbar -->
-    <div class="glass-panel p-4 border border-brand-charcoal-light/30 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 select-none">
+    <div class="glass-panel p-4 border border-brand-charcoal-light/30 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 select-none">
+      <!-- Search Filter -->
+      <div class="sm:col-span-2">
+        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Cari Project</label>
+        <div class="relative">
+          <input
+            v-model="projectSearchQuery"
+            type="search"
+            placeholder="Cari project, klien, venue, PO, PM..."
+            class="w-full px-3 py-1.5 pr-8 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-[11px] font-semibold text-gray-300 outline-none transition-all"
+          />
+          <button
+            v-if="projectSearchQuery"
+            type="button"
+            @click="clearProjectSearch"
+            class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md px-1.5 py-0.5 text-[10px] font-black text-gray-500 transition-colors hover:bg-brand-charcoal-light/30 hover:text-white"
+            title="Bersihkan pencarian"
+          >
+            x
+          </button>
+        </div>
+      </div>
+
       <!-- PO Filter -->
       <div>
         <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1">Filter PO</label>
@@ -167,6 +189,10 @@
     <AppLoadingState v-if="loading" message="Memuat daftar project..." />
 
     <!-- KANBAN BOARD VIEW -->
+    <div v-else-if="filteredProjects.length === 0" class="glass-panel p-8 text-center text-sm font-semibold text-gray-500">
+      {{ projectsEmptyMessage }}
+    </div>
+
     <div v-else-if="viewMode === 'board'" class="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-250px)] min-w-full select-none items-start">
       <div 
         v-for="col in columns" 
@@ -302,13 +328,13 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
-              <tr v-if="projects.length === 0">
+              <tr v-if="filteredProjects.length === 0">
                 <td colspan="14" class="px-6 py-12 text-center text-gray-500 font-semibold">
-                  No active event projects cataloged.
+                  {{ projectsEmptyMessage }}
                 </td>
               </tr>
-              <tr 
-                v-for="proj in projects" 
+              <tr
+                v-for="proj in filteredProjects"
                 :key="proj.id"
                 class="hover:bg-brand-charcoal-light/10 transition-colors"
               >
@@ -398,11 +424,11 @@
 
       <!-- Mobile List View (Hidden on desktop/tablet) -->
       <div class="block md:hidden space-y-4">
-        <div v-if="projects.length === 0" class="glass-panel p-8 text-center text-gray-500 font-semibold">
-          No active event projects cataloged.
+        <div v-if="filteredProjects.length === 0" class="glass-panel p-8 text-center text-gray-500 font-semibold">
+          {{ projectsEmptyMessage }}
         </div>
-        <div 
-          v-for="proj in projects" 
+        <div
+          v-for="proj in filteredProjects"
           :key="proj.id"
           class="glass-panel p-4 border border-brand-charcoal-light/30 space-y-3 bg-brand-charcoal/40"
         >
@@ -762,7 +788,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../store/auth'
 import { useUiStore } from '../store/ui'
@@ -796,6 +822,7 @@ const filterQuotationStatus = ref('')
 const filterProgramStatus = ref('')
 const filterPaymentStatus = ref('')
 const filterProjectStatus = ref('')
+const projectSearchQuery = ref('')
 
 const newProj = ref({
   title: '',
@@ -882,6 +909,7 @@ const resetFilters = () => {
   filterProgramStatus.value = ''
   filterPaymentStatus.value = ''
   filterProjectStatus.value = ''
+  projectSearchQuery.value = ''
   fetchProjectsOnly()
 }
 
@@ -889,8 +917,42 @@ onMounted(() => {
   fetchData()
 })
 
+const normalizedProjectSearchQuery = computed(() => projectSearchQuery.value.trim().toLowerCase())
+
+const getProjectSearchText = (project) => {
+  const customer = project.customer?.company_name || customers.value.find(c => c.id === project.customer_id)?.company_name || ''
+  const programOwner = project.program_owner?.full_name || users.value.find(u => u.id === project.program_owner_id)?.full_name || ''
+  const programManager = project.program_manager?.full_name || users.value.find(u => u.id === project.program_manager_id)?.full_name || ''
+  return [
+    project.title,
+    project.project_code,
+    customer,
+    project.venue,
+    programOwner,
+    programManager,
+    project.program_type,
+    project.event_category,
+    project.program_name
+  ].filter(Boolean).join(' ').toLowerCase()
+}
+
+const filteredProjects = computed(() => {
+  if (!normalizedProjectSearchQuery.value) return projects.value
+  return projects.value.filter(project => getProjectSearchText(project).includes(normalizedProjectSearchQuery.value))
+})
+
+const projectsEmptyMessage = computed(() => {
+  return normalizedProjectSearchQuery.value
+    ? 'Tidak ada project yang cocok dengan pencarian.'
+    : 'Belum ada project aktif dalam katalog.'
+})
+
+const clearProjectSearch = () => {
+  projectSearchQuery.value = ''
+}
+
 const getProjectsByStatus = (status) => {
-  return projects.value.filter(p => {
+  return filteredProjects.value.filter(p => {
     const progStatus = p.program_status || p.status || ''
     return progStatus.toLowerCase() === status.toLowerCase()
   })

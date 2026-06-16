@@ -7,8 +7,25 @@
     />
 
     <!-- Top toolbar actions -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 select-none">
-      <div class="flex items-center gap-3">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 select-none">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
+        <div class="relative w-full sm:max-w-md">
+          <input
+            v-model="crmSearchQuery"
+            type="search"
+            placeholder="Cari perusahaan, PIC, email, atau nomor telepon..."
+            class="w-full px-4 py-2.5 pr-9 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/35 focus:border-brand-orange text-xs font-semibold text-gray-300 outline-none transition-all"
+          />
+          <button
+            v-if="crmSearchQuery"
+            type="button"
+            @click="clearCrmSearch"
+            class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-1.5 py-0.5 text-[10px] font-black text-gray-500 transition-colors hover:bg-brand-charcoal-light/30 hover:text-white"
+            title="Bersihkan pencarian"
+          >
+            x
+          </button>
+        </div>
         <select 
           v-model="filterCategory"
           class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-brand-charcoal border border-brand-charcoal-light/35 hover:border-brand-orange/35 focus:border-brand-orange text-xs font-semibold text-gray-300 outline-none transition-all"
@@ -51,7 +68,7 @@
             <tbody class="divide-y divide-brand-charcoal-light/10">
               <tr v-if="filteredCustomers.length === 0">
                 <td colspan="5" class="px-6 py-12 text-center font-semibold text-gray-500">
-                  Tidak ada akun klien yang cocok dengan kriteria filter.
+                  {{ crmEmptyMessage }}
                 </td>
               </tr>
               <tr 
@@ -101,7 +118,7 @@
       <!-- Mobile Card List View -->
       <div class="block md:hidden space-y-4">
         <div v-if="filteredCustomers.length === 0" class="py-12 text-center font-semibold text-gray-500">
-          No client accounts found matching the filter criteria.
+          {{ crmEmptyMessage }}
         </div>
         <div 
           v-for="cust in filteredCustomers" 
@@ -329,6 +346,7 @@ const customers = ref([])
 const loading = ref(true)
 
 const filterCategory = ref('')
+const crmSearchQuery = ref('')
 const showAddModal = ref(false)
 const showContactModal = ref(false)
 
@@ -364,9 +382,38 @@ onMounted(() => {
 })
 
 const filteredCustomers = computed(() => {
-  if (!filterCategory.value) return customers.value
-  return customers.value.filter(c => c.category === filterCategory.value)
+  const query = crmSearchQuery.value.trim().toLowerCase()
+  return customers.value.filter(customer => {
+    if (filterCategory.value && customer.category !== filterCategory.value) return false
+    if (!query) return true
+
+    const contactsText = (customer.contacts || []).map(contact => [
+      contact.name,
+      contact.email,
+      contact.phone,
+      contact.whatsapp,
+      contact.position
+    ].filter(Boolean).join(' ')).join(' ')
+
+    return [
+      customer.company_name,
+      customer.category,
+      customer.status,
+      customer.address,
+      contactsText
+    ].filter(Boolean).join(' ').toLowerCase().includes(query)
+  })
 })
+
+const crmEmptyMessage = computed(() => {
+  return crmSearchQuery.value.trim()
+    ? 'Tidak ada data klien/kontak yang cocok.'
+    : 'Tidak ada akun klien yang cocok dengan kriteria filter.'
+})
+
+const clearCrmSearch = () => {
+  crmSearchQuery.value = ''
+}
 
 const getCategoryStyles = (cat) => {
   if (cat === 'Corporate') return 'bg-brand-orange/10 text-brand-orange'

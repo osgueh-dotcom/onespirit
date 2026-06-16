@@ -27,13 +27,26 @@
         </button>
       </div>
       
+      <div class="flex flex-wrap gap-2">
+        <button
+          v-for="filter in pmQuickFilters"
+          :key="filter.key"
+          type="button"
+          @click="applyPmQuickFilter(filter.key)"
+          class="rounded-full border px-3 py-1.5 text-[10px] font-extrabold transition-all"
+          :class="activePmQuickFilter === filter.key ? 'border-brand-orange bg-brand-orange/10 text-brand-orange' : 'border-brand-charcoal-light/35 text-gray-400 hover:border-brand-orange/35 hover:text-white'"
+        >
+          {{ filter.label }}
+        </button>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <!-- Filter PM -->
         <div>
           <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Manager (PM)</label>
           <select 
             v-model="filterPm" 
-            @change="fetchControlCenterData"
+            @change="handleManualFilterChange"
             class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
           >
             <option value="">Semua PM</option>
@@ -46,7 +59,7 @@
           <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Program Owner (PO)</label>
           <select 
             v-model="filterPo" 
-            @change="fetchControlCenterData"
+            @change="handleManualFilterChange"
             class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
           >
             <option value="">Semua PO</option>
@@ -59,7 +72,7 @@
           <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Periode Event (Window)</label>
           <select 
             v-model="filterEventWindow" 
-            @change="fetchControlCenterData"
+            @change="handleManualFilterChange"
             class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
           >
             <option value="all">Semua Jadwal</option>
@@ -78,7 +91,7 @@
             <input 
               v-model="filterDateFrom" 
               type="date"
-              @change="fetchControlCenterData"
+              @change="handleManualFilterChange"
               class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
             />
           </div>
@@ -87,7 +100,7 @@
             <input 
               v-model="filterDateTo" 
               type="date"
-              @change="fetchControlCenterData"
+              @change="handleManualFilterChange"
               class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
             />
           </div>
@@ -99,7 +112,7 @@
             <input 
               v-model="filterIncludeClosed" 
               type="checkbox" 
-              @change="fetchControlCenterData"
+              @change="handleManualFilterChange"
               class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
             />
             Closed Project
@@ -108,7 +121,7 @@
             <input 
               v-model="filterIncludeCanceled" 
               type="checkbox" 
-              @change="fetchControlCenterData"
+              @change="handleManualFilterChange"
               class="rounded bg-brand-charcoal border-brand-charcoal-light/40 text-brand-orange focus:ring-0"
             />
             Batal (Canceled)
@@ -127,7 +140,7 @@
             min="0"
             max="100"
             placeholder="0"
-            @change="fetchControlCenterData"
+            @change="handleManualFilterChange"
             class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
           />
         </div>
@@ -141,7 +154,7 @@
             min="0"
             max="100"
             placeholder="100"
-            @change="fetchControlCenterData"
+            @change="handleManualFilterChange"
             class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
           />
         </div>
@@ -151,7 +164,7 @@
           <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-500 mb-1.5">Status Instrumen</label>
           <select 
             v-model="filterInstrumentStatus" 
-            @change="fetchControlCenterData"
+            @change="handleManualFilterChange"
             class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 text-[11px] font-semibold text-gray-300 outline-none transition-all"
           >
             <option value="">Semua Status</option>
@@ -863,6 +876,7 @@ const priorityActions = ref([])
 const loading = ref(true)
 const error = ref(null)
 const activeTab = ref('priority')
+const activePmQuickFilter = ref('all')
 
 // Filters variables
 const filterPm = ref('')
@@ -875,6 +889,15 @@ const filterIncludeCanceled = ref(false)
 const filterReadinessMin = ref('')
 const filterReadinessMax = ref('')
 const filterInstrumentStatus = ref('')
+
+const pmQuickFilters = [
+  { key: 'all', label: 'Semua' },
+  { key: 'today', label: 'Hari Ini' },
+  { key: 'next_7_days', label: '7 Hari' },
+  { key: 'next_14_days', label: '14 Hari' },
+  { key: 'not_ready', label: 'Belum Siap' },
+  { key: 'overdue', label: 'Overdue' }
+]
 
 const tabs = computed(() => [
   { id: 'priority', name: 'Prioritas Tindakan', count: priorityActions.value.length },
@@ -926,7 +949,43 @@ const fetchControlCenterData = async () => {
   }
 }
 
+const handleManualFilterChange = () => {
+  activePmQuickFilter.value = 'custom'
+  fetchControlCenterData()
+}
+
+const clearPmQuickFilterFields = () => {
+  filterDateFrom.value = ''
+  filterDateTo.value = ''
+  filterReadinessMin.value = ''
+  filterReadinessMax.value = ''
+  filterInstrumentStatus.value = ''
+}
+
+const applyPmQuickFilter = (key) => {
+  activePmQuickFilter.value = key
+
+  if (key === 'all') {
+    resetFilters()
+    return
+  }
+
+  clearPmQuickFilterFields()
+  filterEventWindow.value = 'all'
+
+  if (key === 'today' || key === 'next_7_days' || key === 'next_14_days' || key === 'overdue') {
+    filterEventWindow.value = key
+  }
+
+  if (key === 'not_ready') {
+    filterReadinessMax.value = 79
+  }
+
+  fetchControlCenterData()
+}
+
 const resetFilters = () => {
+  activePmQuickFilter.value = 'all'
   filterPm.value = ''
   filterPo.value = ''
   filterEventWindow.value = 'all'
