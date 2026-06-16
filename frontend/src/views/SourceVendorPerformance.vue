@@ -19,37 +19,37 @@
     </AppPageHeader>
 
     <!-- Filters Bar -->
-    <div class="glass-panel p-4 border border-brand-charcoal-light/20">
+    <div class="glass-panel p-4">
       <div class="flex flex-wrap items-center gap-4 text-xs">
         <!-- Date From -->
-        <div class="flex flex-col gap-1">
-          <label class="text-gray-400 font-bold select-none">Dari Tanggal</label>
+        <div class="flex flex-col gap-1.5">
+          <label class="app-label select-none">Dari Tanggal</label>
           <input 
             type="date" 
             v-model="filters.date_from" 
             @change="fetchPerformanceData"
-            class="bg-brand-charcoal-dark border border-brand-charcoal-light/30 rounded-xl px-3 py-1.5 text-white outline-none focus:border-brand-orange/50 transition-all font-mono"
+            class="app-form-control-compact font-mono"
           />
         </div>
 
         <!-- Date To -->
-        <div class="flex flex-col gap-1">
-          <label class="text-gray-400 font-bold select-none">Sampai Tanggal</label>
+        <div class="flex flex-col gap-1.5">
+          <label class="app-label select-none">Sampai Tanggal</label>
           <input 
             type="date" 
             v-model="filters.date_to" 
             @change="fetchPerformanceData"
-            class="bg-brand-charcoal-dark border border-brand-charcoal-light/30 rounded-xl px-3 py-1.5 text-white outline-none focus:border-brand-orange/50 transition-all font-mono"
+            class="app-form-control-compact font-mono"
           />
         </div>
 
         <!-- Program Owner -->
-        <div class="flex flex-col gap-1">
-          <label class="text-gray-400 font-bold select-none">Program Owner (PO)</label>
+        <div class="flex flex-col gap-1.5">
+          <label class="app-label select-none">Program Owner (PO)</label>
           <select 
             v-model="filters.po_id" 
             @change="fetchPerformanceData"
-            class="bg-brand-charcoal-dark border border-brand-charcoal-light/30 rounded-xl px-3 py-1.5 text-white outline-none focus:border-brand-orange/50 transition-all cursor-pointer font-bold"
+            class="app-form-control-compact font-bold"
           >
             <option value="">Semua PO</option>
             <option v-for="u in users" :key="u.id" :value="u.id">
@@ -60,21 +60,21 @@
 
         <!-- Checkboxes -->
         <div class="flex items-center gap-4 mt-4 select-none">
-          <label class="inline-flex items-center gap-2 text-gray-300 font-bold cursor-pointer hover:text-white transition-colors">
+          <label class="inline-flex items-center gap-2 text-muted-theme font-bold cursor-pointer hover:text-main-theme transition-colors">
             <input 
               type="checkbox" 
               v-model="filters.include_closed" 
               @change="fetchPerformanceData"
-              class="rounded border-brand-charcoal-light bg-brand-charcoal text-brand-orange focus:ring-brand-orange/50"
+              class="rounded border-panel-theme bg-surface-theme text-brand-orange focus:ring-brand-orange/50"
             />
             Sertakan Closed
           </label>
-          <label class="inline-flex items-center gap-2 text-gray-300 font-bold cursor-pointer hover:text-white transition-colors">
+          <label class="inline-flex items-center gap-2 text-muted-theme font-bold cursor-pointer hover:text-main-theme transition-colors">
             <input 
               type="checkbox" 
               v-model="filters.include_canceled" 
               @change="fetchPerformanceData"
-              class="rounded border-brand-charcoal-light bg-brand-charcoal text-brand-orange focus:ring-brand-orange/50"
+              class="rounded border-panel-theme bg-surface-theme text-brand-orange focus:ring-brand-orange/50"
             />
             Sertakan Batal
           </label>
@@ -83,7 +83,7 @@
         <!-- Reset Button -->
         <button 
           @click="resetFilters"
-          class="ml-auto px-4 py-2 mt-4 rounded-xl bg-red-500/10 hover:bg-red-500/25 border border-red-500/20 text-red-400 hover:text-white font-bold transition-all"
+          class="ml-auto px-4 py-1.5 mt-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 text-red-400 font-bold transition-all"
         >
           Reset Filter
         </button>
@@ -156,19 +156,19 @@
       </div>
 
       <!-- Tab Buttons -->
-      <div class="flex border-b border-brand-charcoal-light/25 select-none overflow-x-auto">
+      <div class="flex border-b border-panel-theme select-none overflow-x-auto">
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
           @click="activeTab = tab.id"
           class="px-5 py-3 text-xs font-bold transition-all border-b-2 outline-none flex items-center gap-2 whitespace-nowrap"
-          :class="activeTab === tab.id ? 'border-brand-orange text-white bg-white/5' : 'border-transparent text-gray-400 hover:text-white'"
+          :class="activeTab === tab.id ? 'border-brand-orange text-main-theme bg-surface-theme' : 'border-transparent text-muted-theme hover:text-main-theme'"
         >
           {{ tab.name }}
           <span 
             v-if="tab.count !== undefined" 
             class="px-1.5 py-0.5 rounded-full text-[9px] font-black"
-            :class="activeTab === tab.id ? 'bg-brand-orange text-black' : 'bg-brand-charcoal-light/30 text-gray-400'"
+            :class="activeTab === tab.id ? 'bg-brand-orange text-black' : 'bg-surface-theme text-muted-theme'"
           >
             {{ tab.count }}
           </span>
@@ -177,13 +177,13 @@
 
       <!-- TAB 1: Source Performance -->
       <div v-show="activeTab === 'sources'" class="space-y-4">
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Performa Sumber Project (Lead Source Performance)</h3>
+        <div class="glass-panel p-5 space-y-4">
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Performa Sumber Project (Lead Source Performance)</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden lg:block overflow-x-auto">
-            <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+            <table class="min-w-full text-left text-xs divide-y divide-panel-theme">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Lead Source</th>
                   <th class="px-4 py-3 text-center">Total Projects</th>
@@ -198,28 +198,28 @@
                   <th class="px-4 py-3 text-center">Risk Count</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
+              <tbody class="divide-y divide-panel-theme font-medium">
                 <tr v-if="sourcePerformance.length === 0">
-                  <td colspan="11" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="11" class="px-4 py-8 text-center text-muted-theme font-semibold">
                     Tidak ada data performa source untuk filter ini.
                   </td>
                 </tr>
                 <tr 
                   v-for="s in sourcePerformance" 
                   :key="s.source_type"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 whitespace-nowrap font-bold text-white select-all">
+                  <td class="px-4 py-3 whitespace-nowrap font-bold text-main-theme select-all">
                     {{ s.source_type }}
                   </td>
-                  <td class="px-4 py-3 text-center text-gray-300 font-mono font-bold">{{ s.total_projects }}</td>
+                  <td class="px-4 py-3 text-center text-soft-theme font-mono font-bold">{{ s.total_projects }}</td>
                   <td class="px-4 py-3 text-center text-indigo-400 font-bold">{{ s.active_projects }}</td>
                   <td class="px-4 py-3 text-center text-brand-emerald font-bold">{{ s.confirmed_projects }}</td>
                   <td class="px-4 py-3 text-center text-amber-500 font-bold">{{ s.pending_quotation_projects }}</td>
                   <td class="px-4 py-3 text-center text-red-400 font-bold">{{ s.cancelled_projects }}</td>
-                  <td class="px-4 py-3 text-right font-mono text-gray-300">{{ formatCurrency(s.potential_revenue) }}</td>
+                  <td class="px-4 py-3 text-right font-mono text-soft-theme">{{ formatCurrency(s.potential_revenue) }}</td>
                   <td class="px-4 py-3 text-right font-mono text-brand-emerald font-bold">{{ formatCurrency(s.confirmed_revenue) }}</td>
-                  <td class="px-4 py-3 text-right font-mono" :class="s.outstanding_payment > 0 ? 'text-red-400 font-bold' : 'text-gray-400'">
+                  <td class="px-4 py-3 text-right font-mono" :class="s.outstanding_payment > 0 ? 'text-red-400 font-bold' : 'text-muted-theme'">
                     {{ formatCurrency(s.outstanding_payment) }}
                   </td>
                   <td class="px-4 py-3 text-center font-bold text-brand-emerald font-mono">
@@ -241,32 +241,32 @@
 
           <!-- Mobile Card List -->
           <div class="block lg:hidden space-y-4">
-            <div v-if="sourcePerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="sourcePerformance.length === 0" class="py-6 text-center text-xs text-muted-theme font-semibold">
               Tidak ada data performa source untuk filter ini.
             </div>
             <div 
               v-for="s in sourcePerformance" 
               :key="s.source_type"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+              class="glass-panel p-4 space-y-3 animate-fade-in"
             >
-              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="text-white font-bold select-none text-xs">{{ s.source_type }}</span>
+              <div class="flex items-center justify-between border-b border-panel-theme pb-2">
+                <span class="text-main-theme font-bold select-none text-xs">{{ s.source_type }}</span>
                 <span class="text-brand-emerald font-bold font-mono text-xs">{{ Math.round(s.conversion_rate) }}% Deal Rate</span>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
-                  <p class="text-white font-bold">{{ s.total_projects }} Proyek</p>
-                  <p class="text-[9px] text-gray-400 mt-0.5">Active: {{ s.active_projects }} • Deal: {{ s.confirmed_projects }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-main-theme font-bold">{{ s.total_projects }} Proyek</p>
+                  <p class="text-[9px] text-muted-theme mt-0.5">Active: {{ s.active_projects }} • Deal: {{ s.confirmed_projects }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Status Keuangan</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Status Keuangan</p>
                   <p class="text-brand-emerald font-mono font-bold">Terkonfirmasi: {{ formatCurrency(s.confirmed_revenue) }}</p>
                   <p class="text-red-400 font-mono text-[10px]">Belum Lunas: {{ formatCurrency(s.outstanding_payment) }}</p>
                 </div>
               </div>
-              <div class="flex justify-between items-center text-[10px] text-gray-400">
-                <span>Estimasi: <b class="text-white font-mono">{{ formatCurrency(s.potential_revenue) }}</b></span>
+              <div class="flex justify-between items-center text-[10px] text-muted-theme">
+                <span>Estimasi: <b class="text-main-theme font-mono">{{ formatCurrency(s.potential_revenue) }}</b></span>
                 <span v-if="s.commercial_risk > 0" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">
                   {{ s.commercial_risk }} Risiko
                 </span>
@@ -278,10 +278,10 @@
 
       <!-- TAB 2: Vendor Performance -->
       <div v-show="activeTab === 'vendors'" class="space-y-4">
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
+        <div class="glass-panel p-5 space-y-4">
           <div class="flex items-center justify-between">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Performa Vendor Partner (Vendor Performance)</h3>
-            <span class="text-[10px] font-black text-gray-400 uppercase bg-brand-charcoal-light/20 px-2 py-0.5 rounded select-none">Kualitas Data</span>
+            <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Performa Vendor Partner (Vendor Performance)</h3>
+            <span class="text-[10px] font-black text-muted-theme uppercase bg-panel-theme px-2 py-0.5 rounded select-none">Kualitas Data</span>
           </div>
 
           <!-- Empty state description / limitation warning -->
@@ -295,8 +295,8 @@
 
           <!-- Desktop Table View -->
           <div class="hidden lg:block overflow-x-auto">
-            <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+            <table class="min-w-full text-left text-xs divide-y divide-panel-theme">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Nama Vendor Partner</th>
                   <th class="px-4 py-3 text-center">Total Projects</th>
@@ -310,28 +310,28 @@
                   <th class="px-4 py-3 text-center">Risk Count</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
+              <tbody class="divide-y divide-panel-theme font-medium">
                 <tr v-if="vendorPerformance.length === 0">
-                  <td colspan="10" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="10" class="px-4 py-8 text-center text-muted-theme font-semibold">
                     Tidak ada data performa vendor partner.
                   </td>
                 </tr>
                 <tr 
                   v-for="v in vendorPerformance" 
                   :key="v.vendor_name"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 whitespace-nowrap font-bold text-white select-all">
+                  <td class="px-4 py-3 whitespace-nowrap font-bold text-main-theme select-all">
                     {{ v.vendor_name }}
                   </td>
-                  <td class="px-4 py-3 text-center text-gray-300 font-mono font-bold">{{ v.total_projects }}</td>
+                  <td class="px-4 py-3 text-center text-soft-theme font-mono font-bold">{{ v.total_projects }}</td>
                   <td class="px-4 py-3 text-center text-indigo-400 font-bold">{{ v.active_projects }}</td>
                   <td class="px-4 py-3 text-center text-brand-emerald font-bold">{{ v.confirmed_projects }}</td>
                   <td class="px-4 py-3 text-center text-red-400 font-bold">{{ v.cancelled_projects }}</td>
-                  <td class="px-4 py-3 text-right font-mono text-gray-300">{{ formatCurrency(v.potential_revenue) }}</td>
+                  <td class="px-4 py-3 text-right font-mono text-soft-theme">{{ formatCurrency(v.potential_revenue) }}</td>
                   <td class="px-4 py-3 text-right font-mono text-brand-emerald font-bold">{{ formatCurrency(v.confirmed_revenue) }}</td>
-                  <td class="px-4 py-3 text-right font-mono text-gray-400">{{ formatCurrency(v.average_project_value) }}</td>
-                  <td class="px-4 py-3 text-center font-bold text-white font-mono">
+                  <td class="px-4 py-3 text-right font-mono text-muted-theme">{{ formatCurrency(v.average_project_value) }}</td>
+                  <td class="px-4 py-3 text-center font-bold text-main-theme font-mono">
                     {{ v.usage_frequency }}x
                   </td>
                   <td class="px-4 py-3 text-center">
@@ -350,32 +350,32 @@
 
           <!-- Mobile Card List -->
           <div class="block lg:hidden space-y-4">
-            <div v-if="vendorPerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="vendorPerformance.length === 0" class="py-6 text-center text-xs text-muted-theme font-semibold">
               Tidak ada data performa vendor partner.
             </div>
             <div 
               v-for="v in vendorPerformance" 
               :key="v.vendor_name"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3 animate-fade-in"
             >
-              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="text-white font-bold select-none text-xs">{{ v.vendor_name }}</span>
+              <div class="flex items-center justify-between border-b border-panel-theme pb-2">
+                <span class="text-main-theme font-bold select-none text-xs">{{ v.vendor_name }}</span>
                 <span class="px-2 py-0.5 rounded text-[10px] bg-indigo-500/10 text-indigo-400 font-mono">Dipakai {{ v.usage_frequency }}x</span>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
-                  <p class="text-white font-bold">{{ v.total_projects }} Proyek</p>
-                  <p class="text-[9px] text-gray-400 mt-0.5">Active: {{ v.active_projects }} • Deal: {{ v.confirmed_projects }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-main-theme font-bold">{{ v.total_projects }} Proyek</p>
+                  <p class="text-[9px] text-muted-theme mt-0.5">Active: {{ v.active_projects }} • Deal: {{ v.confirmed_projects }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Pendapatan Vendor</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Pendapatan Vendor</p>
                   <p class="text-brand-emerald font-mono font-bold">Terkonfirmasi: {{ formatCurrency(v.confirmed_revenue) }}</p>
-                  <p class="text-gray-400 font-mono text-[10px]">Rata-rata: {{ formatCurrency(v.average_project_value) }}</p>
+                  <p class="text-muted-theme font-mono text-[10px]">Rata-rata: {{ formatCurrency(v.average_project_value) }}</p>
                 </div>
               </div>
-              <div class="flex justify-between items-center text-[10px] text-gray-400">
-                <span>Estimasi: <b class="text-white font-mono">{{ formatCurrency(v.potential_revenue) }}</b></span>
+              <div class="flex justify-between items-center text-[10px] text-muted-theme">
+                <span>Estimasi: <b class="text-main-theme font-mono">{{ formatCurrency(v.potential_revenue) }}</b></span>
                 <span v-if="v.risk_count > 0" class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[9px] font-bold">
                   {{ v.risk_count }} Risiko
                 </span>
@@ -387,13 +387,13 @@
 
       <!-- TAB 3: PO + Source Performance -->
       <div v-show="activeTab === 'po_sources'" class="space-y-4">
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Distribusi Alokasi PO & Event Source</h3>
+        <div class="glass-panel p-5 space-y-4">
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Distribusi Alokasi PO & Event Source</h3>
           
           <!-- Desktop Table View -->
           <div class="hidden lg:block overflow-x-auto">
-            <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-              <thead class="bg-brand-charcoal-dark/30 text-[9px] font-extrabold uppercase tracking-widest text-gray-500 select-none">
+            <table class="min-w-full text-left text-xs divide-y divide-panel-theme">
+              <thead class="app-table-header">
                 <tr>
                   <th class="px-4 py-3">Program Owner (PO)</th>
                   <th class="px-4 py-3">Lead Source Type</th>
@@ -405,25 +405,25 @@
                   <th class="px-4 py-3 text-center">Follow-up Load</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-brand-charcoal-light/5 font-medium">
+              <tbody class="divide-y divide-panel-theme font-medium">
                 <tr v-if="poSourcePerformance.length === 0">
-                  <td colspan="8" class="px-4 py-8 text-center text-gray-500 font-semibold">
+                  <td colspan="8" class="px-4 py-8 text-center text-muted-theme font-semibold">
                     Tidak ada data alokasi PO dan lead source.
                   </td>
                 </tr>
                 <tr 
                   v-for="(p, index) in poSourcePerformance" 
                   :key="index"
-                  class="hover:bg-white/5 transition-colors"
+                  class="app-table-row"
                 >
-                  <td class="px-4 py-3 whitespace-nowrap font-bold text-white select-all">
+                  <td class="px-4 py-3 whitespace-nowrap font-bold text-main-theme select-all">
                     {{ p.po_name }}
                   </td>
-                  <td class="px-4 py-3 text-gray-300 font-semibold">{{ p.source_type }}</td>
-                  <td class="px-4 py-3 text-center text-gray-300 font-mono font-bold">{{ p.total_projects }}</td>
+                  <td class="px-4 py-3 text-soft-theme font-semibold">{{ p.source_type }}</td>
+                  <td class="px-4 py-3 text-center text-soft-theme font-mono font-bold">{{ p.total_projects }}</td>
                   <td class="px-4 py-3 text-center text-brand-emerald font-bold">{{ p.confirmed_projects }}</td>
                   <td class="px-4 py-3 text-center text-amber-500 font-bold">{{ p.pending_projects }}</td>
-                  <td class="px-4 py-3 text-right font-mono text-gray-300">{{ formatCurrency(p.potential_revenue) }}</td>
+                  <td class="px-4 py-3 text-right font-mono text-soft-theme">{{ formatCurrency(p.potential_revenue) }}</td>
                   <td class="px-4 py-3 text-right font-mono text-brand-emerald font-bold">{{ formatCurrency(p.confirmed_revenue) }}</td>
                   <td class="px-4 py-3 text-center">
                     <span 
@@ -441,28 +441,28 @@
 
           <!-- Mobile Card List -->
           <div class="block lg:hidden space-y-4">
-            <div v-if="poSourcePerformance.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+            <div v-if="poSourcePerformance.length === 0" class="py-6 text-center text-xs text-muted-theme font-semibold">
               Tidak ada data alokasi PO dan lead source.
             </div>
             <div 
               v-for="(p, index) in poSourcePerformance" 
               :key="index"
-              class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3 animate-fade-in"
+              class="bg-surface-theme border border-panel-theme p-4 rounded-2xl space-y-3 animate-fade-in"
             >
-              <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
-                <span class="text-white font-bold select-none text-xs">{{ p.po_name }}</span>
-                <span class="text-gray-400 text-[11px] font-semibold">{{ p.source_type }}</span>
+              <div class="flex items-center justify-between border-b border-panel-theme pb-2">
+                <span class="text-main-theme font-bold select-none text-xs">{{ p.po_name }}</span>
+                <span class="text-muted-theme text-[11px] font-semibold">{{ p.source_type }}</span>
               </div>
-              <div class="grid grid-cols-2 gap-2 bg-black/20 p-2.5 rounded-xl border border-white/5 text-[11px] font-semibold">
+              <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2.5 rounded-xl border border-panel-theme text-[11px] font-semibold">
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Total Proyek</p>
-                  <p class="text-white font-bold">{{ p.total_projects }} Proyek</p>
-                  <p class="text-[9px] text-gray-400 mt-0.5">Confirmed: {{ p.confirmed_projects }} • Pending: {{ p.pending_projects }}</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Total Proyek</p>
+                  <p class="text-main-theme font-bold">{{ p.total_projects }} Proyek</p>
+                  <p class="text-[9px] text-muted-theme mt-0.5">Confirmed: {{ p.confirmed_projects }} • Pending: {{ p.pending_projects }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 text-[9px] uppercase tracking-wider">Estimasi Revenue</p>
+                  <p class="text-muted-theme text-[9px] uppercase tracking-wider">Estimasi Revenue</p>
                   <p class="text-brand-emerald font-mono font-bold">Terkonfirmasi: {{ formatCurrency(p.confirmed_revenue) }}</p>
-                  <p class="text-gray-400 font-mono text-[10px]">Estimasi: {{ formatCurrency(p.potential_revenue) }}</p>
+                  <p class="text-muted-theme font-mono text-[10px]">Estimasi: {{ formatCurrency(p.potential_revenue) }}</p>
                 </div>
               </div>
               <div class="flex justify-end">
@@ -478,13 +478,13 @@
       <!-- Risk Alerts & Data Quality Panels -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Left: Risk Alerts -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Source dengan Risiko Tinggi (Risk Alerts)</h3>
-          <div v-if="riskAlerts.length === 0" class="h-32 flex flex-col items-center justify-center text-gray-500">
+        <div class="glass-panel p-5 space-y-4">
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Source dengan Risiko Tinggi (Risk Alerts)</h3>
+          <div v-if="riskAlerts.length === 0" class="h-32 flex flex-col items-center justify-center text-muted-theme">
             <svg class="w-8 h-8 text-brand-emerald/40 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="text-xs font-semibold text-gray-400">Tidak ada alert risiko komersial terdeteksi.</span>
+            <span class="text-xs font-semibold text-muted-theme">Tidak ada alert risiko komersial terdeteksi.</span>
           </div>
           <div v-else class="space-y-3 max-h-72 overflow-y-auto pr-2">
             <div 
@@ -497,36 +497,36 @@
                 {{ alert.level }}
               </div>
               <div class="flex-1 text-xs">
-                <p class="text-white font-bold leading-normal">{{ alert.message }}</p>
-                <p class="text-[10px] text-gray-400 mt-1 uppercase font-semibold tracking-wider">Kategori: {{ alert.category }}</p>
+                <p class="text-main-theme font-bold leading-normal">{{ alert.message }}</p>
+                <p class="text-[10px] text-muted-theme mt-1 uppercase font-semibold tracking-wider">Kategori: {{ alert.category }}</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Right: Data Quality Report -->
-        <div class="glass-panel p-5 border border-brand-charcoal-light/20 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Audit Kualitas Data (Data Quality)</h3>
+        <div class="glass-panel p-5 space-y-4">
+          <h3 class="text-sm font-bold text-main-theme uppercase tracking-wider">Audit Kualitas Data (Data Quality)</h3>
           <div class="grid grid-cols-2 gap-4">
-            <div class="bg-black/20 p-4 rounded-xl border border-white/5 text-center">
-              <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Missing Lead Source Mapping</p>
-              <p class="text-2xl font-black text-white" :class="dataQuality.missing_source_count > 0 ? 'text-amber-400' : 'text-brand-emerald'">
+            <div class="bg-surface-theme p-4 rounded-xl border border-panel-theme text-center">
+              <p class="text-[9px] font-black text-muted-theme uppercase tracking-widest mb-1">Missing Lead Source Mapping</p>
+              <p class="text-2xl font-black text-main-theme" :class="dataQuality.missing_source_count > 0 ? 'text-amber-400' : 'text-brand-emerald'">
                 {{ dataQuality.missing_source_count }}
               </p>
-              <span class="text-[8px] text-gray-400 block mt-1">Proyek tanpa Event Source</span>
+              <span class="text-[8px] text-muted-theme block mt-1">Proyek tanpa Event Source</span>
             </div>
 
-            <div class="bg-black/20 p-4 rounded-xl border border-white/5 text-center">
-              <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Missing Vendor Partners</p>
-              <p class="text-2xl font-black text-white" :class="dataQuality.missing_vendor_count > 0 ? 'text-amber-400' : 'text-brand-emerald'">
+            <div class="bg-surface-theme p-4 rounded-xl border border-panel-theme text-center">
+              <p class="text-[9px] font-black text-muted-theme uppercase tracking-widest mb-1">Missing Vendor Partners</p>
+              <p class="text-2xl font-black text-main-theme" :class="dataQuality.missing_vendor_count > 0 ? 'text-amber-400' : 'text-brand-emerald'">
                 {{ dataQuality.missing_vendor_count }}
               </p>
-              <span class="text-[8px] text-gray-400 block mt-1">Vendor name kosong / -</span>
+              <span class="text-[8px] text-muted-theme block mt-1">Vendor name kosong / -</span>
             </div>
           </div>
 
-          <div class="bg-brand-charcoal-dark/40 rounded-xl p-4 border border-white/5 text-xs text-gray-400 space-y-2">
-            <div class="flex items-center gap-2 font-bold text-white">
+          <div class="bg-surface-theme rounded-xl p-4 border border-panel-theme text-xs text-muted-theme space-y-2">
+            <div class="flex items-center gap-2 font-bold text-main-theme">
               <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.083 1.083l-.04.02m-.041 0a.75.75 0 001.083 1.083l.04-.02m-1.083-1.083A.75.75 0 0011.25 11.25zm.041-.02l.041-.02a.75.75 0 10-1.083-1.083l-.04.02m1.083 1.083a.75.75 0 00-1.083-1.083l-.04.02" />
               </svg>
@@ -674,10 +674,3 @@ const getAlertBadgeClass = (level) => {
 }
 </script>
 
-<style scoped>
-.glass-panel {
-  background: rgba(26, 32, 44, 0.75);
-  backdrop-filter: blur(12px);
-  border-radius: 1.25rem;
-}
-</style>

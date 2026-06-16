@@ -31,8 +31,8 @@
       </div>
 
       <div class="space-y-1.5">
-        <p class="text-sm font-bold text-white">Tarik & lepas file Excel Anda di sini, atau <span class="text-brand-orange underline">pilih file</span></p>
-        <p class="text-[10px] font-bold text-charcoal-400 uppercase tracking-widest">Mendukung spreadsheet .xlsx yang berisi sheet "Workflow"</p>
+        <p class="text-sm font-bold text-main-theme">Tarik & lepas file Excel Anda di sini, atau <span class="text-brand-orange underline">pilih file</span></p>
+        <p class="text-[10px] font-bold text-muted-theme uppercase tracking-widest">Mendukung spreadsheet .xlsx yang berisi sheet "Workflow"</p>
       </div>
 
       <div v-if="parsing" class="flex items-center gap-2 mt-4 text-xs font-bold text-brand-orange">
@@ -48,35 +48,35 @@
     <div v-if="previewData && !importReport" class="space-y-6 animate-fade-in">
       <!-- Preview Statistics Cards -->
       <div class="grid grid-cols-2 md:grid-cols-5 gap-4 select-none">
-        <div class="p-4 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] uppercase tracking-wider text-charcoal-400 font-bold">Total Rows</p>
-          <h4 class="text-2xl font-black text-white mt-1">{{ previewData.total_rows }}</h4>
+        <div class="interactive-card p-4">
+          <p class="text-[9px] uppercase tracking-wider text-muted-theme font-bold">Total Rows</p>
+          <h4 class="text-2xl font-black text-main-theme mt-1">{{ previewData.total_rows }}</h4>
         </div>
-        <div class="p-4 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] uppercase tracking-wider text-charcoal-400 font-bold">Valid Runs</p>
+        <div class="interactive-card p-4">
+          <p class="text-[9px] uppercase tracking-wider text-muted-theme font-bold">Valid Runs</p>
           <h4 class="text-2xl font-black text-emerald-400 mt-1">{{ previewData.valid_rows_count }}</h4>
         </div>
-        <div class="p-4 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] uppercase tracking-wider text-charcoal-400 font-bold">New Clients</p>
+        <div class="interactive-card p-4">
+          <p class="text-[9px] uppercase tracking-wider text-muted-theme font-bold">New Clients</p>
           <h4 class="text-2xl font-black text-brand-orange mt-1">{{ previewData.new_customers_count }}</h4>
         </div>
-        <div class="p-4 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] uppercase tracking-wider text-charcoal-400 font-bold">New Projects</p>
+        <div class="interactive-card p-4">
+          <p class="text-[9px] uppercase tracking-wider text-muted-theme font-bold">New Projects</p>
           <h4 class="text-2xl font-black text-sky-400 mt-1">{{ previewData.new_projects_count }}</h4>
         </div>
-        <div class="p-4 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] uppercase tracking-wider text-charcoal-400 font-bold">Conflicts/Skips</p>
+        <div class="interactive-card p-4">
+          <p class="text-[9px] uppercase tracking-wider text-muted-theme font-bold">Conflicts/Skips</p>
           <h4 class="text-2xl font-black text-rose-400 mt-1">{{ previewData.invalid_rows_count }}</h4>
         </div>
       </div>
 
       <!-- Action Panel bar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-charcoal-800/80 border border-charcoal-700 rounded-2xl select-none">
-        <span class="text-xs text-charcoal-300 font-semibold">Review warnings and matched entries below before committing updates.</span>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-surface-theme border border-panel-theme rounded-2xl select-none">
+        <span class="text-xs text-muted-theme font-semibold">Review warnings and matched entries below before committing updates.</span>
         <div class="flex gap-3 w-full sm:w-auto justify-end">
           <button 
             @click="cancelImport"
-            class="px-4 py-2 border border-charcoal-600 rounded-xl text-xs font-bold text-charcoal-300 hover:text-white transition-colors"
+            class="app-button-secondary py-2 px-4"
           >
             Cancel Sync
           </button>
@@ -95,7 +95,7 @@
       </div>
 
       <!-- Validation Warnings Console -->
-      <div v-if="previewData.warnings?.length > 0" class="glass-panel p-5 bg-charcoal-800 border border-charcoal-700 rounded-2xl space-y-3">
+      <div v-if="previewData.warnings?.length > 0" class="glass-panel p-5 space-y-3">
         <h4 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2 select-none">
           <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
           Data Validation Warnings ({{ previewData.warnings.length }})
@@ -112,13 +112,13 @@
       </div>
 
       <!-- Preview Data Sheet Table -->
-      <div class="glass-panel p-5 md:p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col">
-        <h4 class="text-xs font-bold text-white uppercase tracking-widest mb-4 shrink-0 select-none">Excel Row Preview</h4>
+      <div class="glass-panel p-5 md:p-6 flex flex-col">
+        <h4 class="text-xs font-bold text-main-theme uppercase tracking-widest mb-4 shrink-0 select-none">Excel Row Preview</h4>
         
         <!-- Desktop Table View -->
-        <div class="hidden lg:block overflow-x-auto rounded-xl border border-charcoal-700">
-          <table class="min-w-full text-left text-xs divide-y divide-charcoal-700 font-medium">
-            <thead class="bg-charcoal-900 text-[9px] font-black uppercase tracking-widest text-charcoal-400 select-none">
+        <div class="hidden lg:block overflow-x-auto rounded-xl border border-panel-theme">
+          <table class="min-w-full text-left text-xs divide-y divide-panel-theme font-medium">
+            <thead class="app-table-header">
               <tr>
                 <th class="px-4 py-3">Row</th>
                 <th class="px-4 py-3">Company Name</th>
@@ -130,18 +130,18 @@
                 <th class="px-4 py-3">Project Status</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-charcoal-800">
+            <tbody class="divide-y divide-panel-theme">
               <tr 
                 v-for="row in previewData.preview_rows" 
                 :key="row.row_index"
-                class="hover:bg-charcoal-700/20 text-charcoal-200"
+                class="app-table-row text-soft-theme"
               >
                 <td class="px-4 py-3 font-bold text-brand-orange">{{ row.row_index }}</td>
-                <td class="px-4 py-3 font-bold text-white">{{ row.company_name }}</td>
+                <td class="px-4 py-3 font-bold text-main-theme">{{ row.company_name }}</td>
                 <td class="px-4 py-3 text-xs capitalize">{{ row.customer_category }}</td>
-                <td class="px-4 py-3 font-bold text-white max-w-xs truncate">{{ row.project_title }}</td>
+                <td class="px-4 py-3 font-bold text-main-theme max-w-xs truncate">{{ row.project_title }}</td>
                 <td class="px-4 py-3 font-bold text-emerald-400">{{ formatMoney(row.budget) }}</td>
-                <td class="px-4 py-3 text-[10px] text-charcoal-400 font-bold">
+                <td class="px-4 py-3 text-[10px] text-muted-theme font-bold">
                   {{ row.start_date || '-' }} to {{ row.end_date || '-' }}
                 </td>
                 <td class="px-4 py-3 font-bold text-sky-400">{{ row.quotation_number || '-' }}</td>
@@ -157,32 +157,32 @@
 
         <!-- Mobile Card List View -->
         <div class="block lg:hidden space-y-4">
-          <div v-if="!previewData.preview_rows || previewData.preview_rows.length === 0" class="py-6 text-center text-xs text-gray-500 font-semibold">
+          <div v-if="!previewData.preview_rows || previewData.preview_rows.length === 0" class="py-6 text-center text-xs text-muted-theme font-semibold">
             No preview rows found.
           </div>
           <div 
             v-for="row in previewData.preview_rows" 
             :key="row.row_index"
-            class="bg-brand-charcoal/60 border border-brand-charcoal-light/20 p-4 rounded-2xl space-y-3"
+            class="glass-panel p-4 space-y-3"
           >
-            <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+            <div class="flex items-center justify-between border-b border-panel-theme pb-2">
               <span class="font-bold text-brand-orange">Row {{ row.row_index }}</span>
               <span class="px-2 py-0.5 rounded-[5px] text-[9px] uppercase font-black" :class="getStatusStyles(row.project_status)">
                 {{ row.project_status }}
               </span>
             </div>
             <div>
-              <h4 class="font-bold text-white text-sm">{{ row.project_title }}</h4>
-              <p class="text-xs text-gray-400 mt-0.5">{{ row.company_name }} ({{ row.customer_category }})</p>
+              <h4 class="font-bold text-main-theme text-sm">{{ row.project_title }}</h4>
+              <p class="text-xs text-muted-theme mt-0.5">{{ row.company_name }} ({{ row.customer_category }})</p>
               <p class="text-brand-emerald font-bold font-mono mt-1">{{ formatMoney(row.budget) }}</p>
             </div>
-            <div class="grid grid-cols-2 gap-2 bg-black/20 p-2 rounded-xl text-[10px] text-gray-400 font-semibold">
+            <div class="grid grid-cols-2 gap-2 bg-surface-theme p-2 rounded-xl text-[10px] text-muted-theme font-semibold">
               <div>
-                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Proposed Dates</p>
-                <p class="text-white">{{ row.start_date || '-' }} to {{ row.end_date || '-' }}</p>
+                <p class="text-muted-theme text-[8px] uppercase tracking-wider">Proposed Dates</p>
+                <p class="text-main-theme">{{ row.start_date || '-' }} to {{ row.end_date || '-' }}</p>
               </div>
               <div>
-                <p class="text-gray-500 text-[8px] uppercase tracking-wider">Quotation Number</p>
+                <p class="text-muted-theme text-[8px] uppercase tracking-wider">Quotation Number</p>
                 <p class="text-sky-400 font-bold">{{ row.quotation_number || '-' }}</p>
               </div>
             </div>
@@ -208,28 +208,28 @@
         </div>
 
         <div class="space-y-1">
-          <h3 class="text-base font-extrabold text-white">
+          <h3 class="text-base font-extrabold text-main-theme">
             {{ importReport.success ? 'Migration Commit Completed' : 'Commit Encountered Issues' }}
           </h3>
-          <p class="text-xs text-charcoal-300 font-medium">
+          <p class="text-xs text-muted-theme font-medium">
             Workflow synchronization completed. System has transactionalized ledger records and updated audit activity timelines.
           </p>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-6 select-none max-w-md">
-        <div class="p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl text-center">
-          <p class="text-[10px] uppercase font-bold tracking-widest text-charcoal-400">Created Records</p>
+        <div class="interactive-card p-5 text-center">
+          <p class="text-[10px] uppercase font-bold tracking-widest text-muted-theme">Created Records</p>
           <h4 class="text-4xl font-black text-emerald-400 mt-1.5">{{ importReport.created_count }}</h4>
         </div>
-        <div class="p-5 bg-charcoal-800 border border-charcoal-700 rounded-3xl text-center">
-          <p class="text-[10px] uppercase font-bold tracking-widest text-charcoal-400">Updated/Merged Records</p>
+        <div class="interactive-card p-5 text-center">
+          <p class="text-[10px] uppercase font-bold tracking-widest text-muted-theme">Updated/Merged Records</p>
           <h4 class="text-4xl font-black text-sky-400 mt-1.5">{{ importReport.updated_count }}</h4>
         </div>
       </div>
 
       <!-- Import Errors Console -->
-      <div v-if="importReport.errors?.length > 0" class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl space-y-4">
+      <div v-if="importReport.errors?.length > 0" class="glass-panel p-6 space-y-4">
         <h4 class="text-xs font-bold uppercase tracking-wider text-red-400 flex items-center gap-2 select-none">
           <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
           Execution Errors ({{ importReport.errors.length }})
@@ -248,7 +248,7 @@
       <div class="flex gap-4 select-none">
         <button 
           @click="resetHub"
-          class="px-5 py-2.5 bg-charcoal-800 hover:bg-charcoal-700 text-white font-bold text-xs rounded-xl border border-charcoal-700 transition-colors"
+          class="app-button-secondary py-2.5 px-5"
         >
           Return to Hub
         </button>

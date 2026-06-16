@@ -16,33 +16,33 @@
     <div v-show="showFilters" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-300">
       <!-- Date Start -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Date Range Start</label>
+        <label class="app-label">Date Range Start</label>
         <input 
           type="date" 
           v-model="localFilters.date_from" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         />
       </div>
 
       <!-- Date End -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Date Range End</label>
+        <label class="app-label">Date Range End</label>
         <input 
           type="date" 
           v-model="localFilters.date_to" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         />
       </div>
 
       <!-- Year Select -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Year</label>
+        <label class="app-label">Year</label>
         <select 
           v-model="localFilters.year" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Years</option>
           <option :value="2025">2025</option>
@@ -53,11 +53,11 @@
 
       <!-- Month Select -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Month</label>
+        <label class="app-label">Month</label>
         <select 
           v-model="localFilters.month" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Months</option>
           <option v-for="m in 12" :key="m" :value="m">{{ new Date(2000, m - 1).toLocaleString('default', { month: 'long' }) }}</option>
@@ -66,11 +66,11 @@
 
       <!-- PO Selector -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Owner (PO)</label>
+        <label class="app-label">Program Owner (PO)</label>
         <select 
           v-model="localFilters.po_id" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All POs</option>
           <option v-for="user in usersList" :key="user.id" :value="user.id">
@@ -81,11 +81,11 @@
 
       <!-- PM Selector -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Manager (PM)</label>
+        <label class="app-label">Program Manager (PM)</label>
         <select 
           v-model="localFilters.pm_id" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All PMs</option>
           <option v-for="user in usersList" :key="user.id" :value="user.id">
@@ -96,11 +96,11 @@
 
       <!-- Quotation Status -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Quotation Status</label>
+        <label class="app-label">Quotation Status</label>
         <select 
           v-model="localFilters.quotation_status" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Quotation Statuses</option>
           <option value="Draft">Draft</option>
@@ -114,11 +114,11 @@
 
       <!-- Program Status -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Status</label>
+        <label class="app-label">Program Status</label>
         <select 
           v-model="localFilters.program_status" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Program Statuses</option>
           <option value="Inquiry">Inquiry</option>
@@ -135,11 +135,11 @@
 
       <!-- Payment Status -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Payment Status</label>
+        <label class="app-label">Payment Status</label>
         <select 
           v-model="localFilters.payment_status" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Payment Statuses</option>
           <option value="Not Invoiced">Not Invoiced</option>
@@ -153,11 +153,11 @@
 
       <!-- Project Status -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Project Status</label>
+        <label class="app-label">Project Status</label>
         <select 
           v-model="localFilters.project_status" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Project Statuses</option>
           <option value="Open">Open</option>
@@ -170,11 +170,11 @@
 
       <!-- Customer Category -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Customer Category</label>
+        <label class="app-label">Customer Category</label>
         <select 
           v-model="localFilters.customer_category" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Customer Categories</option>
           <option value="Corporate">Corporate</option>
@@ -186,11 +186,11 @@
 
       <!-- Event Source Type -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Event Source Type</label>
+        <label class="app-label">Event Source Type</label>
         <select 
           v-model="localFilters.source_type" 
           @change="emitFilters"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         >
           <option value="">All Source Types</option>
           <option value="Hotel">Hotel</option>
@@ -205,25 +205,25 @@
 
       <!-- Event Category (text search) -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Event Category Tag</label>
+        <label class="app-label">Event Category Tag</label>
         <input 
           type="text" 
           placeholder="e.g. Gathering, Outbound" 
           v-model="localFilters.event_category" 
           @input="debounceEmit"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         />
       </div>
 
       <!-- Program Type (text search) -->
       <div class="flex flex-col gap-1.5">
-        <label class="text-[9px] uppercase tracking-wider text-charcoal-400 font-black">Program Type Tag</label>
+        <label class="app-label">Program Type Tag</label>
         <input 
           type="text" 
           placeholder="e.g. Entertainment" 
           v-model="localFilters.program_type" 
           @input="debounceEmit"
-          class="bg-charcoal-900 border border-charcoal-700 text-xs text-white p-2.5 rounded-xl outline-none focus:border-brand-orange"
+          class="app-form-control text-xs p-2.5"
         />
       </div>
 
@@ -231,7 +231,7 @@
       <div class="flex items-end sm:col-span-2 gap-3">
         <button 
           @click="resetFilters"
-          class="w-full py-2.5 border border-charcoal-600 hover:border-brand-orange text-xs text-charcoal-300 hover:text-white rounded-xl transition-all duration-200"
+          class="app-button-secondary w-full"
         >
           Reset semua filter
         </button>

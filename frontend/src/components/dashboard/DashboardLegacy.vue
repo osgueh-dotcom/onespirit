@@ -1,13 +1,13 @@
 <template>
   <div class="space-y-6">
     <!-- Tab Selection -->
-    <div class="flex border-b border-charcoal-700 overflow-x-auto select-none custom-scrollbar pb-1">
+    <div class="flex border-b border-panel-theme overflow-x-auto select-none custom-scrollbar pb-1">
       <button 
         v-for="tab in legacyTabs" 
         :key="tab.id"
         @click="activeLegacyTab = tab.id"
         class="px-5 py-3 text-xs font-black uppercase tracking-wider border-b-2 transition-all duration-300 whitespace-nowrap"
-        :class="activeLegacyTab === tab.id ? 'border-brand-orange text-brand-orange' : 'border-transparent text-charcoal-400 hover:text-white'"
+        :class="activeLegacyTab === tab.id ? 'border-brand-orange text-brand-orange' : 'border-transparent text-muted-theme hover:text-main-theme'"
       >
         {{ tab.label }}
       </button>
@@ -18,12 +18,12 @@
       <!-- 4 KPI Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <!-- Active Projects Card -->
-        <div class="interactive-card p-5 relative overflow-hidden select-none bg-charcoal-800 border border-charcoal-700 rounded-2xl">
+        <div class="interactive-card p-5 relative overflow-hidden select-none">
           <div class="absolute -top-10 -right-10 w-24 h-24 bg-brand-orange/5 rounded-full blur-3xl"></div>
-          <p class="text-[10px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1">Active Projects</p>
-          <h3 class="text-3xl font-black text-white font-sans">
+          <p class="text-[10px] font-extrabold uppercase tracking-widest text-muted-theme mb-1">Active Projects</p>
+          <h3 class="text-3xl font-black text-main-theme font-sans">
             {{ stats.ongoing_projects || 0 }} 
-            <span class="text-xs text-charcoal-400 font-semibold">/ {{ stats.total_projects || 0 }} total</span>
+            <span class="text-xs text-muted-theme font-semibold">/ {{ stats.total_projects || 0 }} total</span>
           </h3>
           <span class="inline-flex mt-3 text-[10px] font-bold text-brand-orange px-2.5 py-1 bg-brand-orange/10 rounded-lg">
             In Prep / Run State
@@ -31,29 +31,29 @@
         </div>
 
         <!-- Upcoming Events Card -->
-        <div class="interactive-card p-5 relative overflow-hidden select-none bg-charcoal-800 border border-charcoal-700 rounded-2xl">
+        <div class="interactive-card p-5 relative overflow-hidden select-none">
           <div class="absolute -top-10 -right-10 w-24 h-24 bg-brand-blue/5 rounded-full blur-2xl"></div>
-          <p class="text-[10px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1">Upcoming Runs</p>
-          <h3 class="text-3xl font-black text-white font-sans">{{ stats.upcoming_events || 0 }}</h3>
+          <p class="text-[10px] font-extrabold uppercase tracking-widest text-muted-theme mb-1">Upcoming Runs</p>
+          <h3 class="text-3xl font-black text-main-theme font-sans">{{ stats.upcoming_events || 0 }}</h3>
           <span class="inline-flex mt-3 text-[10px] font-bold text-brand-blue px-2.5 py-1 bg-brand-blue/10 rounded-lg">
             Next 7 Days
           </span>
         </div>
 
         <!-- Revenue Collected Card -->
-        <div class="interactive-card p-5 relative overflow-hidden select-none bg-charcoal-800 border border-charcoal-700 rounded-2xl">
+        <div class="interactive-card p-5 relative overflow-hidden select-none">
           <div class="absolute -top-10 -right-10 w-24 h-24 bg-brand-emerald/5 rounded-full blur-2xl"></div>
-          <p class="text-[10px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1">Cash Received</p>
+          <p class="text-[10px] font-extrabold uppercase tracking-widest text-muted-theme mb-1">Cash Received</p>
           <h3 class="text-2xl font-black text-brand-emerald font-sans">{{ formatMoney(stats.revenue_received) }}</h3>
-          <span class="inline-flex mt-3.5 text-[10px] font-bold text-charcoal-400">
+          <span class="inline-flex mt-3.5 text-[10px] font-bold text-muted-theme">
             Projected Pipeline: {{ formatMoney(stats.revenue_projected) }}
           </span>
         </div>
 
         <!-- Pending Invoices Card -->
-        <div class="interactive-card p-5 relative overflow-hidden select-none bg-charcoal-800 border border-charcoal-700 rounded-2xl">
+        <div class="interactive-card p-5 relative overflow-hidden select-none">
           <div class="absolute -top-10 -right-10 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl"></div>
-          <p class="text-[10px] font-extrabold uppercase tracking-widest text-charcoal-400 mb-1">Outstanding Balances</p>
+          <p class="text-[10px] font-extrabold uppercase tracking-widest text-muted-theme mb-1">Outstanding Balances</p>
           <h3 class="text-2xl font-black text-rose-400 font-sans">{{ formatMoney(stats.pending_invoices_amount) }}</h3>
           <span class="inline-flex mt-3.5 text-[10px] font-bold text-rose-400 px-2.5 py-1 bg-rose-500/10 rounded-lg">
             {{ stats.pending_invoices_count || 0 }} Pending Invoices
@@ -68,20 +68,20 @@
         </div>
 
         <!-- Alerts Board -->
-        <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[288px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4 shrink-0 flex items-center gap-2">
+        <div class="glass-panel p-6 flex flex-col h-[288px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-4 shrink-0 flex items-center gap-2">
             <span class="h-2 w-2 rounded-full bg-brand-orange animate-pulse"></span>
             Critical Safety Alerts
           </h3>
           
           <div class="flex-1 overflow-y-auto space-y-3 pr-1 custom-scrollbar">
-            <div v-if="!stats.alerts || stats.alerts.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-charcoal-500 text-center">
+            <div v-if="!stats.alerts || stats.alerts.length === 0" class="h-full flex items-center justify-center text-xs font-semibold text-muted-theme text-center">
               All systems nominal.<br>No active bottlenecks.
             </div>
             <div 
               v-for="alert in stats.alerts" 
               :key="alert.message"
-              class="p-3 rounded-xl flex items-start gap-2 border text-[11px] font-medium leading-relaxed bg-charcoal-900/60 transition-all hover:scale-[1.01]"
+              class="p-3 rounded-xl flex items-start gap-2 border text-[11px] font-medium leading-relaxed bg-surface-theme transition-all hover:scale-[1.01]"
               :class="getAlertStyles(alert.type)"
             >
               <span class="h-2 w-2 rounded-full mt-1 shrink-0" :class="getAlertBulletColor(alert.type)"></span>
@@ -89,7 +89,7 @@
                 <span class="text-[9px] uppercase font-black tracking-widest block mb-0.5" :class="getAlertTextColor(alert.type)">
                   {{ alert.module }}
                 </span>
-                <p class="text-charcoal-200 font-semibold leading-normal">{{ alert.message }}</p>
+                <p class="text-soft-theme font-semibold leading-normal">{{ alert.message }}</p>
               </div>
             </div>
           </div>
@@ -97,13 +97,13 @@
       </div>
 
       <!-- Target Banner -->
-      <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="glass-panel p-6 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6">
         <div class="space-y-1.5 text-center sm:text-left">
           <h4 class="text-xs font-bold uppercase tracking-widest text-brand-orange">Annual Confirmed collections vs Target 2025</h4>
-          <p class="text-sm text-white font-black">
+          <p class="text-sm text-main-theme font-black">
             Target goal of <span class="text-emerald-400">Rp 9,200,000,000</span> set by One Spirit Asia executives.
           </p>
-          <p class="text-xs text-charcoal-400 font-semibold">
+          <p class="text-xs text-muted-theme font-semibold">
             Currently achieved: {{ formatMoney(stats.revenue_received) }} Confirmed Revenue.
           </p>
         </div>
@@ -123,11 +123,11 @@
                 :stroke-dashoffset="calculateDashoffset(stats.revenue_received, 9200000000)"
               />
             </svg>
-            <span class="absolute text-xs font-black text-white">
+            <span class="absolute text-xs font-black text-main-theme">
               {{ calculatePercentage(stats.revenue_received, 9200000000) }}%
             </span>
           </div>
-          <span class="text-[9px] uppercase font-black text-charcoal-400 mt-1">Operational Progress</span>
+          <span class="text-[9px] uppercase font-black text-muted-theme mt-1">Operational Progress</span>
         </div>
       </div>
     </div>
@@ -135,20 +135,20 @@
     <!-- 2. REVENUE ANALYSIS TAB -->
     <div v-if="activeLegacyTab === 'revenue'" class="space-y-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 select-none">
-        <div class="p-5 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] font-black uppercase tracking-widest text-charcoal-400">Total Projected Revenue</p>
-          <h4 class="text-2xl font-black text-white mt-1">{{ formatMoney(stats.revenue_projected) }}</h4>
+        <div class="interactive-card p-5">
+          <p class="text-[9px] font-black uppercase tracking-widest text-muted-theme">Total Projected Revenue</p>
+          <h4 class="text-2xl font-black text-main-theme mt-1">{{ formatMoney(stats.revenue_projected) }}</h4>
         </div>
-        <div class="p-5 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] font-black uppercase tracking-widest text-charcoal-400">Confirmed Received Cash</p>
+        <div class="interactive-card p-5">
+          <p class="text-[9px] font-black uppercase tracking-widest text-muted-theme">Confirmed Received Cash</p>
           <h4 class="text-2xl font-black text-emerald-400 mt-1">{{ formatMoney(stats.revenue_received) }}</h4>
         </div>
-        <div class="p-5 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] font-black uppercase tracking-widest text-charcoal-400">Pending Pipeline Balance</p>
+        <div class="interactive-card p-5">
+          <p class="text-[9px] font-black uppercase tracking-widest text-muted-theme">Pending Pipeline Balance</p>
           <h4 class="text-2xl font-black text-brand-orange mt-1">{{ formatMoney((stats.revenue_projected || 0) - (stats.revenue_received || 0)) }}</h4>
         </div>
-        <div class="p-5 bg-charcoal-800 border border-charcoal-700 rounded-2xl">
-          <p class="text-[9px] font-black uppercase tracking-widest text-charcoal-400">Excel Conversion Rate</p>
+        <div class="interactive-card p-5">
+          <p class="text-[9px] font-black uppercase tracking-widest text-muted-theme">Excel Conversion Rate</p>
           <h4 class="text-2xl font-black text-sky-400 mt-1">46.2%</h4>
         </div>
       </div>
@@ -158,8 +158,8 @@
           <AreaChart :data="stats.monthly_trends || []" />
         </div>
 
-        <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[400px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4">Revenue share by Event Category</h3>
+        <div class="glass-panel p-6 flex flex-col h-[400px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-4">Revenue share by Event Category</h3>
           <div class="flex-1 overflow-y-auto space-y-4 custom-scrollbar pr-1">
             <div 
               v-for="cat in stats.revenue_by_category || mockRevenueCategory" 
@@ -167,10 +167,10 @@
               class="space-y-1.5"
             >
               <div class="flex justify-between text-xs font-bold select-none">
-                <span class="text-charcoal-200">{{ cat.category }}</span>
-                <span class="text-white">{{ formatMoney(cat.amount) }}</span>
+                <span class="text-soft-theme">{{ cat.category }}</span>
+                <span class="text-main-theme">{{ formatMoney(cat.amount) }}</span>
               </div>
-              <div class="h-2 w-full bg-charcoal-900 rounded-full overflow-hidden">
+              <div class="h-2 w-full bg-surface-theme rounded-full overflow-hidden">
                 <div 
                   class="h-full bg-brand-orange transition-all duration-300"
                   :style="`width: ${calculatePercentage(cat.amount, stats.revenue_projected)}%`"
@@ -180,8 +180,8 @@
           </div>
         </div>
 
-        <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[400px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4">Revenue shares by Sales PM</h3>
+        <div class="glass-panel p-6 flex flex-col h-[400px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-4">Revenue shares by Sales PM</h3>
           <div class="flex-1 overflow-y-auto space-y-4 custom-scrollbar pr-1">
             <div 
               v-for="pm_rev in stats.revenue_by_sales || mockRevenuePM" 
@@ -189,10 +189,10 @@
               class="space-y-1.5"
             >
               <div class="flex justify-between text-xs font-bold select-none">
-                <span class="text-charcoal-200">{{ pm_rev.sales }}</span>
-                <span class="text-white">{{ formatMoney(pm_rev.amount) }}</span>
+                <span class="text-soft-theme">{{ pm_rev.sales }}</span>
+                <span class="text-main-theme">{{ formatMoney(pm_rev.amount) }}</span>
               </div>
-              <div class="h-2 w-full bg-charcoal-900 rounded-full overflow-hidden">
+              <div class="h-2 w-full bg-surface-theme rounded-full overflow-hidden">
                 <div 
                   class="h-full bg-sky-400 transition-all duration-300"
                   :style="`width: ${calculatePercentage(pm_rev.amount, stats.revenue_projected)}%`"
@@ -207,37 +207,37 @@
     <!-- 3. WORKFLOW PIPELINE TAB -->
     <div v-if="activeLegacyTab === 'workflow'" class="space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[400px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-3 shrink-0">Pipeline Conversion Funnel</h3>
+        <div class="glass-panel p-6 flex flex-col h-[400px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-3 shrink-0">Pipeline Conversion Funnel</h3>
           <div class="flex-1 flex items-center justify-center overflow-hidden">
             <FunnelChart :data="stats.pipeline_funnel || []" />
           </div>
         </div>
 
-        <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[400px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-3 shrink-0">Projects Status Shares</h3>
+        <div class="glass-panel p-6 flex flex-col h-[400px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-3 shrink-0">Projects Status Shares</h3>
           <div class="flex-1 flex items-center justify-center overflow-hidden">
             <DonutChart :data="stats.project_status_counts || {}" />
           </div>
         </div>
 
-        <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[400px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4">Workflow Conversion Insights</h3>
+        <div class="glass-panel p-6 flex flex-col h-[400px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-4">Workflow Conversion Insights</h3>
           <div class="space-y-5 flex-1 overflow-y-auto pr-1 custom-scrollbar select-none text-xs leading-relaxed font-semibold">
-            <div class="p-4 bg-charcoal-900/60 border border-charcoal-800 rounded-xl space-y-1">
+            <div class="p-4 bg-surface-theme border border-panel-theme rounded-xl space-y-1">
               <span class="text-[9px] uppercase tracking-wider text-brand-orange block">Inquiry to Quote</span>
-              <span class="text-xl font-black text-white">53.7% Rate</span>
-              <p class="text-charcoal-300 mt-1">Excellent initial engagement. The sales PIC team is highly responsive to incoming corporate hotel briefs.</p>
+              <span class="text-xl font-black text-main-theme">53.7% Rate</span>
+              <p class="text-muted-theme mt-1">Excellent initial engagement. The sales PIC team is highly responsive to incoming corporate hotel briefs.</p>
             </div>
-            <div class="p-4 bg-charcoal-900/60 border border-charcoal-800 rounded-xl space-y-1">
+            <div class="p-4 bg-surface-theme border border-panel-theme rounded-xl space-y-1">
               <span class="text-[9px] uppercase tracking-wider text-sky-400 block">Quote to Deal conversion</span>
-              <span class="text-xl font-black text-white">46.2% Deal Rate</span>
-              <p class="text-charcoal-300 mt-1">Almost half of all generated proposals convert successfully into actual cash budget operations.</p>
+              <span class="text-xl font-black text-main-theme">46.2% Deal Rate</span>
+              <p class="text-muted-theme mt-1">Almost half of all generated proposals convert successfully into actual cash budget operations.</p>
             </div>
-            <div class="p-4 bg-charcoal-900/60 border border-charcoal-800 rounded-xl space-y-1">
+            <div class="p-4 bg-surface-theme border border-panel-theme rounded-xl space-y-1">
               <span class="text-[9px] uppercase tracking-wider text-emerald-400 block">Run Phase completed</span>
-              <span class="text-xl font-black text-white">96.8% Success Rate</span>
-              <p class="text-charcoal-300 mt-1">Event schedules are completed flawlessly by Dago Highlands operations with negligible cancel rates.</p>
+              <span class="text-xl font-black text-main-theme">96.8% Success Rate</span>
+              <p class="text-muted-theme mt-1">Event schedules are completed flawlessly by Dago Highlands operations with negligible cancel rates.</p>
             </div>
           </div>
         </div>
@@ -247,27 +247,27 @@
     <!-- 4. TEAM WORKLOADS TAB -->
     <div v-if="activeLegacyTab === 'workloads'" class="space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[450px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-3 shrink-0">PM Allocation Workloads</h3>
+        <div class="lg:col-span-2 glass-panel p-6 flex flex-col h-[450px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-3 shrink-0">PM Allocation Workloads</h3>
           <div class="flex-1 flex items-center justify-center overflow-hidden">
             <WorkbarChart :data="stats.team_workload || []" />
           </div>
         </div>
 
-        <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col h-[450px]">
-          <h3 class="text-xs font-bold text-white tracking-widest uppercase mb-4">Operations Task Balance</h3>
+        <div class="glass-panel p-6 flex flex-col h-[450px]">
+          <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase mb-4">Operations Task Balance</h3>
           <div class="flex-1 overflow-y-auto space-y-4 custom-scrollbar pr-1 select-none text-xs">
-            <div v-if="!stats.team_workload || stats.team_workload.length === 0" class="h-full flex items-center justify-center text-charcoal-500 text-center font-bold">
+            <div v-if="!stats.team_workload || stats.team_workload.length === 0" class="h-full flex items-center justify-center text-muted-theme text-center font-bold">
               No tasks currently assigned to PM staff.
             </div>
             <div 
               v-for="pm_work in stats.team_workload" 
               :key="pm_work.name"
-              class="p-3.5 bg-charcoal-900/60 border border-charcoal-800 rounded-xl flex items-center justify-between gap-4 font-bold"
+              class="p-3.5 bg-surface-theme border border-panel-theme rounded-xl flex items-center justify-between gap-4 font-bold"
             >
               <div class="space-y-1">
-                <span class="text-xs font-bold text-white block">{{ pm_work.name }}</span>
-                <span class="text-[9px] uppercase font-black text-charcoal-400 bg-charcoal-800 py-0.5 px-1.5 rounded">
+                <span class="text-xs font-bold text-main-theme block">{{ pm_work.name }}</span>
+                <span class="text-[9px] uppercase font-black text-muted-theme bg-panel-theme py-0.5 px-1.5 rounded">
                   PIC PM
                 </span>
               </div>
@@ -285,26 +285,26 @@
 
     <!-- 5. CENTRAL TIMELINE TAB -->
     <div v-if="activeLegacyTab === 'timeline'" class="space-y-6">
-      <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col max-h-[700px]">
-        <div class="flex items-center justify-between border-b border-charcoal-700 pb-4 mb-4">
+      <div class="glass-panel p-6 flex flex-col max-h-[700px]">
+        <div class="flex items-center justify-between border-b border-panel-theme pb-4 mb-4">
           <div class="flex flex-col">
-            <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
+            <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
               Centralized Operational Timeline
             </h3>
-            <span class="text-[10px] text-charcoal-400 font-semibold">Real-time status, payments, and checklists ledger</span>
+            <span class="text-[10px] text-muted-theme font-semibold">Real-time status, payments, and checklists ledger</span>
           </div>
         </div>
 
         <div class="overflow-y-auto space-y-3.5 pr-2 max-h-[580px] custom-scrollbar">
-          <div v-if="!stats.recent_activities || stats.recent_activities.length === 0" class="py-12 flex flex-col items-center justify-center text-xs font-semibold text-charcoal-500 text-center gap-2">
+          <div v-if="!stats.recent_activities || stats.recent_activities.length === 0" class="py-12 flex flex-col items-center justify-center text-xs font-semibold text-muted-theme text-center gap-2">
             <span>No operational activities logged in the matrix.</span>
           </div>
           
           <div 
             v-for="log in stats.recent_activities" 
             :key="log.id"
-            class="flex items-start gap-4 p-3.5 bg-charcoal-900/40 border border-charcoal-800 hover:border-charcoal-700 rounded-xl transition-all duration-200 hover:bg-charcoal-900/70"
+            class="flex items-start gap-4 p-3.5 bg-surface-theme border border-panel-theme hover:border-brand-orange/30 rounded-xl transition-all duration-200"
           >
             <div 
               class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-white font-bold"
@@ -317,27 +317,27 @@
 
             <div class="flex-1 min-w-0">
               <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                <span class="text-xs font-black text-white capitalize leading-none">
+                <span class="text-xs font-black text-main-theme capitalize leading-none">
                   {{ getActionStyles(log.action).label }}
                 </span>
-                <span class="text-[9px] font-bold text-charcoal-400 uppercase tracking-widest sm:text-right">
+                <span class="text-[9px] font-bold text-muted-theme uppercase tracking-widest sm:text-right">
                   {{ formatTimeAgo(log.created_at) }}
                 </span>
               </div>
 
-              <p class="text-xs text-charcoal-200 mt-1 font-semibold leading-relaxed">
+              <p class="text-xs text-soft-theme mt-1 font-semibold leading-relaxed">
                 {{ formatLogDetails(log) }}
               </p>
 
-              <div class="flex items-center gap-2.5 mt-2 text-[10px] font-bold text-charcoal-400">
+              <div class="flex items-center gap-2.5 mt-2 text-[10px] font-bold text-muted-theme">
                 <span class="flex items-center gap-1">
-                  <svg class="w-3.5 h-3.5 text-charcoal-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5 text-muted-theme" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                   </svg>
                   {{ log.user_name }}
                 </span>
                 <span>•</span>
-                <span class="uppercase text-[9px] tracking-wider bg-charcoal-800 py-0.5 px-1.5 rounded border border-charcoal-700">
+                <span class="uppercase text-[9px] tracking-wider bg-panel-theme py-0.5 px-1.5 rounded border border-panel-theme">
                   {{ log.entity_type }}
                 </span>
               </div>

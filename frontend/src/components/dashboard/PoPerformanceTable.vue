@@ -1,7 +1,7 @@
 <template>
-  <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-2xl flex flex-col select-none print:bg-white print:border print:border-charcoal-200 print:rounded-xl print:p-5">
+  <div class="glass-panel p-6 flex flex-col select-none print:bg-white print:border print:border-charcoal-200 print:rounded-xl print:p-5">
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2 print:text-charcoal-900 print:text-sm">
+      <h3 class="text-xs font-bold text-main-theme tracking-widest uppercase flex items-center gap-2 print:text-charcoal-900 print:text-sm">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-orange print:hidden"></span>
         Review Performa Program Owner (PO)
       </h3>
@@ -10,7 +10,7 @@
     <div class="overflow-x-auto custom-scrollbar">
       <table class="w-full text-left text-xs font-bold border-collapse print:text-charcoal-900">
         <thead>
-          <tr class="border-b border-charcoal-700 text-charcoal-400 uppercase tracking-widest text-[9px] print:border-charcoal-200 print:text-charcoal-500">
+          <tr class="border-b border-panel-theme text-muted-theme uppercase tracking-widest text-[9px] print:border-charcoal-200 print:text-charcoal-500">
             <th class="pb-3 pl-2">Nama</th>
             <th class="pb-3 text-center">Inisial</th>
             <th class="pb-3 text-center">Total Proyek</th>
@@ -23,22 +23,22 @@
         </thead>
         <tbody>
           <tr v-if="data.length === 0">
-            <td colspan="8" class="py-8 text-center text-charcoal-500 font-bold print:text-charcoal-400">
+            <td colspan="8" class="py-8 text-center text-muted-theme font-bold print:text-charcoal-400">
               Belum ada data untuk periode atau filter yang dipilih.
             </td>
           </tr>
           <tr 
             v-for="po in data" 
             :key="po.po_id"
-            class="border-b border-charcoal-700/60 hover:bg-charcoal-900/30 transition-all print:border-charcoal-200 print:hover:bg-transparent"
+            class="app-table-row border-b border-panel-theme print:border-charcoal-200 print:hover:bg-transparent"
           >
-            <td class="py-3.5 pl-2 text-white print:text-charcoal-900">{{ po.po_name }}</td>
+            <td class="py-3.5 pl-2 text-main-theme print:text-charcoal-900">{{ po.po_name }}</td>
             <td class="py-3.5 text-center">
-              <span class="px-2 py-0.5 bg-charcoal-700 border border-charcoal-600 rounded text-brand-orange print:bg-charcoal-50 print:border-charcoal-200 print:text-orange-700">
+              <span class="px-2 py-0.5 bg-surface-theme border border-panel-theme rounded text-brand-orange print:bg-charcoal-50 print:border-charcoal-200 print:text-orange-700">
                 {{ po.initial_code || '-' }}
               </span>
             </td>
-            <td class="py-3.5 text-center text-charcoal-200 print:text-charcoal-800">{{ po.total_projects }}</td>
+            <td class="py-3.5 text-center text-soft-theme print:text-charcoal-800">{{ po.total_projects }}</td>
             <td class="py-3.5 text-center text-brand-emerald print:text-emerald-700">{{ po.deal_count }}</td>
             <td class="py-3.5 text-center text-rose-400 print:text-red-700">{{ po.cancel_count }}</td>
             <td class="py-3.5 text-right text-brand-emerald font-sans print:text-emerald-700">{{ formatMoney(po.confirmed_revenue) }}</td>

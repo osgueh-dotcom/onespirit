@@ -1,10 +1,10 @@
 <template>
-  <div class="glass-panel p-6 bg-charcoal-800 border border-charcoal-700 rounded-3xl space-y-4 print:bg-white print:border-none print:p-0 print:rounded-none">
+  <div class="glass-panel p-6 rounded-3xl space-y-4 print:bg-white print:border-none print:p-0 print:rounded-none">
     <h3 class="text-xs font-bold text-brand-orange uppercase tracking-widest print:text-charcoal-800 print:text-sm">
       Catatan Evaluasi Manajemen
     </h3>
     
-    <div v-if="!hasData" class="text-xs font-semibold text-charcoal-400 leading-relaxed print:text-charcoal-600">
+    <div v-if="!hasData" class="text-xs font-semibold text-muted-theme leading-relaxed print:text-charcoal-600">
       Belum ada data untuk menghasilkan evaluasi manajemen pada periode ini.
     </div>
     
@@ -15,7 +15,7 @@
           <span class="w-1.5 h-1.5 rounded-full bg-brand-emerald print:hidden"></span>
           Kekuatan / Indikasi Positif
         </h4>
-        <ul class="space-y-2 text-xs font-semibold text-charcoal-200 list-disc pl-4 leading-relaxed print:text-charcoal-600">
+        <ul class="space-y-2 text-xs font-semibold text-soft-theme list-disc pl-4 leading-relaxed print:text-charcoal-600">
           <li v-for="s in strengths" :key="s">{{ s }}</li>
           <li v-if="strengths.length === 0">Belum ada indikasi positif signifikan yang terdeteksi secara otomatis.</li>
         </ul>
@@ -27,7 +27,7 @@
           <span class="w-1.5 h-1.5 rounded-full bg-red-500 print:hidden"></span>
           Risiko / Bottlenecks
         </h4>
-        <ul class="space-y-2 text-xs font-semibold text-charcoal-200 list-disc pl-4 leading-relaxed print:text-charcoal-600">
+        <ul class="space-y-2 text-xs font-semibold text-soft-theme list-disc pl-4 leading-relaxed print:text-charcoal-600">
           <li v-for="r in risks" :key="r">{{ r }}</li>
           <li v-if="risks.length === 0">Tidak ada risiko kritis yang terdeteksi secara otomatis pada periode ini.</li>
         </ul>
@@ -39,7 +39,7 @@
           <span class="w-1.5 h-1.5 rounded-full bg-brand-orange print:hidden"></span>
           Rekomendasi Tindakan
         </h4>
-        <ul class="space-y-2 text-xs font-semibold text-charcoal-200 list-disc pl-4 leading-relaxed print:text-charcoal-600">
+        <ul class="space-y-2 text-xs font-semibold text-soft-theme list-disc pl-4 leading-relaxed print:text-charcoal-600">
           <li v-for="a in actions" :key="a">{{ a }}</li>
           <li v-if="actions.length === 0">Semua parameter berjalan sesuai dengan standar operasional nominal.</li>
         </ul>
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Footnote stating these are guidelines -->
-    <p class="text-[9px] text-charcoal-500 font-bold tracking-wide italic pt-1 print:text-charcoal-600">
+    <p class="text-[9px] text-muted-theme font-bold tracking-wide italic pt-1 print:text-charcoal-600">
       * Catatan ini dihasilkan secara otomatis berdasarkan data operasional dan bersifat sebagai referensi pendukung pengambilan keputusan manajemen.
     </p>
   </div>

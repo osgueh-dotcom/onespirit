@@ -13,7 +13,7 @@
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
-      <span class="text-xs text-gray-400 font-semibold">Memuat ledger operasional...</span>
+      <span class="text-xs text-muted-theme font-semibold">Memuat ledger operasional...</span>
     </div>
 
     <div v-else class="space-y-6">
@@ -29,53 +29,53 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none">
             <!-- Event parameters -->
             <div class="glass-panel p-5 space-y-3">
-              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Event Parameters</h4>
+              <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Event Parameters</h4>
               <div class="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <p class="text-gray-400 font-semibold">Category</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.event_category || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Category</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.event_category || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Program Type</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.program_type || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Program Type</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.program_type || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Program Name</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.program_name || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Program Name</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.program_name || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Quantity (Pax)</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.quantity || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Quantity (Pax)</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.quantity || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Venue</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.venue || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Venue</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.venue || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Duration</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.duration || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Duration</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.duration || '-' }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Quotation Parameters -->
             <div class="glass-panel p-5 space-y-3">
-              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Quotation & Financials</h4>
+              <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Quotation & Financials</h4>
               <div class="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <p class="text-gray-400 font-semibold">Quote Reference</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.quotation_number || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Quote Reference</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.quotation_number || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Quotation Date</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.quotation_date || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Quotation Date</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.quotation_date || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Inquiry Date</p>
-                  <p class="text-white font-bold mt-0.5">{{ project.inquiry_date || '-' }}</p>
+                  <p class="text-muted-theme font-semibold">Inquiry Date</p>
+                  <p class="text-main-theme font-bold mt-0.5">{{ project.inquiry_date || '-' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">Allocated Revenue</p>
+                  <p class="text-muted-theme font-semibold">Allocated Revenue</p>
                   <p class="text-brand-emerald font-black mt-0.5">{{ formatMoney(project.revenue) }}</p>
                 </div>
               </div>
@@ -86,7 +86,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 select-none">
             <!-- General Notes & Cancel -->
             <div class="glass-panel p-5 space-y-3">
-              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">General & Cancel Notes</h4>
+              <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">General & Cancel Notes</h4>
               <div class="text-xs space-y-3">
                 <div v-if="project.cancel_reason">
                   <p class="text-red-400 font-bold">Cancellation Reason</p>
@@ -95,8 +95,8 @@
                   </p>
                 </div>
                 <div>
-                  <p class="text-gray-400 font-semibold">General Remarks</p>
-                  <p class="text-gray-200 font-semibold mt-1 whitespace-pre-line leading-relaxed">
+                  <p class="text-muted-theme font-semibold">General Remarks</p>
+                  <p class="text-soft-theme font-semibold mt-1 whitespace-pre-line leading-relaxed">
                     {{ project.general_notes || 'No general notes recorded.' }}
                   </p>
                 </div>
@@ -105,9 +105,9 @@
 
             <!-- MOM Notes -->
             <div class="glass-panel p-5 space-y-3">
-              <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Minutes of Meeting (MOM)</h4>
+              <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Minutes of Meeting (MOM)</h4>
               <div class="text-xs">
-                <p class="text-gray-200 font-semibold whitespace-pre-line leading-relaxed">
+                <p class="text-soft-theme font-semibold whitespace-pre-line leading-relaxed">
                   {{ project.mom_notes || 'No meeting minutes logged yet.' }}
                 </p>
               </div>
@@ -117,13 +117,13 @@
           <!-- Dynamic ledger action tabs -->
           <div class="space-y-6">
             <!-- Tabs Navigation -->
-            <div class="flex border-b border-brand-charcoal-light/20 pb-0.5 select-none gap-4 shrink-0 overflow-x-auto">
+            <div class="flex border-b border-panel-theme pb-0.5 select-none gap-4 shrink-0 overflow-x-auto">
               <button 
                 v-for="tab in tabs" 
                 :key="tab.id"
                 @click="activeTab = tab.id"
                 class="pb-3 text-xs font-bold uppercase tracking-wider relative transition-colors whitespace-nowrap"
-                :class="activeTab === tab.id ? 'text-brand-orange border-b-2 border-brand-orange' : 'text-gray-400 hover:text-white'"
+                :class="activeTab === tab.id ? 'text-brand-orange border-b-2 border-brand-orange' : 'text-muted-theme hover:text-main-theme'"
               >
                 {{ tab.name }}
               </button>
@@ -132,7 +132,7 @@
             <!-- TAB 1: EVENT TIMELINE (Rundowns) -->
             <div v-if="activeTab === 'schedules'" class="space-y-6">
               <div class="flex items-center justify-between gap-4 select-none">
-                <h3 class="text-sm font-extrabold uppercase tracking-wider text-white">Event Venues & Rundown Sheets</h3>
+                <h3 class="text-sm font-extrabold uppercase tracking-wider text-main-theme">Event Venues & Rundown Sheets</h3>
                 <button 
                   v-if="auth.hasPermission('events:write')"
                   @click="showAddScheduleModal = true"
@@ -142,7 +142,7 @@
                 </button>
               </div>
 
-              <div v-if="schedules.length === 0" class="p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
+              <div v-if="schedules.length === 0" class="p-12 text-center border border-dashed border-panel-theme rounded-3xl text-xs font-semibold text-muted-theme select-none">
                 No event schedule venues created. Click Link Venue Schedule to initialize rundowns.
               </div>
 
@@ -154,13 +154,13 @@
                   class="glass-panel p-6 space-y-4"
                 >
                   <!-- Schedule Header -->
-                  <div class="flex items-center justify-between flex-wrap gap-3 border-b border-brand-charcoal-light/20 pb-4 select-none">
+                  <div class="flex items-center justify-between flex-wrap gap-3 border-b border-panel-theme pb-4 select-none">
                     <div>
-                      <h4 class="text-base font-extrabold text-white tracking-wide">{{ sched.venue_name }}</h4>
-                      <p class="text-xs text-gray-400 mt-1">Location: {{ sched.address || '-' }} | <a :href="sched.map_link" target="_blank" class="text-brand-blue hover:underline">Google Maps</a></p>
+                      <h4 class="text-base font-extrabold text-main-theme tracking-wide">{{ sched.venue_name }}</h4>
+                      <p class="text-xs text-muted-theme mt-1">Location: {{ sched.address || '-' }} | <a :href="sched.map_link" target="_blank" class="text-brand-blue hover:underline">Google Maps</a></p>
                     </div>
                     <div class="text-right text-xs">
-                      <p class="font-bold text-gray-300">Time: {{ formatDateTime(sched.start_time) }} to {{ formatDateTime(sched.end_time) }}</p>
+                      <p class="font-bold text-soft-theme">Time: {{ formatDateTime(sched.start_time) }} to {{ formatDateTime(sched.end_time) }}</p>
                       <p class="text-[10px] text-brand-orange font-bold uppercase mt-1">PIC: {{ sched.pic?.full_name || 'Unassigned' }}</p>
                     </div>
                   </div>
@@ -169,9 +169,9 @@
                   <div>
                     <p class="text-[10px] font-extrabold uppercase tracking-widest text-brand-orange mb-3 select-none">Hour-by-Hour Rundown Timesheet</p>
                     <!-- Desktop Rundown Table -->
-                    <div class="hidden md:block overflow-x-auto rounded-xl border border-brand-charcoal-light/20">
-                      <table class="min-w-full text-left text-xs divide-y divide-brand-charcoal-light/10">
-                        <thead class="bg-brand-charcoal/50 text-[10px] font-extrabold uppercase tracking-widest text-gray-400 select-none">
+                    <div class="hidden md:block overflow-x-auto rounded-xl border border-panel-theme">
+                      <table class="min-w-full text-left text-xs divide-y divide-panel-theme">
+                        <thead class="app-table-header">
                           <tr>
                             <th class="px-4 py-3">Time</th>
                             <th class="px-4 py-3">Activity description</th>
@@ -179,15 +179,15 @@
                             <th class="px-4 py-3">Special Instructions</th>
                           </tr>
                         </thead>
-                        <tbody class="divide-y divide-brand-charcoal-light/5">
+                        <tbody class="divide-y divide-panel-theme">
                           <tr v-if="sched.rundown?.length === 0">
-                            <td colspan="4" class="px-4 py-6 text-center text-gray-500 font-semibold italic">No rundown items added.</td>
+                            <td colspan="4" class="px-4 py-6 text-center text-muted-theme font-semibold italic">No rundown items added.</td>
                           </tr>
-                          <tr v-for="(item, idx) in sched.rundown" :key="idx" class="hover:bg-brand-charcoal-light/5">
+                          <tr v-for="(item, idx) in sched.rundown" :key="idx" class="app-table-row">
                             <td class="px-4 py-3 font-bold text-brand-orange">{{ item.time }}</td>
-                            <td class="px-4 py-3 text-white font-bold">{{ item.activity }}</td>
-                            <td class="px-4 py-3 text-gray-300 font-semibold">{{ item.pic }}</td>
-                            <td class="px-4 py-3 text-gray-400">{{ item.notes || '-' }}</td>
+                            <td class="px-4 py-3 text-main-theme font-bold">{{ item.activity }}</td>
+                            <td class="px-4 py-3 text-soft-theme font-semibold">{{ item.pic }}</td>
+                            <td class="px-4 py-3 text-muted-theme">{{ item.notes || '-' }}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -195,21 +195,21 @@
 
                     <!-- Mobile Rundown Card List (Hidden on desktop/tablet) -->
                     <div class="block md:hidden space-y-3">
-                      <div v-if="sched.rundown?.length === 0" class="p-6 text-center bg-brand-charcoal-light/5 border border-dashed border-brand-charcoal-light/20 rounded-xl text-gray-500 font-semibold italic">
+                      <div v-if="sched.rundown?.length === 0" class="p-6 text-center bg-surface-theme border border-dashed border-panel-theme rounded-xl text-muted-theme font-semibold italic">
                         No rundown items added.
                       </div>
                       <div 
                         v-for="(item, idx) in sched.rundown" 
                         :key="idx"
-                        class="bg-brand-charcoal-dark/40 border border-brand-charcoal-light/10 p-3.5 rounded-xl space-y-2 text-xs"
+                        class="bg-surface-theme border border-panel-theme p-3.5 rounded-xl space-y-2 text-xs"
                       >
-                        <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-1.5">
+                        <div class="flex items-center justify-between border-b border-panel-theme pb-1.5">
                           <span class="font-bold text-brand-orange font-mono">{{ item.time }}</span>
-                          <span class="text-gray-400 font-bold">PIC: {{ item.pic }}</span>
+                          <span class="text-muted-theme font-bold">PIC: {{ item.pic }}</span>
                         </div>
                         <div>
-                          <p class="font-bold text-white leading-tight">{{ item.activity }}</p>
-                          <p v-if="item.notes" class="text-xs text-gray-400 mt-1 font-medium"><span class="text-gray-500 font-bold">Notes:</span> {{ item.notes }}</p>
+                          <p class="font-bold text-main-theme leading-tight">{{ item.activity }}</p>
+                          <p v-if="item.notes" class="text-xs text-muted-theme mt-1 font-medium"><span class="text-muted-theme font-bold">Notes:</span> {{ item.notes }}</p>
                         </div>
                       </div>
                     </div>
@@ -218,13 +218,13 @@
                     <form 
                       v-if="auth.hasPermission('events:write')"
                       @submit.prevent="addRundownItem(sched)"
-                      class="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3 bg-brand-charcoal-light/10 p-3.5 rounded-xl border border-brand-charcoal-light/10"
+                      class="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3 bg-surface-theme p-3.5 rounded-xl border border-panel-theme"
                     >
-                      <input v-model="newRundown.time" type="text" placeholder="e.g. 08:00" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                      <input v-model="newRundown.activity" type="text" placeholder="Activity" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
-                      <input v-model="newRundown.pic" type="text" placeholder="Assignee (PIC)" required class="w-full px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                      <input v-model="newRundown.time" type="text" placeholder="e.g. 08:00" required class="w-full app-form-control-compact text-xs" />
+                      <input v-model="newRundown.activity" type="text" placeholder="Activity" required class="w-full app-form-control-compact text-xs" />
+                      <input v-model="newRundown.pic" type="text" placeholder="Assignee (PIC)" required class="w-full app-form-control-compact text-xs" />
                       <div class="flex gap-2">
-                        <input v-model="newRundown.notes" type="text" placeholder="Notes/Remarks" class="flex-1 px-3 py-2 rounded-lg bg-brand-charcoal-dark border border-brand-charcoal-light/40 text-xs text-white" />
+                        <input v-model="newRundown.notes" type="text" placeholder="Notes/Remarks" class="flex-1 app-form-control-compact text-xs" />
                         <button type="submit" class="px-4 py-2 bg-brand-emerald text-white rounded-lg font-bold text-xs shrink-0 hover:bg-brand-emerald-dark transition-all">+</button>
                       </div>
                     </form>
@@ -236,7 +236,7 @@
             <!-- TAB 2: TASKS CHECKLIST -->
             <div v-if="activeTab === 'tasks'" class="space-y-6">
               <div class="flex items-center justify-between gap-4 select-none">
-                <h3 class="text-sm font-extrabold uppercase tracking-wider text-white">Operations Task Checklist</h3>
+                <h3 class="text-sm font-extrabold uppercase tracking-wider text-main-theme">Operations Task Checklist</h3>
                 <button 
                   v-if="auth.hasPermission('tasks:write')"
                   @click="showAddTaskModal = true"
@@ -246,7 +246,7 @@
                 </button>
               </div>
 
-              <div v-if="tasks.length === 0" class="p-12 text-center border border-dashed border-brand-charcoal-light/25 rounded-3xl text-xs font-semibold text-gray-500 select-none">
+              <div v-if="tasks.length === 0" class="p-12 text-center border border-dashed border-panel-theme rounded-3xl text-xs font-semibold text-muted-theme select-none">
                 No operations tasks registered. Click Create New Task to add checklists.
               </div>
 
@@ -255,8 +255,8 @@
                 <div 
                   v-for="task in tasks" 
                   :key="task.id"
-                  class="p-4 bg-brand-charcoal border rounded-2xl flex items-center justify-between gap-4 flex-wrap"
-                  :class="task.status === 'done' ? 'border-brand-emerald/20 opacity-70' : 'border-brand-charcoal-light/40 hover:border-brand-orange/30 transition-all'"
+                  class="p-4 bg-panel-theme border rounded-2xl flex items-center justify-between gap-4 flex-wrap"
+                  :class="task.status === 'done' ? 'border-brand-emerald/20 opacity-70' : 'border-panel-theme hover:border-brand-orange/30 transition-all'"
                 >
                   <div class="flex items-center gap-3 min-w-0 flex-1">
                     <!-- Quick check checkbox -->
@@ -265,13 +265,13 @@
                       type="checkbox"
                       :checked="task.status === 'done'"
                       @change="toggleTaskDone(task)"
-                      class="h-4.5 w-4.5 rounded-lg bg-brand-charcoal-dark border-brand-charcoal-light/45 checked:bg-brand-emerald focus:ring-0 text-brand-emerald shrink-0 cursor-pointer"
+                      class="h-4.5 w-4.5 rounded-lg bg-surface-theme border-panel-theme checked:bg-brand-emerald focus:ring-0 text-brand-emerald shrink-0 cursor-pointer"
                     />
                     <div class="min-w-0">
-                      <p class="font-bold text-sm tracking-wide text-white" :class="{ 'line-through !text-gray-500': task.status === 'done' }">
+                      <p class="font-bold text-sm tracking-wide text-main-theme" :class="{ 'line-through !text-muted-theme': task.status === 'done' }">
                         {{ task.title }}
                       </p>
-                      <p class="text-xs text-gray-400 mt-1 font-semibold">
+                      <p class="text-xs text-muted-theme mt-1 font-semibold">
                         Due: {{ formatDateTime(task.due_date) }} | PIC: {{ task.assigned_to?.full_name || 'Unassigned' }}
                       </p>
                     </div>
@@ -332,21 +332,21 @@
           
           <!-- Assignments panel -->
           <div class="glass-panel p-5 space-y-4 select-none">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Operational Assignments</h4>
+            <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Operational Assignments</h4>
             <div class="space-y-3 text-xs">
-              <div class="flex justify-between items-center bg-brand-charcoal-light/10 p-2.5 rounded-xl border border-brand-charcoal-light/15">
+              <div class="flex justify-between items-center bg-surface-theme p-2.5 rounded-xl border border-panel-theme">
                 <div>
-                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Program Owner (PO)</p>
-                  <p class="text-white font-extrabold mt-1 text-sm">{{ project.program_owner?.full_name || 'Unassigned' }}</p>
+                  <p class="text-muted-theme font-bold uppercase tracking-widest text-[9px]">Program Owner (PO)</p>
+                  <p class="text-main-theme font-extrabold mt-1 text-sm">{{ project.program_owner?.full_name || 'Unassigned' }}</p>
                 </div>
                 <span v-if="project.program_owner?.initial_code" class="px-2 py-1 bg-brand-orange/15 text-brand-orange text-xs font-black rounded border border-brand-orange/20">
                   {{ project.program_owner.initial_code }}
                 </span>
               </div>
-              <div class="flex justify-between items-center bg-brand-charcoal-light/10 p-2.5 rounded-xl border border-brand-charcoal-light/15">
+              <div class="flex justify-between items-center bg-surface-theme p-2.5 rounded-xl border border-panel-theme">
                 <div>
-                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Program Manager (PM)</p>
-                  <p class="text-white font-extrabold mt-1 text-sm">{{ project.program_manager?.full_name || 'Unassigned' }}</p>
+                  <p class="text-muted-theme font-bold uppercase tracking-widest text-[9px]">Program Manager (PM)</p>
+                  <p class="text-main-theme font-extrabold mt-1 text-sm">{{ project.program_manager?.full_name || 'Unassigned' }}</p>
                 </div>
                 <span v-if="project.program_manager?.initial_code" class="px-2 py-1 bg-brand-orange/15 text-brand-orange text-xs font-black rounded border border-brand-orange/20">
                   {{ project.program_manager.initial_code }}
@@ -357,12 +357,12 @@
 
           <!-- Project Readiness Scorecard (Sprint 7) -->
           <div v-if="project" class="glass-panel p-5 space-y-4 select-none">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Project Readiness Indicator</h4>
+            <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Project Readiness Indicator</h4>
             <div class="space-y-3 text-xs">
-              <div class="flex justify-between items-center bg-brand-charcoal-light/10 p-2.5 rounded-xl border border-brand-charcoal-light/15">
+              <div class="flex justify-between items-center bg-surface-theme p-2.5 rounded-xl border border-panel-theme">
                 <div>
-                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[9px]">Readiness Score</p>
-                  <p class="text-white font-extrabold mt-1 text-sm">
+                  <p class="text-muted-theme font-bold uppercase tracking-widest text-[9px]">Readiness Score</p>
+                  <p class="text-main-theme font-extrabold mt-1 text-sm">
                     {{ (project && project.project_readiness_score !== null && !isNaN(project.project_readiness_score)) ? Math.round(project.project_readiness_score * 100) + '%' : '0%' }}
                   </p>
                 </div>
@@ -372,31 +372,31 @@
               </div>
               <div class="grid grid-cols-2 gap-2 text-xs pt-1">
                 <div>
-                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Completion Rate</p>
-                  <p class="text-white font-extrabold text-sm">{{ (project && project.instrument_completion_rate !== null && !isNaN(project.instrument_completion_rate)) ? Math.round(project.instrument_completion_rate * 100) + '%' : '0%' }}</p>
+                  <p class="text-muted-theme font-bold text-[9px] uppercase tracking-widest">Completion Rate</p>
+                  <p class="text-main-theme font-extrabold text-sm">{{ (project && project.instrument_completion_rate !== null && !isNaN(project.instrument_completion_rate)) ? Math.round(project.instrument_completion_rate * 100) + '%' : '0%' }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Done / Required</p>
+                  <p class="text-muted-theme font-bold text-[9px] uppercase tracking-widest">Done / Required</p>
                   <p class="text-brand-emerald font-black text-sm">{{ project.completed_required_instruments_count }} / {{ project.required_instruments_count }}</p>
                 </div>
               </div>
-              <div class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/20 h-2 rounded-full overflow-hidden mt-2">
+              <div class="w-full bg-surface-theme border border-panel-theme h-2 rounded-full overflow-hidden mt-2">
                 <div 
                   class="bg-brand-orange h-full rounded-full transition-all duration-500" 
                   :style="{ width: (project && project.project_readiness_score !== null && !isNaN(project.project_readiness_score)) ? Math.round(project.project_readiness_score * 100) + '%' : '0%' }"
                 ></div>
               </div>
               <!-- Alerts inside readiness card -->
-              <div class="grid grid-cols-2 gap-2 pt-1 border-t border-brand-charcoal-light/10 mt-2 text-[10px]">
+              <div class="grid grid-cols-2 gap-2 pt-1 border-t border-panel-theme mt-2 text-[10px]">
                 <div class="flex items-center gap-1">
                   <span class="w-2 h-2 rounded-full" :class="project.overdue_instruments_count > 0 ? 'bg-red-400 animate-pulse' : 'bg-gray-600'"></span>
-                  <span class="text-gray-400 font-medium">Overdue:</span>
-                  <span class="font-extrabold" :class="project.overdue_instruments_count > 0 ? 'text-red-400' : 'text-gray-300'">{{ project.overdue_instruments_count }}</span>
+                  <span class="text-muted-theme font-medium">Overdue:</span>
+                  <span class="font-extrabold" :class="project.overdue_instruments_count > 0 ? 'text-red-400' : 'text-soft-theme'">{{ project.overdue_instruments_count }}</span>
                 </div>
                 <div class="flex items-center gap-1">
                   <span class="w-2 h-2 rounded-full" :class="project.revision_required_count > 0 ? 'bg-rose-400 animate-pulse' : 'bg-gray-600'"></span>
-                  <span class="text-gray-400 font-medium">Revision:</span>
-                  <span class="font-extrabold" :class="project.revision_required_count > 0 ? 'text-rose-400' : 'text-gray-300'">{{ project.revision_required_count }}</span>
+                  <span class="text-muted-theme font-medium">Revision:</span>
+                  <span class="font-extrabold" :class="project.revision_required_count > 0 ? 'text-rose-400' : 'text-soft-theme'">{{ project.revision_required_count }}</span>
                 </div>
               </div>
             </div>
@@ -411,50 +411,50 @@
 
           <!-- Customer details -->
           <div class="glass-panel p-5 space-y-3 select-none">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Client Profile</h4>
+            <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Client Profile</h4>
             <div class="text-xs space-y-2">
-              <p class="text-sm font-extrabold text-white">{{ project.customer?.company_name }}</p>
-              <p class="text-gray-400 font-semibold">Category: <span class="text-gray-200">{{ project.customer?.category }}</span></p>
-              <p class="text-gray-400 font-semibold">Mailing Address: <span class="text-gray-300">{{ project.customer?.address || '-' }}</span></p>
+              <p class="text-sm font-extrabold text-main-theme">{{ project.customer?.company_name }}</p>
+              <p class="text-muted-theme font-semibold">Category: <span class="text-soft-theme">{{ project.customer?.category }}</span></p>
+              <p class="text-muted-theme font-semibold">Mailing Address: <span class="text-soft-theme">{{ project.customer?.address || '-' }}</span></p>
             </div>
           </div>
 
           <!-- Event Source -->
           <div class="glass-panel p-5 space-y-3 select-none">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Event Source / Referral</h4>
+            <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Event Source / Referral</h4>
             <div class="text-xs space-y-2">
               <div class="flex justify-between items-center">
-                <p class="text-gray-400 font-semibold">Source Type</p>
+                <p class="text-muted-theme font-semibold">Source Type</p>
                 <span class="px-2 py-0.5 bg-brand-orange/10 text-brand-orange rounded font-bold uppercase text-[9px]">
                   {{ project.event_source?.source_type || 'Direct' }}
                 </span>
               </div>
-              <p class="text-gray-400 font-semibold">Partner/Vendor: <span class="text-gray-200 font-bold">{{ project.event_source?.vendor_name || '-' }}</span></p>
-              <p class="text-gray-400 font-semibold">External Sales PIC: <span class="text-gray-200 font-bold">{{ project.event_source?.sales_name || '-' }}</span></p>
+              <p class="text-muted-theme font-semibold">Partner/Vendor: <span class="text-soft-theme font-bold">{{ project.event_source?.vendor_name || '-' }}</span></p>
+              <p class="text-muted-theme font-semibold">External Sales PIC: <span class="text-soft-theme font-bold">{{ project.event_source?.sales_name || '-' }}</span></p>
             </div>
           </div>
 
           <!-- Collections Progress Card -->
           <div class="glass-panel p-5 space-y-3 select-none">
-            <h4 class="text-xs font-bold text-white uppercase tracking-wider border-b border-brand-charcoal-light/20 pb-2">Collections Progress</h4>
+            <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider border-b border-panel-theme pb-2">Collections Progress</h4>
             <div class="space-y-3 text-xs">
               <div class="flex justify-between items-center">
-                <p class="text-gray-400 font-semibold">Billing Status</p>
+                <p class="text-muted-theme font-semibold">Billing Status</p>
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(project.payment_status)">
                   {{ project.payment_status }}
                 </span>
               </div>
               <div class="grid grid-cols-2 gap-2 text-xs pt-1">
                 <div>
-                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Total Deal Value</p>
-                  <p class="text-white font-extrabold text-sm">{{ formatMoney(project.budget) }}</p>
+                  <p class="text-muted-theme font-bold text-[9px] uppercase tracking-widest">Total Deal Value</p>
+                  <p class="text-main-theme font-extrabold text-sm">{{ formatMoney(project.budget) }}</p>
                 </div>
                 <div>
-                  <p class="text-gray-500 font-bold text-[9px] uppercase tracking-widest">Approved Collected</p>
+                  <p class="text-muted-theme font-bold text-[9px] uppercase tracking-widest">Approved Collected</p>
                   <p class="text-brand-emerald font-black text-sm">{{ formatMoney(project.paid_amount) }}</p>
                 </div>
               </div>
-              <div class="w-full bg-brand-charcoal-dark border border-brand-charcoal-light/20 h-2 rounded-full overflow-hidden mt-2">
+              <div class="w-full bg-surface-theme border border-panel-theme h-2 rounded-full overflow-hidden mt-2">
                 <div 
                   class="bg-brand-emerald h-full rounded-full transition-all duration-500" 
                   :style="{ width: getPaymentPercent(project.budget, project.paid_amount) + '%' }"
@@ -471,40 +471,40 @@
 
     <!-- Link Venue Schedule Modal -->
     <div v-if="showAddScheduleModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
-        <h3 class="text-base font-bold text-white tracking-wide mb-5">Link Venue Schedule</h3>
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-5">Link Venue Schedule</h3>
         <form @submit.prevent="saveSchedule" class="space-y-4">
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Venue/Address Name</label>
-            <input v-model="newSched.venue_name" type="text" required placeholder="e.g. Sentul Adventure Park Camp" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange" />
+            <label class="app-label mb-2">Venue/Address Name</label>
+            <input v-model="newSched.venue_name" type="text" required placeholder="e.g. Sentul Adventure Park Camp" class="app-form-control" />
           </div>
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Full Mailing Address</label>
-            <textarea v-model="newSched.address" rows="2" placeholder="Address..." class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange"></textarea>
+            <label class="app-label mb-2">Full Mailing Address</label>
+            <textarea v-model="newSched.address" rows="2" placeholder="Address..." class="app-form-control"></textarea>
           </div>
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Google Maps Embed Link URL</label>
-            <input v-model="newSched.map_link" type="url" placeholder="https://maps.google.com/..." class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange" />
+            <label class="app-label mb-2">Google Maps Embed Link URL</label>
+            <input v-model="newSched.map_link" type="url" placeholder="https://maps.google.com/..." class="app-form-control" />
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Operational Start Time</label>
-              <input v-model="newSched.start_time" type="datetime-local" required class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange" />
+              <label class="app-label mb-2">Operational Start Time</label>
+              <input v-model="newSched.start_time" type="datetime-local" required class="app-form-control text-xs" />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Operational End Time</label>
-              <input v-model="newSched.end_time" type="datetime-local" required class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange" />
+              <label class="app-label mb-2">Operational End Time</label>
+              <input v-model="newSched.end_time" type="datetime-local" required class="app-form-control text-xs" />
             </div>
           </div>
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Assign On-Site PIC Manager</label>
-            <select v-model="newSched.pic_id" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange">
+            <label class="app-label mb-2">Assign On-Site PIC Manager</label>
+            <select v-model="newSched.pic_id" class="app-form-control text-xs">
               <option :value="null">Unassigned</option>
               <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
             </select>
           </div>
           <div class="flex items-center justify-end gap-3 pt-3">
-            <button type="button" @click="showAddScheduleModal = false" class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all">Cancel</button>
+            <button type="button" @click="showAddScheduleModal = false" class="app-button-secondary">Cancel</button>
             <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg">Save Schedule</button>
           </div>
         </form>
@@ -513,40 +513,40 @@
 
     <!-- Create Task Modal -->
     <div v-if="showAddTaskModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
-        <h3 class="text-base font-bold text-white tracking-wide mb-5">Create Operations Task</h3>
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-lg shadow-2xl p-6 relative">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-5">Create Operations Task</h3>
         <form @submit.prevent="saveTask" class="space-y-4">
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Task Title</label>
-            <input v-model="newTask.title" type="text" required placeholder="e.g. Procure sound equipment system" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange" />
+            <label class="app-label mb-2">Task Title</label>
+            <input v-model="newTask.title" type="text" required placeholder="e.g. Procure sound equipment system" class="app-form-control" />
           </div>
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Description / Instructions</label>
-            <textarea v-model="newTask.description" rows="2" placeholder="Task requirements..." class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange"></textarea>
+            <label class="app-label mb-2">Description / Instructions</label>
+            <textarea v-model="newTask.description" rows="2" placeholder="Task requirements..." class="app-form-control"></textarea>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Priority Level</label>
-              <select v-model="newTask.priority" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange">
+              <label class="app-label mb-2">Priority Level</label>
+              <select v-model="newTask.priority" class="app-form-control text-xs">
                 <option value="low">Low Priority</option>
                 <option value="medium">Medium Priority</option>
                 <option value="high">High Priority</option>
               </select>
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Due Date & Time</label>
-              <input v-model="newTask.due_date" type="datetime-local" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange" />
+              <label class="app-label mb-2">Due Date & Time</label>
+              <input v-model="newTask.due_date" type="datetime-local" class="app-form-control text-xs" />
             </div>
           </div>
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Assign On-Site PIC Manager</label>
-            <select v-model="newTask.assigned_to_id" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange">
+            <label class="app-label mb-2">Assign On-Site PIC Manager</label>
+            <select v-model="newTask.assigned_to_id" class="app-form-control text-xs">
               <option :value="null">Unassigned</option>
               <option v-for="u in users" :key="u.id" :value="u.id">{{ u.full_name }}</option>
             </select>
           </div>
           <div class="flex items-center justify-end gap-3 pt-3">
-            <button type="button" @click="showAddTaskModal = false" class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all">Cancel</button>
+            <button type="button" @click="showAddTaskModal = false" class="app-button-secondary">Cancel</button>
             <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg">Allocate Task</button>
           </div>
         </form>
@@ -555,14 +555,14 @@
 
     <!-- Unified Readiness & Status Transition Modal (Sprint 8) -->
     <div v-if="showReadinessModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-xl shadow-2xl p-6 relative">
-        <h3 class="text-base font-bold text-white tracking-wide mb-2 flex items-center gap-2">
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-xl shadow-2xl p-6 relative">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-2 flex items-center gap-2">
           <span>Ubah Status Project</span>
           <span v-if="pendingTransition.newStatus" class="px-2 py-0.5 text-[10px] bg-brand-orange/15 text-brand-orange border border-brand-orange/20 rounded font-black">
             {{ pendingTransition.newStatus }}
           </span>
         </h3>
-        <p class="text-xs text-gray-400 font-semibold mb-5">
+        <p class="text-xs text-muted-theme font-semibold mb-5">
           Sistem sedang menganalisis tingkat kesiapan (readiness) operasional event Anda.
         </p>
 
@@ -572,19 +572,19 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span class="text-xs text-gray-400 font-semibold">Menganalisis checklist readiness...</span>
+          <span class="text-xs text-muted-theme font-semibold">Menganalisis checklist readiness...</span>
         </div>
 
         <!-- Loaded Check state -->
         <div v-else-if="readinessGateData" class="space-y-4">
           <!-- Readiness Scores -->
-          <div class="grid grid-cols-2 gap-3 p-3 bg-brand-charcoal-dark border border-brand-charcoal-light/10 rounded-2xl text-xs select-none">
+          <div class="grid grid-cols-2 gap-3 p-3 bg-surface-theme border border-panel-theme rounded-2xl text-xs select-none">
             <div>
-              <p class="text-gray-400 font-bold text-[9px] uppercase tracking-widest">Readiness Score</p>
-              <p class="text-white font-extrabold text-sm mt-0.5">{{ Math.round(readinessGateData.readiness_score) }}%</p>
+              <p class="text-muted-theme font-bold text-[9px] uppercase tracking-widest">Readiness Score</p>
+              <p class="text-main-theme font-extrabold text-sm mt-0.5">{{ Math.round(readinessGateData.readiness_score) }}%</p>
             </div>
             <div>
-              <p class="text-gray-400 font-bold text-[9px] uppercase tracking-widest">Completion Rate</p>
+              <p class="text-muted-theme font-bold text-[9px] uppercase tracking-widest">Completion Rate</p>
               <p class="text-brand-emerald font-black text-sm mt-0.5">{{ Math.round(readinessGateData.instrument_completion_rate) }}%</p>
             </div>
           </div>
@@ -594,14 +594,14 @@
             <span>❌</span>
             <div>
               <p class="font-extrabold text-red-400 uppercase tracking-wider text-[9px]">Critical Blockers Detected</p>
-              <p class="mt-0.5">Sistem mendeteksi blocker kritis yang berisiko merusak alur kerja. Silakan periksa rekomendasi di bawah.</p>
+              <p class="mt-0.5 text-red-300/90">Sistem mendeteksi blocker kritis yang berisiko merusak alur kerja. Silakan periksa rekomendasi di bawah.</p>
             </div>
           </div>
           <div v-else-if="readinessGateData.warnings.length > 0" class="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-200 rounded-xl text-[11px] font-semibold leading-relaxed flex items-start gap-2">
             <span>⚠️</span>
             <div>
               <p class="font-extrabold text-amber-400 uppercase tracking-wider text-[9px]">Operational Warnings Detected</p>
-              <p class="mt-0.5">Sistem mendeteksi beberapa catatan kesiapan. Anda dapat mengabaikan ini namun pastikan untuk melengkapinya segera.</p>
+              <p class="mt-0.5 text-amber-300/90">Sistem mendeteksi beberapa catatan kesiapan. Anda dapat mengabaikan ini namun pastikan untuk melengkapinya segera.</p>
             </div>
           </div>
           <div v-else class="p-3 bg-brand-emerald/10 border border-brand-emerald/20 text-brand-emerald rounded-xl text-[11px] font-semibold leading-relaxed flex items-start gap-2">
@@ -647,8 +647,8 @@
 
           <!-- Notes textarea -->
           <div>
-            <label class="block text-[9px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Catatan Perubahan Status (Wajib)</label>
-            <textarea v-model="transitionNotes" rows="2.5" placeholder="Masukkan alasan transisi atau tindakan mitigasi..." class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white focus:border-brand-orange"></textarea>
+            <label class="app-label mb-2">Catatan Perubahan Status (Wajib)</label>
+            <textarea v-model="transitionNotes" rows="2.5" placeholder="Masukkan alasan transisi atau tindakan mitigasi..." class="app-form-control"></textarea>
           </div>
 
           <!-- Override switch if critical blockers -->
@@ -657,7 +657,7 @@
               id="force-override" 
               type="checkbox" 
               v-model="forceTransition"
-              class="rounded border-red-900 bg-brand-charcoal-dark text-red-500 focus:ring-red-500 h-4.5 w-4.5 cursor-pointer"
+              class="rounded border-red-900 bg-surface-theme text-red-500 focus:ring-red-500 h-4.5 w-4.5 cursor-pointer"
             />
             <label for="force-override" class="text-xs font-bold text-red-300 cursor-pointer select-none">
               Saya memahami risiko kritis di atas dan setuju untuk melakukan Force Update status.
@@ -666,7 +666,7 @@
 
           <!-- Action buttons -->
           <div class="flex items-center justify-end gap-3 pt-2">
-            <button type="button" @click="showReadinessModal = false" class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all">Cancel</button>
+            <button type="button" @click="showReadinessModal = false" class="app-button-secondary">Cancel</button>
             <button 
               type="button" 
               @click="confirmTransition"
@@ -891,21 +891,21 @@ const formatDateTime = (val) => {
 const getPriorityStyles = (priority) => {
   if (priority === 'high') return 'bg-red-500/10 text-red-400'
   if (priority === 'medium') return 'bg-brand-orange/10 text-brand-orange'
-  return 'bg-brand-charcoal-light text-gray-300'
+  return 'bg-surface-theme text-muted-theme'
 }
 
 const getTaskStatusStyles = (status) => {
   if (status === 'done') return 'bg-brand-emerald/10 text-brand-emerald'
   if (status === 'review') return 'bg-purple-500/10 text-purple-500'
   if (status === 'in_progress') return 'bg-brand-blue/10 text-brand-blue'
-  return 'bg-brand-charcoal-light text-gray-300'
+  return 'bg-surface-theme text-muted-theme'
 }
 
 const getPaymentStatusStyles = (status) => {
   if (status === 'Paid') return 'bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20'
   if (status === 'Partial Paid') return 'bg-brand-blue/10 text-brand-blue border border-brand-blue/20'
   if (status === 'Outstanding' || status === 'Overdue') return 'bg-red-500/10 text-red-400 border border-red-500/20'
-  return 'bg-brand-charcoal-light text-gray-300 border border-brand-charcoal-light/30'
+  return 'bg-surface-theme text-muted-theme border border-panel-theme'
 }
 
 // Transition Status Action

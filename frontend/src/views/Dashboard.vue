@@ -145,9 +145,9 @@
             id="toggle-dev-tools" 
             type="checkbox" 
             v-model="showDeveloperTools"
-            class="rounded border-charcoal-700 bg-charcoal-900 text-brand-orange focus:ring-brand-orange focus:ring-offset-charcoal-800 h-4.5 w-4.5 transition-colors cursor-pointer"
+            class="rounded border-panel-theme bg-surface-theme text-brand-orange focus:ring-brand-orange h-4.5 w-4.5 transition-colors cursor-pointer"
           />
-          <label for="toggle-dev-tools" class="text-xs font-bold text-charcoal-400 cursor-pointer hover:text-charcoal-300">
+          <label for="toggle-dev-tools" class="text-xs font-bold text-muted-theme cursor-pointer hover:text-main-theme">
             Tampilkan Fitur Developer (Show Developer Tools)
           </label>
         </div>
@@ -157,24 +157,24 @@
       <div v-if="auth.canUseDeveloperTools() && showDeveloperTools" class="app-section-card space-y-4 print:hidden">
         <div class="flex items-center justify-between cursor-pointer select-none" @click="showLegacyBI = !showLegacyBI">
           <h3 class="text-xs font-bold text-white tracking-widest uppercase flex items-center gap-2">
-            <svg class="w-4.5 h-4.5 text-charcoal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg class="w-4.5 h-4.5 text-muted-theme" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
             </svg>
             Legacy Operational BI Streams (Tabs view)
           </h3>
-          <span class="text-xs text-charcoal-400 font-bold hover:underline">
+          <span class="text-xs text-muted-theme font-bold hover:underline">
             {{ showLegacyBI ? 'Sembunyikan Bagian' : 'Tampilkan Bagian' }}
           </span>
         </div>
         
-        <div v-show="showLegacyBI" class="pt-4 border-t border-charcoal-700 space-y-6">
+        <div v-show="showLegacyBI" class="pt-4 border-t border-panel-theme space-y-6">
           <div v-if="legacyLoading" class="py-12 flex flex-col items-center justify-center gap-3">
             <svg class="animate-spin h-8 w-8 text-brand-orange" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span class="text-xs font-bold text-charcoal-400 tracking-wider">Sinkronisasi aliran data operasional...</span>
+            <span class="text-xs font-bold text-muted-theme tracking-wider">Sinkronisasi aliran data operasional...</span>
           </div>
           <DashboardLegacy v-else :stats="stats" />
         </div>
