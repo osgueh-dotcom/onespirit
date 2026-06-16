@@ -50,7 +50,7 @@
       <div
         v-for="card in financeSummaryCards"
         :key="card.label"
-        class="glass-panel p-4 border border-brand-charcoal-light/20"
+        class="glass-panel p-4 border border-panel-theme"
       >
         <p class="text-[9px] font-black uppercase tracking-widest text-muted-theme">{{ card.label }}</p>
         <p class="mt-1 text-lg font-black tracking-tight" :class="card.valueClass">
@@ -69,9 +69,9 @@
       <!-- INVOICES SUB-TAB -->
       <div v-if="activeSubTab === 'invoices'">
         <!-- Desktop Table View -->
-        <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
+        <div class="hidden md:block glass-panel overflow-hidden border border-panel-theme">
           <div class="overflow-x-auto min-w-full">
-            <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+            <table class="min-w-full text-left divide-y divide-panel-theme text-xs">
               <thead class="app-table-header">
                 <tr>
                   <th class="px-6 py-4">Invoice Number</th>
@@ -83,7 +83,7 @@
                   <th class="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
+              <tbody class="divide-y divide-panel-theme font-medium">
                 <tr v-if="invoices.length === 0">
                   <td colspan="7" class="px-6 py-12 text-center app-empty-copy select-none">
                     No invoices generated in current ledger.
@@ -131,7 +131,7 @@
             :key="inv.id"
             class="glass-panel p-4 border border-panel-theme space-y-3 bg-surface-theme"
           >
-            <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+            <div class="flex items-center justify-between border-b border-panel-theme pb-2">
               <span class="font-bold text-main-theme tracking-wide text-xs select-all">{{ inv.invoice_number }}</span>
               <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider" :class="getInvoiceStatusStyles(inv.status)">
                 {{ inv.status }}
@@ -166,9 +166,9 @@
       <!-- PAYMENT COLLECTIONS SUB-TAB -->
       <div v-else>
         <!-- Desktop Table View -->
-        <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
+        <div class="hidden md:block glass-panel overflow-hidden border border-panel-theme">
           <div class="overflow-x-auto min-w-full">
-            <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+            <table class="min-w-full text-left divide-y divide-panel-theme text-xs">
               <thead class="app-table-header">
                 <tr>
                   <th class="px-6 py-4">Receipt ID</th>
@@ -180,7 +180,7 @@
                   <th class="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-brand-charcoal-light/10 font-medium">
+              <tbody class="divide-y divide-panel-theme font-medium">
                 <tr v-if="payments.length === 0">
                   <td colspan="7" class="px-6 py-12 text-center app-empty-copy select-none">
                     No payment collections logged.
@@ -228,7 +228,7 @@
             :key="pay.id"
             class="glass-panel p-4 border border-panel-theme space-y-3 bg-surface-theme"
           >
-            <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+            <div class="flex items-center justify-between border-b border-panel-theme pb-2">
               <span class="font-mono text-[9px] text-muted-theme">ID: {{ pay.id.slice(0, 8) }}...</span>
               <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider" :class="getPaymentStatusStyles(pay.status)">
                 {{ pay.status }}
@@ -264,15 +264,15 @@
 
     <!-- Generate Invoice Modal -->
     <div v-if="showAddInvoiceModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
-        <h3 class="text-base font-bold text-white tracking-wide mb-5">Generate Billing Invoice</h3>
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-5">Generate Billing Invoice</h3>
         <form @submit.prevent="saveInvoice" class="space-y-4">
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Project Association *</label>
+            <label class="app-label mb-2">Project Association *</label>
             <select 
               v-model="newInvoice.project_id"
               required
-              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+              class="app-form-control text-sm"
             >
               <option value="" disabled>Select Project</option>
               <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.title }} (Client: {{ p.customer?.company_name }})</option>
@@ -280,28 +280,28 @@
           </div>
 
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Invoice Number Reference</label>
-            <input v-model="newInvoice.invoice_number" type="text" required placeholder="e.g. OSA-2026-0001" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange" />
+            <label class="app-label mb-2">Invoice Number Reference</label>
+            <input v-model="newInvoice.invoice_number" type="text" required placeholder="e.g. OSA-2026-0001" class="app-form-control" />
           </div>
 
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Billing Amount (Rp)</label>
-            <input v-model="newInvoice.amount" type="number" step="0.01" required placeholder="0.00" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange" />
+            <label class="app-label mb-2">Billing Amount (Rp)</label>
+            <input v-model="newInvoice.amount" type="number" step="0.01" required placeholder="0.00" class="app-form-control" />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Billing Date</label>
-              <input v-model="newInvoice.issue_date" type="date" required class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange" />
+              <label class="app-label mb-2">Billing Date</label>
+              <input v-model="newInvoice.issue_date" type="date" required class="app-form-control text-xs" />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Due Date</label>
-              <input v-model="newInvoice.due_date" type="date" required class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange" />
+              <label class="app-label mb-2">Due Date</label>
+              <input v-model="newInvoice.due_date" type="date" required class="app-form-control text-xs" />
             </div>
           </div>
 
           <div class="flex items-center justify-end gap-3 pt-3">
-            <button type="button" @click="showAddInvoiceModal = false" class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all">Cancel</button>
+            <button type="button" @click="showAddInvoiceModal = false" class="app-button-secondary">Cancel</button>
             <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg">Issue Invoice</button>
           </div>
         </form>
@@ -310,15 +310,15 @@
 
     <!-- Record Payment Modal -->
     <div v-if="showAddPaymentModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
-        <h3 class="text-base font-bold text-white tracking-wide mb-5">Record Payment Receipt</h3>
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-5">Record Payment Receipt</h3>
         <form @submit.prevent="savePayment" class="space-y-4">
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Billing Invoice Reference *</label>
+            <label class="app-label mb-2">Billing Invoice Reference *</label>
             <select 
               v-model="newPayment.invoice_id"
               required
-              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-xs font-semibold outline-none transition-all text-gray-300"
+              class="app-form-control text-sm"
             >
               <option value="" disabled>Select Invoice</option>
               <option v-for="i in invoices" :key="i.id" :value="i.id">{{ i.invoice_number }} (Amt: {{ formatMoney(i.amount) }} - Status: {{ i.status }})</option>
@@ -326,23 +326,23 @@
           </div>
 
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Paid Amount Collection (Rp)</label>
-            <input v-model="newPayment.amount" type="number" step="0.01" required placeholder="0.00" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange" />
+            <label class="app-label mb-2">Paid Amount Collection (Rp)</label>
+            <input v-model="newPayment.amount" type="number" step="0.01" required placeholder="0.00" class="app-form-control" />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Collection Date</label>
-              <input v-model="newPayment.payment_date" type="date" required class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold text-gray-300 outline-none focus:border-brand-orange" />
+              <label class="app-label mb-2">Collection Date</label>
+              <input v-model="newPayment.payment_date" type="date" required class="app-form-control text-xs" />
             </div>
             <div>
-              <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Bank Reference Number</label>
-              <input v-model="newPayment.reference_number" type="text" placeholder="e.g. TRF-12345" class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-sm font-semibold outline-none text-white focus:border-brand-orange" />
+              <label class="app-label mb-2">Bank Reference Number</label>
+              <input v-model="newPayment.reference_number" type="text" placeholder="e.g. TRF-12345" class="app-form-control" />
             </div>
           </div>
 
           <div class="flex items-center justify-end gap-3 pt-3">
-            <button type="button" @click="showAddPaymentModal = false" class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all">Cancel</button>
+            <button type="button" @click="showAddPaymentModal = false" class="app-button-secondary">Cancel</button>
             <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-orange to-brand-orange-light text-white font-bold text-xs shadow-lg">Link Receipt</button>
           </div>
         </form>
@@ -502,7 +502,7 @@ const financeSummaryCards = computed(() => [
   {
     label: 'Overdue',
     value: formatMoney(financeSummary.value.overdue),
-    valueClass: financeSummary.value.overdue > 0 ? 'text-red-400' : 'text-gray-300',
+    valueClass: financeSummary.value.overdue > 0 ? 'text-red-400' : 'text-muted-theme',
     caption: `${financeSummary.value.overdueCount} invoice`
   },
   {
@@ -607,11 +607,3 @@ const archivePayment = async (pay) => {
   }
 }
 </script>
-
-<style scoped>
-.glass-panel {
-  background: rgba(26, 32, 44, 0.75);
-  backdrop-filter: blur(12px);
-  border-radius: 1.25rem;
-}
-</style>

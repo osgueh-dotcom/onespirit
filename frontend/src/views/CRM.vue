@@ -53,9 +53,9 @@
 
     <div v-else class="space-y-6 animate-fade-in">
       <!-- Desktop Table View -->
-      <div class="hidden md:block glass-panel overflow-hidden border border-brand-charcoal-light/30">
+      <div class="hidden md:block glass-panel overflow-hidden border border-panel-theme">
         <div class="overflow-x-auto min-w-full">
-          <table class="min-w-full text-left divide-y divide-brand-charcoal-light/20 text-xs">
+          <table class="min-w-full text-left divide-y divide-panel-theme text-xs">
             <thead class="app-table-header">
               <tr>
                 <th class="px-6 py-4">Nama Perusahaan</th>
@@ -65,7 +65,7 @@
                 <th class="px-6 py-4 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-brand-charcoal-light/10">
+            <tbody class="divide-y divide-panel-theme">
               <tr v-if="filteredCustomers.length === 0">
                 <td colspan="5" class="px-6 py-12 text-center app-empty-copy">
                   {{ crmEmptyMessage }}
@@ -88,7 +88,7 @@
                     <div v-for="c in cust.contacts.slice(0, 1)" :key="c.id" class="font-semibold text-main-theme">
                       {{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span>
                     </div>
-                    <span v-if="cust.contacts.length > 1" class="text-[10px] text-gray-500 font-bold block">
+                    <span v-if="cust.contacts.length > 1" class="text-[10px] text-muted-theme font-bold block">
                       + {{ cust.contacts.length - 1 }} narahubung lainnya
                     </span>
                   </div>
@@ -125,7 +125,7 @@
           :key="cust.id"
           class="glass-panel p-4 border border-panel-theme space-y-3 bg-surface-theme"
         >
-          <div class="flex items-center justify-between border-b border-brand-charcoal-light/10 pb-2">
+          <div class="flex items-center justify-between border-b border-panel-theme pb-2">
             <span class="font-bold text-main-theme tracking-wide text-sm">{{ cust.company_name }}</span>
             <span class="px-2 py-0.5 rounded text-[10px] font-bold" :class="getCategoryStyles(cust.category)">
               {{ cust.category }}
@@ -165,27 +165,27 @@
 
     <!-- Client Account Creation Modal -->
     <div v-if="showAddModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
-        <h3 class="text-base font-bold text-white tracking-wide mb-5">Register Client Profile</h3>
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-lg shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-5">Register Client Profile</h3>
         
         <form @submit.prevent="saveCustomer" class="space-y-4">
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Company Name</label>
+            <label class="app-label mb-2">Company Name</label>
             <input 
               v-model="newCust.company_name"
               type="text" 
               required
               placeholder="e.g. Google Indonesia"
-              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-sm font-semibold outline-none transition-all text-white"
+              class="app-form-control"
             />
           </div>
 
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Account Classification</label>
+            <label class="app-label mb-2">Account Classification</label>
             <select 
               v-model="newCust.category"
               required
-              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-sm font-semibold outline-none transition-all text-gray-300"
+              class="app-form-control text-sm"
             >
               <option value="Corporate">Corporate Account</option>
               <option value="Agency">Creative Agency</option>
@@ -196,12 +196,12 @@
           </div>
 
           <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-widest text-gray-400 mb-2">Headquarters Address</label>
+            <label class="app-label mb-2">Headquarters Address</label>
             <textarea 
               v-model="newCust.address"
               rows="3"
               placeholder="Full mailing address details..."
-              class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 hover:border-brand-orange/30 focus:border-brand-orange text-sm font-semibold outline-none transition-all text-white"
+              class="app-form-control"
             ></textarea>
           </div>
 
@@ -209,7 +209,7 @@
             <button 
               type="button"
               @click="showAddModal = false"
-              class="px-4 py-2.5 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white hover:bg-brand-charcoal-light/10 transition-all"
+              class="app-button-secondary"
             >
               Cancel
             </button>
@@ -226,24 +226,24 @@
 
     <!-- Point of Contact Modal -->
     <div v-if="showContactModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 select-none">
-      <div class="bg-brand-charcoal border border-brand-charcoal-light/35 rounded-3xl w-full max-w-2xl shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
-        <h3 class="text-base font-bold text-white tracking-wide mb-4">
+      <div class="bg-panel-theme border border-panel-theme rounded-3xl w-full max-w-2xl shadow-2xl p-6 relative overflow-y-auto max-h-[90vh]">
+        <h3 class="text-base font-bold text-main-theme tracking-wide mb-4">
           Point of Contacts: <span class="text-brand-orange">{{ activeCust?.company_name }}</span>
         </h3>
 
         <!-- Contact List -->
         <div class="max-h-60 overflow-y-auto space-y-2 mb-6">
-          <div v-if="activeCust?.contacts?.length === 0" class="p-4 bg-brand-charcoal-light/10 rounded-2xl text-center text-xs font-semibold text-gray-500">
+          <div v-if="activeCust?.contacts?.length === 0" class="p-4 bg-surface-theme border border-panel-theme rounded-2xl text-center text-xs font-semibold text-muted-theme">
             No contacts recorded for this client.
           </div>
           <div 
             v-for="c in activeCust?.contacts" 
             :key="c.id"
-            class="p-4 bg-brand-charcoal-light/20 border border-brand-charcoal-light/10 rounded-2xl flex items-center justify-between text-xs font-medium"
+            class="p-4 bg-surface-theme border border-panel-theme rounded-2xl flex items-center justify-between text-xs font-medium"
           >
             <div>
-              <p class="font-bold text-white">{{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span></p>
-              <p class="text-gray-400 mt-1">Email: {{ c.email || '-' }} | Phone: {{ c.phone || '-' }}</p>
+              <p class="font-bold text-main-theme">{{ c.name }} <span class="text-[10px] text-brand-orange font-semibold">({{ c.position || 'POC' }})</span></p>
+              <p class="text-muted-theme mt-1">Email: {{ c.email || '-' }} | Phone: {{ c.phone || '-' }}</p>
             </div>
             <button 
               v-if="auth.hasPermission('crm:write')"
@@ -256,8 +256,8 @@
         </div>
 
         <!-- Add Contact Form -->
-        <div v-if="auth.hasPermission('crm:write')" class="border-t border-brand-charcoal-light/30 pt-4">
-          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Add New Point of Contact</h4>
+        <div v-if="auth.hasPermission('crm:write')" class="border-t border-panel-theme pt-4">
+          <h4 class="text-xs font-bold text-main-theme uppercase tracking-wider mb-3">Add New Point of Contact</h4>
           <form @submit.prevent="saveContact" class="grid grid-cols-2 gap-3">
             <div class="col-span-2">
               <input 
@@ -265,7 +265,7 @@
                 type="text" 
                 required
                 placeholder="POC Name *"
-                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+                class="app-form-control-compact"
               />
             </div>
             <div>
@@ -273,7 +273,7 @@
                 v-model="newContact.email" 
                 type="email" 
                 placeholder="Email Address"
-                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+                class="app-form-control-compact"
               />
             </div>
             <div>
@@ -281,7 +281,7 @@
                 v-model="newContact.phone" 
                 type="text" 
                 placeholder="Phone Number"
-                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+                class="app-form-control-compact"
               />
             </div>
             <div class="col-span-2">
@@ -289,14 +289,14 @@
                 v-model="newContact.position" 
                 type="text" 
                 placeholder="Position / Title (e.g. Marketing Lead)"
-                class="w-full px-4 py-2.5 rounded-xl bg-brand-charcoal-dark border border-brand-charcoal-light/45 text-xs font-semibold outline-none text-white placeholder-gray-500"
+                class="app-form-control-compact"
               />
             </div>
             <div class="col-span-2 flex items-center justify-end gap-3 mt-2">
               <button 
                 type="button"
                 @click="showContactModal = false"
-                class="px-4 py-2 rounded-xl border border-brand-charcoal-light/40 text-xs font-bold text-gray-400 hover:text-white transition-all"
+                class="app-button-secondary"
               >
                 Close
               </button>
@@ -312,7 +312,7 @@
         <div v-else class="flex justify-end pt-2">
           <button 
             @click="showContactModal = false"
-            class="px-4 py-2 rounded-xl bg-brand-charcoal-light text-white font-bold text-xs"
+            class="app-button-secondary"
           >
             Close
           </button>
@@ -419,7 +419,7 @@ const getCategoryStyles = (cat) => {
   if (cat === 'Corporate') return 'bg-brand-orange/10 text-brand-orange'
   if (cat === 'Agency') return 'bg-brand-blue/10 text-brand-blue'
   if (cat === 'Partner') return 'bg-brand-emerald/10 text-brand-emerald'
-  return 'bg-brand-charcoal-light text-gray-300'
+  return 'bg-surface-theme text-muted-theme border border-panel-theme'
 }
 
 const saveCustomer = async () => {
@@ -493,11 +493,3 @@ const deleteContact = async (id) => {
   }
 }
 </script>
-
-<style scoped>
-.glass-panel {
-  background: rgba(26, 32, 44, 0.75);
-  backdrop-filter: blur(12px);
-  border-radius: 1.25rem;
-}
-</style>
