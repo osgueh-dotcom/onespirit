@@ -214,9 +214,20 @@
                 </button>
               </div>
 
-              <div v-if="schedules.length === 0" class="p-12 text-center border border-dashed border-panel-theme rounded-3xl text-xs font-semibold text-muted-theme select-none">
-                No event schedule venues created. Click Link Venue Schedule to initialize rundowns.
-              </div>
+              <AppEmptyState
+                v-if="schedules.length === 0"
+                title="Belum Ada Data"
+                message="Tidak ada rundown yang tercatat untuk project ini. Hubungkan jadwal venue untuk memulai."
+              >
+                <template #actions v-if="auth.hasPermission('events:write')">
+                  <button 
+                    @click="showAddScheduleModal = true"
+                    class="px-4 py-2 bg-brand-orange text-white rounded-lg font-bold text-xs hover:bg-brand-orange-dark transition-all"
+                  >
+                    + Link Venue Schedule
+                  </button>
+                </template>
+              </AppEmptyState>
 
               <!-- Venue Schedule Listing Grid -->
               <div v-else class="grid grid-cols-1 gap-6">
@@ -226,14 +237,47 @@
                   class="glass-panel p-6 space-y-4"
                 >
                   <!-- Schedule Header -->
-                  <div class="flex items-center justify-between flex-wrap gap-3 border-b border-panel-theme pb-4 select-none">
-                    <div>
-                      <h4 class="text-base font-extrabold text-main-theme tracking-wide">{{ sched.venue_name }}</h4>
-                      <p class="text-xs text-muted-theme mt-1">Location: {{ sched.address || '-' }} | <a :href="sched.map_link" target="_blank" class="text-brand-blue hover:underline">Google Maps</a></p>
+                  <div class="flex items-center justify-between flex-wrap gap-4 border-b border-panel-theme pb-4 select-none">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <h4 class="text-base font-extrabold text-main-theme tracking-wide">{{ sched.venue_name }}</h4>
+                        
+                        <!-- Status Badges -->
+                        <span 
+                          v-if="sched.rundown?.length > 0" 
+                          class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20"
+                        >
+                          Siap
+                        </span>
+                        <span 
+                          v-else 
+                          class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-brand-orange/15 text-brand-orange border border-brand-orange/20"
+                        >
+                          Belum Lengkap
+                        </span>
+                        
+                        <span 
+                          v-if="isApproachingEvent(sched.start_time)" 
+                          class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/15 text-amber-500 border border-amber-500/25 animate-pulse"
+                        >
+                          Mendekati Event
+                        </span>
+                      </div>
+                      <p class="text-xs text-muted-theme mt-1">
+                        Location: <span class="text-soft-theme font-semibold">{{ sched.address || '-' }}</span>
+                        <span v-if="sched.map_link">
+                          | <a :href="sched.map_link" target="_blank" class="text-brand-blue hover:underline font-bold">Google Maps ↗</a>
+                        </span>
+                      </p>
                     </div>
-                    <div class="text-right text-xs">
+                    <div class="text-right text-xs space-y-1.5">
                       <p class="font-bold text-soft-theme">Time: {{ formatDateTime(sched.start_time) }} to {{ formatDateTime(sched.end_time) }}</p>
-                      <p class="text-[10px] text-brand-orange font-bold uppercase mt-1">PIC: {{ sched.pic?.full_name || 'Unassigned' }}</p>
+                      <div class="flex items-center justify-end gap-1.5 mt-1">
+                        <span class="text-[9px] text-muted-theme font-extrabold uppercase tracking-widest">PIC:</span>
+                        <span class="px-2 py-0.5 rounded bg-brand-orange/15 text-brand-orange text-[10px] font-black border border-brand-orange/20">
+                          {{ sched.pic?.full_name || 'Unassigned' }}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -253,7 +297,7 @@
                         </thead>
                         <tbody class="divide-y divide-panel-theme">
                           <tr v-if="sched.rundown?.length === 0">
-                            <td colspan="4" class="px-4 py-6 text-center text-muted-theme font-semibold italic">No rundown items added.</td>
+                            <td colspan="4" class="px-4 py-8 text-center text-muted-theme font-semibold italic">Tidak ada rundown yang tercatat</td>
                           </tr>
                           <tr v-for="(item, idx) in sched.rundown" :key="idx" class="app-table-row">
                             <td class="px-4 py-3 font-bold text-brand-orange">{{ item.time }}</td>
@@ -267,8 +311,8 @@
 
                     <!-- Mobile Rundown Card List (Hidden on desktop/tablet) -->
                     <div class="block md:hidden space-y-3">
-                      <div v-if="sched.rundown?.length === 0" class="p-6 text-center bg-surface-theme border border-dashed border-panel-theme rounded-xl text-muted-theme font-semibold italic">
-                        No rundown items added.
+                      <div v-if="sched.rundown?.length === 0" class="p-8 text-center bg-surface-theme border border-dashed border-panel-theme rounded-2xl text-muted-theme font-semibold italic">
+                        Tidak ada rundown yang tercatat
                       </div>
                       <div 
                         v-for="(item, idx) in sched.rundown" 
@@ -318,33 +362,67 @@
                 </button>
               </div>
 
-              <div v-if="tasks.length === 0" class="p-12 text-center border border-dashed border-panel-theme rounded-3xl text-xs font-semibold text-muted-theme select-none">
-                No operations tasks registered. Click Create New Task to add checklists.
-              </div>
+              <AppEmptyState
+                v-if="tasks.length === 0"
+                title="Belum Ada Data"
+                message="Belum ada checklist operasi yang terdaftar."
+              >
+                <template #actions v-if="auth.hasPermission('tasks:write')">
+                  <button 
+                    @click="showAddTaskModal = true"
+                    class="px-4 py-2 bg-brand-orange text-white rounded-lg font-bold text-xs hover:bg-brand-orange-dark transition-all"
+                  >
+                    + Create New Task
+                  </button>
+                </template>
+              </AppEmptyState>
 
               <!-- Task Checklist Grid -->
               <div v-else class="space-y-3">
                 <div 
                   v-for="task in tasks" 
                   :key="task.id"
-                  class="p-4 bg-panel-theme border rounded-2xl flex items-center justify-between gap-4 flex-wrap"
-                  :class="task.status === 'done' ? 'border-brand-emerald/20 opacity-70' : 'border-panel-theme hover:border-brand-orange/30 transition-all'"
+                  class="p-4 bg-panel-theme border rounded-2xl flex items-center justify-between gap-4 flex-wrap transition-all duration-300"
+                  :class="task.status === 'done' ? 'border-brand-emerald/20 opacity-70' : isTaskOverdue(task) ? 'border-red-500/35 bg-red-500/5' : 'border-panel-theme hover:border-brand-orange/30'"
                 >
-                  <div class="flex items-center gap-3 min-w-0 flex-1">
+                  <div class="flex items-center gap-3.5 min-w-0 flex-1">
                     <!-- Quick check checkbox -->
                     <input 
                       v-if="auth.hasPermission('tasks:write')"
                       type="checkbox"
                       :checked="task.status === 'done'"
                       @change="toggleTaskDone(task)"
-                      class="h-4.5 w-4.5 rounded-lg bg-surface-theme border-panel-theme checked:bg-brand-emerald focus:ring-0 text-brand-emerald shrink-0 cursor-pointer"
+                      class="h-5 w-5 rounded-lg bg-surface-theme border-panel-theme checked:bg-brand-emerald focus:ring-0 text-brand-emerald shrink-0 cursor-pointer transition-all duration-200"
                     />
                     <div class="min-w-0">
-                      <p class="font-bold text-sm tracking-wide text-main-theme" :class="{ 'line-through !text-muted-theme': task.status === 'done' }">
-                        {{ task.title }}
-                      </p>
-                      <p class="text-xs text-muted-theme mt-1 font-semibold">
-                        Due: {{ formatDateTime(task.due_date) }} | PIC: {{ task.assigned_to?.full_name || 'Unassigned' }}
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <p class="font-extrabold text-sm tracking-wide text-main-theme" :class="{ 'line-through !text-muted-theme font-medium': task.status === 'done' }">
+                          {{ task.title }}
+                        </p>
+                        
+                        <!-- Status Badges -->
+                        <span 
+                          v-if="task.status === 'done'" 
+                          class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20"
+                        >
+                          Siap
+                        </span>
+                        <span 
+                          v-else-if="isTaskOverdue(task)" 
+                          class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-red-500/15 text-red-400 border border-red-500/20 animate-pulse"
+                        >
+                          Perlu Dicek
+                        </span>
+                        <span 
+                          v-else 
+                          class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-brand-orange/15 text-brand-orange border border-brand-orange/20"
+                        >
+                          Belum Lengkap
+                        </span>
+                      </div>
+                      <p class="text-xs text-muted-theme mt-1.5 font-semibold">
+                        Due: <span :class="isTaskOverdue(task) ? 'text-red-400 font-extrabold' : 'text-soft-theme'">{{ formatDateTime(task.due_date) }}</span>
+                        | PIC: <span class="text-soft-theme font-bold">{{ task.assigned_to?.full_name || 'Unassigned' }}</span>
                       </p>
                     </div>
                   </div>
@@ -354,13 +432,10 @@
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getPriorityStyles(task.priority)">
                       {{ task.priority }} Priority
                     </span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider" :class="getTaskStatusStyles(task.status)">
-                      {{ task.status }}
-                    </span>
                     <button 
                       v-if="auth.hasPermission('tasks:write')"
                       @click="deleteTask(task.id)"
-                      class="text-red-400 hover:text-red-500 text-xs font-bold transition-colors"
+                      class="text-red-400 hover:text-red-500 text-xs font-bold transition-colors select-none"
                     >
                       Delete
                     </button>
@@ -768,6 +843,7 @@ import ProjectActivityLog from '../components/ProjectActivityLog.vue'
 import ProjectDocumentsPanel from '../components/ProjectDocumentsPanel.vue'
 import ProjectInstrumentsPanel from '../components/ProjectInstrumentsPanel.vue'
 import ProjectExecutionControlPanel from '../components/projects/ProjectExecutionControlPanel.vue'
+import AppEmptyState from '../components/ui/AppEmptyState.vue'
 
 const auth = useAuthStore()
 const ui = useUiStore()
@@ -1114,12 +1190,7 @@ const getPriorityStyles = (priority) => {
   return 'bg-surface-theme text-muted-theme'
 }
 
-const getTaskStatusStyles = (status) => {
-  if (status === 'done') return 'bg-brand-emerald/10 text-brand-emerald'
-  if (status === 'review') return 'bg-purple-500/10 text-purple-500'
-  if (status === 'in_progress') return 'bg-brand-blue/10 text-brand-blue'
-  return 'bg-surface-theme text-muted-theme'
-}
+
 
 const getPaymentStatusStyles = (status) => {
   if (status === 'Paid') return 'bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20'
@@ -1314,5 +1385,22 @@ const getReadinessLabel = (score) => {
   if (score >= 0.8) return 'READY'
   if (score >= 0.5) return 'PREPARING'
   return 'NOT READY'
+}
+
+const isApproachingEvent = (startTime) => {
+  if (!startTime) return false
+  const start = new Date(startTime)
+  if (isNaN(start.getTime())) return false
+  const today = new Date()
+  const diffTime = start.getTime() - today.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return diffDays >= 0 && diffDays <= 7
+}
+
+const isTaskOverdue = (task) => {
+  if (!task.due_date || task.status === 'done') return false
+  const today = new Date()
+  const due = new Date(task.due_date)
+  return due < today
 }
 </script>
