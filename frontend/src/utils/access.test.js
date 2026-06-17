@@ -13,13 +13,20 @@ const userWith = (roleName, permissions = []) => ({
 describe('role-aware access helpers', () => {
   it('allows the admin permission to bypass item restrictions', () => {
     const admin = userWith('Super Admin', ['admin'])
+    const namedAdmin = userWith('Admin', [])
 
     expect(hasPermission(admin, 'finance:write')).toBe(true)
+    expect(hasPermission(namedAdmin, 'finance:write')).toBe(true)
     expect(canAccessItem(admin, {
       permission: 'projects:write',
       roles: ['Management']
     })).toBe(true)
+    expect(canAccessItem(namedAdmin, {
+      permission: 'projects:write',
+      roles: ['Management']
+    })).toBe(true)
     expect(canUseDeveloperTools(admin)).toBe(true)
+    expect(canUseDeveloperTools(namedAdmin)).toBe(true)
   })
 
   it('requires both permission and allowed role for restricted navigation', () => {
@@ -33,6 +40,20 @@ describe('role-aware access helpers', () => {
 
     expect(canAccessItem(management, importItem)).toBe(true)
     expect(canAccessItem(staff, importItem)).toBe(false)
+  })
+
+  it('allows formal PO and PM roles into their workflow control centers', () => {
+    const po = userWith('PO', ['projects:read'])
+    const pm = userWith('PM', ['projects:read'])
+
+    expect(canAccessItem(po, {
+      permission: 'projects:read',
+      roles: ['Super Admin', 'Admin', 'Management', 'PO', 'Staff']
+    })).toBe(true)
+    expect(canAccessItem(pm, {
+      permission: 'projects:read',
+      roles: ['Super Admin', 'Admin', 'Management', 'PM', 'Staff']
+    })).toBe(true)
   })
 
   it('limits PNL visibility to approved roles', () => {

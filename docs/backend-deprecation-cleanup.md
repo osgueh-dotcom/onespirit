@@ -42,7 +42,7 @@ cd backend
 python -m pytest app/tests -q
 ```
 
-Hasil terkini setelah Sprint 19: `36 passed`.
+Hasil terkini setelah Sprint 20: `38 passed`.
 
 ## Remaining Cleanup
 

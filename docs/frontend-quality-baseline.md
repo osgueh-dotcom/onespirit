@@ -43,9 +43,10 @@ Coverage baseline:
 
 - admin bypass
 - kombinasi permission dan allowed role
+- akses role formal PO/PM ke control center workflow
 - visibility PNL
 
-Hasil Sprint 14: `3 passed`.
+Hasil terkini setelah Sprint 20: `4 passed`.
 
 ## Dependency Audit
 

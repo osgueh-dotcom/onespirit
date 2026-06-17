@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 19 - Backend Test Stack Cleanup |
+| Status Project | Sprint 20 - Formal Workflow Role Foundation |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | Local Zoom demo; VS Code Port Forwarding as temporary fallback |
 | Backend Deployment Strategy | Local backend; temporary port forwarding only when required |
@@ -38,12 +38,15 @@ Deployment model saat ini:
 
 Project sudah cukup kuat untuk demo client, tetapi belum masuk kategori production-ready cloud deployment.
 
-Role mapping sementara:
+Role mapping saat ini:
 
-- `super_admin` dan `admin` menggunakan role `Super Admin`/permission `admin`.
+- `super_admin` menggunakan role `Super Admin`/permission `admin`.
+- `admin` menggunakan role `Admin`/permission `admin`.
 - `management` menggunakan `Management`.
 - `finance` menggunakan `Finance`.
-- `po` dan `pm` masih menggunakan `Staff` sampai permission matrix granular disepakati.
+- `po` menggunakan role `PO`.
+- `pm` menggunakan role `PM`.
+- `Staff` tetap menjadi role operasional umum sampai ownership gate per project selesai.
 - Akun demo menggunakan akses `Management` untuk kebutuhan presentasi workflow.
 
 ---
@@ -65,18 +68,20 @@ Sprint 14 mencakup:
 
 Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
 
-Current validation after Sprint 19:
+Current validation after Sprint 20:
 
-- Backend: `36 passed`.
+- Backend: `38 passed`.
 - Frontend lint: `0 errors`, `0 warnings`.
-- Frontend test: `3 passed`.
+- Frontend test: `4 passed`.
 - Frontend build: success.
+
+Sprint 20 memformalkan role backend `Admin`, `PO`, dan `PM`, menyelaraskan alias role admin/user creation, dan memperbarui guard project workflow agar Admin/PM sesuai dengan UI workflow.
 
 Sprint 19 menambahkan dependency `httpx2` untuk menyelaraskan FastAPI/Starlette TestClient dan menghapus warning test backend terakhir.
 
 Sprint 18 membersihkan sisa warning ESLint legacy di frontend tanpa mengubah workflow bisnis CL, ROS, CK, PNL, atau response contract backend.
 
-Role visibility frontend sudah membatasi control center, imports, project actions, PNL link, dan developer tools. Backend tetap menjadi security authority; role PO/PM/Admin dan ownership per project belum formal.
+Role visibility frontend sudah membatasi control center, imports, project actions, PNL link, dan developer tools. Backend tetap menjadi security authority; project ownership per PO/PM belum formal.
 
 ## 1.3 Status Sprint 14.1 & Brand UI Direction
 

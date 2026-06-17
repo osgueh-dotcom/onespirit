@@ -10,6 +10,10 @@ from app.modules.projects.models import ProjectActivityLog
 
 router = APIRouter(tags=["Project Workflow Module"])
 
+PNL_ACCESS_ROLES = {"Super Admin", "Admin", "Management", "Finance"}
+CANCEL_APPROVER_ROLES = {"Super Admin", "Admin", "Management", "Director"}
+PROGRAM_STATUS_OPERATOR_ROLES = {"Super Admin", "Admin", "Management", "Director", "Staff", "PM"}
+
 @router.get("/projects", response_model=List[schemas.ProjectResponse])
 def get_all_projects(
     db: Session = Depends(deps.get_db),
@@ -81,7 +85,7 @@ def get_project_by_id(
     
     # Mask PNL document link if unauthorized
     user_role = current_user.role.name if current_user and current_user.role else None
-    if user_role not in ["Super Admin", "Management", "Finance"]:
+    if user_role not in PNL_ACCESS_ROLES:
         for inst in response_data.instruments:
             if inst.instrument_type == "PNL":
                 inst.document_url = None
@@ -149,7 +153,7 @@ def transition_project_workflow(
     user_role = current_user.role.name
     
     # 1. Cancel status requires administrative or management scope
-    if normalized_status == "Cancel" and user_role not in ["Super Admin", "Management", "Director"]:
+    if normalized_status == "Cancel" and user_role not in CANCEL_APPROVER_ROLES:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Only Directors, Management, or Administrators can cancel active event projects."
@@ -157,7 +161,7 @@ def transition_project_workflow(
 
     # 2. Confirmed or Completed status requires PM, Staff, Management, or Admin scope
     is_pm_assigned = project.program_manager_id == current_user.id
-    if normalized_status in ["Confirmed", "Completed"] and not (is_pm_assigned or user_role in ["Super Admin", "Management", "Director", "Staff"]):
+    if normalized_status in ["Confirmed", "Completed"] and not (is_pm_assigned or user_role in PROGRAM_STATUS_OPERATOR_ROLES):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Only Management, Staff, the assigned Program Manager, or Administrators can confirm or complete active event projects."
@@ -225,13 +229,13 @@ def patch_project_status(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid program status selection. Must be one of {valid_statuses}"
             )
-        if payload.new_status == "Cancel" and user_role not in ["Super Admin", "Management", "Director"]:
+        if payload.new_status == "Cancel" and user_role not in CANCEL_APPROVER_ROLES:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Only Directors, Management, or Administrators can cancel active event projects."
             )
         is_pm_assigned = project.program_manager_id == current_user.id
-        if payload.new_status in ["Confirmed", "Completed"] and not (is_pm_assigned or user_role in ["Super Admin", "Management", "Director", "Staff"]):
+        if payload.new_status in ["Confirmed", "Completed"] and not (is_pm_assigned or user_role in PROGRAM_STATUS_OPERATOR_ROLES):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Only Management, Staff, the assigned Program Manager, or Administrators can confirm or complete active event projects."
@@ -379,7 +383,7 @@ def get_instruments_for_project(
     
     # Mask PNL document link if unauthorized
     user_role = current_user.role.name if current_user and current_user.role else None
-    if user_role not in ["Super Admin", "Management", "Finance"]:
+    if user_role not in PNL_ACCESS_ROLES:
         for inst in response_list:
             if inst.instrument_type == "PNL":
                 inst.document_url = None
@@ -427,7 +431,7 @@ def create_instrument_for_project(
         
         # Mask PNL document link if unauthorized
         user_role = current_user.role.name if current_user and current_user.role else None
-        if user_role not in ["Super Admin", "Management", "Finance"]:
+        if user_role not in PNL_ACCESS_ROLES:
             if response_data.instrument_type == "PNL":
                 response_data.document_url = None
                 
@@ -473,7 +477,7 @@ def update_instrument_in_project(
         
         # Mask PNL document link if unauthorized
         user_role = current_user.role.name if current_user and current_user.role else None
-        if user_role not in ["Super Admin", "Management", "Finance"]:
+        if user_role not in PNL_ACCESS_ROLES:
             if response_data.instrument_type == "PNL":
                 response_data.document_url = None
                 
@@ -527,7 +531,7 @@ def generate_default_instruments_for_project(
     
     # Mask PNL document link if unauthorized
     user_role = current_user.role.name if current_user and current_user.role else None
-    if user_role not in ["Super Admin", "Management", "Finance"]:
+    if user_role not in PNL_ACCESS_ROLES:
         for inst in response_list:
             if inst.instrument_type == "PNL":
                 inst.document_url = None

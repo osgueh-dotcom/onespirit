@@ -14,17 +14,17 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 19 - Backend Test Stack Cleanup |
+| Status | Sprint 20 - Formal Workflow Role Foundation |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
 | Database | PostgreSQL untuk Docker/production-like, SQLite untuk test lokal |
 
 Current readiness summary:
-- Backend test: `36 passed`
+- Backend test: `38 passed`
 - Frontend build: success
 - Frontend lint: `0 errors`, `0 warnings`
-- Frontend test: `3 passed`
+- Frontend test: `4 passed`
 - GitHub Pages demo deployment: configured but deferred
 - Backend tunnel: temporary demo access
 - Database: private local Docker
@@ -222,7 +222,7 @@ Alur demo 15 sampai 25 menit:
 ## Known Limitations
 
 1. **Security**: JWT secret dan default password demo/admin hanya boleh dipakai untuk development/demo. Environment `production` wajib memakai secret dan password berbeda.
-2. **Permission UI**: role-aware visibility baseline sudah ada, tetapi role PO/PM/Admin dan project ownership backend belum formal.
+2. **Permission & Ownership**: role Admin, PO, dan PM sudah formal di backend, tetapi project ownership gate per PO/PM belum selesai.
 3. **Backup**: belum ada automated cloud backup database.
 4. **External Integration**: belum ada e-mail automation dan direct PDF export service.
 5. **Vendor Model**: vendor partner masih bergantung pada field tekstual dan belum menjadi entity relasional penuh.

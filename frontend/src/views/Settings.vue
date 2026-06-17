@@ -257,6 +257,16 @@ const statusLoadingId = ref(null)
 
 const selectedRole = computed(() => roles.value.find((role) => role.id === createForm.role_id))
 
+const preferredCreateRole = () => {
+  return roles.value.find((role) => role.name === 'Staff') || roles.value[0]
+}
+
+const ensureCreateRoleSelected = () => {
+  if (!createForm.role_id && roles.value.length > 0) {
+    createForm.role_id = preferredCreateRole()?.id || ''
+  }
+}
+
 const readError = (error, fallback) => {
   const detail = error.response?.data?.detail
   if (Array.isArray(detail)) {
@@ -298,9 +308,7 @@ const loadUserManagement = async () => {
     ])
     users.value = usersResponse.data
     roles.value = rolesResponse.data
-    if (!createForm.role_id && roles.value.length > 0) {
-      createForm.role_id = roles.value[0].id
-    }
+    ensureCreateRoleSelected()
   } catch (error) {
     createError.value = readError(error, 'Gagal memuat user management.')
   } finally {
@@ -314,7 +322,7 @@ const clearCreateForm = () => {
   createForm.password = ''
   createForm.is_active = true
   if (!selectedRole.value && roles.value.length > 0) {
-    createForm.role_id = roles.value[0].id
+    createForm.role_id = preferredCreateRole()?.id || ''
   }
 }
 

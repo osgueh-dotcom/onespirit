@@ -63,6 +63,55 @@ def role_id_by_name(client, headers, role_name="Finance"):
     return next(role["id"] for role in roles if role["name"] == role_name)
 
 
+def roles_by_name(client, headers):
+    response = client.get("/api/v1/auth/roles", headers=headers)
+    assert response.status_code == 200
+    return {role["name"]: role for role in response.json()}
+
+
+def test_seeded_roles_include_formal_admin_po_pm(client):
+    admin_headers = login(client)
+    roles = roles_by_name(client, admin_headers)
+
+    assert {"Super Admin", "Admin", "Management", "PO", "PM", "Finance", "Staff"}.issubset(roles)
+    assert "admin" in roles["Admin"]["permissions"]
+    assert {"crm:read", "crm:write", "projects:read", "projects:write", "finance:read"}.issubset(roles["PO"]["permissions"])
+    assert "finance:write" not in roles["PO"]["permissions"]
+    assert {"projects:read", "projects:write", "events:read", "events:write", "tasks:write"}.issubset(roles["PM"]["permissions"])
+    assert "finance:read" not in roles["PM"]["permissions"]
+
+
+def test_admin_create_user_accepts_formal_role_aliases(client):
+    admin_headers = login(client)
+    cases = [
+        ("alias_admin@onespirit.asia", "admin", "Admin"),
+        ("alias_po@onespirit.asia", "po", "PO"),
+        ("alias_pm@onespirit.asia", "pm", "PM"),
+    ]
+
+    for email, role_name, expected_role in cases:
+        response = client.post(
+            "/api/v1/auth/users",
+            json={
+                "email": email,
+                "full_name": f"Alias {expected_role}",
+                "password": "AliasRole2026!",
+                "role_name": role_name,
+                "is_active": True,
+            },
+            headers=admin_headers,
+        )
+        assert response.status_code == 200
+        assert response.json()["role"]["name"] == expected_role
+
+    alias_admin_headers = login(client, "alias_admin@onespirit.asia", "AliasRole2026!")
+    assert client.get("/api/v1/auth/users", headers=alias_admin_headers).status_code == 200
+
+    alias_po_headers = login(client, "alias_po@onespirit.asia", "AliasRole2026!")
+    assert client.get("/api/v1/auth/users", headers=alias_po_headers).status_code == 403
+    assert client.get("/api/v1/auth/users/options", headers=alias_po_headers).status_code == 200
+
+
 def test_admin_create_user_success_and_password_hash_not_returned(client, db):
     admin_headers = login(client)
     role_id = role_id_by_name(client, admin_headers)

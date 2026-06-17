@@ -4,6 +4,21 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 20] - 2026-06-17
+
+### Changed
+- Added formal backend roles for `Admin`, `PO`, and `PM`.
+- Updated admin user creation aliases so `admin`, `po`, and `pm` resolve to formal workflow roles.
+- Aligned project workflow guards for Admin/PM status transitions and Admin PNL visibility.
+- Defaulted Settings user creation toward `Staff` instead of the first returned role.
+
+### Validation
+- Backend: `38 passed`; `pip check` passed.
+- Frontend: lint `0 errors, 0 warnings`; tests `4 passed`; quality scan, audit, and build passed.
+- Docker rebuild, role seed check, HTTP smoke test, and Edge headless login/route smoke test passed.
+
+---
+
 ## [Sprint 19] - 2026-06-17
 
 ### Changed

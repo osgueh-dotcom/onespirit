@@ -75,11 +75,15 @@ def authenticate(db: Session, email: str, password: str) -> Optional[User]:
 
 def seed_roles_and_admin(db: Session):
     """Seed base roles and super admin user if they don't exist"""
+    staff_permissions = ["crm:read", "projects:read", "projects:write", "events:read", "events:write", "tasks:read", "tasks:write", "documents:read", "documents:write"]
     role_definitions = {
         "Super Admin": ["admin"],
+        "Admin": ["admin"],
         "Management": ["crm:read", "crm:write", "projects:read", "projects:write", "events:read", "events:write", "finance:read", "finance:write", "documents:read", "documents:write", "tasks:read", "tasks:write"],
+        "PO": ["crm:read", "crm:write", "projects:read", "projects:write", "events:read", "finance:read", "documents:read", "documents:write", "tasks:read"],
+        "PM": ["crm:read", "projects:read", "projects:write", "events:read", "events:write", "documents:read", "documents:write", "tasks:read", "tasks:write"],
         "Finance": ["projects:read", "finance:read", "finance:write", "documents:read"],
-        "Staff": ["crm:read", "projects:read", "projects:write", "events:read", "events:write", "tasks:read", "tasks:write", "documents:read", "documents:write"]
+        "Staff": staff_permissions
     }
     
     created_roles = {}

@@ -1,6 +1,6 @@
 # MVP Limitations - OneSpirit Workflow System
 
-Status: Sprint 19 Backend Test Stack Cleanup
+Status: Sprint 20 Formal Workflow Role Foundation
 
 OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
 
@@ -13,7 +13,7 @@ OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
 
 2. **Authorization**
    - Role-aware UI visibility baseline sudah tersedia.
-   - Role Admin, PO, dan PM belum formal di backend.
+   - Role Admin, PO, dan PM sudah formal di backend.
    - Project ownership belum menjadi authorization gate.
    - Import dan mutation instrumen PNL masih memakai permission broad.
 
@@ -35,7 +35,7 @@ OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
    - Normalisasi vendor ditunda agar Sprint 14 tidak menjadi rewrite data model.
 
 7. **Quality Debt**
-   - Backend test stack sudah bersih dengan `36 passed` tanpa warning.
+   - Backend test stack sudah bersih dengan `38 passed` tanpa warning.
    - Frontend ESLint baseline sudah bersih dengan `0 errors` dan `0 warnings`.
    - Component test dan coverage threshold belum tersedia.
 
@@ -50,13 +50,13 @@ Jangan menggunakan MVP ini langsung sebagai production system sebelum:
 - backup dan restore drill berhasil;
 - monitoring dan rollback diuji.
 
-## Sprint 20 Recommendation
+## Sprint 21 Recommendation
 
-`Sprint 20 - Authorization & Production Runtime Hardening`
+`Sprint 21 - Project Ownership & Production Runtime Hardening`
 
-1. Formalisasi Admin, PO, dan PM.
+1. Terapkan project ownership gate untuk assigned PO/PM.
 2. Tambahkan permission khusus imports dan PNL.
-3. Terapkan project ownership gate.
+3. Perkuat backend role-specific control center access.
 4. Siapkan production Dockerfiles/Compose override.
 5. Jalankan backup/restore drill.
 6. Tambahkan monitoring dan rate limiting.

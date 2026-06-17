@@ -36,6 +36,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 17** | Backend Deprecation Cleanup Phase 2 | 2026-06-17 | Done |
 | **Sprint 18** | Frontend Stability Cleanup | 2026-06-17 | Done |
 | **Sprint 19** | Backend Test Stack Cleanup | 2026-06-17 | Done |
+| **Sprint 20** | Formal Workflow Role Foundation | 2026-06-17 | Done |
 
 ---
 
@@ -266,3 +267,16 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Status**: Done.
 - **Validation**: Backend `36 passed`; `pip check` success; frontend lint `0 errors, 0 warnings`; frontend test `3 passed`; quality scan, audit, build, Docker rebuild, HTTP smoke test, dan Edge headless login/route smoke test success.
 - **Known limitations**: Production runtime hardening, role/ownership authorization granular, backup automation, monitoring, dan server-side PDF masih belum final.
+
+## Sprint 20 - Formal Workflow Role Foundation
+
+- **Tujuan**: Memformalkan role backend Admin, PO, dan PM agar sesuai dengan UI workflow dan user management.
+- **Hasil**:
+  - Menambahkan role seed `Admin`, `PO`, dan `PM` dengan permission yang sesuai alur komersial/operasional.
+  - Mengubah alias create user `admin`, `po`, dan `pm` agar menghasilkan role formal, bukan fallback lama.
+  - Menyelaraskan project workflow guard agar `Admin` dan `PM` terbaca pada status transition dan PNL masking.
+  - Mengatur default role create user di Settings ke `Staff` agar tidak otomatis memilih role admin.
+  - Menambahkan regression test backend dan frontend untuk role formal.
+- **Status**: Done.
+- **Validation**: Backend `38 passed`; `pip check` success; frontend lint `0 errors, 0 warnings`; frontend test `4 passed`; quality scan, audit, build, Docker rebuild, HTTP smoke test, dan Edge headless login/route smoke test success.
+- **Known limitations**: Ownership gate per project untuk assigned PO/PM, permission khusus imports/PNL, backup automation, monitoring, rate limiting, dan server-side PDF masih belum final.

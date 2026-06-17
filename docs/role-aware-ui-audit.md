@@ -11,10 +11,10 @@
 | Role bisnis | Status implementasi |
 |---|---|
 | Super Admin | Seeded, permission `admin`, full bypass. |
-| Admin | Didukung helper UI, tetapi belum seeded sebagai role terpisah. |
+| Admin | Seeded, permission `admin`, full bypass untuk user management dan workflow guard. |
 | Management | Seeded, read/write lintas workflow; dipakai demo user. |
-| PO | Belum seeded; ownership memakai `program_owner_id`, biasanya role `Staff`. |
-| PM | Belum seeded; assignment memakai `program_manager_id`, biasanya role `Staff`. |
+| PO | Seeded sebagai role komersial untuk CRM, project, finance read, documents, dan PO Control Center. |
+| PM | Seeded sebagai role operasional untuk project, events, tasks, documents, dan PM Control Center. |
 | Finance | Seeded dengan projects read, finance read/write, documents read. |
 | Staff | Seeded sebagai role operasional umum. |
 | Demo user | Role Management; credential diberikan melalui environment/presenter. |
@@ -59,6 +59,7 @@ Finance tidak lagi melihat control center operasional hanya karena memiliki `pro
 - Tujuh endpoint dashboard modular yang sebelumnya tidak memiliki auth telah diberi `get_current_user`.
 - Test memastikan endpoint tersebut mengembalikan 401 tanpa token.
 - `/auth/users` dilindungi permission `admin`; `/auth/users/options` hanya menyediakan safe user reference data untuk workflow.
+- `/auth/users` menerima alias role formal `admin`, `po`, dan `pm` saat admin membuat user.
 - `PermissionChecker` memakai semantics "salah satu permission", bukan seluruh permission.
 
 ## Limitations
@@ -69,10 +70,9 @@ Finance tidak lagi melihat control center operasional hanya karena memiliki `pro
 - Belum ada project-level ownership enforcement untuk PO/PM.
 - Dashboard analytics belum dipisahkan berdasarkan sensitivitas role.
 
-## Rekomendasi Sprint 15
+## Rekomendasi Sprint 21
 
-1. Formalisasi role Admin, PO, dan PM.
-2. Tambahkan permission khusus seperti `imports:write`, `pnl:read`, dan `pnl:write`.
-3. Terapkan ownership gate per project untuk assigned PO/PM.
-4. Tambahkan backend permission matrix tests untuk seluruh write endpoint.
-5. Tentukan dashboard metrics yang boleh dilihat Finance, Staff, PO, dan PM.
+1. Tambahkan permission khusus seperti `imports:write`, `pnl:read`, dan `pnl:write`.
+2. Terapkan ownership gate per project untuk assigned PO/PM.
+3. Tambahkan backend permission matrix tests untuk seluruh write endpoint.
+4. Tentukan dashboard metrics yang boleh dilihat Finance, Staff, PO, dan PM.

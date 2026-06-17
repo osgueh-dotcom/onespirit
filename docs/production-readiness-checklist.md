@@ -85,7 +85,7 @@ OneSpirit Workflow is demo-ready, but production is not yet declared. Use this c
 ## Current Sprint 14 Blockers
 
 - Current Compose/Dockerfiles remain development/demo configuration.
-- Role PO/PM/Admin and project ownership gates are not formalized.
+- Project ownership gates for assigned PO/PM are not formalized.
 - Backup automation and restore drill are not complete.
 - `/docs`, monitoring, rate limiting, and production reverse proxy are not finalized.
 - Production deployment must not proceed until these blockers are closed.
