@@ -50,10 +50,10 @@ Hasil Sprint 14: `3 passed`.
 ## Dependency Audit
 
 - `npm audit --omit=dev`: `0 vulnerabilities`.
-- Full `npm audit`: dua advisory high pada Vite 5/esbuild development server.
-- Advisory kritis Vitest telah diperbaiki dengan patch `3.2.6`.
+- Full `npm audit`: `0 vulnerabilities`.
+- Vitest baseline berjalan di versi 4.x.
 
-Upgrade Vite major ditunda karena memerlukan compatibility test dan update Node image.
+Frontend toolchain sudah memakai Vite 8 dengan Node 24 image untuk menutup advisory esbuild development server.
 
 ## Limitations
 
