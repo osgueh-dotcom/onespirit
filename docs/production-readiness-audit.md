@@ -17,7 +17,7 @@ Status: foundation complete, production belum dideklarasikan
 
 ## Area yang Belum Aman untuk Production
 
-- `docker-compose.yml` dan Dockerfile masih development-oriented: source bind mount, Vite dev server, dan Uvicorn `--reload`.
+- `docker-compose.yml` dan Dockerfile masih development/demo-oriented: Vite dev server, Uvicorn `--reload`, dan image rebuild diperlukan setelah perubahan source.
 - Port PostgreSQL masih dipublish ke host untuk kebutuhan lokal.
 - `/docs` dan OpenAPI sudah nonaktif saat `ENV=production`, tetapi belum ada staging access policy.
 - `AUTO_CREATE_TABLES` dan seeding startup belum menjadi migration-first production flow.
@@ -39,9 +39,9 @@ Status: foundation complete, production belum dideklarasikan
 
 - Permission `projects:write` masih luas, termasuk mutation instrumen PNL.
 - Import backend menerima `admin` atau `projects:write`; pembatasan Admin/Management saat ini baru diterapkan di UI.
-- Masih ada 39 warning test, terutama Pydantic `class Config`.
-- ESLint baseline masih menyisakan 26 warning legacy non-blocking.
-- Vite 5/esbuild memiliki dua advisory moderate pada development toolchain; production dependency audit bersih.
+- Masih ada 1 warning test dari Starlette/httpx compatibility.
+- ESLint baseline masih menyisakan 10 warning legacy non-blocking.
+- Full frontend `npm audit` bersih setelah upgrade Vite 8/esbuild dan Node 24 image.
 - Vendor analytics masih memakai textual fallback.
 
 ## Scope Aman Sprint 14
@@ -57,8 +57,8 @@ Status: foundation complete, production belum dideklarasikan
 
 - Production Compose/reverse proxy/cloud deployment final.
 - Role dan ownership authorization granular untuk PO/PM/Finance.
-- Schema-wide Pydantic v2 migration.
-- Upgrade Vite major dan cleanup seluruh lint warning.
+- Cleanup Starlette/httpx test stack warning.
+- Cleanup seluruh lint warning.
 - Automated encrypted backup serta restore drill.
 - Server-side PDF generation.
 - Vendor normalization.

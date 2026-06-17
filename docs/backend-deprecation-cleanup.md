@@ -1,4 +1,4 @@
-# Backend Deprecation Cleanup - Sprint 14 Phase 1
+# Backend Deprecation Cleanup - Sprint 17
 
 Phase 1 hanya mengubah API internal yang mekanis dan mempertahankan response contract.
 
@@ -21,10 +21,11 @@ Phase 1 hanya mengubah API internal yang mekanis dan mempertahankan response con
 - Project router memakai `model_validate()`.
 - FastAPI startup memakai lifespan.
 - Warning total turun dari baseline Sprint 13 `919` menjadi `37`.
+- Auth, CRM, events, tasks, documents, finance, imports, event sources, dan dashboard schemas memakai `ConfigDict(from_attributes=True)`.
+- Pydantic class-based `Config` warning sudah selesai.
 
 ## Ditunda
 
-- `ConfigDict` migration untuk auth, CRM, events, tasks, documents, finance, imports, event sources, dan dashboard.
 - Full timezone-aware database column strategy.
 - Starlette/httpx test client upgrade.
 
@@ -41,11 +42,9 @@ cd backend
 python -m pytest app/tests -q
 ```
 
-Hasil terkini: `36 passed, 37 warnings`.
+Hasil terkini: `36 passed, 1 warning`.
 
-## Phase 2
+## Remaining Cleanup
 
-1. Migrasikan schema per modul dengan response contract tests.
-2. Selesaikan seluruh `class Config`.
-3. Putuskan strategi timezone database.
-4. Selaraskan FastAPI, Starlette, dan httpx test stack.
+1. Putuskan strategi timezone database.
+2. Selaraskan FastAPI, Starlette, dan httpx test stack.

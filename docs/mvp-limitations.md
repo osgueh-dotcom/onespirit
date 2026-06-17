@@ -1,6 +1,6 @@
 # MVP Limitations - OneSpirit Workflow System
 
-Status: Sprint 14 Production Readiness Foundation
+Status: Sprint 17 Backend Deprecation Cleanup
 
 OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
 
@@ -19,7 +19,7 @@ OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
 
 3. **Deployment**
    - GitHub Pages dan backend tunnel adalah demo architecture.
-   - Docker Compose memakai dev server, bind mounts, dan database host port.
+   - Docker Compose memakai dev server dan database host port; image rebuild diperlukan setelah perubahan source.
    - Production reverse proxy, SSL, restart policy, dan monitoring belum final.
 
 4. **Data Recovery**
@@ -35,8 +35,8 @@ OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
    - Normalisasi vendor ditunda agar Sprint 14 tidak menjadi rewrite data model.
 
 7. **Quality Debt**
-   - Backend masih memiliki 39 warning.
-   - Frontend ESLint masih memiliki 26 warning non-blocking.
+   - Backend masih memiliki 1 warning Starlette/httpx compatibility.
+   - Frontend ESLint masih memiliki 10 warning non-blocking.
    - Component test dan coverage threshold belum tersedia.
 
 ## Production Risk
@@ -60,4 +60,4 @@ Jangan menggunakan MVP ini langsung sebagai production system sebelum:
 4. Siapkan production Dockerfiles/Compose override.
 5. Jalankan backup/restore drill.
 6. Tambahkan monitoring dan rate limiting.
-7. Lanjutkan Pydantic deprecation cleanup phase 2.
+7. Bersihkan Starlette/httpx test stack warning.

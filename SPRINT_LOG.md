@@ -205,3 +205,37 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Status**: Done.
 - **Validation**: Frontend build success; lint/test baseline tetap tersedia untuk sprint berikutnya.
 - **Known limitations**: Tidak semua halaman lama dirombak total; beberapa utility class lama masih diwariskan dan akan terus dirapikan bertahap di sprint berikutnya.
+
+## Sprint 15 - Docker & Local Dependency Stabilization
+
+- **Tujuan**: Menstabilkan Docker demo runtime dan dependency lokal di mesin Windows.
+- **Hasil**:
+  - Menambahkan `.dockerignore` backend/frontend.
+  - Menghapus field Compose obsolete dan memakai `docker compose`.
+  - Memperbaiki launcher `run.cmd` agar memakai Docker Desktop CLI dan port backend `8000`.
+  - Menghapus source bind mounts dari Compose demo agar runtime tidak bergantung pada drive sharing Windows.
+  - Menyiapkan Node portable dan backend `.venv` lokal.
+- **Status**: Done.
+- **Validation**: Docker stack running; backend health OK; frontend HTTP 200; backend `36 passed, 37 warnings`; frontend lint/test/build success.
+- **Known limitations**: Compose demo perlu rebuild image setelah perubahan source.
+
+## Sprint 16 - Frontend Toolchain Dependency Upgrade
+
+- **Tujuan**: Menutup advisory Vite/esbuild dan menyelaraskan Node image frontend.
+- **Hasil**:
+  - Upgrade Vite 8, Vitest 4, Vue/plugin Vue, Axios, dan ESLint patch.
+  - Frontend Docker image naik ke `node:24-alpine`.
+  - Full `npm audit` menjadi `0 vulnerabilities`.
+- **Status**: Done.
+- **Validation**: Docker rebuild success; frontend lint `0 errors, 10 warnings`; frontend test `3 passed`; frontend build success; Edge smoke test login dan route utama success.
+- **Known limitations**: Major migration Pinia 3, Vue Router 5, Tailwind 4, dan ESLint 10 masih ditunda.
+
+## Sprint 17 - Backend Deprecation Cleanup Phase 2
+
+- **Tujuan**: Menghapus warning Pydantic class-based `Config` tanpa mengubah response contract.
+- **Hasil**:
+  - Migrasi CRM, dashboard, documents, event sources, events, finance, imports, dan tasks schemas ke `ConfigDict(from_attributes=True)`.
+  - Dokumentasi readiness, audit, dan backend deprecation cleanup diperbarui.
+- **Status**: Done.
+- **Validation**: Backend `36 passed, 1 warning`; Docker backend health OK; frontend HTTP 200.
+- **Known limitations**: Sisa warning backend berasal dari Starlette/httpx test client compatibility.

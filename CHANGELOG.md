@@ -4,6 +4,43 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 17] - 2026-06-17
+
+### Changed
+- Migrated remaining backend response schemas from Pydantic class-based `Config` to `ConfigDict`.
+- Updated readiness documentation after Pydantic deprecation cleanup.
+
+### Validation
+- Backend: `36 passed, 1 warning`.
+- Docker backend health check passed after rebuild.
+
+---
+
+## [Sprint 16] - 2026-06-17
+
+### Changed
+- Upgraded frontend toolchain to Vite 8, Vitest 4, and Node 24 Docker image.
+- Updated frontend lockfile to clear Vite/esbuild audit findings.
+
+### Validation
+- Full frontend `npm audit`: `0 vulnerabilities`.
+- Docker stack, frontend lint/test/build, and Edge smoke test passed.
+
+---
+
+## [Sprint 15] - 2026-06-17
+
+### Changed
+- Hardened Docker local demo configuration with `.dockerignore` files and modern Compose syntax.
+- Removed Windows source bind mount dependency from Docker Compose demo runtime.
+- Updated launcher and setup documentation for Docker Desktop and WSL/virtualization requirements.
+
+### Validation
+- Docker Compose stack started successfully after virtualization was enabled.
+- Backend, frontend, and HTTP smoke checks passed.
+
+---
+
 ## [Sprint 14] - 2026-06-11
 
 ### Added

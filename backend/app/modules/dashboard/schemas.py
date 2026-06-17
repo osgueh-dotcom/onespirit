@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Dict, Any, Optional
 from uuid import UUID
 from datetime import date
@@ -146,9 +146,7 @@ class DashboardAnalyticsResponse(BaseModel):
     instrument_summary: InstrumentSummarySchema
     readiness_summary: ReadinessSummarySchema
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class PMControlCenterSummary(BaseModel):
@@ -161,8 +159,7 @@ class PMControlCenterSummary(BaseModel):
     need_revision_instruments: int
     average_readiness_score: float
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PMControlCenterUpcomingEvent(BaseModel):
@@ -182,8 +179,7 @@ class PMControlCenterUpcomingEvent(BaseModel):
     priority_level: str
     recommended_action: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PMControlCenterNotReadyProject(BaseModel):
@@ -196,8 +192,7 @@ class PMControlCenterNotReadyProject(BaseModel):
     missing_items: List[str]
     recommended_action: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PMControlCenterOverdueInstrument(BaseModel):
@@ -212,8 +207,7 @@ class PMControlCenterOverdueInstrument(BaseModel):
     pm_name: Optional[str] = None
     recommended_action: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PMControlCenterNeedRevisionInstrument(BaseModel):
@@ -225,8 +219,7 @@ class PMControlCenterNeedRevisionInstrument(BaseModel):
     pm_name: Optional[str] = None
     recommended_action: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PMControlCenterPMWorkload(BaseModel):
@@ -240,8 +233,7 @@ class PMControlCenterPMWorkload(BaseModel):
     need_revision_instruments: int
     average_readiness_score: float
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PMControlCenterPriorityAction(BaseModel):
@@ -253,8 +245,7 @@ class PMControlCenterPriorityAction(BaseModel):
     recommended_action: str
     reason: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PMControlCenterResponse(BaseModel):
@@ -266,8 +257,7 @@ class PMControlCenterResponse(BaseModel):
     pm_workload: List[PMControlCenterPMWorkload]
     priority_actions: List[PMControlCenterPriorityAction]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterSummary(BaseModel):
@@ -290,8 +280,7 @@ class POControlCenterSummary(BaseModel):
     outstanding_payment: float
     commercial_risk_count: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterQuotationSummary(BaseModel):
@@ -303,8 +292,7 @@ class POControlCenterQuotationSummary(BaseModel):
     signed_deal_count: int
     cancel_count: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterRevenueSummary(BaseModel):
@@ -315,8 +303,7 @@ class POControlCenterRevenueSummary(BaseModel):
     highest_project_value: float
     lowest_project_value: float
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterFollowUpPriority(BaseModel):
@@ -335,8 +322,7 @@ class POControlCenterFollowUpPriority(BaseModel):
     reason: str
     recommended_action: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterOwnedProject(BaseModel):
@@ -357,8 +343,7 @@ class POControlCenterOwnedProject(BaseModel):
     follow_up_status: Optional[str] = None
     recommended_action: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterPOPerformance(BaseModel):
@@ -375,8 +360,7 @@ class POControlCenterPOPerformance(BaseModel):
     outstanding_count: int
     follow_up_needed_count: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterSourceContribution(BaseModel):
@@ -390,8 +374,7 @@ class POControlCenterSourceContribution(BaseModel):
     potential_revenue: float
     average_project_value: float
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterRiskProject(BaseModel):
@@ -407,8 +390,7 @@ class POControlCenterRiskProject(BaseModel):
     pm_name: Optional[str] = None
     reason: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterCommercialRisks(BaseModel):
@@ -419,8 +401,7 @@ class POControlCenterCommercialRisks(BaseModel):
     missing_po: List[POControlCenterRiskProject]
     missing_source: List[POControlCenterRiskProject]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POControlCenterResponse(BaseModel):
@@ -433,8 +414,7 @@ class POControlCenterResponse(BaseModel):
     source_contribution: List[POControlCenterSourceContribution]
     commercial_risks: POControlCenterCommercialRisks
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SourceVendorSummary(BaseModel):
@@ -447,8 +427,7 @@ class SourceVendorSummary(BaseModel):
     average_conversion_rate: float
     commercial_risk_count: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SourcePerformanceSchema(BaseModel):
@@ -467,8 +446,7 @@ class SourcePerformanceSchema(BaseModel):
     follow_up_needed: int
     commercial_risk: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class VendorPerformanceSchema(BaseModel):
@@ -483,8 +461,7 @@ class VendorPerformanceSchema(BaseModel):
     usage_frequency: int
     risk_count: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class POSourcePerformanceSchema(BaseModel):
@@ -498,8 +475,7 @@ class POSourcePerformanceSchema(BaseModel):
     confirmed_revenue: float
     follow_up_needed: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class RiskAlertSchema(BaseModel):
@@ -507,8 +483,7 @@ class RiskAlertSchema(BaseModel):
     category: str
     message: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class DataQualityReportSchema(BaseModel):
@@ -517,8 +492,7 @@ class DataQualityReportSchema(BaseModel):
     limited_vendor_data: bool
     notes: List[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SourceVendorPerformanceResponse(BaseModel):
@@ -529,6 +503,5 @@ class SourceVendorPerformanceResponse(BaseModel):
     risk_alerts: List[RiskAlertSchema]
     data_quality: DataQualityReportSchema
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 

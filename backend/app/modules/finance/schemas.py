@@ -2,7 +2,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import List, Optional
 from uuid import UUID
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 # Payment Schemas
 class PaymentBase(BaseModel):
@@ -28,8 +28,7 @@ class PaymentResponse(PaymentBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Invoice Schemas
 class InvoiceBase(BaseModel):
@@ -58,5 +57,4 @@ class InvoiceResponse(InvoiceBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

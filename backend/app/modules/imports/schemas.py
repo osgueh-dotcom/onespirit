@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class ImportPreviewResponse(BaseModel):
     total_rows: int
@@ -11,8 +11,7 @@ class ImportPreviewResponse(BaseModel):
     warnings: List[Dict[str, Any]]
     preview_rows: List[Dict[str, Any]]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ImportCommitResponse(BaseModel):
     success: bool
@@ -30,5 +29,4 @@ class ImportCommitResponse(BaseModel):
     unknown_source_types: List[Dict[str, Any]] = []
     duplicate_customers: List[Dict[str, Any]] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

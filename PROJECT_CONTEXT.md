@@ -65,10 +65,10 @@ Sprint 14 mencakup:
 
 Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
 
-Validation Sprint 14:
+Current validation after Sprint 17:
 
-- Backend: `36 passed, 37 warnings`.
-- Frontend lint: `0 errors`, `26 warnings`.
+- Backend: `36 passed, 1 warning`.
+- Frontend lint: `0 errors`, `10 warnings`.
 - Frontend test: `3 passed`.
 - Frontend build: success.
 
