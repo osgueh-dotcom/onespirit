@@ -1,0 +1,10 @@
+.pytest_cache
+.venv
+__pycache__
+*.py[cod]
+*.db
+*.sqlite
+*.sqlite3
+tmp
+uploads
+alembic/versions/__pycache__

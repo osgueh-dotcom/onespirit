@@ -33,7 +33,7 @@ Non-blocking baseline:
 - `console` selain `warn` dan `error`
 - unused Vue template variables
 
-Hasil Sprint 14: `0 errors`, `26 warnings`. Warning tidak disembunyikan dan menjadi cleanup backlog.
+Hasil terkini: `0 errors`, `10 warnings`. Warning tidak disembunyikan dan menjadi cleanup backlog.
 
 ## Vitest Baseline
 
@@ -50,7 +50,7 @@ Hasil Sprint 14: `3 passed`.
 ## Dependency Audit
 
 - `npm audit --omit=dev`: `0 vulnerabilities`.
-- Full `npm audit`: dua advisory moderate pada Vite 5/esbuild development server.
+- Full `npm audit`: dua advisory high pada Vite 5/esbuild development server.
 - Advisory kritis Vitest telah diperbaiki dengan patch `3.2.6`.
 
 Upgrade Vite major ditunda karena memerlukan compatibility test dan update Node image.

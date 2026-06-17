@@ -8,6 +8,7 @@ This runbook covers current demo deployment and future production candidate prep
 
 1. Confirm `.env` is configured with demo-safe credentials.
 2. Start Docker Desktop.
+   - Windows hosts must have virtualization enabled in BIOS/UEFI and WSL/Virtual Machine Platform available for Linux containers.
 3. Run:
    ```bash
    docker compose up -d --build
@@ -16,7 +17,7 @@ This runbook covers current demo deployment and future production candidate prep
 5. Open backend docs locally at `http://localhost:8000/docs` if needed.
 6. Verify login, Dashboard, Projects, PM Control, PO Control, Finance, and Imports.
 
-Current Compose is for local/demo use. It uses source bind mounts, Vite dev server, Uvicorn `--reload`, and a host-published database port.
+Current Compose is for local/demo use. It runs Vite dev server, Uvicorn `--reload`, and a host-published database port. Application source is copied into images at build time so Windows demo hosts do not depend on drive bind-mount sharing; rebuild containers after local code changes.
 
 ---
 

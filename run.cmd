@@ -12,12 +12,17 @@ echo                             ^|_^|
 echo                    ONE SPIRIT ASIA WORKFLOW SYSTEM
 echo =====================================================================
 echo.
+if exist "C:\Program Files\Docker\Docker\resources\bin\docker.exe" (
+    set "PATH=C:\Program Files\Docker\Docker\resources\bin;%PATH%"
+)
+echo.
 echo [1/4] Memeriksa status Docker Daemon...
 docker info >nul 2>&1
 if %errorlevel% neq 0 (
     color 0C
     echo [ERROR] Docker Daemon tidak terdeteksi!
     echo Silakan buka aplikasi Docker Desktop terlebih dahulu, lalu jalankan kembali launcher ini.
+    echo Jika tetap gagal di Windows, aktifkan virtualization di BIOS/UEFI dan fitur WSL/Virtual Machine Platform.
     echo.
     pause
     exit /b
@@ -35,10 +40,10 @@ if %errorlevel% neq 0 (
 )
 echo.
 echo [3/4] Menjalankan container sistem (PostgreSQL, Backend, Frontend)...
-docker-compose up -d --build
+docker compose up -d --build
 if %errorlevel% neq 0 (
     color 0C
-    echo [ERROR] Gagal menjalankan docker-compose! Periksa log kesalahan di atas.
+    echo [ERROR] Gagal menjalankan Docker Compose! Periksa log kesalahan di atas.
     echo.
     pause
     exit /b
@@ -53,7 +58,7 @@ echo =====================================================================
 echo  SISTEM BERHASIL DILUNCURKAN!
 echo.
 echo  - Portal Operasional (Frontend) : http://localhost:5173
-echo  - Dokumentasi API (FastAPI)     : http://localhost:8001/docs
+echo  - Dokumentasi API (FastAPI)     : http://localhost:8000/docs
 echo  - Akun Default                  : admin@onespirit.asia
 echo  - Password                      : lihat environment lokal atau launcher internal
 echo.

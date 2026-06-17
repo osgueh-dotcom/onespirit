@@ -23,7 +23,7 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 Current readiness summary:
 - Backend test: `36 passed, 37 warnings`
 - Frontend build: success
-- Frontend lint: `0 errors`, `23 warnings`
+- Frontend lint: `0 errors`, `10 warnings`
 - Frontend test: `3 passed`
 - GitHub Pages demo deployment: configured but deferred
 - Backend tunnel: temporary demo access
@@ -73,7 +73,9 @@ One Spirit/
 
 ### 1. Docker Demo Mode
 
-Pastikan Docker Desktop aktif, lalu jalankan dari root project:
+Pastikan Docker Desktop aktif dan Linux containers dapat berjalan. Pada Windows, aktifkan virtualization di BIOS/UEFI serta fitur WSL/Virtual Machine Platform sebelum menjalankan stack Docker.
+
+Jalankan dari root project:
 
 ```bash
 run.cmd
@@ -82,12 +84,12 @@ run.cmd
 Atau gunakan Docker Compose manual:
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 Alamat lokal:
 - Frontend: [http://localhost:5173](http://localhost:5173)
-- Backend Swagger API Docs: [http://localhost:8000/docs](http://localhost:8000/docs) atau port `8001`, sesuai mapping host.
+- Backend Swagger API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ### 2. Backend Lokal
 
