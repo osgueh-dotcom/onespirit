@@ -64,4 +64,4 @@ if (failures.length > 0) {
   process.exit(1)
 }
 
-console.log('Frontend lint baseline passed.')
+process.stdout.write('Frontend lint baseline passed.\n')

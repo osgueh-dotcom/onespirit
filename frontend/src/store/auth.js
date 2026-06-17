@@ -55,7 +55,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axios.get('/api/v1/auth/me')
         this.user = response.data
-      } catch (err) {
+      } catch {
         this.logout()
       }
     },

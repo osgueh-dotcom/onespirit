@@ -4,6 +4,18 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 18] - 2026-06-17
+
+### Changed
+- Cleaned remaining frontend ESLint warnings from unused props, imports, chart variables, and stale style helpers.
+- Updated frontend quality documentation after reaching a clean ESLint baseline.
+
+### Validation
+- Frontend: lint `0 errors, 0 warnings`; tests `3 passed`; quality scan, audit, build, and Edge headless login/route smoke test passed.
+- Backend: `36 passed, 1 warning`.
+
+---
+
 ## [Sprint 17] - 2026-06-17
 
 ### Changed

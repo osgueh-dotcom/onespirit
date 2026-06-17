@@ -31,6 +31,10 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 13.1** | Zoom Demo Safety, User Access Management & Client Presentation Finalization | 2026-06-11 | Done |
 | **Sprint 14** | Production Readiness Foundation | 2026-06-11 | Done |
 | **Sprint 14.1** | Brand UI Polish, Clean Professional Interface & Visual Analytics Enhancement | 2026-06-12 | Done |
+| **Sprint 15** | Docker & Local Dependency Stabilization | 2026-06-17 | Done |
+| **Sprint 16** | Frontend Toolchain Dependency Upgrade | 2026-06-17 | Done |
+| **Sprint 17** | Backend Deprecation Cleanup Phase 2 | 2026-06-17 | Done |
+| **Sprint 18** | Frontend Stability Cleanup | 2026-06-17 | Done |
 
 ---
 
@@ -239,3 +243,14 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Status**: Done.
 - **Validation**: Backend `36 passed, 1 warning`; Docker backend health OK; frontend HTTP 200.
 - **Known limitations**: Sisa warning backend berasal dari Starlette/httpx test client compatibility.
+
+## Sprint 18 - Frontend Stability Cleanup
+
+- **Tujuan**: Membersihkan sisa warning ESLint frontend agar baseline kualitas lokal dan Docker lebih stabil.
+- **Hasil**:
+  - Menghapus unused props, imports, variabel chart, dan helper style yang tidak lagi dipakai.
+  - Mengganti output `console.log` pada script quality baseline dengan `process.stdout.write`.
+  - Menyelaraskan dokumentasi readiness setelah frontend lint mencapai `0 errors` dan `0 warnings`.
+- **Status**: Done.
+- **Validation**: Backend `36 passed, 1 warning`; frontend lint `0 errors, 0 warnings`; frontend test `3 passed`; quality scan, audit, build, Docker rebuild, HTTP smoke test, dan Edge headless login/route smoke test success.
+- **Known limitations**: Backend masih memiliki 1 warning Starlette/httpx compatibility; production runtime hardening belum final.

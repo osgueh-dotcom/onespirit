@@ -7,6 +7,7 @@ Status: foundation complete, production belum dideklarasikan
 
 - Backend validation lulus dengan `36 passed`.
 - Frontend memiliki ESLint, Vitest baseline, safety scan, dan production build.
+- Frontend ESLint baseline sudah bersih dengan `0 errors` dan `0 warnings`.
 - GitHub Pages demo memakai hash routing dan configurable `VITE_API_BASE_URL`.
 - CORS backend mendukung origin lokal dan origin GitHub Pages yang spesifik.
 - Menu, route, dan action utama memakai permission/role visibility helper.
@@ -40,7 +41,6 @@ Status: foundation complete, production belum dideklarasikan
 - Permission `projects:write` masih luas, termasuk mutation instrumen PNL.
 - Import backend menerima `admin` atau `projects:write`; pembatasan Admin/Management saat ini baru diterapkan di UI.
 - Masih ada 1 warning test dari Starlette/httpx compatibility.
-- ESLint baseline masih menyisakan 10 warning legacy non-blocking.
 - Full frontend `npm audit` bersih setelah upgrade Vite 8/esbuild dan Node 24 image.
 - Vendor analytics masih memakai textual fallback.
 
@@ -58,7 +58,6 @@ Status: foundation complete, production belum dideklarasikan
 - Production Compose/reverse proxy/cloud deployment final.
 - Role dan ownership authorization granular untuk PO/PM/Finance.
 - Cleanup Starlette/httpx test stack warning.
-- Cleanup seluruh lint warning.
 - Automated encrypted backup serta restore drill.
 - Server-side PDF generation.
 - Vendor normalization.

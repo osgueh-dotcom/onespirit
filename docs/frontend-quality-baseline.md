@@ -33,7 +33,7 @@ Non-blocking baseline:
 - `console` selain `warn` dan `error`
 - unused Vue template variables
 
-Hasil terkini: `0 errors`, `10 warnings`. Warning tidak disembunyikan dan menjadi cleanup backlog.
+Hasil terkini setelah Sprint 18: `0 errors`, `0 warnings`.
 
 ## Vitest Baseline
 
@@ -59,5 +59,4 @@ Frontend toolchain sudah memakai Vite 8 dengan Node 24 image untuk menutup advis
 
 - Belum ada component test dengan Vue Test Utils.
 - Belum ada coverage threshold.
-- Warning lint legacy belum menjadi blocking.
 - TypeScript/typecheck belum digunakan oleh project.

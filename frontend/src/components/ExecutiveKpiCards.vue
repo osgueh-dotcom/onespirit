@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   executive: {
     type: Object,
     required: true,

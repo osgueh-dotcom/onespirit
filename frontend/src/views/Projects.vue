@@ -974,19 +974,6 @@ const formatDate = (val) => {
   })
 }
 
-const getStatusStyles = (status) => {
-  const cleaned = (status || '').toLowerCase()
-  if (cleaned === 'inquiry') return 'bg-brand-orange/15 text-brand-orange border border-brand-orange/20'
-  if (cleaned === 'confirmed') return 'bg-purple-500/10 text-purple-500 border border-purple-500/20'
-  if (cleaned === 'preparation') return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
-  if (cleaned === 'ready') return 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
-  if (cleaned === 'running') return 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
-  if (cleaned === 'completed') return 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20'
-  if (cleaned === 'reporting') return 'bg-teal-500/10 text-teal-400 border border-teal-500/20'
-  if (cleaned === 'closed') return 'bg-gray-500/10 text-gray-400 border border-gray-500/20'
-  return 'bg-red-500/10 text-red-400 border border-red-500/20'
-}
-
 const getQuotationStyles = (status) => {
   const cleaned = (status || '').toLowerCase()
   if (cleaned === 'signed & deal' || cleaned === 'signed' || cleaned === 'deal' || cleaned === 'approved') {
@@ -997,16 +984,6 @@ const getQuotationStyles = (status) => {
   if (cleaned === 'revision') return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
   if (cleaned === 'cancel' || cleaned === 'canceled' || cleaned === 'rejected') return 'bg-red-500/10 text-red-400 border border-red-500/20'
   return 'bg-brand-charcoal-light/35 text-gray-300'
-}
-
-const getPaymentStyles = (status) => {
-  const cleaned = (status || '').toLowerCase()
-  if (cleaned === 'paid') return 'bg-brand-emerald/15 text-brand-emerald border border-brand-emerald/20'
-  if (cleaned === 'partial paid') return 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
-  if (cleaned === 'invoice sent') return 'bg-brand-blue/10 text-brand-blue border border-brand-blue/20'
-  if (cleaned === 'overdue') return 'bg-red-500/10 text-red-400 border border-red-500/20'
-  if (cleaned === 'outstanding') return 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
-  return 'bg-brand-charcoal-light/35 text-gray-400'
 }
 
 const getProjectStyles = (status) => {

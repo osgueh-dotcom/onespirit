@@ -75,9 +75,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import { useAuthStore } from '../store/auth'
-
-const auth = useAuthStore()
 
 const projects = ref([])
 const docs = ref([])

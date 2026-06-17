@@ -99,8 +99,6 @@ const colors = [
 const funnelPolygons = computed(() => {
   if (!props.data || props.data.length === 0) return []
 
-  const totalHeight = 240
-  const stageCount = props.data.length
   const stageHeight = 40
   const gap = 8
 

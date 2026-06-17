@@ -356,7 +356,7 @@ import FunnelChart from '../charts/FunnelChart.vue'
 import DonutChart from '../charts/DonutChart.vue'
 import WorkbarChart from '../charts/WorkbarChart.vue'
 
-const props = defineProps({
+defineProps({
   stats: {
     type: Object,
     required: true,
