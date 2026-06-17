@@ -35,6 +35,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 16** | Frontend Toolchain Dependency Upgrade | 2026-06-17 | Done |
 | **Sprint 17** | Backend Deprecation Cleanup Phase 2 | 2026-06-17 | Done |
 | **Sprint 18** | Frontend Stability Cleanup | 2026-06-17 | Done |
+| **Sprint 19** | Backend Test Stack Cleanup | 2026-06-17 | Done |
 
 ---
 
@@ -254,3 +255,14 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Status**: Done.
 - **Validation**: Backend `36 passed, 1 warning`; frontend lint `0 errors, 0 warnings`; frontend test `3 passed`; quality scan, audit, build, Docker rebuild, HTTP smoke test, dan Edge headless login/route smoke test success.
 - **Known limitations**: Backend masih memiliki 1 warning Starlette/httpx compatibility; production runtime hardening belum final.
+
+## Sprint 19 - Backend Test Stack Cleanup
+
+- **Tujuan**: Menghapus warning backend terakhir dari Starlette TestClient/httpx compatibility tanpa mengubah API contract.
+- **Hasil**:
+  - Menambahkan dependency `httpx2` agar Starlette TestClient tidak lagi fallback ke `httpx`.
+  - Mempertahankan `httpx` existing untuk kompatibilitas transisi dependency.
+  - Memperbarui readiness, limitation, dan backend cleanup documentation.
+- **Status**: Done.
+- **Validation**: Backend `36 passed`; `pip check` success; frontend lint `0 errors, 0 warnings`; frontend test `3 passed`; quality scan, audit, build, Docker rebuild, HTTP smoke test, dan Edge headless login/route smoke test success.
+- **Known limitations**: Production runtime hardening, role/ownership authorization granular, backup automation, monitoring, dan server-side PDF masih belum final.

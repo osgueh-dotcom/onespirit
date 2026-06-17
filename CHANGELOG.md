@@ -4,6 +4,19 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 19] - 2026-06-17
+
+### Changed
+- Added `httpx2` to the backend test stack so Starlette TestClient no longer falls back to deprecated `httpx` compatibility.
+- Updated readiness and limitation documentation after backend tests reached a clean warning-free baseline.
+
+### Validation
+- Backend: `36 passed`; `pip check` passed.
+- Frontend: lint `0 errors, 0 warnings`; tests `3 passed`; quality scan, audit, and build passed.
+- Docker rebuild, HTTP smoke test, and Edge headless login/route smoke test passed.
+
+---
+
 ## [Sprint 18] - 2026-06-17
 
 ### Changed

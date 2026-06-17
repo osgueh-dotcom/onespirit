@@ -1,6 +1,6 @@
 # MVP Limitations - OneSpirit Workflow System
 
-Status: Sprint 18 Frontend Stability Cleanup
+Status: Sprint 19 Backend Test Stack Cleanup
 
 OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
 
@@ -35,7 +35,7 @@ OneSpirit Workflow sudah demo-ready, tetapi belum production-ready.
    - Normalisasi vendor ditunda agar Sprint 14 tidak menjadi rewrite data model.
 
 7. **Quality Debt**
-   - Backend masih memiliki 1 warning Starlette/httpx compatibility.
+   - Backend test stack sudah bersih dengan `36 passed` tanpa warning.
    - Frontend ESLint baseline sudah bersih dengan `0 errors` dan `0 warnings`.
    - Component test dan coverage threshold belum tersedia.
 
@@ -50,9 +50,9 @@ Jangan menggunakan MVP ini langsung sebagai production system sebelum:
 - backup dan restore drill berhasil;
 - monitoring dan rollback diuji.
 
-## Sprint 19 Recommendation
+## Sprint 20 Recommendation
 
-`Sprint 19 - Authorization & Production Runtime Hardening`
+`Sprint 20 - Authorization & Production Runtime Hardening`
 
 1. Formalisasi Admin, PO, dan PM.
 2. Tambahkan permission khusus imports dan PNL.
@@ -60,4 +60,4 @@ Jangan menggunakan MVP ini langsung sebagai production system sebelum:
 4. Siapkan production Dockerfiles/Compose override.
 5. Jalankan backup/restore drill.
 6. Tambahkan monitoring dan rate limiting.
-7. Bersihkan Starlette/httpx test stack warning.
+7. Tambahkan component test dan coverage threshold bertahap.

@@ -14,14 +14,14 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 18 - Frontend Stability Cleanup |
+| Status | Sprint 19 - Backend Test Stack Cleanup |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
 | Database | PostgreSQL untuk Docker/production-like, SQLite untuk test lokal |
 
 Current readiness summary:
-- Backend test: `36 passed, 1 warning`
+- Backend test: `36 passed`
 - Frontend build: success
 - Frontend lint: `0 errors`, `0 warnings`
 - Frontend test: `3 passed`

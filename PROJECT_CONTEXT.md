@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 18 - Frontend Stability Cleanup |
+| Status Project | Sprint 19 - Backend Test Stack Cleanup |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | Local Zoom demo; VS Code Port Forwarding as temporary fallback |
 | Backend Deployment Strategy | Local backend; temporary port forwarding only when required |
@@ -65,12 +65,14 @@ Sprint 14 mencakup:
 
 Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
 
-Current validation after Sprint 18:
+Current validation after Sprint 19:
 
-- Backend: `36 passed, 1 warning`.
+- Backend: `36 passed`.
 - Frontend lint: `0 errors`, `0 warnings`.
 - Frontend test: `3 passed`.
 - Frontend build: success.
+
+Sprint 19 menambahkan dependency `httpx2` untuk menyelaraskan FastAPI/Starlette TestClient dan menghapus warning test backend terakhir.
 
 Sprint 18 membersihkan sisa warning ESLint legacy di frontend tanpa mengubah workflow bisnis CL, ROS, CK, PNL, atau response contract backend.
 

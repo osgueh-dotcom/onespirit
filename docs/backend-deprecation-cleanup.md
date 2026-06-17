@@ -23,17 +23,17 @@ Phase 1 hanya mengubah API internal yang mekanis dan mempertahankan response con
 - Warning total turun dari baseline Sprint 13 `919` menjadi `37`.
 - Auth, CRM, events, tasks, documents, finance, imports, event sources, dan dashboard schemas memakai `ConfigDict(from_attributes=True)`.
 - Pydantic class-based `Config` warning sudah selesai.
+- Starlette TestClient memakai `httpx2` sehingga warning compatibility test stack selesai.
 
 ## Ditunda
 
 - Full timezone-aware database column strategy.
-- Starlette/httpx test client upgrade.
 
 ## Risiko
 
 - Migrasi schema-wide dapat mengubah serialization jika dilakukan tanpa contract tests.
 - Perubahan timezone column membutuhkan migration dan audit data lama.
-- Dependency upgrade FastAPI/Starlette/httpx perlu diuji sebagai satu paket.
+- Dependency upgrade FastAPI/Starlette/httpx/httpx2 perlu diuji sebagai satu paket.
 
 ## Validation
 
@@ -42,9 +42,8 @@ cd backend
 python -m pytest app/tests -q
 ```
 
-Hasil terkini: `36 passed, 1 warning`.
+Hasil terkini setelah Sprint 19: `36 passed`.
 
 ## Remaining Cleanup
 
 1. Putuskan strategi timezone database.
-2. Selaraskan FastAPI, Starlette, dan httpx test stack.
