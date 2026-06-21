@@ -4,6 +4,30 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 21] - 2026-06-21
+
+### Added
+- Added the repo-scoped `$onespirit-development` skill with progressive
+  disclosure, task routing, workflow rules, validation guidance, and a read-only
+  context snapshot script.
+- Added focused backend and frontend `AGENTS.md` guidance.
+- Added a dated repository risk audit and Sprint 22 recommendation.
+
+### Changed
+- Reduced the always-loaded root `AGENTS.md` to durable product, security,
+  delivery, and review guardrails.
+- Updated project status documentation for the Sprint 21 agent workflow.
+
+### Validation
+- Skill validator and skill-link checks passed; context snapshot completed.
+- Backend: `38 passed`; `pip check` passed.
+- Frontend: lint passed; tests `4 passed`; quality scan passed; audit found
+  `0 vulnerabilities`; production build passed.
+- Docker Compose rebuilt successfully; database and backend were healthy,
+  frontend returned HTTP `200`, and backend `/health` returned `ok`.
+
+---
+
 ## [Sprint 20] - 2026-06-17
 
 ### Changed

@@ -37,6 +37,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 18** | Frontend Stability Cleanup | 2026-06-17 | Done |
 | **Sprint 19** | Backend Test Stack Cleanup | 2026-06-17 | Done |
 | **Sprint 20** | Formal Workflow Role Foundation | 2026-06-17 | Done |
+| **Sprint 21** | Agent Workflow & Repository Audit | 2026-06-21 | Done |
 
 ---
 
@@ -280,3 +281,23 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Status**: Done.
 - **Validation**: Backend `38 passed`; `pip check` success; frontend lint `0 errors, 0 warnings`; frontend test `4 passed`; quality scan, audit, build, Docker rebuild, HTTP smoke test, dan Edge headless login/route smoke test success.
 - **Known limitations**: Ownership gate per project untuk assigned PO/PM, permission khusus imports/PNL, backup automation, monitoring, rate limiting, dan server-side PDF masih belum final.
+
+## Sprint 21 - Agent Workflow & Repository Audit
+
+- **Tujuan**: Mengaudit repository dan membangun konfigurasi agent/skill yang lebih
+  presisi serta hemat token.
+- **Hasil**:
+  - Merampingkan root `AGENTS.md` menjadi guardrail yang selalu relevan.
+  - Menambahkan aturan terarah untuk backend dan frontend.
+  - Menambahkan skill repo `$onespirit-development` dengan task routing,
+    workflow contract, validation matrix, repository map, dan context snapshot.
+  - Mendokumentasikan risk register teknis dan prioritas Sprint 22.
+- **Status**: Done.
+- **Validation**: Skill validator dan skill-link check lulus; context snapshot
+  berhasil; backend `38 passed` dan `pip check` success; frontend lint,
+  quality scan, dan build success; frontend test `4 passed`; audit
+  `0 vulnerabilities`; Docker Compose rebuild success; database/backend healthy;
+  frontend HTTP `200`; backend health `ok`.
+- **Known limitations**: Project ownership gate per assigned PO/PM, production
+  migration enforcement, frontend test depth, dan dependency locking belum
+  selesai.

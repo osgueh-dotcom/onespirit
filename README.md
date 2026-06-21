@@ -14,7 +14,7 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 20 - Formal Workflow Role Foundation |
+| Status | Sprint 21 - Agent Workflow & Repository Audit |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
@@ -29,6 +29,23 @@ Current readiness summary:
 - Backend tunnel: temporary demo access
 - Database: private local Docker
 - Production readiness: not yet
+
+## AI Agent Development
+
+The repository uses layered instructions to keep Codex context focused:
+
+- `AGENTS.md` contains always-active product and delivery guardrails.
+- `backend/AGENTS.md` and `frontend/AGENTS.md` contain stack-specific rules.
+- `.agents/skills/onespirit-development/` contains the repo-scoped
+  `$onespirit-development` workflow with on-demand references.
+- `docs/repository-audit-sprint-21.md` contains the current technical risk
+  register and next-sprint recommendation.
+
+Generate a compact repository snapshot without reading all documentation:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .agents/skills/onespirit-development/scripts/context-snapshot.ps1 -Scope full
+```
 
 ---
 

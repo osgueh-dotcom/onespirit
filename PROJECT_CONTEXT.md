@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 20 - Formal Workflow Role Foundation |
+| Status Project | Sprint 21 - Agent Workflow & Repository Audit |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | Local Zoom demo; VS Code Port Forwarding as temporary fallback |
 | Backend Deployment Strategy | Local backend; temporary port forwarding only when required |
@@ -68,7 +68,7 @@ Sprint 14 mencakup:
 
 Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
 
-Current validation after Sprint 20:
+Current validation after Sprint 21:
 
 - Backend: `38 passed`.
 - Frontend lint: `0 errors`, `0 warnings`.
@@ -76,6 +76,11 @@ Current validation after Sprint 20:
 - Frontend build: success.
 
 Sprint 20 memformalkan role backend `Admin`, `PO`, dan `PM`, menyelaraskan alias role admin/user creation, dan memperbarui guard project workflow agar Admin/PM sesuai dengan UI workflow.
+
+Sprint 21 mengaudit struktur repository dan menambahkan sistem agent berlapis:
+root guardrails yang ringkas, aturan khusus backend/frontend, skill repo
+`$onespirit-development`, context snapshot script, dan task routing berbasis
+progressive disclosure untuk mengurangi pemakaian token dan drift instruksi.
 
 Sprint 19 menambahkan dependency `httpx2` untuk menyelaraskan FastAPI/Starlette TestClient dan menghapus warning test backend terakhir.
 
