@@ -38,6 +38,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 19** | Backend Test Stack Cleanup | 2026-06-17 | Done |
 | **Sprint 20** | Formal Workflow Role Foundation | 2026-06-17 | Done |
 | **Sprint 21** | Agent Workflow & Repository Audit | 2026-06-21 | Done |
+| **Sprint 21.1** | Local Network Access Verification | 2026-06-21 | Done |
 
 ---
 
@@ -301,3 +302,22 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 - **Known limitations**: Project ownership gate per assigned PO/PM, production
   migration enforcement, frontend test depth, dan dependency locking belum
   selesai.
+
+## Sprint 21.1 - Local Network Access Verification
+
+- **Tujuan**: Memastikan OneSpirit dapat diakses melalui jaringan lokal dengan
+  service dan data boundary yang aman.
+- **Hasil**:
+  - Frontend dan backend berhasil diakses melalui IP LAN host.
+  - Login demo dan endpoint current user berhasil melalui proxy frontend.
+  - PostgreSQL host port dibatasi ke `127.0.0.1`; hanya port aplikasi yang
+    dipublikasikan ke LAN.
+  - Panduan akses LAN ditambahkan ke README.
+- **Status**: Done.
+- **Validation**: Browser login page render tanpa console error; frontend HTTP
+  `200`; backend health `ok`; unauthenticated proxy check `401`; isolated
+  container access frontend/backend `200`; authenticated current user, projects,
+  dan dashboard analytics success; PostgreSQL hanya reachable melalui host
+  loopback.
+- **Known limitations**: Pengujian fisik dari ponsel/laptop lain tetap bergantung
+  pada firewall host dan konfigurasi router seperti guest Wi-Fi/client isolation.

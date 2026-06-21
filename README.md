@@ -108,6 +108,28 @@ Alamat lokal:
 - Frontend: [http://localhost:5173](http://localhost:5173)
 - Backend Swagger API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
 
+### Akses Jaringan Lokal
+
+Perangkat lain pada jaringan Wi-Fi/Ethernet yang sama dapat membuka:
+
+```text
+http://<IP-LAN-PC>:5173/onespirit/
+```
+
+Temukan IP LAN PC presenter dengan:
+
+```powershell
+Get-NetIPConfiguration |
+  Where-Object { $_.IPv4DefaultGateway } |
+  Select-Object -ExpandProperty IPv4Address
+```
+
+Port frontend `5173` dan backend `8000` dipublikasikan untuk kebutuhan aplikasi.
+Port PostgreSQL host `5433` hanya bind ke `127.0.0.1` dan tidak boleh dibuka ke
+jaringan lokal. Jika perangkat lain tidak dapat terhubung, pastikan perangkat
+berada pada subnet yang sama, tidak memakai guest Wi-Fi/client isolation, dan
+Windows Firewall mengizinkan Docker Desktop pada profile jaringan aktif.
+
 ### 2. Backend Lokal
 
 ```bash

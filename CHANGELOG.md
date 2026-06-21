@@ -4,6 +4,27 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 21.1] - 2026-06-21
+
+### Changed
+- Verified frontend and backend access through the host LAN address from the
+  Windows host, browser, and an isolated container network.
+- Restricted the PostgreSQL host port to `127.0.0.1` while keeping application
+  ports `5173` and `8000` available on the LAN.
+- Added local-network access and troubleshooting guidance.
+
+### Validation
+- LAN frontend returned HTTP `200`; browser rendered the login screen and logo
+  without console errors.
+- LAN backend `/health` returned `ok`; frontend API proxy rejected
+  unauthenticated access with `401`.
+- Configured demo login, `/auth/me`, projects, and dashboard analytics succeeded
+  through the LAN frontend proxy.
+- PostgreSQL remained reachable on host loopback and was unreachable through the
+  host LAN address.
+
+---
+
 ## [Sprint 21] - 2026-06-21
 
 ### Added
