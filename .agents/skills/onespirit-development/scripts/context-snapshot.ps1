@@ -27,6 +27,39 @@ function Get-CommandValue {
     return (($output -join " ").Trim())
 }
 
+function Get-EdgeExecutable {
+    $candidates = @(
+        $env:EDGE_PATH,
+        "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+    ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath $candidate) {
+            return $candidate
+        }
+    }
+
+    return "not found"
+}
+
+function Get-NodeWebSocketState {
+    if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+        return "node not found"
+    }
+
+    $output = @(& node -e "console.log(typeof WebSocket)" 2>$null)
+    if ($LASTEXITCODE -ne 0 -or $output.Count -eq 0) {
+        return "unavailable"
+    }
+
+    if (($output[0]).Trim() -eq "function") {
+        return "available"
+    }
+
+    return "missing"
+}
+
 function Write-RuntimeSnapshot {
     Write-Output ""
     Write-Output "Runtime toolchain:"
@@ -35,6 +68,8 @@ function Write-RuntimeSnapshot {
     Write-Output "  Node: $(Get-CommandValue -Command "node" -Arguments @("--version"))"
     Write-Output "  npm: $(Get-CommandValue -Command "npm" -Arguments @("--version"))"
     Write-Output "  Python: $(Get-CommandValue -Command "python" -Arguments @("--version"))"
+    Write-Output "  Microsoft Edge: $(Get-EdgeExecutable)"
+    Write-Output "  Node native WebSocket: $(Get-NodeWebSocketState)"
 
     Write-Output ""
     Write-Output "Local dependency state:"
@@ -72,6 +107,7 @@ function Write-RuntimeSnapshot {
     Write-Output "  backend local: cd backend; .venv\Scripts\python.exe -m pip check"
     Write-Output "  backend container: docker compose exec -T backend python -m pip check"
     Write-Output "  frontend local: cd frontend; npm ls --depth=0; npm audit"
+    Write-Output "  local Edge CDP: powershell -ExecutionPolicy Bypass -File scripts/edge-local-smoke.ps1"
 }
 
 $repoRoot = (& git rev-parse --show-toplevel).Trim()

@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 23 - Quick Project Customer Intake |
+| Status Project | Sprint 24 - Local Edge CDP Test Workflow |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | Local Zoom demo; VS Code Port Forwarding as temporary fallback |
 | Backend Deployment Strategy | Local backend; temporary port forwarding only when required |
@@ -68,12 +68,14 @@ Sprint 14 mencakup:
 
 Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
 
-Current validation after Sprint 23:
+Current validation after Sprint 24:
 
 - Backend: `41 passed`.
 - Frontend lint: `0 errors`, `0 warnings`.
 - Frontend test: `4 passed`.
 - Frontend build: success.
+- Local Edge CDP smoke: authenticated Projects modal check passes on desktop
+  and mobile viewports with browser console error `0`.
 - Runtime dependency check: Docker/Compose, Node/npm, Python, backend `.venv`,
   frontend `node_modules`, and Docker stack are available on the current
   development machine.
@@ -95,6 +97,12 @@ baru dengan memilih customer CRM yang sudah ada atau mengisi nama klien baru.
 Backend akan mencocokkan nama customer secara ternormalisasi dan membuat profil
 CRM minimal kategori `Prospect` bila belum ada, sehingga project tetap memiliki
 customer_id yang valid tanpa langkah CRM terpisah.
+
+Sprint 24 menambahkan workflow smoke test lokal berbasis Microsoft Edge CDP dan
+native WebSocket Node. Script ini meluncurkan Edge headless dengan temporary
+profile, login melalui backend API, membuka route Projects, dan memverifikasi
+modal create project pada viewport desktop/mobile tanpa menyimpan credential di
+repo.
 
 Sprint 19 menambahkan dependency `httpx2` untuk menyelaraskan FastAPI/Starlette TestClient dan menghapus warning test backend terakhir.
 

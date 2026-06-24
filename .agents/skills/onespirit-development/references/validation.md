@@ -53,6 +53,20 @@ If `backend/.venv` or `frontend/node_modules` is missing, install with the
 documented commands before running local development. Prefer Docker Compose for
 the integrated runtime baseline.
 
+For local browser regression checks with Microsoft Edge CDP/WebSocket:
+
+```powershell
+$env:EDGE_SMOKE_LOGIN_EMAIL = "demo@onespirit.asia"
+$env:EDGE_SMOKE_LOGIN_PASSWORD = "<password-from-secure-channel>"
+powershell -ExecutionPolicy Bypass -File scripts/edge-local-smoke.ps1
+Remove-Item Env:EDGE_SMOKE_LOGIN_PASSWORD
+```
+
+The script launches Edge with a temporary profile and remote debugging port,
+logs in through the backend API, opens the hash-router Projects route, verifies
+the Project create modal on desktop and mobile widths, and fails on browser
+console errors. Do not commit passwords or bearer tokens.
+
 For UI work, inspect the changed route at desktop and mobile widths and check the
 browser console. For API work, check the affected response and authorization
 path, not only `/health`.

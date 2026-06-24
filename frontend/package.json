@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "quality:scan": "node scripts/lint-baseline.mjs",
+    "smoke:edge": "node ../scripts/edge-local-smoke.mjs",
     "test": "vitest run",
     "preview": "vite preview"
   },

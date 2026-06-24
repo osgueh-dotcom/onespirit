@@ -4,6 +4,27 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 24] - 2026-06-24
+
+### Added
+- Added local Microsoft Edge CDP smoke tooling using native Node WebSocket:
+  `scripts/edge-local-smoke.mjs`.
+- Added Windows wrapper `scripts/edge-local-smoke.ps1` for environment-based
+  credentials and repeatable local browser checks.
+- Added frontend shortcut `npm run smoke:edge`.
+
+### Changed
+- Runtime context snapshot now reports Microsoft Edge executable detection and
+  native Node WebSocket availability.
+- Validation guidance and README now include local Edge CDP smoke workflow.
+
+### Validation
+- Runtime snapshot, Edge CDP smoke, frontend lint/test/quality/audit/build,
+  backend tests, backend `pip check`, Docker Compose status, frontend HTTP, and
+  backend health checks passed.
+
+---
+
 ## [Sprint 23] - 2026-06-24
 
 ### Added

@@ -14,7 +14,7 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 23 - Quick Project Customer Intake |
+| Status | Sprint 24 - Local Edge CDP Test Workflow |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
@@ -27,6 +27,8 @@ Current readiness summary:
 - Frontend test: `4 passed`
 - Runtime dependency check: Docker, Node/npm, Python, backend `.venv`, and
   frontend `node_modules` available on the current development machine
+- Local Edge CDP smoke: configured for authenticated desktop/mobile Projects
+  modal checks
 - GitHub Pages demo deployment: configured but deferred
 - Backend tunnel: temporary demo access
 - Database: private local Docker
@@ -173,6 +175,22 @@ Remove-Item Env:SMOKE_LOGIN_PASSWORD
 
 Script ini memeriksa frontend load, Vite API proxy, login, current user, dan backend `/health`. Jangan commit password demo atau token smoke test.
 
+Smoke test lokal Microsoft Edge via CDP/WebSocket:
+
+```powershell
+$env:EDGE_SMOKE_LOGIN_EMAIL = "demo@onespirit.asia"
+$env:EDGE_SMOKE_LOGIN_PASSWORD = "<password-from-secure-channel>"
+powershell -ExecutionPolicy Bypass -File scripts/edge-local-smoke.ps1
+Remove-Item Env:EDGE_SMOKE_LOGIN_PASSWORD
+```
+
+Script ini membuka Edge dengan temporary profile dan remote debugging port,
+login lewat backend API, membuka route Projects, memverifikasi modal create
+project pada viewport desktop/mobile, dan gagal bila browser console memiliki
+error. Jalankan `npm.cmd run smoke:edge` dari `frontend/` untuk shortcut Node
+yang sama. Jika Edge terpasang di lokasi non-standar, set `EDGE_PATH` ke path
+`msedge.exe`.
+
 ### 4. Local Zoom Demo Mode
 
 Mode demo utama adalah aplikasi berjalan di PC presenter dan client melihat melalui Zoom screen share.
@@ -210,6 +228,7 @@ cd frontend
 npm.cmd run lint
 npm.cmd run test
 npm.cmd run quality:scan
+npm.cmd run smoke:edge
 npm.cmd run build
 ```
 

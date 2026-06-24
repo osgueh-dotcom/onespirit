@@ -41,6 +41,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 21.1** | Local Network Access Verification | 2026-06-21 | Done |
 | **Sprint 22** | Agent Runtime Readiness Audit | 2026-06-24 | Done |
 | **Sprint 23** | Quick Project Customer Intake | 2026-06-24 | Done |
+| **Sprint 24** | Local Edge CDP Test Workflow | 2026-06-24 | Done |
 
 ---
 
@@ -372,3 +373,28 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
   migration enforcement, frontend test depth beyond shared access utility,
   backend dependency constraints, backup automation, monitoring, rate limiting,
   dan server-side PDF masih belum selesai.
+
+## Sprint 24 - Local Edge CDP Test Workflow
+
+- **Tujuan**: Membuat konfigurasi Microsoft Edge/CDP/WebSocket yang reusable
+  agar validasi browser lokal lebih cepat dan konsisten untuk sprint berikutnya.
+- **Hasil**:
+  - Menambahkan `scripts/edge-local-smoke.mjs` untuk menjalankan Edge headless
+    dengan temporary profile dan remote debugging port.
+  - Menambahkan wrapper `scripts/edge-local-smoke.ps1` untuk pemakaian Windows
+    dengan credential dari environment atau parameter.
+  - Menambahkan shortcut frontend `npm run smoke:edge`.
+  - Memperbarui context snapshot runtime untuk mendeteksi path Edge dan native
+    WebSocket Node.
+  - Memperbarui validation matrix dan README dengan workflow smoke lokal.
+- **Status**: Done.
+- **Validation**: Runtime snapshot success; local Edge CDP smoke success dengan
+  Projects modal desktop/mobile dan console error `0`; frontend lint, test,
+  quality scan, audit, build success; backend `41 passed`; backend `pip check`
+  success; Docker Compose status, frontend HTTP `200`, dan backend `/health`
+  `ok`.
+- **Known limitations**: Script smoke lokal membutuhkan password dari secure
+  environment variable; tidak menyimpan credential di repo. Project ownership
+  gate per assigned PO/PM, production migration enforcement, dependency
+  constraints, backup automation, monitoring, rate limiting, dan server-side PDF
+  masih belum selesai.
