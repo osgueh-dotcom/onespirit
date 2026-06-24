@@ -14,7 +14,7 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 21 - Agent Workflow & Repository Audit |
+| Status | Sprint 22 - Agent Runtime Readiness Audit |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
@@ -25,6 +25,8 @@ Current readiness summary:
 - Frontend build: success
 - Frontend lint: `0 errors`, `0 warnings`
 - Frontend test: `4 passed`
+- Runtime dependency check: Docker, Node/npm, Python, backend `.venv`, and
+  frontend `node_modules` available on the current development machine
 - GitHub Pages demo deployment: configured but deferred
 - Backend tunnel: temporary demo access
 - Database: private local Docker
@@ -38,13 +40,19 @@ The repository uses layered instructions to keep Codex context focused:
 - `backend/AGENTS.md` and `frontend/AGENTS.md` contain stack-specific rules.
 - `.agents/skills/onespirit-development/` contains the repo-scoped
   `$onespirit-development` workflow with on-demand references.
-- `docs/repository-audit-sprint-21.md` contains the current technical risk
+- `docs/repository-audit-sprint-22.md` contains the current technical risk
   register and next-sprint recommendation.
 
 Generate a compact repository snapshot without reading all documentation:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .agents/skills/onespirit-development/scripts/context-snapshot.ps1 -Scope full
+```
+
+Check only installed toolchain, local dependencies, and Docker Compose state:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .agents/skills/onespirit-development/scripts/context-snapshot.ps1 -Scope runtime
 ```
 
 ---

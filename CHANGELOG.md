@@ -4,6 +4,30 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 22] - 2026-06-24
+
+### Added
+- Added a `runtime` scope to the repo context snapshot for toolchain versions,
+  local dependency state, Docker Compose service status, and dependency
+  verification commands.
+- Added the Sprint 22 repository audit with current machine runtime readiness,
+  risk register updates, and next-sprint recommendation.
+
+### Changed
+- Updated `$onespirit-development` skill guidance, task routing, validation
+  matrix, and skill metadata for agent/runtime readiness work.
+- Updated README and PROJECT_CONTEXT to reflect Sprint 22 agent runtime
+  readiness status.
+
+### Validation
+- Context snapshot `summary`, `runtime`, and `full` completed successfully.
+- Backend local and container dependency checks passed.
+- Frontend dependency tree and `npm audit` completed successfully.
+- Backend tests, frontend lint/tests/quality scan/build, Docker Compose status,
+  frontend HTTP, and backend health checks passed.
+
+---
+
 ## [Sprint 21.1] - 2026-06-21
 
 ### Changed

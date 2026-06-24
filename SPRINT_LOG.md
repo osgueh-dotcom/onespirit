@@ -39,6 +39,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 20** | Formal Workflow Role Foundation | 2026-06-17 | Done |
 | **Sprint 21** | Agent Workflow & Repository Audit | 2026-06-21 | Done |
 | **Sprint 21.1** | Local Network Access Verification | 2026-06-21 | Done |
+| **Sprint 22** | Agent Runtime Readiness Audit | 2026-06-24 | Done |
 
 ---
 
@@ -321,3 +322,27 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
   loopback.
 - **Known limitations**: Pengujian fisik dari ponsel/laptop lain tetap bergantung
   pada firewall host dan konfigurasi router seperti guest Wi-Fi/client isolation.
+
+## Sprint 22 - Agent Runtime Readiness Audit
+
+- **Tujuan**: Meningkatkan agent/skill development workflow agar lebih hemat
+  token dan bisa memverifikasi dependency/runtime lokal secara eksplisit.
+- **Hasil**:
+  - Menambahkan scope `runtime` pada context snapshot untuk toolchain,
+    dependency lokal, dan status Docker Compose.
+  - Memperbarui task routing, validation matrix, skill metadata, dan token
+    discipline agar audit agent tidak perlu membuka dokumentasi luas.
+  - Membuat audit Sprint 22 berisi baseline repo, runtime mesin saat ini, risk
+    register, dan rekomendasi sprint berikutnya.
+  - Menyelaraskan README dan PROJECT_CONTEXT ke status Sprint 22.
+- **Status**: Done.
+- **Validation**: Context snapshot `summary`, `runtime`, dan `full` success;
+  backend local/container `pip check` success; frontend dependency tree and
+  audit success; backend `38 passed`; frontend lint `0 errors, 0 warnings`;
+  frontend test `4 passed`; quality scan and production build success; Docker
+  stack running with db/backend healthy and frontend HTTP `200`; backend
+  `/health` returned `ok`.
+- **Known limitations**: Project ownership gate per assigned PO/PM, production
+  migration enforcement, frontend test depth, backend dependency constraints,
+  backup automation, monitoring, rate limiting, dan server-side PDF masih belum
+  selesai.

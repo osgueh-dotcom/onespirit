@@ -35,6 +35,24 @@ TypeScript project.
 - Dev tunnel smoke test: `scripts/dev-tunnel-smoke.ps1` only when tunnel
   environment variables and secure credentials are available.
 
+For machine/runtime readiness checks:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .agents/skills/onespirit-development/scripts/context-snapshot.ps1 -Scope runtime
+cd backend
+.venv\Scripts\python.exe -m pip check
+cd ..\frontend
+npm ls --depth=0
+npm audit
+cd ..
+docker compose ps
+docker compose exec -T backend python -m pip check
+```
+
+If `backend/.venv` or `frontend/node_modules` is missing, install with the
+documented commands before running local development. Prefer Docker Compose for
+the integrated runtime baseline.
+
 For UI work, inspect the changed route at desktop and mobile widths and check the
 browser console. For API work, check the affected response and authorization
 path, not only `/health`.

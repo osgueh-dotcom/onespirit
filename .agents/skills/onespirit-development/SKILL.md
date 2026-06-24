@@ -16,7 +16,9 @@ Load only task-relevant context and preserve business terminology.
    powershell -ExecutionPolicy Bypass -File .agents/skills/onespirit-development/scripts/context-snapshot.ps1 -Scope backend
    ```
 
-   Valid scopes: `summary`, `backend`, `frontend`, `docs`, `full`.
+   Valid scopes: `summary`, `backend`, `frontend`, `docs`, `runtime`,
+   `full`. Use `runtime` when the task mentions installed dependencies, Docker,
+   local app access, ports, or machine readiness.
 
 2. Read root `AGENTS.md`. Read nested `backend/AGENTS.md` or
    `frontend/AGENTS.md` only for that area.
@@ -53,6 +55,17 @@ terminology.
 - Guard destructive actions and validate all inputs.
 - Update durable docs only when their subject changed.
 
+## Token Budget Discipline
+
+- Start with `summary` or the exact task scope; use `full` only for repo-wide
+  audits or release baselines.
+- Prefer `context-snapshot.ps1`, `rg`, and recent sprint tails over opening
+  broad Markdown or source trees.
+- Read workflow, deployment, or history documents only when task routing points
+  to them or a finding needs verification.
+- Reuse previous validation evidence only as a hint; re-run cheap checks when
+  the machine, dependency, or runtime state matters.
+
 ## Validate And Deliver
 
 Read [validation.md](references/validation.md), then run the smallest complete
@@ -72,6 +85,6 @@ Before completion:
 
 ## Audit Guidance
 
-Read [repository-audit-sprint-21.md](../../../docs/repository-audit-sprint-21.md)
+Read [repository-audit-sprint-22.md](../../../docs/repository-audit-sprint-22.md)
 for the current risk register and next-sprint priorities. Re-verify findings
 against code before acting because the audit is a dated snapshot.

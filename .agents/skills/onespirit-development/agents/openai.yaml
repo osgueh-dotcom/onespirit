@@ -1,4 +1,4 @@
 interface:
   display_name: "OneSpirit Development"
-  short_description: "Develop and audit OneSpirit workflow safely"
-  default_prompt: "Use $onespirit-development to audit and implement the next focused OneSpirit sprint."
+  short_description: "Develop, audit, and validate OneSpirit workflow safely"
+  default_prompt: "Use $onespirit-development to audit, verify runtime readiness, and implement the next focused OneSpirit sprint."
