@@ -4,6 +4,30 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 25] - 2026-06-24
+
+### Added
+- Expanded `scripts/edge-local-smoke.mjs` with a role-aware browser smoke
+  matrix for `Admin`, `Management`, `PO`, `PM`, `Finance`, and `Staff`.
+- Added automatic local smoke-user provisioning/reset through the admin API for
+  `smoke.<role>@onespirit.asia` accounts.
+- Added `-SkipRoleMatrix` / `--skip-role-matrix` for basic Edge smoke checks
+  when an admin-capable login is unavailable.
+
+### Changed
+- Local Edge smoke now verifies menu visibility and route redirects in addition
+  to the desktop/mobile Projects create modal.
+- README, project context, sprint log, and validation guidance now document the
+  admin-backed role matrix workflow.
+
+### Validation
+- Edge CDP smoke matrix passed for Admin, Management, PO, PM, Finance, and
+  Staff with browser console error count `0`.
+- Backend tests, backend `pip check`, frontend lint/test/quality/audit/build,
+  Docker Compose status, frontend HTTP, and backend health checks passed.
+
+---
+
 ## [Sprint 24] - 2026-06-24
 
 ### Added

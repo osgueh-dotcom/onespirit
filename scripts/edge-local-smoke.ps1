@@ -6,11 +6,12 @@ Runs a local Microsoft Edge CDP smoke test for OneSpirit Workflow.
 Starts Microsoft Edge with a temporary profile and remote debugging port, uses
 the Chrome DevTools Protocol over WebSocket, logs in through the backend API,
 opens the local frontend, and verifies the Projects creation modal at desktop
-and mobile viewport sizes. Secrets are read from environment variables or
-parameters but are never printed.
+and mobile viewport sizes. With an admin-capable login it also provisions local
+smoke users and verifies role-aware menu and route visibility. Secrets are read
+from environment variables or parameters but are never printed.
 
 .EXAMPLE
-$env:EDGE_SMOKE_LOGIN_EMAIL = "demo@onespirit.asia"
+$env:EDGE_SMOKE_LOGIN_EMAIL = "admin@onespirit.asia"
 $env:EDGE_SMOKE_LOGIN_PASSWORD = "<password-from-secure-channel>"
 powershell -ExecutionPolicy Bypass -File scripts/edge-local-smoke.ps1
 Remove-Item Env:EDGE_SMOKE_LOGIN_PASSWORD
@@ -25,7 +26,8 @@ param(
     [string]$EdgePath = $env:EDGE_PATH,
     [switch]$Headful,
     [switch]$Json,
-    [switch]$SkipAuth
+    [switch]$SkipAuth,
+    [switch]$SkipRoleMatrix
 )
 
 Set-StrictMode -Version Latest
@@ -69,6 +71,10 @@ if ($Json) {
 
 if ($SkipAuth) {
     $arguments += "--skip-auth"
+}
+
+if ($SkipRoleMatrix) {
+    $arguments += "--skip-role-matrix"
 }
 
 if (-not [string]::IsNullOrWhiteSpace($LoginPassword)) {

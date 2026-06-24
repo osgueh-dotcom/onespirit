@@ -42,6 +42,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 22** | Agent Runtime Readiness Audit | 2026-06-24 | Done |
 | **Sprint 23** | Quick Project Customer Intake | 2026-06-24 | Done |
 | **Sprint 24** | Local Edge CDP Test Workflow | 2026-06-24 | Done |
+| **Sprint 25** | Role-Aware Edge Smoke Matrix | 2026-06-24 | Done |
 
 ---
 
@@ -398,3 +399,30 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
   gate per assigned PO/PM, production migration enforcement, dependency
   constraints, backup automation, monitoring, rate limiting, dan server-side PDF
   masih belum selesai.
+
+## Sprint 25 - Role-Aware Edge Smoke Matrix
+
+- **Tujuan**: Memperluas smoke test Edge/CDP agar validasi UI role visibility
+  dan route guard dapat dijalankan otomatis pada mesin lokal.
+- **Hasil**:
+  - Memperluas `scripts/edge-local-smoke.mjs` dengan matrix role `Admin`,
+    `Management`, `PO`, `PM`, `Finance`, dan `Staff`.
+  - Menambahkan provisioning/reset akun lokal `smoke.<role>@onespirit.asia`
+    melalui admin API tanpa menyimpan password matrix di repo.
+  - Memverifikasi menu visible/hidden dan redirect route untuk Dashboard,
+    Projects, PM Control, PO Control, Source/Vendor, Finance, Imports, CRM,
+    Documents, dan Settings.
+  - Menambahkan flag `-SkipRoleMatrix` / `--skip-role-matrix` untuk basic smoke
+    ketika credential admin belum tersedia.
+  - Memperbarui README, PROJECT_CONTEXT, CHANGELOG, dan validation matrix.
+- **Status**: Done.
+- **Validation**: Edge CDP smoke matrix success untuk Admin, Management, PO, PM,
+  Finance, dan Staff dengan console error `0`; skip-auth smoke JSON success;
+  Node syntax check success; backend `41 passed`; backend `pip check` success;
+  frontend lint, test, quality scan, audit, dan build success; Docker Compose
+  status, frontend HTTP `200`, dan backend `/health` `ok`.
+- **Known limitations**: Script role matrix membuat atau me-reset akun smoke
+  lokal di database development. Backend tetap menjadi security authority;
+  project ownership gate per assigned PO/PM, production migration enforcement,
+  dependency constraints, backup automation, monitoring, rate limiting, dan
+  server-side PDF masih belum selesai.

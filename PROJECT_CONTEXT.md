@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 24 - Local Edge CDP Test Workflow |
+| Status Project | Sprint 25 - Role-Aware Edge Smoke Matrix |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | Local Zoom demo; VS Code Port Forwarding as temporary fallback |
 | Backend Deployment Strategy | Local backend; temporary port forwarding only when required |
@@ -68,14 +68,15 @@ Sprint 14 mencakup:
 
 Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
 
-Current validation after Sprint 24:
+Current validation after Sprint 25:
 
 - Backend: `41 passed`.
 - Frontend lint: `0 errors`, `0 warnings`.
 - Frontend test: `4 passed`.
 - Frontend build: success.
 - Local Edge CDP smoke: authenticated Projects modal check passes on desktop
-  and mobile viewports with browser console error `0`.
+  and mobile viewports; role-aware menu/route matrix for Admin, Management, PO,
+  PM, Finance, and Staff passes with browser console error `0`.
 - Runtime dependency check: Docker/Compose, Node/npm, Python, backend `.venv`,
   frontend `node_modules`, and Docker stack are available on the current
   development machine.
@@ -103,6 +104,12 @@ native WebSocket Node. Script ini meluncurkan Edge headless dengan temporary
 profile, login melalui backend API, membuka route Projects, dan memverifikasi
 modal create project pada viewport desktop/mobile tanpa menyimpan credential di
 repo.
+
+Sprint 25 memperluas smoke test Edge menjadi role-aware menu/route matrix.
+Script menggunakan login admin dari environment, membuat atau me-reset akun
+lokal `smoke.<role>@onespirit.asia`, lalu memverifikasi akses dan redirect UI
+untuk Admin, Management, PO, PM, Finance, dan Staff tanpa menyimpan password
+matrix di repo.
 
 Sprint 19 menambahkan dependency `httpx2` untuk menyelaraskan FastAPI/Starlette TestClient dan menghapus warning test backend terakhir.
 
