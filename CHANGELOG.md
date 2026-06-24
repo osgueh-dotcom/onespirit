@@ -4,6 +4,31 @@ Semua perubahan penting pada project ini dicatat di dokumen ini.
 
 ---
 
+## [Sprint 23] - 2026-06-24
+
+### Added
+- Added quick project customer intake: project creation now accepts either an
+  existing `customer_id` or a new `customer_name`.
+- Added backend regression coverage for auto-created customers, normalized-name
+  customer reuse, and missing customer validation.
+
+### Changed
+- Project creation now resolves customer names through CRM normalization before
+  creating a minimal `Prospect` customer profile.
+- Projects UI now lets users choose an existing Client Account or enter a new
+  client name/category directly in the project creation form.
+- Updated project status documentation for Sprint 23.
+
+### Validation
+- Backend targeted API tests passed with `17 passed`.
+- Backend full suite passed with `41 passed`; `pip check` passed.
+- Frontend lint, tests, quality scan, audit, and build passed.
+- Docker Compose status, frontend HTTP, and backend health checks passed.
+- Edge headless Projects modal check passed on desktop and mobile with console
+  error count `0`.
+
+---
+
 ## [Sprint 22] - 2026-06-24
 
 ### Added

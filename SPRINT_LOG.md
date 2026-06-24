@@ -40,6 +40,7 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
 | **Sprint 21** | Agent Workflow & Repository Audit | 2026-06-21 | Done |
 | **Sprint 21.1** | Local Network Access Verification | 2026-06-21 | Done |
 | **Sprint 22** | Agent Runtime Readiness Audit | 2026-06-24 | Done |
+| **Sprint 23** | Quick Project Customer Intake | 2026-06-24 | Done |
 
 ---
 
@@ -346,3 +347,28 @@ Dokumen ini mencatat riwayat sprint pengembangan OneSpirit Workflow System secar
   migration enforcement, frontend test depth, backend dependency constraints,
   backup automation, monitoring, rate limiting, dan server-side PDF masih belum
   selesai.
+
+## Sprint 23 - Quick Project Customer Intake
+
+- **Tujuan**: Mempercepat pembuatan project baru tanpa mewajibkan user membuat
+  customer secara manual di CRM terlebih dahulu.
+- **Hasil**:
+  - Endpoint create project menerima `customer_id` existing atau
+    `customer_name` baru.
+  - Backend mencocokkan nama customer secara ternormalisasi untuk menghindari
+    duplicate sebelum membuat profil CRM minimal kategori `Prospect`.
+  - Form Projects dapat memilih Client Account existing atau mengisi New Client
+    Name/Category saat membuat project.
+  - Customer auto-created tetap tersimpan di CRM dan project tetap memakai
+    `customer_id` valid, sehingga dashboard PO/PM/Finance tidak kehilangan
+    relasi customer.
+- **Status**: Done.
+- **Validation**: Backend targeted `test_api.py` `17 passed`; backend full
+  `41 passed`; backend `pip check` success; frontend lint `0 errors, 0
+  warnings`; frontend test `4 passed`; quality scan, audit, build, Docker
+  Compose status, frontend HTTP `200`, backend `/health` `ok`, dan Edge
+  headless Projects modal check desktop/mobile success dengan console error `0`.
+- **Known limitations**: Project ownership gate per assigned PO/PM, production
+  migration enforcement, frontend test depth beyond shared access utility,
+  backend dependency constraints, backup automation, monitoring, rate limiting,
+  dan server-side PDF masih belum selesai.

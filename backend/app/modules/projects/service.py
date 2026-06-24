@@ -2,6 +2,8 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.modules.projects.models import Project, ProjectStatusLog, ProjectActivityLog, ProjectInstrument
 from app.modules.projects.schemas import ProjectCreate, ProjectUpdate, ProjectInstrumentCreate, ProjectInstrumentUpdate
+from app.modules.crm import service as crm_service
+from app.modules.crm.schemas import CustomerCreate
 from app.core.activity import log_activity
 from app.core.database import db_commit_safety
 from datetime import date, datetime, timezone
@@ -201,6 +203,35 @@ def calculate_project_readiness(project: Project) -> dict:
     }
 
 
+def resolve_project_customer(db: Session, project_in: ProjectCreate, user_id: str):
+    if project_in.customer_id:
+        customer = crm_service.get_customer(db, customer_id=str(project_in.customer_id))
+        if not customer:
+            raise ValueError("Selected customer account was not found.")
+        return customer, False
+
+    customer_name = (project_in.customer_name or "").strip()
+    if not customer_name:
+        raise ValueError("Provide an existing customer_id or a new customer_name.")
+
+    matches = crm_service.check_duplicate_customer(db, company_name=customer_name)
+    if matches:
+        return matches[0], False
+
+    category = (project_in.customer_category or "Prospect").strip() or "Prospect"
+    customer = crm_service.create_customer(
+        db,
+        customer_in=CustomerCreate(
+            company_name=customer_name,
+            category=category,
+            notes="Auto-created from Project intake. Complete CRM profile and contacts before production handoff."
+        ),
+        user_id=user_id,
+        commit=False
+    )
+    return customer, True
+
+
 def create_project(db: Session, project_in: ProjectCreate, created_by_id: str) -> Project:
     parsed_creator_id = None
     if created_by_id:
@@ -212,6 +243,7 @@ def create_project(db: Session, project_in: ProjectCreate, created_by_id: str) -
         else:
             parsed_creator_id = created_by_id
 
+    customer, customer_created = resolve_project_customer(db, project_in, user_id=created_by_id)
     proj_title = project_in.title or project_in.program_name or "Untitled Program"
 
     db_project = Project(
@@ -222,7 +254,7 @@ def create_project(db: Session, project_in: ProjectCreate, created_by_id: str) -
         end_date=project_in.end_date or project_in.event_date_end,
         budget=project_in.budget,
         revenue=project_in.revenue,
-        customer_id=project_in.customer_id,
+        customer_id=customer.id,
         created_by_id=parsed_creator_id,
         assigned_to_id=project_in.assigned_to_id or project_in.program_manager_id,
         
@@ -280,7 +312,30 @@ def create_project(db: Session, project_in: ProjectCreate, created_by_id: str) -
         notes=f"Project '{db_project.title}' initialized."
     )
     db.add(activity)
+    if customer_created:
+        db.add(ProjectActivityLog(
+            project_id=db_project.id,
+            user_id=parsed_creator_id,
+            action="customer_auto_created",
+            field_name="customer_id",
+            new_value=str(customer.id),
+            notes=f"Customer '{customer.company_name}' auto-created from Project intake."
+        ))
     db_commit_safety(db)
+
+    if customer_created:
+        log_activity(
+            db,
+            user_id=parsed_creator_id,
+            action="customer_created_from_project",
+            entity_type="customer",
+            entity_id=customer.id,
+            details={
+                "company_name": customer.company_name,
+                "category": customer.category,
+                "project_id": str(db_project.id)
+            }
+        )
     
     # Central activity logging
     log_activity(

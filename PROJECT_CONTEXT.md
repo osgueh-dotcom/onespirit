@@ -15,7 +15,7 @@ Dokumen ini wajib dipahami oleh pengembang dan AI agent sebelum memodifikasi kod
 | Client / Internal | PT One Spirit Asia (Internal Operation & Commercial) |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
 | Bidang Bisnis | Event Operations, Project Workflow, Document Tracking, dan Finance |
-| Status Project | Sprint 22 - Agent Runtime Readiness Audit |
+| Status Project | Sprint 23 - Quick Project Customer Intake |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Frontend Deployment Strategy | Local Zoom demo; VS Code Port Forwarding as temporary fallback |
 | Backend Deployment Strategy | Local backend; temporary port forwarding only when required |
@@ -68,9 +68,9 @@ Sprint 14 mencakup:
 
 Production is not yet declared. GitHub Pages dan backend tunnel tetap diposisikan sebagai demo deployment model.
 
-Current validation after Sprint 22:
+Current validation after Sprint 23:
 
-- Backend: `38 passed`.
+- Backend: `41 passed`.
 - Frontend lint: `0 errors`, `0 warnings`.
 - Frontend test: `4 passed`.
 - Frontend build: success.
@@ -89,6 +89,12 @@ Sprint 22 menambahkan runtime/dependency readiness scope pada context snapshot,
 memperbarui routing agent/skill untuk audit mesin lokal, dan mencatat ulang
 risk register repository agar pengembangan berikutnya dapat dimulai dengan
 konteks yang lebih pendek dan terverifikasi.
+
+Sprint 23 menambahkan quick project customer intake: user dapat membuat project
+baru dengan memilih customer CRM yang sudah ada atau mengisi nama klien baru.
+Backend akan mencocokkan nama customer secara ternormalisasi dan membuat profil
+CRM minimal kategori `Prospect` bila belum ada, sehingga project tetap memiliki
+customer_id yang valid tanpa langkah CRM terpisah.
 
 Sprint 19 menambahkan dependency `httpx2` untuk menyelaraskan FastAPI/Starlette TestClient dan menghapus warning test backend terakhir.
 

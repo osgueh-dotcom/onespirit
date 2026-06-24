@@ -14,14 +14,14 @@ Produk ini dikembangkan untuk mendigitalkan koordinasi operasional, melacak read
 |---|---|
 | Nama Project | OneSpirit Workflow System |
 | Jenis Sistem | Sistem Workflow Komersial & Operasional Event |
-| Status | Sprint 22 - Agent Runtime Readiness Audit |
+| Status | Sprint 23 - Quick Project Customer Intake |
 | Owner | PT One Spirit Asia |
 | Lokasi Folder | `<PROJECT_ROOT>` |
 | Tech Stack | FastAPI backend, Vue 3 + Tailwind CSS frontend |
 | Database | PostgreSQL untuk Docker/production-like, SQLite untuk test lokal |
 
 Current readiness summary:
-- Backend test: `38 passed`
+- Backend test: `41 passed`
 - Frontend build: success
 - Frontend lint: `0 errors`, `0 warnings`
 - Frontend test: `4 passed`
@@ -60,7 +60,7 @@ powershell -ExecutionPolicy Bypass -File .agents/skills/onespirit-development/sc
 ## Fitur Utama
 
 1. **CRM & Customer Management**: manajemen klien, kategori klien, dan kontak terkait.
-2. **Project & Event Management**: pelacakan siklus proyek dari Inquiry sampai Closed.
+2. **Project & Event Management**: pelacakan siklus proyek dari Inquiry sampai Closed, termasuk quick intake customer baru dari form project.
 3. **Readiness Control Center & Instruments**: kontrol CL, ROS, CK, dan PNL.
 4. **PM Control Center**: dashboard Program Manager untuk readiness score, overdue instruments, dan workload.
 5. **PO Control Center**: dashboard Program Owner untuk quotation, revenue, follow-up, dan risiko komersial.

@@ -100,6 +100,85 @@ def test_dashboard_modular_endpoints_require_authentication(client, path):
     response = client.get(path)
     assert response.status_code == 401
 
+def test_project_create_auto_creates_customer_from_project_intake(client):
+    login_response = client.post(
+        "/api/v1/auth/login",
+        data={"username": "admin@onespirit.asia", "password": "OneSpirit2026!"}
+    )
+    assert login_response.status_code == 200
+    headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+
+    payload = {
+        "title": "Quick Intake Project",
+        "customer_name": "PT Quick Intake Baru",
+        "customer_category": "Prospect",
+        "budget": 12500000
+    }
+    response = client.post("/api/v1/projects", json=payload, headers=headers)
+    assert response.status_code == 201
+
+    data = response.json()
+    assert data["customer_id"]
+    assert data["customer"]["company_name"] == "PT Quick Intake Baru"
+    assert data["customer"]["category"] == "Prospect"
+
+    customers_res = client.get("/api/v1/customers", headers=headers)
+    assert customers_res.status_code == 200
+    assert any(c["id"] == data["customer_id"] for c in customers_res.json())
+
+
+def test_project_create_reuses_existing_customer_by_normalized_name(client):
+    login_response = client.post(
+        "/api/v1/auth/login",
+        data={"username": "admin@onespirit.asia", "password": "OneSpirit2026!"}
+    )
+    assert login_response.status_code == 200
+    headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+
+    customer_payload = {
+        "company_name": "PT Existing Intake Match",
+        "category": "Corporate",
+        "address": "Jakarta"
+    }
+    customer_res = client.post("/api/v1/customers", json=customer_payload, headers=headers)
+    assert customer_res.status_code == 201
+    customer_id = customer_res.json()["id"]
+
+    project_payload = {
+        "title": "Existing Customer Intake Project",
+        "customer_name": "pt existing intake match",
+        "customer_category": "Prospect",
+        "budget": 25000000
+    }
+    project_res = client.post("/api/v1/projects", json=project_payload, headers=headers)
+    assert project_res.status_code == 201
+    assert project_res.json()["customer_id"] == customer_id
+    assert project_res.json()["customer"]["category"] == "Corporate"
+
+    customers_res = client.get("/api/v1/customers", headers=headers)
+    assert customers_res.status_code == 200
+    matching_customers = [
+        c for c in customers_res.json()
+        if c["company_name"] in {"PT Existing Intake Match", "pt existing intake match"}
+    ]
+    assert len(matching_customers) == 1
+
+
+def test_project_create_requires_customer_reference(client):
+    login_response = client.post(
+        "/api/v1/auth/login",
+        data={"username": "admin@onespirit.asia", "password": "OneSpirit2026!"}
+    )
+    assert login_response.status_code == 200
+    headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+
+    response = client.post(
+        "/api/v1/projects",
+        json={"title": "Project Without Customer"},
+        headers=headers
+    )
+    assert response.status_code == 422
+
 def test_password_complexity_validator(client):
     # 1. Login to retrieve bearer token
     login_response = client.post(

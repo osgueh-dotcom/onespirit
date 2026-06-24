@@ -1,3 +1,4 @@
+import uuid
 import re
 from typing import List, Optional
 from sqlalchemy.orm import Session
@@ -28,7 +29,13 @@ def check_duplicate_customer(db: Session, company_name: str, exclude_id: Optiona
 
 # Customer CRUD
 def get_customer(db: Session, customer_id: str) -> Optional[Customer]:
-    return db.query(Customer).filter(Customer.id == customer_id, Customer.deleted_at == None).first()
+    parsed_id = customer_id
+    if isinstance(customer_id, str):
+        try:
+            parsed_id = uuid.UUID(customer_id)
+        except ValueError:
+            pass
+    return db.query(Customer).filter(Customer.id == parsed_id, Customer.deleted_at == None).first()
 
 def get_customer_by_name(db: Session, company_name: str) -> Optional[Customer]:
     return db.query(Customer).filter(Customer.company_name == company_name, Customer.deleted_at == None).first()
@@ -36,7 +43,7 @@ def get_customer_by_name(db: Session, company_name: str) -> Optional[Customer]:
 def get_customers(db: Session, skip: int = 0, limit: int = 100) -> List[Customer]:
     return db.query(Customer).filter(Customer.deleted_at == None).offset(skip).limit(limit).all()
 
-def create_customer(db: Session, customer_in: CustomerCreate, user_id: Optional[str] = None) -> Customer:
+def create_customer(db: Session, customer_in: CustomerCreate, user_id: Optional[str] = None, commit: bool = True) -> Customer:
     db_customer = Customer(
         company_name=customer_in.company_name,
         normalized_name=normalize_customer_name(customer_in.company_name),
@@ -45,17 +52,21 @@ def create_customer(db: Session, customer_in: CustomerCreate, user_id: Optional[
         notes=customer_in.notes
     )
     db.add(db_customer)
-    db_commit_safety(db)
-    db.refresh(db_customer)
+    if commit:
+        db_commit_safety(db)
+        db.refresh(db_customer)
+    else:
+        db.flush()
     
-    log_activity(
-        db,
-        user_id=user_id,
-        action="customer_created",
-        entity_type="customer",
-        entity_id=db_customer.id,
-        details={"company_name": db_customer.company_name, "category": db_customer.category}
-    )
+    if commit:
+        log_activity(
+            db,
+            user_id=user_id,
+            action="customer_created",
+            entity_type="customer",
+            entity_id=db_customer.id,
+            details={"company_name": db_customer.company_name, "category": db_customer.category}
+        )
     
     return db_customer
 

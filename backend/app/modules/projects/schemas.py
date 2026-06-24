@@ -2,7 +2,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import List, Optional
 from uuid import UUID
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 from app.modules.crm.schemas import CustomerResponse
 from app.modules.event_sources.schemas import EventSourceResponse
 
@@ -64,11 +64,25 @@ class ProjectBase(BaseModel):
     general_notes: Optional[str] = None
 
 class ProjectCreate(ProjectBase):
-    customer_id: UUID
+    customer_id: Optional[UUID] = None
+    customer_name: Optional[str] = None
+    customer_category: Optional[str] = "Prospect"
     assigned_to_id: Optional[UUID] = None
     event_source_id: Optional[UUID] = None
     program_owner_id: Optional[UUID] = None
     program_manager_id: Optional[UUID] = None
+
+    @model_validator(mode="after")
+    def require_customer_reference(self):
+        if self.customer_name:
+            self.customer_name = self.customer_name.strip()
+        if self.customer_category:
+            self.customer_category = self.customer_category.strip() or "Prospect"
+        else:
+            self.customer_category = "Prospect"
+        if not self.customer_id and not self.customer_name:
+            raise ValueError("Provide an existing customer_id or a new customer_name.")
+        return self
 
 class ProjectUpdate(BaseModel):
     title: Optional[str] = None

@@ -528,13 +528,12 @@
 
             <!-- Client & Event Source -->
             <div>
-              <label class="app-label mb-1.5">Client Account *</label>
+              <label class="app-label mb-1.5">Client Account</label>
               <select 
                 v-model="newProj.customer_id"
-                required
                 class="app-form-control text-xs"
               >
-                <option value="" disabled>Select Client</option>
+                <option value="">New client</option>
                 <option v-for="c in customers" :key="c.id" :value="c.id">{{ c.company_name }}</option>
               </select>
             </div>
@@ -548,6 +547,31 @@
                 <option v-for="s in eventSources" :key="s.id" :value="s.id">
                   {{ s.vendor_name || 'Partner' }} {{ s.sales_name ? `(${s.sales_name})` : '' }}
                 </option>
+              </select>
+            </div>
+            <div>
+              <label class="app-label mb-1.5">New Client Name <span v-if="!newProj.customer_id">*</span></label>
+              <input
+                v-model.trim="newProj.customer_name"
+                type="text"
+                :required="!newProj.customer_id"
+                :disabled="Boolean(newProj.customer_id)"
+                placeholder="e.g. PT Nusantara Event"
+                class="app-form-control text-xs disabled:opacity-60"
+              />
+            </div>
+            <div>
+              <label class="app-label mb-1.5">New Client Category</label>
+              <select
+                v-model="newProj.customer_category"
+                :disabled="Boolean(newProj.customer_id)"
+                class="app-form-control text-xs disabled:opacity-60"
+              >
+                <option value="Prospect">Prospect</option>
+                <option value="Corporate">Corporate</option>
+                <option value="Agency">Agency</option>
+                <option value="Partner">Partner</option>
+                <option value="Individual">Individual</option>
               </select>
             </div>
 
@@ -829,6 +853,8 @@ const newProj = ref({
   project_code: '',
   inquiry_date: '',
   customer_id: '',
+  customer_name: '',
+  customer_category: 'Prospect',
   event_source_id: null,
   program_owner_id: null,
   program_manager_id: null,
@@ -1004,16 +1030,25 @@ const getReadinessScoreBadgeStyles = (score) => {
 }
 
 const openAddModal = () => {
-  if (customers.value.length === 0) {
-    ui.warning('Daftarkan minimal satu akun klien di CRM sebelum memulai project.')
-    return
-  }
   showAddModal.value = true
 }
 
 const saveProject = async () => {
   try {
     const payload = { ...newProj.value }
+    if (payload.customer_id) {
+      delete payload.customer_name
+      delete payload.customer_category
+    } else {
+      delete payload.customer_id
+      payload.customer_name = (payload.customer_name || '').trim()
+      if (!payload.customer_name) {
+        ui.error('Pilih Client Account atau isi nama klien baru.')
+        return
+      }
+      payload.customer_category = payload.customer_category || 'Prospect'
+    }
+
     // Clean up empty optional date fields so backend does not fail validation
     if (!payload.inquiry_date) delete payload.inquiry_date
     if (!payload.event_date_start) delete payload.event_date_start
@@ -1029,11 +1064,15 @@ const saveProject = async () => {
     const response = await axios.post('/api/v1/projects', payload)
     
     // Fetch and append relation metadata manually to prevent reload
-    const client = customers.value.find(c => c.id === response.data.customer_id)
+    const client = response.data.customer || customers.value.find(c => c.id === response.data.customer_id)
     const source = eventSources.value.find(s => s.id === response.data.event_source_id)
     const po = users.value.find(u => u.id === response.data.program_owner_id)
     const pm = users.value.find(u => u.id === response.data.program_manager_id)
     
+    if (client && !customers.value.some(c => c.id === client.id)) {
+      customers.value.push(client)
+    }
+
     response.data.customer = client
     response.data.event_source = source
     response.data.program_owner = po
@@ -1049,6 +1088,8 @@ const saveProject = async () => {
       project_code: '',
       inquiry_date: '',
       customer_id: '',
+      customer_name: '',
+      customer_category: 'Prospect',
       event_source_id: null,
       program_owner_id: null,
       program_manager_id: null,

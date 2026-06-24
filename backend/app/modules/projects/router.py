@@ -99,7 +99,13 @@ def create_project_entry(
     current_user: User = Depends(deps.PermissionChecker(["projects:write"]))
 ):
     """Initialize a brand new event project"""
-    return service.create_project(db, project_in=project_in, created_by_id=str(current_user.id))
+    try:
+        return service.create_project(db, project_in=project_in, created_by_id=str(current_user.id))
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
 
 @router.put("/projects/{project_id}", response_model=schemas.ProjectResponse)
 def update_project_entry(
